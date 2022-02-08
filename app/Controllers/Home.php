@@ -1,0 +1,153 @@
+<?php
+
+namespace App\Controllers;
+
+use CodeItNow\BarcodeBundle\Utils\BarcodeGenerator;
+use App\Models\ModelHome;
+use CodeIgniter\Validation\Rules;
+
+class Home extends BaseController
+{
+    protected $barangmodel;
+    protected $barcodeG;
+
+    public function __construct()
+    {
+
+        $this->barcodeG =  new BarcodeGenerator();
+        $this->barangmodel = new ModelHome();
+    }
+    public function index()
+    {
+
+        return view('home/index');
+    }
+    public function databarang()
+    {
+        session();
+        //dd($this->barangmodel->getBarang()[0]->getResult());
+        $data = [
+            'barang' => $this->barangmodel->getBarang(),
+            'pages' => 1,
+            'validation' => \Config\Services::validation()
+
+            // 'img' => $this->barangmodel->getBarang()[0]->getResult()
+        ];
+        return view('home/data_barang', $data);
+    }
+    public function detail($id)
+    {
+        $data = $this->barangmodel->getBarang($id);
+        $barcode = $this->barcodeG;
+        $barcode->setText($data['barcode']);
+        $barcode->setType(BarcodeGenerator::Code128);
+        $barcode->setScale(2);
+        $barcode->setThickness(25);
+        $barcode->setFontSize(10);
+        $code = $barcode->generate();
+        //echo '<img src="data:image/png;base64,' . $code . '" />';
+        $data1 = [
+            'barang' => $data,
+            'barcode' => '<img src="data:image/png;base64,' . $code . '" />',
+            // 'img' => $this->barangmodel->getImg($id)
+        ];
+
+        return view('home/detail_barang', $data1);
+    }
+
+    public function print($id)
+    {
+        $data = $this->barangmodel->getBarang($id);
+        $barcode = $this->barcodeG;
+        $barcode->setText($data['barcode']);
+        $barcode->setType(BarcodeGenerator::Code128);
+        $barcode->setScale(2);
+        $barcode->setThickness(25);
+        $barcode->setFontSize(10);
+        $code = $barcode->generate();
+        //echo '<img src="data:image/png;base64,' . $code . '" />';
+        $data1 = [
+            'barcode' => '<img src="data:image/png;base64,' . $code . '" /> <br>',
+        ];
+
+        return view('home/print_barcode.php', $data1);
+    }
+
+    public function save()
+    {
+        if (!$this->validate([
+            'namabarang' => [
+                'rules' => 'required|is_unique[tbl_barang.nama_barang]',
+                'errors' => [
+                    'required' => 'Nama Barang Harus di isi',
+                    'is_unique' => 'Nama Barang sudah ada'
+                ]
+            ],
+            'idbarcode' => [
+                'rules' => 'required|is_unique[tbl_barang.barcode]',
+                'errors' => [
+                    'required' => 'Id Barcode Harus di isi',
+                    'is_unique' => 'Id Barcode sudah Terpakai'
+                ]
+            ],
+            'jenisbarang' => [
+                'rules' => 'required',
+                'errors' => [
+                    'required' => 'Jenis Barang Harus di isi',
+                ]
+            ],
+            'jumlahbarang' => [
+                'rules' => 'required',
+                'errors' => [
+                    'required' => 'Stock Barang Harus di isi',
+                ]
+            ],
+            'beratbarang' => [
+                'rules' => 'required',
+                'errors' => [
+                    'required' => 'Berat Barang Harus di isi',
+                ]
+            ],
+            'hargabarang' => [
+                'rules' => 'required',
+                'errors' => [
+                    'required' => 'Harga Barang Harus di isi',
+                ]
+            ],
+            'gambar' => [
+                'rules' => 'is_image[gambar]|mime_in[gambar,image/jpg,image/jpeg,image/png]',
+                'errors' => [
+                    'max_size' => 'Ukuran Gambar teralu besar',
+                    'is_image' => 'Bukan Gambar',
+                    'mime_in' => 'extention tidak cocok'
+
+                ]
+            ]
+
+        ])) {
+            // $validation = \Config\Services::validation();
+            // return redirect()->to('/komik/create')->withInput()->with('validation', $validation);
+            return redirect()->to('/home/databarang')->withInput();
+        }
+        $filesampul = $this->request->getFile('gambar');
+        if ($filesampul->getError() == 4) {
+            $namafile = 'default.jpg';
+        } else {
+            $namafile = $filesampul->getRandomName(); // pake nama random
+            // $namafile = $filesampul->getName(); // ini pake nama asli di foto
+            $filesampul->move('img', $namafile);
+        }
+        $this->barangmodel->save([
+            'id_img' => $this->request->getVar('idbarcode'),
+            'barcode' => $this->request->getVar('idbarcode'),
+            'nama_barang' => $this->request->getVar('namabarang'),
+            'jenis_barang' => $this->request->getVar('jenisbarang'),
+            'berat_barang' => $this->request->getVar('beratbarang'),
+            'stock_barang' => $this->request->getVar('jumlahbarang'),
+            'harga_barang' => $this->request->getVar('hargabarang'),
+            'nama_gbr' => $namafile,
+        ]);
+        session()->setFlashdata('pesan', 'Data berhasil ditambahkan');
+        return redirect()->to('/databarang');
+    }
+}
