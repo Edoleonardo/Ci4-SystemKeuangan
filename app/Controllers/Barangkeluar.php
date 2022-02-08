@@ -186,13 +186,11 @@ class Barangkeluar extends BaseController
                         'qty' => '0'
                     ]);
 
-                    $msg = [
-                        'pesan' => 'Draft',
-                        'id' => $session->get('date_id_penjualan')
-                    ];
+                    $idmsg = $session->get('date_id_penjualan');
                 }
                 $msg = [
                     'pesan' => 'Berhasil',
+                    'idmsg' => (isset($idmsg)) ? $idmsg : null
                 ];
             } else {
                 $msg = [
@@ -206,7 +204,6 @@ class Barangkeluar extends BaseController
             exit('Anda Hacker Sejati');
         }
     }
-
     public function UbahHarga()
     {
         if ($this->request->isAJAX()) {
@@ -561,7 +558,7 @@ class Barangkeluar extends BaseController
         $session = session();
         if ($this->request->isAJAX()) {
             $data = [
-                'tampildata' => $this->modeldetailpenjualan->getDetailAlljual($session->get('date_id_penjualan'))
+                'tampildata' => $this->modeldetailpenjualan->getDetailAlljual($session->get('date_id_penjualan')),
             ];
             $msg = [
                 'data' => view('barangkeluar/detailtablejual', $data),

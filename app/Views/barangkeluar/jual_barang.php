@@ -406,6 +406,7 @@
         return rounded
     }
 
+
     function tampildata() {
         $.ajax({
             type: "GET",
@@ -811,8 +812,8 @@
                     tampildata()
                     document.getElementById('kodebarang').value = ''
                 }
-                if (result.pesan == 'Draft') {
-                    window.location.href = "draftpenjualan/" + result.id;
+                if (result.idmsg) {
+                    window.location.href = "draftpenjualan/" + result.idmsg;
                 }
 
             },
@@ -847,8 +848,7 @@
                     $('.btntambah').html('Tambah')
                 },
                 success: function(result) {
-                    console.log(result)
-                    $('#modal-lg').modal('toggle');
+                    window.location.reload();
 
                 },
                 error: function(xhr, ajaxOptions, thrownError) {
