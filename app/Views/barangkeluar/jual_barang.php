@@ -11,6 +11,60 @@
     .imgg {
         width: 100px;
     }
+
+
+    .autocomplete {
+        position: relative;
+        display: inline-block;
+    }
+
+    input {
+        border: 1px solid transparent;
+        background-color: #f1f1f1;
+        padding: 10px;
+        font-size: 16px;
+    }
+
+    input[type=text] {
+        background-color: #f1f1f1;
+        width: 100%;
+    }
+
+    input[type=submit] {
+        background-color: DodgerBlue;
+        color: #fff;
+        cursor: pointer;
+    }
+
+    .autocomplete-items {
+        position: absolute;
+        border: 1px solid #d4d4d4;
+        border-bottom: none;
+        border-top: none;
+        z-index: 99;
+        /*position the autocomplete items to be the same width as the container:*/
+        top: 100%;
+        left: 0;
+        right: 0;
+    }
+
+    .autocomplete-items div {
+        padding: 10px;
+        cursor: pointer;
+        background-color: #fff;
+        border-bottom: 1px solid #d4d4d4;
+    }
+
+    /*when hovering an item:*/
+    .autocomplete-items div:hover {
+        background-color: #e9e9e9;
+    }
+
+    /*when navigating through the items using the arrow keys:*/
+    .autocomplete-active {
+        background-color: DodgerBlue !important;
+        color: #ffffff;
+    }
 </style>
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
@@ -38,38 +92,30 @@
             <div class="col-6">
                 <div class="card">
                     <!-- /.card-header -->
-                    <table class="table table-striped">
-                        <form action="/kodebarcode" name="formkodebarcode" id="formkodebarcode" class="formkodebarcode" method="post">
-                            <tbody>
-                                <tr>
-                                    <td>
-                                        <div class="form-group">
-                                            <label>Nama Customer</label>
-                                            <select name="customer" id="customer" class="form-control select2" style="width: 100%;">
-                                                <?php foreach ($datacust as $m) : ?>
-                                                    <option value="<?= $m['id_customer'] ?>" <?= (isset($datapenjualan['nama_customer']) == $m['nama']) ? ($datapenjualan['nama_customer'] == $m['nama']) ? 'selected' : '' : ''; ?>><?= $m['nama'] ?> </option>
-                                                <?php endforeach; ?>
-                                            </select>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <div class="form-group">
-                                            <label>Kode Barang</label>
-                                            <div class="input-group input-group-sm">
-                                                <input type="text" class="form-control" id="kodebarang" onkeyup="ScanBarcode()" name="kodebarang" placeholder="Masukan Nomor Nota Supplier">
-                                                <span class="input-group-append">
-                                                    <button type="submit" id="btnsubmitform" class="btn btn-info btn-flat btnsubmitform">Ok</button>
-                                                </span>
-                                            </div>
-                                        </div>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </form>
-                    </table>
-                    <!-- /.card-body -->
+                    <form action="/kodebarcode" name="formkodebarcode" id="formkodebarcode" class="formkodebarcode" method="post">
+
+                        <div class="form-group" style="margin: 1mm;">
+                            <label>Nama Customer</label>
+                            <input autocomplete="off" type="text" onchange="checkcust()" class="form-control inputcustomer" id="inputcustomer" name="inputcustomer" value="<?= (isset($datapenjualan['nama_customer'])) ? $datapenjualan['nama_customer'] : '' ?>" placeholder="Masukan data customer">
+                            <div id="validationServerUsernameFeedback" class="invalid-feedback inputcustomermsg">
+                            </div>
+                        </div>
+                </div>
+                <div class="card">
+                    <div class="form-group" style="margin: 1mm;">
+                        <label>Kode Barang</label>
+                        <div class="input-group input-group-sm">
+                            <input type="text" class="form-control kodebarang" id="kodebarang" onkeyup="ScanBarcode()" name="kodebarang" placeholder="Masukan Nomor Nota Supplier">
+                            <span class="input-group-append">
+                                <button type="submit" id="btnsubmitform" class="btn btn-info btn-flat btnsubmitform">Ok</button>
+                            </span>
+                            <div id="validationServerUsernameFeedback" class="invalid-feedback kodebarangmsg">
+                            </div>
+                        </div>
+                    </div>
+
+                    </form>
+
                 </div>
                 <!-- /.card -->
             </div>
@@ -77,7 +123,7 @@
                 <!-- Application buttons -->
                 <div class="card">
                     <div class="card-body">
-                        <a class="btn btn-app" data-toggle="modal" data-target="#modal-lg">
+                        <a class="btn btn-app tambahcustomer" id="tambahcustomer" data-toggle="modal" data-target="#modal-lg">
                             <i class="fas fa-users"></i> Tambah Customer
                         </a>
                         <a type="button" onclick="Batal()" class="btn btn-app">
@@ -399,6 +445,150 @@
 
 </footer>
 <script type="text/javascript">
+    function autocomplete(inp, arr) {
+        /*the autocomplete function takes two arguments,
+        the text field element and an array of possible autocompleted values:*/
+        var currentFocus;
+        /*execute a function when someone writes in the text field:*/
+        inp.addEventListener("input", function(e) {
+            var a, b, i, val = this.value;
+            /*close any already open lists of autocompleted values*/
+            closeAllLists();
+            if (!val) {
+                return false;
+            }
+            currentFocus = -1;
+            /*create a DIV element that will contain the items (values):*/
+            a = document.createElement("DIV");
+            a.setAttribute("id", this.id + "autocomplete-list");
+            a.setAttribute("class", "autocomplete-items");
+            /*append the DIV element as a child of the autocomplete container:*/
+            this.parentNode.appendChild(a);
+            /*for each item in the array...*/
+            for (i = 0; i < arr.length; i++) {
+                /*check if the item starts with the same letters as the text field value:*/
+                if (arr[i].substr(0, val.length).toUpperCase() == val.toUpperCase()) {
+                    /*create a DIV element for each matching element:*/
+                    b = document.createElement("DIV");
+                    /*make the matching letters bold:*/
+                    b.innerHTML = "<strong>" + arr[i].substr(0, val.length) + "</strong>";
+                    b.innerHTML += arr[i].substr(val.length);
+                    /*insert a input field that will hold the current array item's value:*/
+                    b.innerHTML += "<input type='hidden' value='" + arr[i] + "'>";
+                    /*execute a function when someone clicks on the item value (DIV element):*/
+                    b.addEventListener("click", function(e) {
+                        /*insert the value for the autocomplete text field:*/
+                        inp.value = this.getElementsByTagName("input")[0].value;
+                        /*close the list of autocompleted values,
+                        (or any other open lists of autocompleted values:*/
+                        closeAllLists();
+                    });
+                    a.appendChild(b);
+                }
+            }
+        });
+        /*execute a function presses a key on the keyboard:*/
+        inp.addEventListener("keydown", function(e) {
+            var x = document.getElementById(this.id + "autocomplete-list");
+            if (x) x = x.getElementsByTagName("div");
+            if (e.keyCode == 40) {
+                /*If the arrow DOWN key is pressed,
+                increase the currentFocus variable:*/
+                currentFocus++;
+                /*and and make the current item more visible:*/
+                addActive(x);
+            } else if (e.keyCode == 38) { //up
+                /*If the arrow UP key is pressed,
+                decrease the currentFocus variable:*/
+                currentFocus--;
+                /*and and make the current item more visible:*/
+                addActive(x);
+            } else if (e.keyCode == 13) {
+                /*If the ENTER key is pressed, prevent the form from being submitted,*/
+                e.preventDefault();
+                if (currentFocus > -1) {
+                    /*and simulate a click on the "active" item:*/
+                    if (x) x[currentFocus].click();
+                }
+            }
+        });
+
+        function addActive(x) {
+            /*a function to classify an item as "active":*/
+            if (!x) return false;
+            /*start by removing the "active" class on all items:*/
+            removeActive(x);
+            if (currentFocus >= x.length) currentFocus = 0;
+            if (currentFocus < 0) currentFocus = (x.length - 1);
+            /*add class "autocomplete-active":*/
+            x[currentFocus].classList.add("autocomplete-active");
+        }
+
+        function removeActive(x) {
+            /*a function to remove the "active" class from all autocomplete items:*/
+            for (var i = 0; i < x.length; i++) {
+                x[i].classList.remove("autocomplete-active");
+            }
+        }
+
+        function closeAllLists(elmnt) {
+            /*close all autocomplete lists in the document,
+            except the one passed as an argument:*/
+            var x = document.getElementsByClassName("autocomplete-items");
+            for (var i = 0; i < x.length; i++) {
+                if (elmnt != x[i] && elmnt != inp) {
+                    x[i].parentNode.removeChild(x[i]);
+                }
+            }
+        }
+        /*execute a function when someone clicks in the document:*/
+        document.addEventListener("click", function(e) {
+            closeAllLists(e.target);
+        });
+    }
+
+
+    function tampilcustomer() {
+        $.ajax({
+            type: "GET",
+            dataType: "json",
+            url: "<?php echo base_url('tampilcust'); ?>",
+            success: function(result) {
+                var arr = []
+                for (var i = 0; i < result.length; i++) {
+                    var obj = result[i];
+                    arr.push(obj.nama)
+
+                }
+                autocomplete(document.getElementById("inputcustomer"), arr);
+            },
+            error: function(xhr, ajaxOptions, thrownError) {
+                alert(xhr.status + "\n" + xhr.responseText + "\n" + thrownError);
+            }
+        })
+    }
+
+    function checkcust() {
+        $.ajax({
+            type: "GET",
+            dataType: "json",
+            data: {
+                nama_cust: document.getElementById('inputcustomer').value
+            },
+            url: "<?php echo base_url('checkcust'); ?>",
+            success: function(result) {
+                if (result == 'gagal') {
+                    isicust = document.getElementById('inputcustomer').value
+                    document.getElementById("nama_cust").value = isicust
+                    $('#tambahcustomer').trigger('click');
+                }
+            },
+            error: function(xhr, ajaxOptions, thrownError) {
+                alert(xhr.status + "\n" + xhr.responseText + "\n" + thrownError);
+            }
+        })
+    }
+
     function pembulatankoma(berat) {
         var num = Number(berat) // The Number() only visualizes the type and is not needed
         var roundedString = num.toFixed(2);
@@ -481,31 +671,31 @@
                             $('.namabankmsg').html(result.error.namabank)
                         } else {
                             $('#namabank').removeClass('is-invalid')
-                            $('.namabank').html('')
+                            $('.namabankmsg').html('')
                         }
                         if (result.error.transfer) {
                             $('#transfer').addClass('is-invalid')
                             $('.transfermsg').html(result.error.transfer)
                         } else {
                             $('#transfer').removeClass('is-invalid')
-                            $('.transfer').html('')
+                            $('.transfermsg').html('')
                         }
                         if (result.error.tunai) {
                             $('#tunai').addClass('is-invalid')
                             $('.tunaimsg').html(result.error.tunai)
                         } else {
                             $('#tunai').removeClass('is-invalid')
-                            $('.tunai').html('')
+                            $('.tunaimsg').html('')
                         }
                     } else {
                         $('#debitcc').removeClass('is-invalid')
                         $('.debitccmsg').html('')
                         $('#namabank').removeClass('is-invalid')
-                        $('.namabank').html('')
+                        $('.namabankmsg').html('')
                         $('#transfer').removeClass('is-invalid')
-                        $('.transfer').html('')
+                        $('.transfermsg').html('')
                         $('#tunai').removeClass('is-invalid')
-                        $('.tunai').html('')
+                        $('.tunaimsg').html('')
 
                         Swal.fire({
                             icon: 'success',
@@ -637,7 +827,7 @@
 
     function byrnamabank() {
         const totalbersih = document.getElementById('totalbersih').innerHTML
-        totalbersihval = parseFloat(totalbersih.replace('.', ''))
+        totalbersihval = parseFloat(totalbersih.replaceAll('.', ''))
         var bank = document.getElementById('namabank').value
         document.getElementById('bankbyr').innerHTML = bank
     }
@@ -665,7 +855,7 @@
         }
 
         const totalbersih = document.getElementById('totalbersih').innerHTML
-        totalbersihval = parseFloat(totalbersih.replace('.', ''))
+        totalbersihval = parseFloat(totalbersih.replaceAll('.', ''))
         var hasil = totalbersihval - (bulat + debitcc + transfer + tunai)
         document.getElementById('totalbersih1').innerHTML = hasil.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
         document.getElementById('pembulatanhtml').innerHTML = bulat.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
@@ -674,12 +864,12 @@
     function brycas() {
         var val = document.getElementById('charge').value
         const totalbersih = document.getElementById('totalbersih01').innerHTML
-        totalbersihval = parseFloat(totalbersih.replace('.', ''))
+        totalbersihval = parseFloat(totalbersih.replaceAll('.', ''))
         hasil = totalbersihval + (val * (totalbersihval / 100))
         document.getElementById('totalbersih').innerHTML = hasil.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
         document.getElementById('totalbersih1').innerHTML = hasil.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
         document.getElementById('chargebyr').innerHTML = val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".") + '%'
-        myPembulatan()
+        // myPembulatan()
         byrdebitcc()
         byrtransfer()
         byrtunai()
@@ -707,7 +897,7 @@
             tunai = 0
         }
         const totalbersih = document.getElementById('totalbersih').innerHTML
-        totalbersihval = parseFloat(totalbersih.replace('.', ''))
+        totalbersihval = parseFloat(totalbersih.replaceAll('.', ''))
         hasil = totalbersihval - (debitcc + bulat + tunai + transfer)
         document.getElementById('debitccbyr').innerHTML = debitcc.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
         document.getElementById('totalbersih1').innerHTML = hasil.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
@@ -736,7 +926,7 @@
             tunai = 0
         }
         const totalbersih = document.getElementById('totalbersih').innerHTML
-        totalbersihval = parseFloat(totalbersih.replace('.', ''))
+        totalbersihval = parseFloat(totalbersih.replaceAll('.', ''))
         hasil = totalbersihval - (debitcc + bulat + tunai + transfer)
         document.getElementById('transferbyr').innerHTML = transfer.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
         document.getElementById('totalbersih1').innerHTML = hasil.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
@@ -764,7 +954,7 @@
             tunai = 0
         }
         const totalbersih = document.getElementById('totalbersih').innerHTML
-        totalbersihval = parseFloat(totalbersih.replace('.', ''))
+        totalbersihval = parseFloat(totalbersih.replaceAll('.', ''))
         hasil = totalbersihval - (debitcc + bulat + tunai + transfer)
         document.getElementById('tunaibyr').innerHTML = tunai.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
         document.getElementById('totalbersih1').innerHTML = hasil.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
@@ -806,14 +996,38 @@
             cache: false,
             dataType: "json",
             success: function(result) {
-                if (result.pesan == 'gagal') {
-                    console.log(result)
+                if (result.error) {
+                    if (result.error.inputcustomer) {
+                        $('#inputcustomer').addClass('is-invalid')
+                        $('.inputcustomermsg').html(result.error.inputcustomer)
+                    } else {
+                        $('#inputcustomer').removeClass('is-invalid')
+                        $('.inputcustomermsg').html('')
+                    }
+                    if (result.error.kodebarang) {
+                        $('#kodebarang').addClass('is-invalid')
+                        $('.kodebarangmsg').html(result.error.kodebarang)
+                    } else {
+                        $('#kodebarang').removeClass('is-invalid')
+                        $('.kodebarangmsg').html('')
+                    }
                 } else {
-                    tampildata()
-                    document.getElementById('kodebarang').value = ''
-                }
-                if (result.idmsg) {
-                    window.location.href = "draftpenjualan/" + result.idmsg;
+                    if (result.pesan == 'gagal') {
+                        document.getElementById('kodebarang').removeAttribute("onkeyup");
+                        // $('#kodebarang').addClass('is-invalid')
+                        // $('.kodebarangmsg').html(result.errormsg)
+                    } else {
+                        $('#kodebarang').removeClass('is-invalid')
+                        $('.kodebarangmsg').html('')
+                        $('#inputcustomer').removeClass('is-invalid')
+                        $('.inputcustomermsg').html('')
+                        tampildata()
+                        document.getElementById('kodebarang').setAttribute("onkeyup", "ScanBarcode()");
+                        document.getElementById('kodebarang').value = ''
+                    }
+                    if (result.idmsg) {
+                        window.location.href = "draftpenjualan/" + result.idmsg;
+                    }
                 }
 
             },
@@ -829,6 +1043,7 @@
     $(document).ready(function() {
         tampildata()
         myDataBayar()
+        tampilcustomer()
         $('.insertcust').submit(function(e) {
             e.preventDefault()
             let form = $('.insertcust')[0];
@@ -848,8 +1063,8 @@
                     $('.btntambah').html('Tambah')
                 },
                 success: function(result) {
-                    window.location.reload();
-
+                    tampilcustomer()
+                    $('#modal-lg').modal('toggle');
                 },
                 error: function(xhr, ajaxOptions, thrownError) {
                     alert(xhr.status + "\n" + xhr.responseText + "\n" + thrownError);

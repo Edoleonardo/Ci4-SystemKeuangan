@@ -21,4 +21,9 @@ class ModelCustomer extends Model
         }
         return $this->where(['id_customer' => $id])->first();
     }
+    public function getDataCustomerone($id = false)
+    {
+
+        return $this->where(['nama' => $id])->first();
+    }
 }

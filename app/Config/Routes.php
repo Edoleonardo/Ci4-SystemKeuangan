@@ -73,6 +73,8 @@ $routes->get('/ajaxdetailpenjualan', 'Barangkeluar::penjualan_detail_read');
 $routes->post('/ajaxpembayaranjual', 'Barangkeluar::Pembayaran_jual');
 $routes->get('/printinvoice/(:any)', 'Barangkeluar::PrintInvoice/$1');
 $routes->get('/detailpenjualan/(:any)', 'Barangkeluar::DetailDataPenjualan/$1');
+$routes->get('/tampilcust', 'Barangkeluar::TampilCustomer');
+$routes->get('/checkcust', 'Barangkeluar::CheckCustomer');
 
 
 

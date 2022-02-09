@@ -61,11 +61,29 @@ class Barangkeluar extends BaseController
     {
         $session = session();
         $session->remove('date_id_penjualan');
-        $data = [
-            'datacust' => $this->datacust->getDataCustomer(),
-            'session' => session()
-        ];
-        return view('barangkeluar/jual_barang', $data);
+        //-------------------------------------------------------------
+        $dateidjual = date('dmyhis');
+        $session->set('date_id_penjualan', $dateidjual);
+        $this->penjualan->save([
+            // 'created_at' => date("y-m-d"),
+            'id_date_penjualan' => $session->get('date_id_penjualan'),
+            'nama_supplier' => '-',
+            'no_transaksi_jual' => $this->NoTransaksiGenerateJual(),
+            'id_customer' => '',
+            'id_karyawan' => '1',
+            'nama_customer' => '',
+            'jumlah' => '1',
+            'onkos' => '0',
+            'pembulatan/diskon' => '0',
+            'total_harga' => '0',
+            'pembayaran' => 'Bayar Nanti',
+            'tunai' => '-',
+            'debitcc' => '0',
+            'transfer' => '0',
+            'status_dokumen' => 'Draft'
+        ]);
+        //---------------------------------------------------
+        return redirect()->to('/draftpenjualan/' . $session->get('date_id_penjualan'));
     }
     public function InsertCust()
     {
@@ -85,19 +103,63 @@ class Barangkeluar extends BaseController
             echo json_encode($msg);
         }
     }
+
+    public function TampilCustomer()
+    {
+        if ($this->request->isAJAX()) {
+            $data = $this->datacust->getDataCustomer();
+            echo json_encode($data);
+        }
+    }
+
+    public function CheckCustomer()
+    {
+        if ($this->request->isAJAX()) {
+            $data = $this->datacust->getDataCustomerone($this->request->getVar('nama_cust'));
+            if ($data) {
+                $msg = 'sukses';
+            } else {
+                $msg = 'gagal';
+            }
+            echo json_encode($msg);
+        }
+    }
     public function InsertJual()
     {
         if ($this->request->isAJAX()) {
             $session = session();
+            $validation = \Config\Services::validation();
             $kode = $this->request->getVar('kodebarang');
             $databarang = $this->datastock->getBarangkode($kode);
-            if ($databarang && $databarang['qty'] > 0) {
-                if ($session->get('date_id_penjualan')) {
-                    if ($this->request->getVar('pembulatan') != 0) {
-                        $pembulatan = $this->request->getVar('pembulatan');
-                    } else {
-                        $pembulatan = 0;
-                    }
+
+            if (!$this->validate([
+                'inputcustomer' => [
+                    'rules' => 'required',
+                    'errors' => [
+                        'required' => 'Customer Harus di isi',
+                    ]
+                ],
+                'kodebarang' => [
+                    'rules' => 'required',
+                    'errors' => [
+                        'required' => 'Kode Harus di isi',
+                    ]
+                ]
+            ])) {
+                $msg = [
+                    'error' => [
+                        'inputcustomer' => $validation->getError('inputcustomer'),
+                        'kodebarang' => $validation->getError('kodebarang'),
+                    ]
+                ];
+            } else {
+                if ($databarang && $databarang['qty'] > 0) {
+                    // if ($session->get('date_id_penjualan')) {
+                    // if ($this->request->getVar('pembulatan') != 0) {
+                    //     $pembulatan = $this->request->getVar('pembulatan');
+                    // } else {
+                    //     $pembulatan = 0;
+                    // }
                     $data = $this->penjualan->getDataPenjualan($session->get('date_id_penjualan'));
                     $this->modeldetailpenjualan->save([
                         'id_date_penjualan' => $session->get('date_id_penjualan'),
@@ -119,12 +181,12 @@ class Barangkeluar extends BaseController
                     $this->penjualan->save([
                         'id_penjualan' =>  $data['id_penjualan'],
                         'nama_supplier' => $this->request->getVar('supplier'),
-                        'id_customer' => $this->request->getVar('customer'),
+                        'id_customer' => $this->datacust->getDataCustomerone($this->request->getVar('inputcustomer'))['id_customer'],
                         'id_karyawan' => '1',
-                        'nama_customer' =>  $this->datacust->getDataCustomer($this->request->getVar('customer'))['nama'],
+                        'nama_customer' => $this->request->getVar('inputcustomer'),
                         'jumlah' => '1',
                         'onkos' => '0',
-                        'pembulatan/diskon' => $pembulatan,
+                        'pembulatan/diskon' => '0',
                         'total_harga' => $this->modeldetailpenjualan->SumDataDetailJual($session->get('date_id_penjualan')),
                         'pembayaran' => 'Bayar Nanti',
                         'tunai' => '-',
@@ -137,68 +199,68 @@ class Barangkeluar extends BaseController
                         'id_stock' => $databarang['id_stock'],
                         'qty' => '0'
                     ]);
+                    // } else {
+                    //     $dateidjual = date('dmyhis');
+                    //     $session->set('date_id_penjualan', $dateidjual);
+                    //     if ($this->request->getVar('pembulatan') != 0) {
+                    //         $pembulatan = $this->request->getVar('pembulatan');
+                    //     } else {
+                    //         $pembulatan = 0;
+                    //     }
+                    //     $this->penjualan->save([
+                    //         // 'created_at' => date("y-m-d"),
+                    //         'id_date_penjualan' => $session->get('date_id_penjualan'),
+                    //         'nama_supplier' => $this->request->getVar('supplier'),
+                    //         'no_transaksi_jual' => $this->NoTransaksiGenerateJual(),
+                    //         'id_customer' => $this->datacust->getDataCustomerone($this->request->getVar('inputcustomer'))['id_customer'],
+                    //         'id_karyawan' => '1',
+                    //         'nama_customer' => $this->request->getVar('inputcustomer'),
+                    //         'jumlah' => '1',
+                    //         'onkos' => '0',
+                    //         'pembulatan/diskon' => $pembulatan,
+                    //         'total_harga' => '0',
+                    //         'pembayaran' => 'Bayar Nanti',
+                    //         'tunai' => '-',
+                    //         'debitcc' => '0',
+                    //         'transfer' => '0',
+                    //         'status_dokumen' => 'Draft'
+                    //     ]);
+
+                    //     $this->modeldetailpenjualan->save([
+                    //         'id_date_penjualan' => $session->get('date_id_penjualan'),
+                    //         'nama_img' => $databarang['gambar'],
+                    //         'kode' =>  $databarang['barcode'],
+                    //         'qty' => $databarang['qty'],
+                    //         'jenis' =>  $databarang['jenis'],
+                    //         'model' =>  $databarang['model'],
+                    //         'keterangan' =>  $databarang['keterangan'],
+                    //         'berat_kotor' =>  $databarang['berat_kotor'],
+                    //         'berat_bersih' =>  $databarang['berat_bersih'],
+                    //         'harga_beli' =>  $databarang['total_harga'],
+                    //         'kadar' =>   $databarang['kadar'],
+                    //         'nilai_tukar' =>   '0',
+                    //         'merek' =>  $databarang['merek'],
+                    //         'total_harga' => $databarang['total_harga'],
+                    //     ]);
+
+                    //     $this->datastock->save([
+                    //         'id_stock' => $databarang['id_stock'],
+                    //         'qty' => '0'
+                    //     ]);
+
+                    //     $idmsg = $session->get('date_id_penjualan');
+                    // }
+                    $msg = [
+                        'pesan' => 'Berhasil',
+                        // 'idmsg' => (isset($idmsg)) ? $idmsg : null
+                    ];
                 } else {
-                    $dateidjual = date('dmyhis');
-                    $session->set('date_id_penjualan', $dateidjual);
-                    if ($this->request->getVar('pembulatan') != 0) {
-                        $pembulatan = $this->request->getVar('pembulatan');
-                    } else {
-                        $pembulatan = 0;
-                    }
-
-                    $this->modeldetailpenjualan->save([
-                        'id_date_penjualan' => $session->get('date_id_penjualan'),
-                        'nama_img' => $databarang['gambar'],
-                        'kode' =>  $databarang['barcode'],
-                        'qty' => $databarang['qty'],
-                        'jenis' =>  $databarang['jenis'],
-                        'model' =>  $databarang['model'],
-                        'keterangan' =>  $databarang['keterangan'],
-                        'berat_kotor' =>  $databarang['berat_kotor'],
-                        'berat_bersih' =>  $databarang['berat_bersih'],
-                        'harga_beli' =>  $databarang['total_harga'],
-                        'kadar' =>   $databarang['kadar'],
-                        'nilai_tukar' =>   '0',
-                        'merek' =>  $databarang['merek'],
-                        'total_harga' => $databarang['total_harga'],
-                    ]);
-                    $this->penjualan->save([
-                        // 'created_at' => date("y-m-d"),
-                        'id_date_penjualan' => $session->get('date_id_penjualan'),
-                        'nama_supplier' => $this->request->getVar('supplier'),
-                        'no_transaksi_jual' => $this->NoTransaksiGenerateJual(),
-                        'id_customer' => $this->request->getVar('customer'),
-                        'id_karyawan' => '1',
-                        'nama_customer' =>  $this->datacust->getDataCustomer($this->request->getVar('customer'))['nama'],
-                        'jumlah' => '1',
-                        'onkos' => '0',
-                        'pembulatan/diskon' => $pembulatan,
-                        'total_harga' => '0',
-                        'pembayaran' => 'Bayar Nanti',
-                        'tunai' => '-',
-                        'debitcc' => '0',
-                        'transfer' => '0',
-                        'status_dokumen' => 'Draft'
-                    ]);
-
-                    $this->datastock->save([
-                        'id_stock' => $databarang['id_stock'],
-                        'qty' => '0'
-                    ]);
-
-                    $idmsg = $session->get('date_id_penjualan');
+                    $msg = [
+                        'pesan' => 'gagal',
+                        'errormsg' => 'Stock Data Tidak ada'
+                    ];
                 }
-                $msg = [
-                    'pesan' => 'Berhasil',
-                    'idmsg' => (isset($idmsg)) ? $idmsg : null
-                ];
-            } else {
-                $msg = [
-                    'pesan' => 'gagal '
-                ];
             }
-
-
             echo json_encode($msg);
         } else {
             exit('Anda Hacker Sejati');

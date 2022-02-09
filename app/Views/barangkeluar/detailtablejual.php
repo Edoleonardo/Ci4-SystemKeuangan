@@ -3,7 +3,7 @@
         <td><img src='/img/<?= $row['nama_img'] ?>' class='imgg'></td>
         <td><?= $row['kode'] ?></td>
         <td><?= $row['qty'] ?></td>
-        <td><input style="width: 100px;" id="harganow <?= $row['id_detail_penjualan'] ?>" class="harganow" onchange="UbahHarga(<?= $row['id_detail_penjualan'] ?>)" type="number" class="form-control" value="<?= $row['total_harga'] ?>"></td>
+        <td><input style="width: 100px;" id="harganow <?= $row['id_detail_penjualan'] ?>" class="harganow" onchange="UbahHarga(<?= $row['id_detail_penjualan'] ?>)" type="number" class="form-control" value="<?= $row['harga_beli'] ?>"></td>
         <td><?= $row['jenis'] ?></td>
         <td><?= $row['model'] ?></td>
         <td><?= $row['keterangan'] ?></td>
