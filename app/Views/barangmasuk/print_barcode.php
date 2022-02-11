@@ -37,7 +37,7 @@ function barcodegenerate($kode, $wrn)
       echo $tr1;
     ?>
       <td style=" background-color: <?= $wrn ?> !important;  -webkit-print-color-adjust: exact;"><?= barcodegenerate($row['kode'], $wrn) ?> <br> <?= $datapembelian['no_faktur_supp'] ?> <?= $row['merek'] ?></td>
-      <td style=" background-color: <?= $wrn ?> !important;  -webkit-print-color-adjust: exact;"><?= $row['kode'] ?> <?= $row['kadar'] ?><br><?= $row['jenis'] ?>, <?= $row['model'] ?><br><?= $row['berat_kotor'] ?></td>
+      <td style=" background-color: <?= $wrn ?> !important;  -webkit-print-color-adjust: exact;"><?= $row['kode'] ?> <?= $row['kadar'] ?><br><?= $row['jenis'] ?>, <?= $row['model'] ?><br><?= $row['berat'] ?></td>
     <?php $i++;
     endforeach;
     echo $tr2; ?>

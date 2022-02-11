@@ -2,6 +2,7 @@
 <?= $this->section('content') ?>
 <script type="text/javascript" src="/js/jquery.js"></script>
 <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/webcamjs/1.0.26/webcam.min.js"></script>
 <style>
     .table>tbody>tr>* {
         vertical-align: middle;
@@ -10,6 +11,18 @@
 
     .imgg {
         width: 100px;
+    }
+
+    /* Chrome, Safari, Edge, Opera */
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+
+    /* Firefox */
+    input[type=number] {
+        -moz-appearance: textfield;
     }
 </style>
 <!-- Content Wrapper. Contains page content -->
@@ -52,14 +65,14 @@
                                             <form action="/ajaxinsert" name="ajaxform" id="ajaxform" class="ajaxform" method="post" enctype="multipart/form-data">
                                                 <?= csrf_field(); ?>
                                                 <div class="row">
-                                                    <div class="col-sm-4">
+                                                    <div class="col-sm-2">
                                                         <!-- text input -->
                                                         <div class="form-group">
                                                             <label>Tanggal Input Barang</label>
-                                                            <input type="date" name="tanggal_input" class="form-control" value="<?php echo date('Y-m-d') ?>">
+                                                            <input type="date" id="tanggal_input" name="tanggal_input" class="form-control" value="<?php echo date('Y-m-d') ?>">
                                                         </div>
                                                     </div>
-                                                    <div class="col-sm-4">
+                                                    <div class="col-sm-2">
                                                         <!-- text input -->
                                                         <div class="form-group">
                                                             <label>Tanggal Nota Supplier</label>
@@ -69,16 +82,14 @@
                                                         </div>
                                                         <!-- <input type="text" name="kelompok" class="form-control" placeholder="Masukan Kelompok"> -->
                                                     </div>
-                                                    <div class="col-sm-4">
+                                                    <div class="col-sm-2">
                                                         <!-- text input -->
                                                         <div class="form-group">
                                                             <label>Tanggal Jatuh Tempo </label>
-                                                            <input type="date" name="tanggal_tempo" class="form-control" value="<?= (isset($datapembelian['tgl_jatuh_tempo'])) ? $datapembelian['tgl_jatuh_tempo'] : date('Y-m-d'); ?>">
+                                                            <input type="date" id="tanggal_tempo" name="tanggal_tempo" class="form-control" value="<?= (isset($datapembelian['tgl_jatuh_tempo'])) ? $datapembelian['tgl_jatuh_tempo'] : date('Y-m-d'); ?>">
                                                         </div>
                                                     </div>
-                                                </div>
-                                                <div class="row">
-                                                    <div class="col-sm-4">
+                                                    <div class="col-sm-2">
                                                         <!-- text input -->
                                                         <div class="form-group">
                                                             <label>No Nota Supplier</label>
@@ -86,7 +97,7 @@
                                                             <div id="validationServerUsernameFeedback" class="invalid-feedback no_nota_suppmsg"></div>
                                                         </div>
                                                     </div>
-                                                    <div class="col-sm-4">
+                                                    <div class="col-sm-2">
                                                         <!-- text input -->
                                                         <div class="form-group">
                                                             <label>Nama Supplier</label>
@@ -97,7 +108,7 @@
                                                             </select>
                                                         </div>
                                                     </div>
-                                                    <div class="col-sm-4">
+                                                    <div class="col-sm-2">
                                                         <!-- text input -->
                                                         <div class="form-group">
                                                             <label>Total Berat Murni (Gr)</label>
@@ -119,7 +130,7 @@
                                     <td>
                                         <div class="p-0" style="margin: 10px;">
                                             <div class="row">
-                                                <div class="col-sm-4">
+                                                <div class="col-sm-2">
                                                     <!-- text input -->
                                                     <div class="form-group">
                                                         <label>Kelompok</label>
@@ -133,7 +144,7 @@
                                                         </select>
                                                     </div>
                                                 </div>
-                                                <div class="col-sm-4">
+                                                <div class="col-sm-2">
                                                     <!-- text input -->
                                                     <div class="form-group">
                                                         <label>Merek</label>
@@ -144,8 +155,7 @@
                                                         </select>
                                                     </div>
                                                 </div>
-
-                                                <div class="col-sm-4">
+                                                <div class="col-sm-2">
                                                     <!-- text input -->
                                                     <div class="form-group">
                                                         <label>Kadar</label>
@@ -156,9 +166,7 @@
                                                         </select>
                                                     </div>
                                                 </div>
-                                            </div>
-                                            <div class="row">
-                                                <div class="col-sm-4">
+                                                <div class="col-sm-2">
                                                     <!-- text input -->
                                                     <div class="form-group">
                                                         <label>Jenis</label>
@@ -167,32 +175,16 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class="col-sm-4">
+                                                <div class="col-sm-2">
                                                     <!-- text input -->
                                                     <div class="form-group">
-                                                        <label>Model</label>
-                                                        <input type="text" name="model" class="form-control" placeholder="Masukan Model Barang">
-                                                    </div>
-                                                </div>
-                                                <div class="col-sm-4">
-                                                    <!-- text input -->
-                                                    <div class="form-group">
-                                                        <label>Keterangan</label>
-                                                        <input type="text" name="keterangan" class="form-control" placeholder="Masukan Keterangan">
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="row">
-                                                <div class="col-sm-4">
-                                                    <!-- text input -->
-                                                    <div class="form-group">
-                                                        <label>Berat Kotor</label>
-                                                        <input type="number" step="0.01" id="berat_kotor" name="berat_kotor" class="form-control" placeholder="Masukan Berat Bersih">
-                                                        <div id="validationServerUsernameFeedback" class="invalid-feedback berat_kotormsg">
+                                                        <label>Berat</label>
+                                                        <input type="number" step="0.01" id="berat" name="berat" class="form-control" placeholder="Masukan Berat Bersih">
+                                                        <div id="validationServerUsernameFeedback" class="invalid-feedback beratmsg">
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class="col-sm-4">
+                                                <div class="col-sm-2">
                                                     <!-- text input -->
                                                     <div class="form-group">
                                                         <label>Qty</label>
@@ -201,7 +193,24 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class="col-sm-4">
+                                            </div>
+                                            <div class="row">
+
+                                                <div class="col-sm-2">
+                                                    <!-- text input -->
+                                                    <div class="form-group">
+                                                        <label>Model</label>
+                                                        <input type="text" name="model" class="form-control" placeholder="Masukan Model Barang">
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-3">
+                                                    <!-- text input -->
+                                                    <div class="form-group">
+                                                        <label>Keterangan</label>
+                                                        <input type="text" name="keterangan" class="form-control" placeholder="Masukan Keterangan">
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-2">
                                                     <!-- text input -->
                                                     <div class="form-group">
                                                         <label>Nilai Tukar</label>
@@ -210,33 +219,41 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                            <div class="row">
-                                                <div class="col-sm-4">
+                                                <div class="col-sm-2">
                                                     <!-- text input -->
                                                     <div class="form-group">
                                                         <label>Harga Beli</label>
-                                                        <input type="number" name="harga_beli" class="form-control" placeholder="Masukan Harga Beli">
-                                                    </div>
-                                                </div>
-                                                <div class="col-sm-8">
-                                                    <!-- text input -->
-                                                    <div class="form-group">
-                                                        <label>Gambar</label>
-                                                        <div class="custom-file">
-                                                            <input type="file" name="gambar" class="custom-file-input" id="gambar" accept="image/*">
-                                                            <label style="text-align: left" class="custom-file-label" for="gambar">Pilih Gambar</label>
-                                                            <div id="validationServerUsernameFeedback" class="invalid-feedback gambarmsg">
-                                                            </div>
+                                                        <input type="number" name="harga_beli" id="harga_beli" class="form-control harga_beli" placeholder="Masukan Harga Beli">
+                                                        <div id="validationServerUsernameFeedback" class="invalid-feedback harga_belimsg">
                                                         </div>
                                                     </div>
                                                 </div>
+                                                <div class="col-sm-2">
+                                                    <!-- text input -->
+                                                    <div class="form-group">
+                                                        <label>Ongkos</label>
+                                                        <input type="number" value="0" name="ongkos" id="ongkos" class="form-control ongkos" placeholder="Masukan Ongkos">
+                                                        <div id="validationServerUsernameFeedback" class="invalid-feedback ongkosmsg">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-1">
+                                                    <!-- text input -->
+                                                    <div class="form-group">
+                                                        <label>Foto</label><br>
+                                                        <button type="button" id="ambilgbr" class="btn btn-primary" data-toggle="modal" data-target="#modal-foto" onclick="cameranyala()">
+                                                            <i class="fa fa-camera"></i>
+                                                        </button>
+                                                        <div id="validationServerUsernameFeedback" class="invalid-feedback ambilgbrmsg"></div>
+                                                    </div>
+                                                </div>
                                             </div>
-                                            <div>
-                                                <button type="button" class="btn btn-danger" onclick="hapussemua()">Hapus Semua</button>
-                                                <button type="submit" id="send_form" class="btn btn-info btntambah"></i>Tambah</button>
-                                            </div>
-                                            <!-- </form> -->
+                                        </div>
+                                        <div>
+                                            <button type="button" class="btn btn-danger" onclick="hapussemua()">Hapus Semua</button>
+                                            <button type="submit" id="send_form" class="btn btn-info btntambah">Tambah</button>
+                                        </div>
+                                        <!-- </form> -->
                                     </td>
                                 </tr>
                             </tbody>
@@ -259,15 +276,33 @@
                                 <table class="table table-hover text-nowrap">
                                     <thead>
                                         <tr>
+                                            <th></th>
+                                            <th></th>
+                                            <th id="theadqty" style="text-align: center;"></th>
+                                            <th></th>
+                                            <th></th>
+                                            <th></th>
+                                            <th id="theadberat" style="text-align: center;"></th>
+                                            <th id="theadmurni" style="text-align: center;"></th>
+                                            <th id="theadhargabeli" style="text-align: center;"></th>
+                                            <th></th>
+                                            <th></th>
+                                            <th></th>
+                                            <th></th>
+                                            <th id="theadtotalharga" style="text-align: center;"></th>
+                                            <th></th>
+                                        </tr>
+                                        <tr>
                                             <th>Gambar</th>
                                             <th>Kode</th>
                                             <th>Qty</th>
                                             <th>Jenis</th>
                                             <th>Model</th>
                                             <th>Keterangan</th>
-                                            <th>Berat Kotor</th>
-                                            <th>Berat Bersih</th>
+                                            <th>Berat</th>
+                                            <th>Berat Murni</th>
                                             <th>Harga Beli</th>
+                                            <th>Ongkos</th>
                                             <th>Kadar</th>
                                             <th>Nilai Tukar</th>
                                             <th>Merek</th>
@@ -286,73 +321,50 @@
                 </div>
                 <div class="row">
                     <div class="col-sm-6">
-                        <!-- <form action=""> -->
-                        <div class="col-sm-12">
-                            <!-- text input -->
-                            <div class="form-group">
-                                <label>Pembulatan</label>
-                                <input onkeyup="myPembulatan()" type="number" value="<?= (isset($datapembelian['pembulatan'])) ? $datapembelian['pembulatan'] : ''; ?>" min="0" id="pembulatan" name="pembulatan" class="form-control" placeholder="Masukan Pembulatan">
-                            </div>
-                        </div>
-                        <div class="col-sm-12">
-                            <div class="card">
-                                <!-- ./card-header -->
-                                <div class="card-body p-0">
-                                    <table class="table table-hover">
-                                        <tbody>
-                                            <tr data-widget="expandable-table" aria-expanded="false">
-                                                <td>
-                                                    Pembayaran
-                                                </td>
-                                            </tr>
-                                            <tr class="expandable-body">
-                                                <td>
-                                                    <div class="p-0">
-                                                        <!-- text input -->
-                                                        <div class="row">
-                                                            <div class="col-sm-6">
-                                                                <div class="form-group">
-                                                                    <label>Cara Pembayaran</label>
-                                                                    <select onchange="myPembayaran()" name="pembayaran" class="form-control" id="pembayaran" name="pembayaran">
-                                                                        <option value="Bayar Nanti" selected>Bayar Nanti</option>
-                                                                        <option value="Debit/CC">Debit/CC</option>
-                                                                        <option value="Debit/CCTranfer">Debit/CC & Tranfer</option>
-                                                                        <option value="Transfer">Transfer</option>
-                                                                        <option value="Tunai">Tunai</option>
-                                                                        <option value="Tunai&Debit/CC">Tunai & Debit/CC</option>
-                                                                        <option value="Tunai&Transfer">Tunai & Transfer</option>
-                                                                    </select>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-sm-6">
-                                                                <div class="form-group metodebayar">
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="row">
-                                                            <div class="col-sm-6">
-                                                                <div class="form-group namabankhtml">
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-sm-6">
-                                                                <div class="form-group metodebayar2">
-                                                                    <!-- <label>Debit/CC</label> -->
-                                                                    <!-- <input type="number" min="0" id="debitcc" name="debitcc" class="form-control" placeholder="Masukan Debit"> -->
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-sm-6">
-                                                                <div class="form-group chargehtml">
-                                                                </div>
-                                                            </div>
+                        <div class="modal fade" id="modal-foto">
+                            <div class="modal-dialog modal-default">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h4 class="modal-title">Ambil Foto</h4>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="row">
+                                            <div class="col-sm-12">
+                                                <div class="form-group">
+                                                    <div class="form-group"><label>Gambar</label>
+                                                        <div class="custom-file">
+                                                            <input type="file" name="gambar" class="custom-file-input" id="gambar" accept="image/*">
+                                                            <label style="text-align: left" class="custom-file-label" for="gambar">Pilih Gambar</label>
                                                         </div>
                                                     </div>
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="form-group">
+                                                <div class="col-sm-12">
+                                                    <div id='my_camera'>
+                                                    </div>
+                                                    <button style="text-align: center;" type='button' id='ambilfoto' class='btn btn-info ambilfoto' onclick='Foto_ulang()'>
+                                                        <i class='fa fa-trash'></i></button>
+                                                    <button type='button' id='ambilfoto' class='btn btn-info ambilfoto' onclick='Ambil_foto()'>Foto <i class='fa fa-camera'></i>
+                                                    </button>
+                                                    <input type='hidden' name='gambar' id='gambar' class='image-tag'>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer justify-content-between">
+                                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                            <button type="button" class="btn btn-primary" onclick="Webcam.reset()" data-dismiss="modal">Done</button>
+                                        </div>
+                                    </div>
                                 </div>
-                                <!-- /.card-body -->
+                                <!-- /.modal-content -->
                             </div>
+                            <!-- /.modal-dialog -->
                         </div>
                         </form>
                     </div>
@@ -363,27 +375,15 @@
                                 <table class="table table-hover text-nowrap">
                                     <tbody>
                                         <tr>
-                                            <td>Total Berat Bersih</td>
-                                            <td id="totalberatbersihhtml"></td>
+                                            <td>Total Berat Murni</td>
+                                            <td id="totalberatmurnihtml"></td>
                                         </tr>
                                         <tr>
-                                            <td>Total Berat Kotor</td>
-                                            <td id="totalberatkotorhtml"></td>
-                                        </tr>
-                                        <tr id="tabelbank">
-                                        </tr>
-                                        <tr id="tabelbayar1">
-                                        </tr>
-                                        <tr id="tabelbayar2">
-                                        </tr>
-                                        <tr id="tabelbayar3">
+                                            <td>Total Berat</td>
+                                            <td id="totalberathtml"></td>
                                         </tr>
                                         <tr>
-                                            <td>Pembulatan</td>
-                                            <td id="pembulatanhtml"></td>
-                                        </tr>
-                                        <tr>
-                                            <td>Total Harga Bersih</td>
+                                            <td>Total Harga Murni</td>
                                             <td id="totalbersih"></td>
                                         </tr>
                                     </tbody>
@@ -396,7 +396,7 @@
                         <div class="row">
                             <div class="col - text-center">
                                 <a type="button" onclick="Batal()" class="btn btn-danger">Batal</a>
-                                <a type="button" onclick="Selesai()" id="selesai" class="btn btn-info "></i>Selesai</a>
+                                <a type="button" onclick="Selesai()" id="selesai" class="btn btn-info ">Selesai</a>
                             </div>
                         </div>
                     </div>
@@ -420,10 +420,6 @@
 
 </footer>
 <script type="text/javascript">
-    // $('#gambar').change(function(e) {
-    //     var fileName = e.target.files[0].name;
-    //     $('.custom-file-label').html(fileName)
-    // });
     function Batal() {
         Swal.fire({
             title: 'Batal Input ',
@@ -442,14 +438,12 @@
     };
 
     function Selesai() {
-        //   console.log((document.getElementById('debit/cc').value) ? document.getElementById('debit/cc').value : 0)
-        var pembulatan = (document.getElementById('pembulatan')) ? document.getElementById('pembulatan').value : 0
-        var debitcc = (document.getElementById('debit/cc')) ? document.getElementById('debit/cc').value : 0
-        var namabank = (document.getElementById('namabank')) ? document.getElementById('namabank').value : 0
-        var charge = (document.getElementById('charge')) ? document.getElementById('charge').value : 0
-        var transfer = (document.getElementById('transfer')) ? document.getElementById('transfer').value : 0
-        var tunai = (document.getElementById('tunai')) ? document.getElementById('pembulatan').value : 0
-        var carabayar = (document.getElementById('pembayaran')) ? document.getElementById('pembayaran').value : 0
+        var tanggal_input = document.getElementById('tanggal_input').value
+        var supplier = document.getElementById('supplier').value
+        var no_nota_supp = document.getElementById('no_nota_supp').value
+        var tanggal_nota_sup = document.getElementById('tanggal_nota_sup').value
+        var total_berat_m = document.getElementById('total_berat_m').value
+        var tanggal_tempo = document.getElementById('tanggal_tempo').value
 
         Swal.fire({
             title: 'Sudah Selesai ',
@@ -464,19 +458,16 @@
                 $.ajax({
                     type: "GET",
                     dataType: "json",
-                    url: "<?php echo base_url('stockdata'); ?>",
                     data: {
-                        carabayar: carabayar,
-                        debitcc: debitcc,
-                        namabank: namabank,
-                        charge: charge,
-                        transfer: transfer,
-                        tunai: tunai
-
+                        tanggal_input: tanggal_input,
+                        supplier: supplier,
+                        no_nota_supp: no_nota_supp,
+                        tanggal_nota_sup: tanggal_nota_sup,
+                        total_berat_m: total_berat_m,
+                        tanggal_tempo: tanggal_tempo
                     },
+                    url: "<?php echo base_url('stockdata'); ?>",
                     success: function(result) {
-                        console.log(result)
-
                         if (result.pesan == 'error') {
                             Swal.fire({
                                 icon: 'warning',
@@ -497,142 +488,6 @@
         })
     }
 
-    function myPembulatan() {
-        $.ajax({
-            type: "GET",
-            dataType: "json",
-            url: "<?php echo base_url('ajaxpembelian'); ?>",
-            success: function(result) {
-                $('#databeli').html(result.data)
-                $('#totalberatbersihhtml').html(pembulatankoma(result.totalberatbersih.berat_bersih))
-                $('#totalberatkotorhtml').html(pembulatankoma(result.totalberatkotor.berat_kotor))
-
-                var bulat = document.getElementById('pembulatan').value
-                var hasil = result.totalbersih.total_harga - bulat
-                document.getElementById('totalbersih').innerHTML = pembulatankoma(hasil).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
-                document.getElementById('pembulatanhtml').innerHTML = bulat.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
-
-
-            },
-            error: function(xhr, ajaxOptions, thrownError) {
-                alert(xhr.status + "\n" + xhr.responseText + "\n" + thrownError);
-            }
-        })
-    }
-
-    function namabank() {
-        var bank = document.getElementById('namabank').value
-        document.getElementById('bankbyr').innerHTML = bank
-    }
-
-    function brycas() {
-        var val = document.getElementById('charge').value
-        document.getElementById('chargebyr').innerHTML = val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
-    }
-
-    function debitcc() {
-        var val = document.getElementById('debit/cc').value
-        document.getElementById('debitccbyr').innerHTML = val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
-    }
-
-    function transfer() {
-        var val = document.getElementById('transfer').value
-        document.getElementById('transferbyr').innerHTML = val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
-    }
-
-    function tunai() {
-        var val = document.getElementById('tunai').value
-        document.getElementById('tunaibyr').innerHTML = val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
-    }
-
-    function myPembayaran() {
-        const carabyr = document.getElementById('pembayaran').value
-        const metod1 = $('.metodebayar')
-        const nmbank = $('.namabankhtml')
-        const charge = $('.chargehtml')
-        const table1 = $('#tabelbayar1')
-        const table2 = $('#tabelbayar2')
-        const table3 = $('#tabelbayar3')
-        const bank = $('#tabelbank')
-        const metod2 = document.getElementsByClassName('metodebayar2')
-        metod1[0].innerHTML = ''
-        nmbank[0].innerHTML = ''
-        charge[0].innerHTML = ''
-        metod2[0].innerHTML = ''
-        table1[0].innerHTML = ''
-        table2[0].innerHTML = ''
-        table3[0].innerHTML = ''
-        bank[0].innerHTML = ''
-
-        var DebitCC = '<label>Debit/CC</label><input type="number" onkeyup = "debitcc()" min="0" id="debit/cc" name="debit/cc" class="form-control" placeholder="Masukan debit/cc">'
-        var NamaBank = '<label>Nama Bank Debit/CC</label><input onkeyup = "namabank()" type="text" id="namabank" name="namabank" class="form-control" placeholder="Masukan Nama Bank">'
-        var Charge = '<label>Charge %</label><input type="number" onkeyup = "brycas()" min="0" id="charge" name="charge" class="form-control" placeholder="Masukan Charge">'
-        var Transfer = '<label>Transfer</label><input type="number" onkeyup = "transfer()" min="0" id="transfer" name="transfer" class="form-control" placeholder="Masukan transfer">'
-        var Tunai = '<label>Tunai</label><input type="number" onkeyup = "tunai()" min="0" id="tunai" name="tunai" class="form-control" placeholder="Masukan tunai">'
-
-        if (carabyr == 'Bayar Nanti') {
-            metod1[0].innerHTML = ''
-            nmbank[0].innerHTML = ''
-            charge[0].innerHTML = ''
-            metod2[0].innerHTML = ''
-            table1[0].innerHTML = ''
-            table2[0].innerHTML = ''
-            table3[0].innerHTML = ''
-            bank[0].innerHTML = ''
-        }
-        if (carabyr == 'Debit/CC') {
-            metod1[0].innerHTML = DebitCC
-            nmbank[0].innerHTML = NamaBank
-            charge[0].innerHTML = Charge
-            bank[0].innerHTML = '<td>Nama Bank</td><td id="bankbyr"></td>'
-            table1[0].innerHTML = '<td>Charge</td><td id="chargebyr"></td>'
-            table2[0].innerHTML = '<td>Debit/CC</td><td id="debitccbyr"></td>'
-        }
-        if (carabyr == 'Debit/CCTranfer') {
-            metod1[0].innerHTML = DebitCC
-            nmbank[0].innerHTML = NamaBank
-            charge[0].innerHTML = Charge
-            metod2[0].innerHTML = Transfer
-            bank[0].innerHTML = '<td>Nama Bank</td><td id="bankbyr"></td>'
-            table1[0].innerHTML = '<td>Charge</td><td id="chargebyr"></td>'
-            table2[0].innerHTML = '<td>Debit/CC</td><td id="debitccbyr"></td>'
-            table3[0].innerHTML = '<td>Tranfer</td><td id="transferbyr"></td>'
-        }
-        if (carabyr == 'Transfer') {
-            metod1[0].innerHTML = Transfer
-            nmbank[0].innerHTML = NamaBank
-            bank[0].innerHTML = '<td>Nama Bank</td><td id="bankbyr"></td>'
-            table2[0].innerHTML = '<td>Tranfer</td><td id="transferbyr"></td>'
-
-        }
-        if (carabyr == 'Tunai') {
-            metod1[0].innerHTML = Tunai
-            table1[0].innerHTML = '<td>Tunai</td><td id="tunaibyr"></td>'
-
-        }
-        if (carabyr == 'Tunai&Debit/CC') {
-            metod1[0].innerHTML = DebitCC
-            nmbank[0].innerHTML = NamaBank
-            charge[0].innerHTML = Charge
-            metod2[0].innerHTML = Tunai
-            bank[0].innerHTML = '<td>Nama Bank</td><td id="bankbyr"></td>'
-            table1[0].innerHTML = '<td>Charge</td><td id="chargebyr"></td>'
-            table2[0].innerHTML = '<td>Debit/CC</td><td id="debitccbyr"></td>'
-            table3[0].innerHTML = '<td>Tunai</td><td id="tunaibyr"></td>'
-        }
-
-        if (carabyr == 'Tunai&Transfer') {
-            metod1[0].innerHTML = Transfer
-            nmbank[0].innerHTML = NamaBank
-            metod2[0].innerHTML = Tunai
-            bank[0].innerHTML = '<td>Nama Bank</td><td id="bankbyr"></td>'
-            table3[0].innerHTML = '<td>Tunai</td><td id="tunaibyr"></td>'
-            table2[0].innerHTML = '<td>Tranfer</td><td id="transferbyr"></td>'
-
-        }
-        console.log(carabyr)
-    }
-
     function hapussemua() {
         Swal.fire({
             title: 'Hapus Semua Data',
@@ -643,14 +498,12 @@
             cancelButtonColor: '#d33',
             confirmButtonText: 'Hapus',
         }).then((result) => {
-            console.log('asd')
             if (result.isConfirmed) {
                 $.ajax({
                     type: "GET",
                     dataType: "json",
                     url: "<?php echo base_url('deletedetailsemua'); ?>",
                     success: function(result) {
-                        console.log(result)
                         tampildata()
                         Swal.fire({
                             icon: 'success',
@@ -686,8 +539,14 @@
             success: function(result) {
                 $('#databeli').html(result.data)
                 $('#totalbersih').html(result.totalbersih.total_harga.toString().replace(/\B(?=(\d{3})+(?!\d))/g, "."))
-                $('#totalberatbersihhtml').html(pembulatankoma(result.totalberatbersih.berat_bersih))
-                $('#totalberatkotorhtml').html(pembulatankoma(result.totalberatkotor.berat_kotor))
+                $('#totalberatmurnihtml').html(pembulatankoma(result.totalberatmurni.berat_murni))
+                $('#totalberathtml').html(pembulatankoma(result.totalberat.berat))
+                $('#theadmurni').html(pembulatankoma(result.totalberatmurni.berat_murni))
+                $('#theadberat').html(pembulatankoma(result.totalberat.berat))
+                $('#theadqty').html(result.totalqty.qty)
+                $('#theadtotalharga').html(result.totalbersih.total_harga.toString().replace(/\B(?=(\d{3})+(?!\d))/g, "."))
+
+
 
             },
             error: function(xhr, ajaxOptions, thrownError) {
@@ -698,7 +557,6 @@
 
     $(document).ready(function() {
         tampildata()
-        myPembulatan()
         $('.ajaxform').submit(function(e) {
             e.preventDefault()
             let form = $('.ajaxform')[0];
@@ -719,7 +577,6 @@
                     $('.btntambah').html('Tambah')
                 },
                 success: function(result) {
-                    console.log(result)
                     if (result.error) {
                         if (result.error.qty) {
                             $('#qty').addClass('is-invalid')
@@ -763,19 +620,19 @@
                             $('#jenis').removeClass('is-invalid')
                             $('.jenismsg').html('')
                         }
-                        if (result.error.berat_kotor) {
-                            $('#berat_kotor').addClass('is-invalid')
-                            $('.berat_kotormsg').html(result.error.berat_kotor)
+                        if (result.error.berat) {
+                            $('#berat').addClass('is-invalid')
+                            $('.beratmsg').html(result.error.berat)
                         } else {
-                            $('#berat_kotor').removeClass('is-invalid')
-                            $('.berat_kotormsg').html('')
+                            $('#berat').removeClass('is-invalid')
+                            $('.beratmsg').html('')
                         }
                         if (result.error.gambar) {
-                            $('#gambar').addClass('is-invalid')
-                            $('.gambarmsg').html(result.error.gambar)
+                            $('#ambilgbr').addClass('is-invalid')
+                            $('.ambilgbrmsg').html(result.error.gambar)
                         } else {
-                            $('#gambar').removeClass('is-invalid')
-                            $('.gambarmsg').html('')
+                            $('#ambilgbr').removeClass('is-invalid')
+                            $('.ambilgbrmsg').html('')
                         }
                         if (result.error.no_nota_supp) {
                             $('#no_nota_supp').addClass('is-invalid')
@@ -783,6 +640,20 @@
                         } else {
                             $('#no_nota_supp').removeClass('is-invalid')
                             $('.no_nota_suppmsg').html('')
+                        }
+                        if (result.error.harga_beli) {
+                            $('#harga_beli').addClass('is-invalid')
+                            $('.harga_belimsg').html(result.error.harga_beli)
+                        } else {
+                            $('#harga_beli').removeClass('is-invalid')
+                            $('.harga_belimsg').html('')
+                        }
+                        if (result.error.ongkos) {
+                            $('#ongkos').addClass('is-invalid')
+                            $('.ongkosmsg').html(result.error.ongkos)
+                        } else {
+                            $('#ongkos').removeClass('is-invalid')
+                            $('.ongkosmsg').html('')
                         }
                     } else {
                         $('#qty').removeClass('is-invalid')
@@ -797,13 +668,16 @@
                         $('.total_qtymsg').html('')
                         $('#jenis').removeClass('is-invalid')
                         $('.jenismsg').html('')
-                        $('#berat_kotor').removeClass('is-invalid')
-                        $('.berat_kotormsg').html('')
-                        $('#gambar').removeClass('is-invalid')
-                        $('.gambarmsg').html('')
+                        $('#berat').removeClass('is-invalid')
+                        $('.beratmsg').html('')
+                        $('#ambilgbr').removeClass('is-invalid')
+                        $('.ambilgbrmsg').html('')
                         $('#no_nota_supp').removeClass('is-invalid')
                         $('.no_nota_suppmsg').html('')
-                        window.scrollTo(0, 10000);
+                        $('#harga_beli').removeClass('is-invalid')
+                        $('.harga_belimsg').html('')
+                        $('#ongkos').removeClass('is-invalid')
+                        $('.ongkosmsg').html('')
                         tampildata()
                     }
                 },
@@ -813,7 +687,41 @@
             })
         })
 
-
+        $(".modal").on("hidden.bs.modal", function() {
+            Webcam.reset('#my_camera')
+        });
     })
+    Webcam.set({
+        width: 320,
+        height: 240,
+        image_format: 'jpeg',
+        jpeg_quality: 100,
+        flip_horiz: true,
+    });
+
+    function cameranyala() {
+        if ($(".image-tag").val()) {
+            document.getElementById('my_camera').innerHTML = '<img src="' + data_uri + '">'
+        } else {
+            Webcam.attach('#my_camera');
+        }
+    }
+
+    function Ambil_foto() {
+        Webcam.snap(function(data_uri) {
+            $(".image-tag").val(data_uri);
+            Webcam.reset()
+            // Webcam.attach('#my_camera');
+            // console.log($(".image-tag").val())
+            document.getElementById('my_camera').innerHTML = '<img src="' + data_uri + '">'
+        })
+    }
+
+    function Foto_ulang() {
+        document.getElementById('my_camera').innerHTML = ''
+        $(".image-tag").val('');
+        Webcam.attach('#my_camera');
+    }
 </script>
+
 <?= $this->endSection(); ?>

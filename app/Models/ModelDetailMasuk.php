@@ -10,7 +10,7 @@ class ModelDetailMasuk extends Model
     protected $table = 'tbl_detail_pembelian';
     protected $primaryKey = 'id_detail_pembelian';
     protected $useTimestamps = true;
-    protected $allowedFields = ['id_date_pembelian', 'nama_img', 'kode', 'jenis', 'qty', 'model', 'keterangan', 'berat_bersih', 'berat_kotor', 'harga_beli', 'kadar', 'nilai_tukar', 'merek', 'total_harga'];
+    protected $allowedFields = ['id_date_pembelian', 'nama_img', 'kode', 'jenis', 'qty', 'model', 'keterangamurni', 'berat', 'berat_murni', 'harga_beli', 'kadar', 'ongkos', 'nilai_tukar', 'merek', 'total_harga'];
 
     public function getDetailAll($id)
     {
@@ -24,12 +24,18 @@ class ModelDetailMasuk extends Model
         //     //return $this->findAll();
         // }
         //$query = $this->select('(SELECT * FROM tbl_detail_pembelian WHERE id_date_pembelian = ' . $id . ')');
-        $query = $this->getWhere(['id_date_pembelian' => $id]);
+        $this->Where(['id_date_pembelian' => $id]);
+        $this->orderBy('kode', 'DESC');
+        $query = $this->get();
         return $query->getResult('array');
     }
     public function getDetailone($id)
     {
         return $this->where(['id_detail_pembelian' => $id])->first();
+    }
+    public function getDetailKode($id)
+    {
+        return $this->where(['kode' => $id])->first();
     }
     public function SumDataDetail($id)
     {
@@ -38,16 +44,23 @@ class ModelDetailMasuk extends Model
         $query = $this->get();
         return $query->getResult('array')[0];
     }
-    public function SumBeratKotorDetail($id)
+    public function SumBeratDetail($id)
     {
-        $this->selectSum('berat_kotor');
+        $this->selectSum('berat');
         $this->where('id_date_pembelian', $id);
         $query = $this->get();
         return $query->getResult('array')[0];
     }
-    public function SumBeratBersihDetail($id)
+    public function SumBeratMurniDetail($id)
     {
-        $this->selectSum('berat_bersih');
+        $this->selectSum('berat_murni');
+        $this->where('id_date_pembelian', $id);
+        $query = $this->get();
+        return $query->getResult('array')[0];
+    }
+    public function SumQty($id)
+    {
+        $this->selectSum('qty');
         $this->where('id_date_pembelian', $id);
         $query = $this->get();
         return $query->getResult('array')[0];

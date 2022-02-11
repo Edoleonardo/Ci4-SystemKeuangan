@@ -352,8 +352,9 @@ class Barangmasuk extends BaseController
                 $msg = [
                     'data' => view('barangmasuk/detailtable', $data),
                     'totalbersih' => $this->detailbeli->SumDataDetail($session->get('date_id')),
-                    'totalberatkotor' => $this->detailbeli->SumBeratKotorDetail($session->get('date_id')),
-                    'totalberatbersih' => $this->detailbeli->SumBeratBersihDetail($session->get('date_id')),
+                    'totalberat' => $this->detailbeli->SumBeratDetail($session->get('date_id')),
+                    'totalberatmurni' => $this->detailbeli->SumBeratMurniDetail($session->get('date_id')),
+                    'totalqty' => $this->detailbeli->SumQty($session->get('date_id'))
                 ];
                 echo json_encode($msg);
             } else {
@@ -364,13 +365,13 @@ class Barangmasuk extends BaseController
     }
     public function pembelian_detail_read()
     {
-        $session = session();
         if ($this->request->isAJAX()) {
 
             $msg = [
                 'totalbersih' => $this->detailbeli->SumDataDetail($this->request->getVar('dateid')),
-                'totalberatkotor' => $this->detailbeli->SumBeratKotorDetail($this->request->getVar('dateid')),
-                'totalberatbersih' => $this->detailbeli->SumBeratBersihDetail($this->request->getVar('dateid')),
+                'totalberat' => $this->detailbeli->SumBeratDetail($this->request->getVar('dateid')),
+                'totalberatmurni' => $this->detailbeli->SumBeratMurniDetail($this->request->getVar('dateid')),
+                'totalqty' => $this->detailbeli->SumQty($this->request->getVar('dateid'))
             ];
             echo json_encode($msg);
         }
@@ -379,55 +380,123 @@ class Barangmasuk extends BaseController
     public function pembelian_insert()
     {
         if ($this->request->isAJAX()) {
+            date_default_timezone_set('Asia/Jakarta');
             $validation = \Config\Services::validation();
+            $filesampul = $this->request->getFile('gambar');
+            if ($filesampul->getError() != 4 || $this->request->getPost('gambar')) {
 
-            if (!$this->validate([
-                'nilai_tukar' => [
-                    'rules' => 'required',
-                    'errors' => [
-                        'required' => 'Nilai Tukar Harus di isi',
-                    ]
-                ],
-                'qty' => [
-                    'rules' => 'required',
-                    'errors' => [
-                        'required' => 'Qty Harus di isi',
-                    ]
-                ],
-                'no_nota_supp' => [
-                    'rules' => 'required',
-                    'errors' => [
-                        'required' => 'Nomor Nota Harus di isi',
-                    ]
-                ],
-                'total_berat_m' => [
-                    'rules' => 'required',
-                    'errors' => [
-                        'required' => 'Total Berat Murni Harus di isi',
-                    ]
-                ],
-                'jenis' => [
-                    'rules' => 'required',
-                    'errors' => [
-                        'required' => 'Jenis Harus di isi',
-                    ]
-                ],
-                'berat_kotor' => [
-                    'rules' => 'required',
-                    'errors' => [
-                        'required' => 'Berat Bersih Harus di isi',
-                    ]
-                ],
-                'gambar' => [
-                    'rules' => 'uploaded[gambar]|is_image[gambar]|mime_in[gambar,image/jpg,image/jpeg,image/png]',
-                    'errors' => [
-                        'uploaded' => 'gambar harus diisi',
-                        'mime_in' => 'extention tidak cocok',
-                        'is_image' => 'Bukan Gambar',
+                $valid = $this->validate([
+                    'nilai_tukar' => [
+                        'rules' => 'required',
+                        'errors' => [
+                            'required' => 'Nilai Tukar Harus di isi',
+                        ]
+                    ],
+                    'qty' => [
+                        'rules' => 'required',
+                        'errors' => [
+                            'required' => 'Qty Harus di isi',
+                        ]
+                    ],
+                    'no_nota_supp' => [
+                        'rules' => 'required',
+                        'errors' => [
+                            'required' => 'Nomor Nota Harus di isi',
+                        ]
+                    ],
+                    'total_berat_m' => [
+                        'rules' => 'required',
+                        'errors' => [
+                            'required' => 'Total Berat Murni Harus di isi',
+                        ]
+                    ],
+                    'jenis' => [
+                        'rules' => 'required',
+                        'errors' => [
+                            'required' => 'Jenis Harus di isi',
+                        ]
+                    ],
+                    'berat' => [
+                        'rules' => 'required',
+                        'errors' => [
+                            'required' => 'Berat Harus di isi',
+                        ]
+                    ],
+                    'harga_beli' => [
+                        'rules' => 'required',
+                        'errors' => [
+                            'required' => 'Berat Bersih Harus di isi',
+                        ]
+                    ],
+                    'ongkos' => [
+                        'rules' => 'required',
+                        'errors' => [
+                            'required' => 'Ongkos Harus di isi',
+                        ]
+                    ],
+                ]);
+            } else {
+                $valid = $this->validate([
+                    'nilai_tukar' => [
+                        'rules' => 'required',
+                        'errors' => [
+                            'required' => 'Nilai Tukar Harus di isi',
+                        ]
+                    ],
+                    'qty' => [
+                        'rules' => 'required',
+                        'errors' => [
+                            'required' => 'Qty Harus di isi',
+                        ]
+                    ],
+                    'no_nota_supp' => [
+                        'rules' => 'required',
+                        'errors' => [
+                            'required' => 'Nomor Nota Harus di isi',
+                        ]
+                    ],
+                    'total_berat_m' => [
+                        'rules' => 'required',
+                        'errors' => [
+                            'required' => 'Total Berat Murni Harus di isi',
+                        ]
+                    ],
+                    'jenis' => [
+                        'rules' => 'required',
+                        'errors' => [
+                            'required' => 'Jenis Harus di isi',
+                        ]
+                    ],
+                    'berat' => [
+                        'rules' => 'required',
+                        'errors' => [
+                            'required' => 'Berat Harus di isi',
+                        ]
+                    ],
+                    'harga_beli' => [
+                        'rules' => 'required',
+                        'errors' => [
+                            'required' => 'Berat Bersih Harus di isi',
+                        ]
+                    ],
+                    'ongkos' => [
+                        'rules' => 'required',
+                        'errors' => [
+                            'required' => 'Ongkos Harus di isi',
+                        ]
+                    ],
+                    'gambar' => [
+                        'rules' => 'uploaded[gambar]|is_image[gambar]|mime_in[gambar,image/jpg,image/jpeg,image/png]',
+                        'errors' => [
+                            'uploaded' => 'gambar harus diisi',
+                            'mime_in' => 'extention tidak cocok',
+                            'is_image' => 'Bukan Gambar',
 
+                        ]
                     ]
-                ]
-            ])) {
+                ]);
+            }
+            if (!$valid) {
                 $msg = [
                     'error' => [
                         'no_nota_supp' => $validation->getError('no_nota_supp'),
@@ -435,20 +504,30 @@ class Barangmasuk extends BaseController
                         'total_berat_m' => $validation->getError('total_berat_m'),
                         'nilai_tukar' => $validation->getError('nilai_tukar'),
                         'jenis' => $validation->getError('jenis'),
-                        'berat_kotor' => $validation->getError('berat_kotor'),
+                        'berat' => $validation->getError('berat'),
+                        'harga_beli' => $validation->getError('harga_beli'),
+                        'ongkos' => $validation->getError('ongkos'),
                         'gambar' => $validation->getError('gambar'),
                     ]
                 ];
                 echo json_encode($msg);
             } else {
                 $session = session();
-                $filesampul = $this->request->getFile('gambar');
-                if ($filesampul->getError() == 4) {
-                    $namafile = 'default.jpg';
+                if ($this->request->getPost('gambar')) {
+                    $image = $this->request->getPost('gambar');
+                    $image = str_replace('data:image/jpeg;base64,', '', $image);
+                    $image = base64_decode($image, true);
+                    $namafile = date('dmyhis') . '.jpg';
+                    file_put_contents(FCPATH . '/img/' . $namafile, $image);
                 } else {
-                    $namafile = $filesampul->getRandomName(); // pake nama random
-                    // $namafile = $filesampul->getName(); // ini pake nama asli di foto
-                    $filesampul->move('img', $namafile);
+                    $filesampul = $this->request->getFile('gambar');
+                    if ($filesampul->getError() == 4) {
+                        $namafile = 'default.jpg';
+                    } else {
+                        $namafile = $filesampul->getRandomName(); // pake nama random
+                        // $namafile = $filesampul->getName(); // ini pake nama asli di foto
+                        $filesampul->move('img', $namafile);
+                    }
                 }
                 // $dateid = $session->get('date_id');
                 if ($session->get('date_id')) {
@@ -456,16 +535,16 @@ class Barangmasuk extends BaseController
                     $kode = $this->request->getVar('kelompok');
                     $qty = $this->request->getVar('qty');
                     $harga = $this->request->getVar('harga_beli');
-                    $beratkotor = $this->request->getVar('berat_kotor');
-                    $berat = $beratkotor * ($this->request->getVar('nilai_tukar') / 100);
+                    $berat = $this->request->getVar('berat');
+                    $beratmurni = $berat * ($this->request->getVar('nilai_tukar') / 100);
                     if ($kode == 1 || 4 || 5) {
-                        $totalharga =  $berat *  $harga;
+                        $totalharga =  $beratmurni *  $harga;
                     }
                     if ($kode == 2) {
                         $totalharga = $harga;
                     }
                     if ($kode == 3) {
-                        $totalharga =  $berat *  $harga * $qty;
+                        $totalharga =  $beratmurni *  $harga * $qty;
                     }
 
                     $simpandetailpembelian = [
@@ -477,13 +556,14 @@ class Barangmasuk extends BaseController
                         'jenis' => $this->request->getVar('jenis'),
                         'model' => $this->request->getVar('model'),
                         'keterangan' => $this->request->getVar('keterangan'),
-                        'berat_kotor' => $this->request->getVar('berat_kotor'),
-                        'berat_bersih' => $berat,
+                        'berat' => $this->request->getVar('berat'),
+                        'berat_murni' => $beratmurni,
+                        'ongkos' => $this->request->getVar('ongkos'),
                         'harga_beli' => $this->request->getVar('harga_beli'),
                         'kadar' =>  $this->request->getVar('kadar'),
                         'nilai_tukar' =>  $this->request->getVar('nilai_tukar'),
                         'merek' => $this->request->getVar('merek'),
-                        'total_harga' => $totalharga,
+                        'total_harga' => $totalharga + $this->request->getVar('ongkos'),
                     ];
                     $this->detailbeli->insert($simpandetailpembelian);
 
@@ -500,14 +580,7 @@ class Barangmasuk extends BaseController
                         'harga_emas_24k' => $this->request->getVar('harga_beli'),
                         'total_berat_murni' => $this->request->getVar('total_berat_m'),
                         'tgl_jatuh_tempo' => $this->request->getVar('tanggal_tempo'),
-                        'cara_pembayaran' => $this->request->getVar('pembayaran'),
-                        'nama_bank' => $this->request->getVar('namabank'),
-                        'tunai' => $this->request->getVar('pembayaran'),
-                        'debitcc' => $this->request->getVar('debit/cc'),
-                        'transfer' => $this->request->getVar('transfer'),
-                        'charge' => $this->request->getVar('charge'),
-                        'tanggal_bayar' => '-',
-                        'pembulatan' => $this->request->getVar('pembulatan'),
+                        'cara_pembayaran' => 'Bayar Nanti',
                         'total_bayar' => $this->detailbeli->SumDataDetail($session->get('date_id')),
                         'status_dokumen' => 'Draft'
                     ]);
@@ -524,16 +597,16 @@ class Barangmasuk extends BaseController
                     $kode = $this->request->getVar('kelompok');
                     $qty = $this->request->getVar('qty');
                     $harga = $this->request->getVar('harga_beli');
-                    $beratkotor = $this->request->getVar('berat_kotor');
-                    $berat = $beratkotor * ($this->request->getVar('nilai_tukar') / 100);
+                    $berat = $this->request->getVar('berat');
+                    $beratmurni = $berat * ($this->request->getVar('nilai_tukar') / 100);
                     if ($kode == 1 || 4 || 5) {
-                        $totalharga =  $berat *  $harga;
+                        $totalharga =  $beratmurni *  $harga;
                     }
                     if ($kode == 2) {
                         $totalharga = $harga;
                     }
                     if ($kode == 3) {
-                        $totalharga =  $berat *  $harga * $qty;
+                        $totalharga =  $beratmurni *  $harga * $qty;
                     }
 
                     $simpandetailpembelian = [
@@ -545,13 +618,14 @@ class Barangmasuk extends BaseController
                         'jenis' => $this->request->getVar('jenis'),
                         'model' => $this->request->getVar('model'),
                         'keterangan' => $this->request->getVar('keterangan'),
-                        'berat_kotor' => $this->request->getVar('berat_kotor'),
-                        'berat_bersih' => $berat,
+                        'berat' => $this->request->getVar('berat'),
+                        'berat_murni' => $beratmurni,
+                        'ongkos' => $this->request->getVar('ongkos'),
                         'harga_beli' => $this->request->getVar('harga_beli'),
                         'kadar' =>  $this->request->getVar('kadar'),
                         'nilai_tukar' =>  $this->request->getVar('nilai_tukar'),
                         'merek' => $this->request->getVar('merek'),
-                        'total_harga' => $totalharga,
+                        'total_harga' => $totalharga + $this->request->getVar('ongkos'),
                     ];
                     $this->detailbeli->insert($simpandetailpembelian);
 
@@ -566,14 +640,7 @@ class Barangmasuk extends BaseController
                         'harga_emas_24k' => $this->request->getVar('harga_beli'),
                         'total_berat_murni' => $this->request->getVar('total_berat_m'),
                         'tgl_jatuh_tempo' => $this->request->getVar('tanggal_tempo'),
-                        'cara_pembayaran' => $this->request->getVar('pembayaran'),
-                        'nama_bank' => $this->request->getVar('namabank'),
-                        'tunai' => $this->request->getVar('pembayaran'),
-                        'debitcc' => $this->request->getVar('debit/cc'),
-                        'transfer' => $this->request->getVar('transfer'),
-                        'charge' => $this->request->getVar('charge'),
-                        'tanggal_bayar' => 'Belum Bayar',
-                        'pembulatan' => $this->request->getVar('pembulatan'),
+                        'cara_pembayaran' => 'Bayar Nanti',
                         'total_bayar' => $this->detailbeli->SumDataDetail($session->get('date_id')),
                         'status_dokumen' => 'Draft'
                     ]);
@@ -670,6 +737,18 @@ class Barangmasuk extends BaseController
         }
     }
 
+    public function GetDataDetail()
+    {
+        if ($this->request->isAJAX()) {
+            $data = $this->detailbeli->getDetailKode($this->request->getVar('kode'));
+            $msg = [
+                'data' => $data
+            ];
+
+            echo json_encode($msg);
+        }
+    }
+
     public function DeleteDetailsemua()
     {
         if ($this->request->isAJAX()) {
@@ -716,8 +795,11 @@ class Barangmasuk extends BaseController
         $data = [
             'datapembelian' => $this->datapembelian->getPembelianSupplier($id),
             'tampildata' =>  $this->detailbeli->getDetailAll($id),
-            'totalberatkotor' => $this->detailbeli->SumBeratKotorDetail($id),
-            'totalberatbersih' => $this->detailbeli->SumBeratBersihDetail($id),
+            'totalberat' => $this->detailbeli->SumBeratDetail($id),
+            'totalberatmurni' => $this->detailbeli->SumBeratMurniDetail($id),
+            'merek' => $this->datamerek->getMerek(),
+            'kadar' => $this->datakadar->getKadar(),
+            'supplier' => $this->datasupplier->getSupplier(),
 
 
         ];
@@ -738,24 +820,15 @@ class Barangmasuk extends BaseController
                 //$datastock = $this->datastock->CheckData(1);
                 $this->datapembelian->save([
                     'id_pembelian' =>  $datapembelian['id_pembelian'],
-                    'created_at' => $datapembelian['created_at'],
+                    'created_at' => $this->request->getVar('tanggal_input'),
                     'id_date_pembelian' => $session->get('date_id'),
-                    'nama_supplier' => $datapembelian['nama_supplier'],
-                    'id_karyawan' => $datapembelian['id_karyawan'],
-                    'no_faktur_supp' => $datapembelian['no_faktur_supp'],
+                    'nama_supplier' => $this->request->getVar('supplier'),
+                    'id_karyawan' => '2',
+                    'no_faktur_supp' => $this->request->getVar('no_nota_supp'),
                     'no_transaksi' => $datapembelian['no_transaksi'],
-                    'tgl_faktur' => $datapembelian['tgl_faktur'],
-                    'harga_emas_24k' => $datapembelian['harga_emas_24k'],
-                    'total_berat_murni' => $datapembelian['total_berat_murni'],
-                    'tgl_jatuh_tempo' => $datapembelian['tgl_jatuh_tempo'],
-                    'cara_pembayaran' => $this->request->getVar('carabayar'),
-                    'nama_bank' => $this->request->getVar('namabank'),
-                    'tunai' =>  $this->request->getVar('tunai'),
-                    'debitcc' =>  $this->request->getVar('debitcc'),
-                    'transfer' =>  $this->request->getVar('transfer'),
-                    'charge' =>   $this->request->getVar('charge'),
-                    'tanggal_bayar' => date('yy-mm-dd'),
-                    'pembulatan' => $this->request->getVar('pembulatan'),
+                    'tgl_faktur' => $this->request->getVar('tanggal_nota_sup'),
+                    'total_berat_murni' => $this->request->getVar('total_berat_m'),
+                    'tgl_jatuh_tempo' => $this->request->getVar('tanggal_tempo'),
                     'total_bayar' =>  $totalharga,
                     'status_dokumen' => 'Selesai'
                 ]);
@@ -775,10 +848,10 @@ class Barangmasuk extends BaseController
                         'keterangan' => $row['keterangan'],
                         'merek' => $row['merek'],
                         'kadar' => $row['kadar'],
-                        'berat_bersih' => $row['berat_bersih'],
-                        'berat_kotor' => $row['berat_kotor'],
+                        'berat_murni' => $row['berat_murni'],
+                        'berat' => $row['berat'],
                         'nilai_tukar' =>  $row['nilai_tukar'],
-                        'ongkos/harga' => '0',
+                        'ongkos' => $row['ongkos'],
                         'total_harga' => $row['total_harga'],
                         'kode_beli' =>  'JN',
                         'gambar' =>  $row['nama_img'],

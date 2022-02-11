@@ -118,31 +118,33 @@
                                             <th>Jenis</th>
                                             <th>Model</th>
                                             <th>Keterangan</th>
-                                            <th>Berat Kotor</th>
-                                            <th>Berat Bersih</th>
+                                            <th>Berat</th>
+                                            <th>Berat Murni</th>
                                             <th>Harga Beli</th>
                                             <th>Kadar</th>
                                             <th>Nilai Tukar</th>
                                             <th>Merek</th>
                                             <th>Total Harga</th>
+                                            <th>Edit</th>
                                         </tr>
                                     </thead>
-                                    <tbody id="databeli">
+                                    <tbody id="datatable">
                                         <?php foreach ($tampildata as $row) : ?>
-                                            <tr>
+                                            <tr id="isirefres">
                                                 <td><img src='/img/<?= $row['nama_img'] ?>' class='imgg'></td>
                                                 <td><?= $row['kode'] ?></td>
                                                 <td><?= $row['qty'] ?></td>
                                                 <td><?= $row['jenis'] ?></td>
                                                 <td><?= $row['model'] ?></td>
                                                 <td><?= $row['keterangan'] ?></td>
-                                                <td><?= $row['berat_kotor'] ?></td>
-                                                <td><?= $row['berat_bersih'] ?></td>
+                                                <td><?= $row['berat'] ?></td>
+                                                <td><?= $row['berat_murni'] ?></td>
                                                 <td><?= $row['harga_beli'] ?></td>
                                                 <td><?= $row['kadar'] ?></td>
                                                 <td><?= $row['nilai_tukar'] ?></td>
                                                 <td><?= $row['merek'] ?></td>
                                                 <td><?= number_format($row['total_harga'], 2, ",", ".") ?></td>
+                                                <td><a class="btn btn-block bg-gradient-primary" type="button" onclick="EditData(<?= $row['kode'] ?>)">Edit</a></td>
                                             </tr>
                                         <?php endforeach; ?>
                                     </tbody>
@@ -161,12 +163,12 @@
                                 <table class="table table-striped">
                                     <tbody>
                                         <tr>
-                                            <td>Total Berat Kotor</td>
-                                            <td><?= number_format($totalberatkotor['berat_kotor'], 2, ',', '.') ?></td>
+                                            <td>Total Berat</td>
+                                            <td><?= number_format($totalberat['berat'], 2, ',', '.') ?></td>
                                         </tr>
                                         <tr>
-                                            <td>Total Berat Bersih</td>
-                                            <td><?= number_format($totalberatbersih['berat_bersih'], 2, ',', '.') ?></td>
+                                            <td>Total Berat Murni</td>
+                                            <td><?= number_format($totalberatmurni['berat_murni'], 2, ',', '.') ?></td>
                                         </tr>
 
                                         <tr>
@@ -258,8 +260,8 @@
                                             <th>Jenis</th>
                                             <th>Model</th>
                                             <th>Keterangan</th>
-                                            <th>Berat Kotor</th>
-                                            <th>Berat Bersih</th>
+                                            <th>Berat</th>
+                                            <th>Berat Murni</th>
                                             <th>Harga Beli</th>
                                             <th>Kadar</th>
                                             <th>Nilai Tukar</th>
@@ -277,8 +279,8 @@
                                                 <td><?= $row['jenis'] ?></td>
                                                 <td><?= $row['model'] ?></td>
                                                 <td><?= $row['keterangan'] ?></td>
-                                                <td><?= $row['berat_kotor'] ?></td>
-                                                <td><?= $row['berat_bersih'] ?></td>
+                                                <td><?= $row['berat'] ?></td>
+                                                <td><?= $row['berat_murni'] ?></td>
                                                 <td><?= $row['harga_beli'] ?></td>
                                                 <td><?= $row['kadar'] ?></td>
                                                 <td><?= $row['nilai_tukar'] ?></td>
@@ -382,12 +384,12 @@
                                             <table class="table table-hover text-nowrap">
                                                 <tbody>
                                                     <tr>
-                                                        <td>Total Berat Kotor</td>
-                                                        <td id="totalberatkotorhtml"></td>
+                                                        <td>Total Berat</td>
+                                                        <td id="totalberathtml"></td>
                                                     </tr>
                                                     <tr>
-                                                        <td>Total Berat Bersih</td>
-                                                        <td id="totalberatbersihhtml"></td>
+                                                        <td>Total Berat Murni</td>
+                                                        <td id="totalberatmurnihtml"></td>
                                                     </tr>
                                                     <tr id="tabelbank">
                                                     </tr>
@@ -427,6 +429,136 @@
             </div>
             <!-- /.modal-dialog -->
         </div>
+        <div class="modal fade" id="modal-edit">
+            <div class="modal-dialog modal-xl">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Edit</h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form action="/pembayaranform" id="pembayaranform" class="pembayaranform" name="pembayaranform">
+                            <div class="row">
+                                <div class="col-sm-2">
+                                    <!-- text input -->
+                                    <div class="form-group">
+                                        <label>Kelompok</label>
+                                        <select name="kelompok" class="form-control" id="kelompok" name="kelompok">
+                                            <option value="1">Perhiasan Mas</option>
+                                            <option value="2">Perhiasan Berlian</option>
+                                            <option value="3">Logam Mulia (Antam, UBS, HWT)</option>
+                                            <option value="4">Bahan Murni</option>
+                                            <option value="5">Loose Diamond</option>
+                                            <option value="6">Barang Dagang</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-sm-2">
+                                    <!-- text input -->
+                                    <div class="form-group">
+                                        <label>Merek</label>
+                                        <select name="merek" class="form-control" id="cars" name="cars">
+                                            <?php foreach ($merek as $m) : ?>
+                                                <option value="<?= $m['nama_merek'] ?>"><?= $m['nama_merek'] ?> </option>
+                                            <?php endforeach; ?>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-sm-2">
+                                    <!-- text input -->
+                                    <div class="form-group">
+                                        <label>Kadar</label>
+                                        <select name="kadar" class="form-control" id="cars" name="cars">
+                                            <?php foreach ($kadar as $m) : ?>
+                                                <option value="<?= $m['nama_kadar'] ?>"><?= $m['nama_kadar'] ?> </option>
+                                            <?php endforeach; ?>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-sm-2">
+                                    <!-- text input -->
+                                    <div class="form-group">
+                                        <label>Jenis</label>
+                                        <input type="text" name="jenis" id="jenis" class="form-control" placeholder="Masukan Jenis">
+                                        <div id="validationServerUsernameFeedback" class="invalid-feedback jenismsg">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-2">
+                                    <!-- text input -->
+                                    <div class="form-group">
+                                        <label>Berat</label>
+                                        <input type="number" step="0.01" id="berat" name="berat" class="form-control" placeholder="Masukan Berat Bersih">
+                                        <div id="validationServerUsernameFeedback" class="invalid-feedback beratmsg">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-2">
+                                    <!-- text input -->
+                                    <div class="form-group">
+                                        <label>Qty</label>
+                                        <input type="Number" id="qty" name="qty" min="1" class="form-control" placeholder="Masukan jumlah">
+                                        <div id="validationServerUsernameFeedback" class="invalid-feedback qtymsg">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-2">
+                                    <!-- text input -->
+                                    <div class="form-group">
+                                        <label>Model</label>
+                                        <input type="text" name="model" class="form-control" placeholder="Masukan Model Barang">
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <!-- text input -->
+                                    <div class="form-group">
+                                        <label>Keterangan</label>
+                                        <input type="text" name="keterangan" class="form-control" placeholder="Masukan Keterangan">
+                                    </div>
+                                </div>
+                                <div class="col-sm-2">
+                                    <!-- text input -->
+                                    <div class="form-group">
+                                        <label>Nilai Tukar</label>
+                                        <input type="number" id="nilai_tukar" name="nilai_tukar" class="form-control" placeholder="Masukan Nilai Tukar">
+                                        <div id="validationServerUsernameFeedback" class="invalid-feedback nilai_tukarmsg">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-2">
+                                    <!-- text input -->
+                                    <div class="form-group">
+                                        <label>Harga Beli</label>
+                                        <input type="number" name="harga_beli" id="harga_beli" class="form-control harga_beli" placeholder="Masukan Harga Beli">
+                                        <div id="validationServerUsernameFeedback" class="invalid-feedback harga_belimsg">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-2">
+                                    <!-- text input -->
+                                    <div class="form-group">
+                                        <label>Ongkos</label>
+                                        <input type="number" value="0" name="ongkos" id="ongkos" class="form-control ongkos" placeholder="Masukan Ongkos">
+                                        <div id="validationServerUsernameFeedback" class="invalid-feedback ongkosmsg">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                    </div>
+                    <div class="modal-footer justify-content-between">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary btntambah">Edit</button>
+                    </div>
+                    </form>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
     </section>
     <!-- /.content -->
 </div>
@@ -442,6 +574,27 @@
 
 </footer>
 <script type="text/javascript">
+    function EditData(id) {
+        $.ajax({
+            type: "GET",
+            dataType: "json",
+            url: "<?php echo base_url('editdetail'); ?>",
+            data: {
+                kode: id
+            },
+            success: function(result) {
+                console.log(result.data.jenis)
+                $('#modal-edit').modal('show');
+                $('#jenis').val(result.data.jenis)
+                // $("#datatable").load("/detailpembelian/" + <?= $datapembelian['id_date_pembelian'] ?> + " #isirefres");
+
+            },
+            error: function(xhr, ajaxOptions, thrownError) {
+                alert(xhr.status + "\n" + xhr.responseText + "\n" + thrownError);
+            }
+        })
+    }
+
     function pembulatankoma(berat) {
         var num = Number(berat) // The Number() only visualizes the type and is not needed
         var roundedString = num.toFixed(2);
@@ -458,8 +611,8 @@
                 dateid: '<?php echo $datapembelian['id_date_pembelian'] ?>'
             },
             success: function(result) {
-                $('#totalberatbersihhtml').html(pembulatankoma(result.totalberatbersih.berat_bersih))
-                $('#totalberatkotorhtml').html(pembulatankoma(result.totalberatkotor.berat_kotor))
+                $('#totalberatmurnihtml').html(pembulatankoma(result.totalberatmurni.berat_murni))
+                $('#totalberathtml').html(pembulatankoma(result.totalberat.berat))
 
 
                 document.getElementById('totalbersih1').innerHTML = pembulatankoma(result.totalbersih.total_harga).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")

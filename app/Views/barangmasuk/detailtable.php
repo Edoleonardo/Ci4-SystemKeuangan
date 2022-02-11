@@ -6,9 +6,10 @@
         <td><?= $row['jenis'] ?></td>
         <td><?= $row['model'] ?></td>
         <td><?= $row['keterangan'] ?></td>
-        <td><?= $row['berat_kotor'] ?></td>
-        <td><?= $row['berat_bersih'] ?></td>
+        <td><?= $row['berat'] ?></td>
+        <td><?= $row['berat_murni'] ?></td>
         <td><?= number_format($row['harga_beli']) ?></td>
+        <td><?= number_format($row['ongkos']) ?></td>
         <td><?= $row['kadar'] ?></td>
         <td><?= $row['nilai_tukar'] ?></td>
         <td><?= $row['merek'] ?></td>
