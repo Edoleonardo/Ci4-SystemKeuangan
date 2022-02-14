@@ -606,13 +606,6 @@
                             $('#nilai_tukar').removeClass('is-invalid')
                             $('.nilai_tukarmsg').html('')
                         }
-                        if (result.error.total_qty) {
-                            $('#total_qty').addClass('is-invalid')
-                            $('.total_qtymsg').html(result.error.total_qty)
-                        } else {
-                            $('#total_qty').removeClass('is-invalid')
-                            $('.total_qtymsg').html('')
-                        }
                         if (result.error.jenis) {
                             $('#jenis').addClass('is-invalid')
                             $('.jenismsg').html(result.error.jenis)
@@ -664,8 +657,6 @@
                         $('.total_berat_mmsg').html('')
                         $('#nilai_tukar').removeClass('is-invalid')
                         $('.nilai_tukarmsg').html('')
-                        $('#total_qty').removeClass('is-invalid')
-                        $('.total_qtymsg').html('')
                         $('#jenis').removeClass('is-invalid')
                         $('.jenismsg').html('')
                         $('#berat').removeClass('is-invalid')

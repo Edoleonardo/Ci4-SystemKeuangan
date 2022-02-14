@@ -328,6 +328,109 @@ class Barangmasuk extends BaseController
             }
         }
     }
+
+    public function EditDataPost()
+    {
+        if ($this->request->isAJAX()) {
+            $validation = \Config\Services::validation();
+            $valid = $this->validate([
+                'nilai_tukar' => [
+                    'rules' => 'required',
+                    'errors' => [
+                        'required' => 'Nilai Tukar Harus di isi',
+                    ]
+                ],
+                'qty' => [
+                    'rules' => 'required',
+                    'errors' => [
+                        'required' => 'Qty Harus di isi',
+                    ]
+                ],
+                'jenis' => [
+                    'rules' => 'required',
+                    'errors' => [
+                        'required' => 'Jenis Harus di isi',
+                    ]
+                ],
+                'berat' => [
+                    'rules' => 'required',
+                    'errors' => [
+                        'required' => 'Berat Harus di isi',
+                    ]
+                ],
+                'harga_beli' => [
+                    'rules' => 'required',
+                    'errors' => [
+                        'required' => 'Berat Bersih Harus di isi',
+                    ]
+                ],
+                'ongkos' => [
+                    'rules' => 'required',
+                    'errors' => [
+                        'required' => 'Ongkos Harus di isi',
+                    ]
+                ],
+
+            ]);
+
+            if (!$valid) {
+                $msg = [
+                    'error' => [
+                        'qty' => $validation->getError('qty'),
+                        'nilai_tukar' => $validation->getError('nilai_tukar'),
+                        'jenis' => $validation->getError('jenis'),
+                        'berat' => $validation->getError('berat'),
+                        'harga_beli' => $validation->getError('harga_beli'),
+                        'ongkos' => $validation->getError('ongkos'),
+                    ]
+                ];
+                echo json_encode($msg);
+            } else {
+
+                $databeli = $this->detailbeli->getDetailKode($this->request->getVar('kode'));
+                $kode = substr($this->request->getVar('kode'), 0, 1);
+                $qty = $this->request->getVar('qty');
+                $harga = $this->request->getVar('harga_beli');
+                $berat = $this->request->getVar('berat');
+                $beratmurni = $berat * ($this->request->getVar('nilai_tukar') / 100);
+                if ($kode == 1 || 4 || 5) {
+                    $totalharga =  $beratmurni *  $harga;
+                }
+                if ($kode == 2) {
+                    $totalharga = $harga;
+                }
+                if ($kode == 3) {
+                    $totalharga =  $beratmurni *  $harga * $qty;
+                }
+
+                $this->detailbeli->save([
+                    'id_detail_pembelian' => $databeli['id_detail_pembelian'],
+                    'qty' => $this->request->getVar('qty'),
+                    'jenis' => $this->request->getVar('jenis'),
+                    'model' => $this->request->getVar('model'),
+                    'keterangan' => $this->request->getVar('keterangan'),
+                    'berat' => $this->request->getVar('berat'),
+                    'berat_murni' => $beratmurni,
+                    'ongkos' => $this->request->getVar('ongkos'),
+                    'harga_beli' => $this->request->getVar('harga_beli'),
+                    'kadar' =>  $this->request->getVar('kadar'),
+                    'nilai_tukar' =>  $this->request->getVar('nilai_tukar'),
+                    'merek' => $this->request->getVar('merek'),
+                    'total_harga' => $totalharga + $this->request->getVar('ongkos'),
+                ]);
+
+                $databeli = $this->datapembelian->getPembelianSupplier($this->request->getVar('dateid'));
+                $this->datapembelian->save([
+                    'id_pembelian' =>  $databeli['id_pembelian'],
+                    'total_bayar' => $this->detailbeli->SumDataDetail($this->request->getVar('dateid')),
+
+                ]);
+
+                $msg = $databeli['id_date_pembelian'];
+                echo json_encode($msg);
+            }
+        }
+    }
     public function detail_pembelian()
     {
         $session = session();

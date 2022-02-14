@@ -57,6 +57,8 @@ $routes->delete('/cancelbarang/(:num)', 'Barangmasuk::CancelBarang/$1');
 $routes->get('/ajaxdetailpembelian', 'Barangmasuk::pembelian_detail_read');
 $routes->post('/ajaxpembayaran', 'Barangmasuk::Pembayaran_beli');
 $routes->get('/editdetail', 'Barangmasuk::GetDataDetail');
+$routes->post('/editdataform', 'Barangmasuk::EditDataPost');
+
 
 
 //--------------------------BarangKeluar---------------------------
