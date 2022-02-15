@@ -37,7 +37,7 @@
                                     <tr>
                                         <th>Nomor Penjualan</th>
                                         <th>Tanggal Terjual</th>
-                                        <th>Customer</th>
+                                        <th>Nomor Hp Customer</th>
                                         <th>Total Harga</th>
                                         <th>Pembayaran</th>
                                         <th>Aksi</th>
@@ -48,7 +48,7 @@
                                         <tr>
                                             <td><?= $row['no_transaksi_jual'] ?></td>
                                             <td><?= date("d-m-Y", strtotime($row['created_at'])); ?></td>
-                                            <td><?= $row['nama_customer'] ?></td>
+                                            <td><?= $row['nohp_cust'] ?></td>
                                             <td><?= number_format($row['total_harga']) ?></td>
                                             <td><?= $row['pembayaran'] ?></td>
                                             <td>

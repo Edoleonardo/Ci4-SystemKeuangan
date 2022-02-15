@@ -41,130 +41,92 @@
           </div>
           <div class="col-12 col-sm-6">
             <h3 class="my-3"><?= $barang['jenis'] . ' ' . $barang['keterangan'] . ' ' . $barang['merek'] ?></h3>
-            <!--<p>Raw denim you probably haven't heard of them jean shorts Austin. Nesciunt tofu stumptown aliqua butcher retro keffiyeh dreamcatcher synth. Cosby sweater eu banh mi, qui irure terr.</p>
-            <hr>
-            <h4>Berat Barang</h4>
-            <div class="text" data-toggle="buttons">
-              <label style="font-size: 20px;" class="text-center">Bersih : <?= $barang['berat_bersih'] ?></label> <br>
-              <label style="font-size: 20px;" class="text-center">Kotor : <?= $barang['berat_bersih'] ?></label>
-            </div>
-            <h4>Jumlah Stock</h4>
-            <div class="text-xl" data-toggle="buttons">
-              <label class="text-center"><?= $barang['qty'] ?></label>
-            </div>
-            <h4 class="mt-3">Barcode</h4>
-            <div class="btn-group btn-group-toggle" data-toggle="buttons">
-              <div>
-                <a href="/print/<?= $barang['id_stock'] ?>" rel="noopener" target="_blank" class="btn btn-default"><i class="fas fa-print"></i> <br> <?= $barcode ?></a>
-                </h4>
-              </div>
-            </div>
-            <div class="bg-gray py-2 px-3 mt-4">
-              <h2 class="mb-0">
-                Harga : Rp <?= number_format($barang['ongkos/harga']) ?>
-              </h2> -->
-            <!-- <h4 class="mt-0">
-                <small>Ex Tax: $80.00 </small>
-              </h4> -->
-            <!-- </div> -->
-            <!-- /.card-header -->
             <div class="card">
-
               <div class="card-body p-0">
                 <table class="table table-striped">
                   <tbody>
                     <tr>
-                      <td>Satus</td>
-                      <td>
-                        <?= $barang['status'] ?>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>Tanggal Faktur</td>
+                      <td>Tanggal Faktur :</td>
                       <td>
                         <?= $barang['tgl_faktur'] ?>
                       </td>
-                    </tr>
-                    <tr>
-                      <td>Tanggal Input</td>
+                      <td>Tanggal Input :</td>
                       <td>
                         <?= $barang['created_at'] ?>
                       </td>
                     </tr>
                     <tr>
-                      <td>No faktur</td>
+                      <td>No faktur :</td>
                       <td>
                         <?= $barang['no_faktur'] ?>
                       </td>
-                    </tr>
-                    <tr>
-                      <td>Qty</td>
+                      <td>Qty :</td>
                       <td>
                         <?= $barang['qty'] ?>
                       </td>
                     </tr>
                     <tr>
-                      <td>Jenis Barang</td>
+                      <td>Jenis Barang :</td>
                       <td>
                         <?= $barang['jenis'] ?>
                       </td>
-                    </tr>
-                    <tr>
-                      <td>Model Barang</td>
+                      <td>Satus :</td>
                       <td>
-                        <?= $barang['model'] ?>
+                        <?= $barang['status'] ?>
                       </td>
                     </tr>
                     <tr>
-                      <td>Keterangan Barang</td>
+                      <td>Model Barang :</td>
+                      <td>
+                        <?= $barang['model'] ?>
+                      </td>
+                      <td>Keterangan Barang :</td>
                       <td>
                         <?= $barang['keterangan'] ?>
                       </td>
                     </tr>
                     <tr>
-                      <td>Merek Barang</td>
+                      <td>Merek Barang :</td>
                       <td>
                         <?= $barang['merek'] ?>
                       </td>
-                    </tr>
-                    <tr>
-                      <td>Kadar Barang</td>
+                      <td>Kadar Barang :</td>
                       <td>
                         <?= $barang['kadar'] ?>
                       </td>
                     </tr>
                     <tr>
-                      <td>Berat Bersih</td>
+                      <td>Berat :</td>
                       <td>
-                        <?= $barang['berat_bersih'] ?>
+                        <?= $barang['berat'] ?>
+                      </td>
+                      <td>Berat Murni :</td>
+                      <td>
+                        <?= $barang['berat_murni'] ?>
                       </td>
                     </tr>
                     <tr>
-                      <td>Berat Kotor</td>
+                      <td>Nilai Tukar :</td>
                       <td>
-                        <?= $barang['berat_kotor'] ?>
+                        <?= $barang['nilai_tukar'] ?> %
+                      </td>
+                      <td>Ongkos :</td>
+                      <td>
+                        <?= number_format($barang['ongkos'], 2, ',', '.') ?>
                       </td>
                     </tr>
                     <tr>
-                      <td>Nilai Tukar</td>
+                      <td>Harga Beli :</td>
                       <td>
-                        <?= $barang['nilai_tukar'] ?>
+                        <?= number_format($barang['harga_beli'], 2, ',', '.') ?>
+                      </td>
+                      <td>Total Harga Murni :</td>
+                      <td>
+                        <?= number_format($barang['total_harga'], 2, ',', '.') ?>
                       </td>
                     </tr>
                     <tr>
-                      <td>Ongkos / Harga</td>
-                      <td>
-                        <?= $barang['ongkos/harga'] ?>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>Kode Beli</td>
-                      <td>
-                        <?= $barang['kode_beli'] ?>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>Barcode</td>
+                      <td>Barcode :</td>
                       <td>
                         <div class="btn-group btn-group-toggle" data-toggle="buttons">
                           <div>
@@ -172,6 +134,10 @@
                             </h4>
                           </div>
                         </div>
+                      </td>
+                      <td>Kode Beli :</td>
+                      <td>
+                        <?= $barang['kode_beli'] ?>
                       </td>
                     </tr>
                   </tbody>

@@ -4,13 +4,13 @@ namespace App\Models;
 
 use CodeIgniter\Model;
 
-class ModelDetailPenjualan extends Model
+class ModelDetailBuyback extends Model
 {
 
-    protected $table = 'tbl_detail_penjualan';
-    protected $primaryKey = 'id_detail_penjualan';
+    protected $table = 'tbl_detail_buyback';
+    protected $primaryKey = 'id_detail_buyback ';
     protected $useTimestamps = true;
-    protected $allowedFields = ['id_date_penjualan', 'nama_img', 'kode', 'jenis', 'qty', 'model', 'keterangan', 'berat_murni', 'berat', 'harga_beli', 'ongkos', 'kadar', 'nilai_tukar', 'merek', 'total_harga'];
+    protected $allowedFields = ['id_date_buyback', 'nama_img', 'kode', 'jenis', 'qty', 'model', 'keterangan', 'berat_murni', 'berat', 'harga_beli', 'ongkos', 'kadar', 'nilai_tukar', 'merek', 'total_harga'];
 
     public function getDetailAllJual($id)
     {
@@ -24,57 +24,57 @@ class ModelDetailPenjualan extends Model
         //     //return $this->findAll();
         // }
         //$query = $this->select('(SELECT * FROM tbl_detail_pembelian WHERE id_date_pembelian = ' . $id . ')');
-        $query = $this->getWhere(['id_date_penjualan' => $id]);
+        $query = $this->getWhere(['id_date_buyback' => $id]);
         return $query->getResult('array');
     }
     public function getDetailJual($id)
     {
-        $query = $this->getWhere(['id_detail_penjualan' => $id]);
+        $query = $this->getWhere(['id_detail_buyback' => $id]);
         return $query->getResult('array');
     }
     public function getDetailoneJual($id)
     {
-        return $this->where(['id_detail_penjualan' => $id])->first();
+        return $this->where(['id_detail_buyback' => $id])->first();
     }
     public function SumBeratKotorDetailjual($id)
     {
         $this->selectSum('berat');
-        $this->where('id_date_penjualan', $id);
+        $this->where('id_date_buyback', $id);
         $query = $this->get();
         return $query->getResult('array')[0];
     }
     public function SumBeratBersihDetailjual($id)
     {
         $this->selectSum('berat_murni');
-        $this->where('id_date_penjualan', $id);
+        $this->where('id_date_buyback', $id);
         $query = $this->get();
         return $query->getResult('array')[0];
     }
     public function SumDataDetailJual($id)
     {
         $this->selectSum('total_harga');
-        $this->where('id_date_penjualan', $id);
+        $this->where('id_date_buyback', $id);
         $query = $this->get();
         return $query->getResult('array')[0];
     }
     public function SumDataDetailBeliJual($id)
     {
         $this->selectSum('harga_beli');
-        $this->where('id_date_penjualan', $id);
+        $this->where('id_date_buyback', $id);
         $query = $this->get();
         return $query->getResult('array')[0];
     }
     public function SumDataOngkosJual($id)
     {
         $this->selectSum('ongkos');
-        $this->where('id_date_penjualan', $id);
+        $this->where('id_date_buyback', $id);
         $query = $this->get();
         return $query->getResult('array')[0];
     }
     public function SumBeratDetailJual($id)
     {
         $this->selectSum('berat');
-        $this->where('id_date_penjualan', $id);
+        $this->where('id_date_buyback', $id);
         $query = $this->get();
         return $query->getResult('array')[0];
     }

@@ -186,15 +186,9 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="/databarang" class="nav-link ">
+                            <a href="/databuyback" class="nav-link ">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>Buyback Customer</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="/jual_barang.php" class="nav-link ">
-                                <i class="far fa-circle nav-icon"></i>
-                                <p>Barang Baru</p>
                             </a>
                         </li>
                     </ul>

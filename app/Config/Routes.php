@@ -79,6 +79,9 @@ $routes->get('/detailpenjualan/(:any)', 'Barangkeluar::DetailDataPenjualan/$1');
 $routes->get('/tampilcust', 'Barangkeluar::TampilCustomer');
 $routes->get('/checkcust', 'Barangkeluar::CheckCustomer');
 
+//----------------------------buyback---------------------------------
+$routes->get('/databuyback', 'Barangkeluar::Databuyback');
+
 
 
 

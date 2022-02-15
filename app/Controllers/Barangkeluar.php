@@ -3,11 +3,6 @@
 namespace App\Controllers;
 
 use CodeItNow\BarcodeBundle\Utils\BarcodeGenerator;
-use App\Models\ModelBarangMasuk;
-use App\Models\ModelDetailMasuk;
-use App\Models\ModelKadar;
-use App\Models\ModelMerek;
-use App\Models\ModelSupplier;
 use App\Models\ModelPembelian;
 use App\Models\ModelHome;
 use App\Models\ModelPenjualan;
@@ -36,11 +31,6 @@ class Barangkeluar extends BaseController
     {
         $this->modeldetailpenjualan =  new ModelDetailPenjualan();
         $this->barcodeG =  new BarcodeGenerator();
-        $this->detailbeli = new ModelDetailMasuk();
-        $this->barangmasuk = new ModelBarangMasuk();
-        $this->datasupplier = new ModelSupplier();
-        $this->datakadar = new ModelKadar();
-        $this->datamerek = new ModelMerek();
         $this->datapembelian = new ModelPembelian();
         $this->datastock = new ModelHome();
         $this->datacust = new ModelCustomer();
@@ -50,9 +40,9 @@ class Barangkeluar extends BaseController
 
     public function DataPenjualan()
     {
-        // dd($this->modeldetailpenjualan->SumBeratKotorDetailjual('080222023605'));
         $data = [
-            'datapenjualan' => $this->penjualan->getDataPenjualan()
+            'datapenjualan' => $this->penjualan->getDataPenjualan(),
+            'datacust' => $this->datacust->getDataCustomer()
         ];
 
         return view('barangkeluar/data_penjualan', $data);
@@ -67,17 +57,15 @@ class Barangkeluar extends BaseController
         $this->penjualan->save([
             // 'created_at' => date("y-m-d"),
             'id_date_penjualan' => $session->get('date_id_penjualan'),
-            'nama_supplier' => '-',
             'no_transaksi_jual' => $this->NoTransaksiGenerateJual(),
             'id_customer' => '',
             'id_karyawan' => '1',
-            'nama_customer' => '',
+            'nohp_cust' => '',
             'jumlah' => '1',
-            'onkos' => '0',
-            'pembulatan/diskon' => '0',
+            'pembulatan' => '0',
             'total_harga' => '0',
             'pembayaran' => 'Bayar Nanti',
-            'tunai' => '-',
+            'tunai' => '0',
             'debitcc' => '0',
             'transfer' => '0',
             'status_dokumen' => 'Draft'
@@ -94,7 +82,7 @@ class Barangkeluar extends BaseController
                 'alamat_cust' => $this->request->getVar('alamat'),
                 'kota_cust' => $this->request->getVar('kota'),
                 'sales_cust' => '-',
-                'point_penjualan' => '0',
+                'point' => '0',
 
             ]);
             $msg = [
@@ -115,7 +103,7 @@ class Barangkeluar extends BaseController
     public function CheckCustomer()
     {
         if ($this->request->isAJAX()) {
-            $data = $this->datacust->getDataCustomerone($this->request->getVar('nama_cust'));
+            $data = $this->datacust->getDataCustomerone($this->request->getVar('nohp_cust'));
             if ($data) {
                 $msg = 'sukses';
             } else {
@@ -127,7 +115,6 @@ class Barangkeluar extends BaseController
     public function InsertJual()
     {
         if ($this->request->isAJAX()) {
-            $session = session();
             $validation = \Config\Services::validation();
             $kode = $this->request->getVar('kodebarang');
             $databarang = $this->datastock->getBarangkode($kode);
@@ -160,34 +147,34 @@ class Barangkeluar extends BaseController
                     // } else {
                     //     $pembulatan = 0;
                     // }
-                    $data = $this->penjualan->getDataPenjualan($session->get('date_id_penjualan'));
+                    $data = $this->penjualan->getDataPenjualan($this->request->getVar('iddate'));
                     $this->modeldetailpenjualan->save([
-                        'id_date_penjualan' => $session->get('date_id_penjualan'),
+                        'id_date_penjualan' => $this->request->getVar('iddate'),
                         'nama_img' => $databarang['gambar'],
                         'kode' =>  $databarang['barcode'],
                         'qty' => $databarang['qty'],
                         'jenis' =>  $databarang['jenis'],
                         'model' =>  $databarang['model'],
                         'keterangan' =>  $databarang['keterangan'],
-                        'berat_kotor' =>  $databarang['berat_kotor'],
-                        'berat_bersih' =>  $databarang['berat_bersih'],
-                        'harga_beli' =>  $databarang['total_harga'],
+                        'berat' =>  $databarang['berat'],
+                        'berat_murni' =>  $databarang['berat_murni'],
+                        'harga_beli' =>  $databarang['harga_beli'],
+                        'ongkos' => $databarang['ongkos'],
                         'kadar' =>   $databarang['kadar'],
                         'nilai_tukar' =>   $databarang['nilai_tukar'],
                         'merek' =>  $databarang['merek'],
-                        'total_harga' => $databarang['total_harga'],
+                        'total_harga' => ($databarang['harga_beli'] * $databarang['berat']),
                     ]);
+
 
                     $this->penjualan->save([
                         'id_penjualan' =>  $data['id_penjualan'],
-                        'nama_supplier' => $this->request->getVar('supplier'),
                         'id_customer' => $this->datacust->getDataCustomerone($this->request->getVar('inputcustomer'))['id_customer'],
                         'id_karyawan' => '1',
-                        'nama_customer' => $this->request->getVar('inputcustomer'),
-                        'jumlah' => '1',
-                        'onkos' => '0',
-                        'pembulatan/diskon' => '0',
-                        'total_harga' => $this->modeldetailpenjualan->SumDataDetailJual($session->get('date_id_penjualan')),
+                        'nohp_cust' => $this->request->getVar('inputcustomer'),
+                        'jumlah' => 1 + $data['jumlah'],
+                        'pembulatan' => '0',
+                        'total_harga' => $this->modeldetailpenjualan->SumDataOngkosJual($this->request->getVar('iddate'))['ongkos'] + $this->modeldetailpenjualan->SumDataDetailBeliJual($this->request->getVar('iddate'))['harga_beli'],
                         'pembayaran' => 'Bayar Nanti',
                         'tunai' => '-',
                         'debitcc' => '0',
@@ -199,57 +186,6 @@ class Barangkeluar extends BaseController
                         'id_stock' => $databarang['id_stock'],
                         'qty' => '0'
                     ]);
-                    // } else {
-                    //     $dateidjual = date('dmyhis');
-                    //     $session->set('date_id_penjualan', $dateidjual);
-                    //     if ($this->request->getVar('pembulatan') != 0) {
-                    //         $pembulatan = $this->request->getVar('pembulatan');
-                    //     } else {
-                    //         $pembulatan = 0;
-                    //     }
-                    //     $this->penjualan->save([
-                    //         // 'created_at' => date("y-m-d"),
-                    //         'id_date_penjualan' => $session->get('date_id_penjualan'),
-                    //         'nama_supplier' => $this->request->getVar('supplier'),
-                    //         'no_transaksi_jual' => $this->NoTransaksiGenerateJual(),
-                    //         'id_customer' => $this->datacust->getDataCustomerone($this->request->getVar('inputcustomer'))['id_customer'],
-                    //         'id_karyawan' => '1',
-                    //         'nama_customer' => $this->request->getVar('inputcustomer'),
-                    //         'jumlah' => '1',
-                    //         'onkos' => '0',
-                    //         'pembulatan/diskon' => $pembulatan,
-                    //         'total_harga' => '0',
-                    //         'pembayaran' => 'Bayar Nanti',
-                    //         'tunai' => '-',
-                    //         'debitcc' => '0',
-                    //         'transfer' => '0',
-                    //         'status_dokumen' => 'Draft'
-                    //     ]);
-
-                    //     $this->modeldetailpenjualan->save([
-                    //         'id_date_penjualan' => $session->get('date_id_penjualan'),
-                    //         'nama_img' => $databarang['gambar'],
-                    //         'kode' =>  $databarang['barcode'],
-                    //         'qty' => $databarang['qty'],
-                    //         'jenis' =>  $databarang['jenis'],
-                    //         'model' =>  $databarang['model'],
-                    //         'keterangan' =>  $databarang['keterangan'],
-                    //         'berat_kotor' =>  $databarang['berat_kotor'],
-                    //         'berat_bersih' =>  $databarang['berat_bersih'],
-                    //         'harga_beli' =>  $databarang['total_harga'],
-                    //         'kadar' =>   $databarang['kadar'],
-                    //         'nilai_tukar' =>   '0',
-                    //         'merek' =>  $databarang['merek'],
-                    //         'total_harga' => $databarang['total_harga'],
-                    //     ]);
-
-                    //     $this->datastock->save([
-                    //         'id_stock' => $databarang['id_stock'],
-                    //         'qty' => '0'
-                    //     ]);
-
-                    //     $idmsg = $session->get('date_id_penjualan');
-                    // }
                     $msg = [
                         'pesan' => 'Berhasil',
                         // 'idmsg' => (isset($idmsg)) ? $idmsg : null
@@ -271,9 +207,16 @@ class Barangkeluar extends BaseController
         if ($this->request->isAJAX()) {
 
             $id = $this->request->getVar('id');
+            $jualan = $this->penjualan->getDataPenjualan($this->request->getVar('iddate'));
+            $data = $this->modeldetailpenjualan->getDetailoneJual($id);
             $this->modeldetailpenjualan->save([
                 'id_detail_penjualan' =>  $id,
-                'total_harga' => $this->request->getVar('hargabaru')
+                'harga_beli' => $this->request->getVar('hargabaru'),
+                'total_harga' => $this->request->getVar('hargabaru') * $data['berat']
+            ]);
+            $this->penjualan->save([
+                'id_penjualan' =>  $jualan['id_penjualan'],
+                'total_harga' => $this->modeldetailpenjualan->SumDataOngkosJual($this->request->getVar('iddate'))['ongkos'] + $this->modeldetailpenjualan->SumDataDetailJual($this->request->getVar('iddate'))['total_harga'],
             ]);
             $msg = 'berhasil';
             echo json_encode($msg);
@@ -283,8 +226,12 @@ class Barangkeluar extends BaseController
     public function DeleteDetailjual()
     {
         if ($this->request->isAJAX()) {
-            $session = session();
-            $datapenjualan = $this->penjualan->getDataPenjualan($session->get('date_id_penjualan'));
+            // $session = session();
+            $datapenjualan = $this->penjualan->getDataPenjualan($this->request->getVar('iddate'));
+            $totalharga = $this->modeldetailpenjualan->SumDataOngkosJual($this->request->getVar('iddate'))['ongkos'] + $this->modeldetailpenjualan->SumDataDetailBeliJual($this->request->getVar('iddate'))['harga_beli'];
+            if ($totalharga != null) {
+                $totalharga = 0;
+            }
             //$datastock = $this->datastock->CheckData(1);
             $id = $this->request->getVar('id');
             $data = $this->modeldetailpenjualan->getDetailoneJual($id);
@@ -292,7 +239,7 @@ class Barangkeluar extends BaseController
 
             $this->penjualan->save([
                 'id_penjualan' =>  $datapenjualan['id_penjualan'],
-                'total_harga' =>  $datapenjualan['total_harga'] - $data['total_harga'],
+                'total_harga' =>  $totalharga,
             ]);
             $this->datastock->save([
                 'id_stock' => $databarang['id_stock'],
@@ -326,7 +273,8 @@ class Barangkeluar extends BaseController
         $data = $this->penjualan->getDataPenjualan($id);
         $datapenjualan = [
             'datapenjualan' => $data,
-            'tampildata' => $this->modeldetailpenjualan->getDetailAllJual($id)
+            'datacust' => $this->datacust->getDataCustomer($data['id_customer']),
+            'tampildata' => $this->modeldetailpenjualan->getDetailAllJual($id),
         ];
 
         return view('barangkeluar/detail_jual_barang', $datapenjualan);
@@ -334,8 +282,10 @@ class Barangkeluar extends BaseController
 
     public function PrintInvoice($id)
     {
+        $datajual = $this->penjualan->getDataPenjualan($id);
         $data = [
-            'datajual' => $this->penjualan->getDataPenjualan($id),
+            'datacust' => $this->datacust->getDataCustomerone($datajual['nohp_cust']),
+            'datajual' => $datajual,
             'datadetailjual' => $this->modeldetailpenjualan->getDetailAllJual($id),
         ];
 
@@ -625,6 +575,7 @@ class Barangkeluar extends BaseController
             $msg = [
                 'data' => view('barangkeluar/detailtablejual', $data),
                 'totalbersih' => $this->modeldetailpenjualan->SumDataDetailJual($session->get('date_id_penjualan')),
+                'totalongkos' => $this->modeldetailpenjualan->SumDataOngkosJual($session->get('date_id_penjualan')),
                 'totalberatkotor' => $this->modeldetailpenjualan->SumBeratKotorDetailjual($session->get('date_id_penjualan')),
                 'totalberatbersih' => $this->modeldetailpenjualan->SumBeratBersihDetailjual($session->get('date_id_penjualan')),
             ];
@@ -658,13 +609,14 @@ class Barangkeluar extends BaseController
 
     public function penjualan_detail_read()
     {
-        $session = session();
         if ($this->request->isAJAX()) {
 
             $msg = [
                 'totalbersih' => $this->modeldetailpenjualan->SumDataDetailJual($this->request->getVar('dateid')),
                 'totalberatkotor' => $this->modeldetailpenjualan->SumBeratKotorDetailjual($this->request->getVar('dateid')),
                 'totalberatbersih' => $this->modeldetailpenjualan->SumBeratBersihDetailjual($this->request->getVar('dateid')),
+                'totalongkos' => $this->modeldetailpenjualan->SumDataOngkosJual($this->request->getVar('dateid')),
+
             ];
             echo json_encode($msg);
         }

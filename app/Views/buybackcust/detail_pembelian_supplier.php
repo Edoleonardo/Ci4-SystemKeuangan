@@ -141,7 +141,6 @@
                                             <th>Berat</th>
                                             <th>Berat Murni</th>
                                             <th>Harga Beli</th>
-                                            <th>Ongkos</th>
                                             <th>Kadar</th>
                                             <th>Nilai Tukar</th>
                                             <th>Merek</th>
@@ -160,8 +159,7 @@
                                                 <td><?= $row['keterangan'] ?></td>
                                                 <td><?= $row['berat'] ?></td>
                                                 <td><?= $row['berat_murni'] ?></td>
-                                                <td><?= number_format($row['harga_beli'], 2, ",", ".") ?></td>
-                                                <td><?= number_format($row['ongkos'], 2, ",", ".") ?></td>
+                                                <td><?= $row['harga_beli'] ?></td>
                                                 <td><?= $row['kadar'] ?></td>
                                                 <td><?= $row['nilai_tukar'] ?></td>
                                                 <td><?= $row['merek'] ?></td>
@@ -287,7 +285,6 @@
                                             <th>Berat</th>
                                             <th>Berat Murni</th>
                                             <th>Harga Beli</th>
-                                            <th>ongkos</th>
                                             <th>Kadar</th>
                                             <th>Nilai Tukar</th>
                                             <th>Merek</th>
@@ -306,12 +303,11 @@
                                                 <td><?= $row['keterangan'] ?></td>
                                                 <td><?= $row['berat'] ?></td>
                                                 <td><?= $row['berat_murni'] ?></td>
-                                                <td><?= number_format($row['harga_beli'], 2, ",", ".") ?></td>
-                                                <td><?= number_format($row['ongkos'], 2, ",", ".") ?></td>
+                                                <td><?= $row['harga_beli'] ?></td>
                                                 <td><?= $row['kadar'] ?></td>
                                                 <td><?= $row['nilai_tukar'] ?></td>
                                                 <td><?= $row['merek'] ?></td>
-                                                <td><?= number_format($row['total_harga'], 2, ",", ".") ?></td>
+                                                <td><?= number_format($row['total_harga']) ?></td>
                                                 <td>
                                                     <form id="returform" action="/returbarang/<?= $row['id_detail_pembelian']; ?>" method="POST" class="d-inline">
                                                         <?= csrf_field(); ?>

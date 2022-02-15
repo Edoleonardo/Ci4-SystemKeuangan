@@ -93,10 +93,10 @@
                 <div class="card">
                     <!-- /.card-header -->
                     <form action="/kodebarcode" name="formkodebarcode" id="formkodebarcode" class="formkodebarcode" method="post">
-
+                        <input type="hidden" name="iddate" value="<?= $datapenjualan['id_date_penjualan'] ?>">
                         <div class="form-group" style="margin: 1mm;">
-                            <label>Nama Customer</label>
-                            <input autocomplete="off" type="text" onchange="checkcust()" class="form-control inputcustomer" id="inputcustomer" name="inputcustomer" value="<?= (isset($datapenjualan['nama_customer'])) ? $datapenjualan['nama_customer'] : '' ?>" placeholder="Masukan data customer">
+                            <label>Nomor Tlp Customer</label>
+                            <input autocomplete="off" type="number" class="form-control inputcustomer" id="inputcustomer" name="inputcustomer" value="<?= (isset($datapenjualan['nohp_cust'])) ? $datapenjualan['nohp_cust'] : '' ?>" placeholder="Masukan data customer">
                             <div id="validationServerUsernameFeedback" class="invalid-feedback inputcustomermsg">
                             </div>
                         </div>
@@ -122,7 +122,7 @@
             <div class="col-6">
                 <!-- Application buttons -->
                 <div class="card">
-                    <div class="card-body">
+                    <div class="card-body" id="refreshtombol">
                         <a class="btn btn-app tambahcustomer" id="tambahcustomer" data-toggle="modal" data-target="#modal-lg">
                             <i class="fas fa-users"></i> Tambah Customer
                         </a>
@@ -165,6 +165,7 @@
                                             <th>Kode</th>
                                             <th>Qty</th>
                                             <th>Harga Jual</th>
+                                            <th>Ongkos</th>
                                             <th>Jenis</th>
                                             <th>Model</th>
                                             <th>Keterangan</th>
@@ -193,15 +194,19 @@
                                 <table class="table table-striped">
                                     <tbody>
                                         <tr>
-                                            <td>Total Berat Bersih</td>
+                                            <td>Total Berat Murni</td>
                                             <td id="totalberatbersihhtml01"></td>
                                         </tr>
                                         <tr>
-                                            <td>Total Berat Kotor</td>
+                                            <td>Total Berat</td>
                                             <td id="totalberatkotorhtml01"></td>
                                         </tr>
                                         <tr>
-                                            <td>Total Harga Bersih</td>
+                                            <td>Total Ongkos</td>
+                                            <td id="totalongkoshtml01"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Total Harga</td>
                                             <td id="totalbersih01"></td>
                                         </tr>
                                     </tbody>
@@ -213,7 +218,7 @@
                     <div class="col-sm-6">
                         <div class="card">
                             <!-- /.card-header -->
-                            <div class="card-body p-0">
+                            <div class="card-body p-0" id="refreshpembayaran">
 
                                 <table class="table table-striped">
                                     <tbody>
@@ -335,7 +340,7 @@
                                 <div class="form-group">
                                     <label>Pembulatan</label>
                                     <input onkeyup="myPembulatan()" type="number" value="<?= (isset($datapenjualan['pembulatan'])) ? $datapenjualan['pembulatan'] : ''; ?>" min="0" id="pembulatan" name="pembulatan" class="form-control" placeholder="Masukan Pembulatan">
-                                    <input type="hidden" name="dateid" value="<?= (isset($datapenjualan['id_date_penjualan'])) ? $datapenjualan['id_date_penjualan'] : ''; ?>">
+                                    <input type="hidden" id="dateid" name="dateid" value="<?= (isset($datapenjualan['id_date_penjualan'])) ? $datapenjualan['id_date_penjualan'] : ''; ?>">
                                 </div>
                             </div>
                             <div class="col-sm-12">
@@ -397,6 +402,10 @@
                                             <tr>
                                                 <td>Total Berat Bersih</td>
                                                 <td id="totalberatbersihhtml"></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Total Ongkos</td>
+                                                <td id="totalongkoshtml"></td>
                                             </tr>
                                             <tr id="tabelbank">
                                             </tr>
@@ -479,6 +488,8 @@
                     b.addEventListener("click", function(e) {
                         /*insert the value for the autocomplete text field:*/
                         inp.value = this.getElementsByTagName("input")[0].value;
+                        inp.focus()
+                        // inp.select()
                         /*close the list of autocompleted values,
                         (or any other open lists of autocompleted values:*/
                         closeAllLists();
@@ -557,7 +568,7 @@
                 var arr = []
                 for (var i = 0; i < result.length; i++) {
                     var obj = result[i];
-                    arr.push(obj.nama)
+                    arr.push(obj.nohp_cust)
 
                 }
                 autocomplete(document.getElementById("inputcustomer"), arr);
@@ -569,24 +580,27 @@
     }
 
     function checkcust() {
-        $.ajax({
-            type: "GET",
-            dataType: "json",
-            data: {
-                nama_cust: document.getElementById('inputcustomer').value
-            },
-            url: "<?php echo base_url('checkcust'); ?>",
-            success: function(result) {
-                if (result == 'gagal') {
-                    isicust = document.getElementById('inputcustomer').value
-                    document.getElementById("nama_cust").value = isicust
-                    $('#tambahcustomer').trigger('click');
+        if (document.getElementById('inputcustomer').value.length != 1) {
+            $.ajax({
+                type: "GET",
+                dataType: "json",
+                data: {
+                    nohp_cust: document.getElementById('inputcustomer').value
+                },
+                url: "<?php echo base_url('checkcust'); ?>",
+                success: function(result) {
+                    console.log(result)
+                    if (result == 'gagal') {
+                        isicust = document.getElementById('inputcustomer').value
+                        document.getElementById("nohp").value = isicust
+                        $('#tambahcustomer').trigger('click');
+                    }
+                },
+                error: function(xhr, ajaxOptions, thrownError) {
+                    alert(xhr.status + "\n" + xhr.responseText + "\n" + thrownError);
                 }
-            },
-            error: function(xhr, ajaxOptions, thrownError) {
-                alert(xhr.status + "\n" + xhr.responseText + "\n" + thrownError);
-            }
-        })
+            })
+        }
     }
 
     function pembulatankoma(berat) {
@@ -603,10 +617,13 @@
             dataType: "json",
             url: "<?php echo base_url('tampilpenjualan'); ?>",
             success: function(result) {
+                var totalharga = parseFloat(result.totalbersih.total_harga) + parseFloat(result.totalongkos.ongkos)
                 $('#datajual').html(result.data)
-                $('#totalbersih01').html(result.totalbersih.total_harga.toString().replace(/\B(?=(\d{3})+(?!\d))/g, "."))
-                $('#totalberatbersihhtml01').html(pembulatankoma(result.totalberatbersih.berat_bersih))
-                $('#totalberatkotorhtml01').html(pembulatankoma(result.totalberatkotor.berat_kotor))
+                $('#totalbersih01').html(totalharga.toString().replace(/\B(?=(\d{3})+(?!\d))/g, "."))
+                $('#totalberatbersihhtml01').html(pembulatankoma(result.totalberatbersih.berat_murni))
+                $('#totalberatkotorhtml01').html(pembulatankoma(result.totalberatkotor.berat))
+                $('#totalongkoshtml01').html(pembulatankoma(result.totalongkos.ongkos).toString().replace(/\B(?=(\d{3})+(?!\d))/g, "."))
+
 
             },
             error: function(xhr, ajaxOptions, thrownError) {
@@ -624,10 +641,13 @@
                 dateid: '<?= (isset($datapenjualan['id_date_penjualan'])) ? $datapenjualan['id_date_penjualan'] : ''; ?>'
             },
             success: function(result) {
-                $('#totalberatbersihhtml').html(pembulatankoma(result.totalberatbersih.berat_bersih))
-                $('#totalberatkotorhtml').html(pembulatankoma(result.totalberatkotor.berat_kotor))
-                document.getElementById('totalbersih1').innerHTML = pembulatankoma(result.totalbersih.total_harga).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
-                document.getElementById('totalbersih').innerHTML = pembulatankoma(result.totalbersih.total_harga).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
+                var totalharga = parseFloat(result.totalbersih.total_harga) + parseFloat(result.totalongkos.ongkos)
+
+                $('#totalberatbersihhtml').html(pembulatankoma(result.totalberatbersih.berat_murni))
+                $('#totalberatkotorhtml').html(pembulatankoma(result.totalberatkotor.berat))
+                $('#totalongkoshtml').html(pembulatankoma(result.totalongkos.ongkos).toString().replace(/\B(?=(\d{3})+(?!\d))/g, "."))
+                document.getElementById('totalbersih1').innerHTML = pembulatankoma(totalharga).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
+                document.getElementById('totalbersih').innerHTML = pembulatankoma(totalharga).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
                 document.getElementById('pembulatanhtml').innerHTML = ''
                 document.getElementById('pembulatan').value = ''
 
@@ -706,7 +726,8 @@
                         }).then((result) => {
                             if (result.isConfirmed) {
                                 $('#modal-bayar').modal('toggle');
-                                window.location.reload();
+                                $("#refreshpembayaran").load("/draftpenjualan/" + document.getElementById('dateid').value + " #refreshpembayaran");
+                                $("#refreshtombol").load("/draftpenjualan/" + document.getElementById('dateid').value + " #refreshtombol");
 
                             }
                         })
@@ -979,11 +1000,12 @@
     };
 
     function ScanBarcode() {
-
+        checkcust()
         $('#btnsubmitform').trigger('click');
     }
 
     $('.formkodebarcode').submit(function(e) {
+        checkcust()
         e.preventDefault()
         let form = $('.formkodebarcode')[0];
         let data = new FormData(form)
@@ -1041,6 +1063,8 @@
 
 
     $(document).ready(function() {
+        $("#refreshtombol").load("/draftpenjualan/" + document.getElementById('dateid').value + " #refreshtombol");
+
         tampildata()
         myDataBayar()
         tampilcustomer()

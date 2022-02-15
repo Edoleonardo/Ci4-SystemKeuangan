@@ -10,7 +10,7 @@ class ModelCustomer extends Model
     protected $table = 'tbl_customer';
     protected $primaryKey = 'id_customer';
     protected $useTimestamps = true;
-    protected $allowedFields = ['nama', 'nohp_cust', 'alamat_cust', 'kota_cust', 'sales_cust', 'piont_penjualan'];
+    protected $allowedFields = ['nama', 'nohp_cust', 'alamat_cust', 'kota_cust', 'sales_cust', 'piont'];
 
     public function getDataCustomer($id = false)
     {
@@ -24,6 +24,6 @@ class ModelCustomer extends Model
     public function getDataCustomerone($id = false)
     {
 
-        return $this->where(['nama' => $id])->first();
+        return $this->where(['nohp_cust' => $id])->first();
     }
 }

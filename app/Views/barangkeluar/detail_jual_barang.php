@@ -43,7 +43,12 @@
                             <tbody>
                                 <tr>
                                     <td>
-                                        Nama Customer : <?= $datapenjualan['nama_customer'] ?>
+                                        Nama Customer : <?= $datacust['nama'] ?>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        No Hp : <?= $datacust['nohp_cust'] ?>
                                     </td>
                                 </tr>
                                 <tr>
@@ -91,14 +96,16 @@
                                             <th>Kode</th>
                                             <th>Qty</th>
                                             <th>Harga Jual</th>
+                                            <th>Ongkos</th>
                                             <th>Jenis</th>
                                             <th>Model</th>
                                             <th>Keterangan</th>
-                                            <th>Berat Kotor</th>
-                                            <th>Berat Bersih</th>
+                                            <th>Berat</th>
+                                            <th>Berat Murni</th>
                                             <th>Kadar</th>
                                             <th>Nilai Tukar</th>
                                             <th>Merek</th>
+                                            <th>Total Harga</th>
                                         </tr>
                                     </thead>
                                     <?php foreach ($tampildata as $row) : ?>
@@ -106,15 +113,18 @@
                                             <td><img src='/img/<?= $row['nama_img'] ?>' class='imgg'></td>
                                             <td><?= $row['kode'] ?></td>
                                             <td><?= $row['qty'] ?></td>
-                                            <td><?= $row['total_harga'] ?></td>
+                                            <td><?= number_format($row['harga_beli'], 2, ',', '.') ?></td>
+                                            <td><?= number_format($row['ongkos'], 2, ',', '.') ?></td>
                                             <td><?= $row['jenis'] ?></td>
                                             <td><?= $row['model'] ?></td>
                                             <td><?= $row['keterangan'] ?></td>
-                                            <td><?= $row['berat_kotor'] ?></td>
-                                            <td><?= $row['berat_bersih'] ?></td>
+                                            <td><?= $row['berat'] ?></td>
+                                            <td><?= $row['berat_murni'] ?></td>
                                             <td><?= $row['kadar'] ?></td>
                                             <td><?= $row['nilai_tukar'] ?></td>
                                             <td><?= $row['merek'] ?></td>
+                                            <td><?= number_format($row['total_harga'], 2, ',', '.') ?></td>
+
                                         </tr>
                                     <?php endforeach; ?>
                                     <tbody id="datajual">
@@ -142,7 +152,11 @@
                                             <td id="totalberatkotorhtml01"></td>
                                         </tr>
                                         <tr>
-                                            <td>Total Harga Bersih</td>
+                                            <td>Total Ongkos</td>
+                                            <td id="totalongkoshtml01"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Total Harga</td>
                                             <td id="totalbersih01"></td>
                                         </tr>
                                     </tbody>
@@ -399,9 +413,14 @@
             dataType: "json",
             url: "<?php echo base_url('tampilpenjualan'); ?>",
             success: function(result) {
-                $('#totalbersih01').html(result.totalbersih.total_harga.toString().replace(/\B(?=(\d{3})+(?!\d))/g, "."))
-                $('#totalberatbersihhtml01').html(pembulatankoma(result.totalberatbersih.berat_bersih))
-                $('#totalberatkotorhtml01').html(pembulatankoma(result.totalberatkotor.berat_kotor))
+                var totalharga = (parseFloat(result.totalbersih.harga_beli) * parseFloat(result.totalberatkotor.berat)) + parseFloat(result.totalongkos.ongkos)
+
+                $('#totalbersih01').html(totalharga.toString().replace(/\B(?=(\d{3})+(?!\d))/g, "."))
+                $('#totalberatbersihhtml01').html(pembulatankoma(result.totalberatbersih.berat_murni))
+                $('#totalberatkotorhtml01').html(pembulatankoma(result.totalberatkotor.berat))
+                $('#totalongkoshtml01').html(pembulatankoma(result.totalongkos.ongkos).toString().replace(/\B(?=(\d{3})+(?!\d))/g, "."))
+
+
 
             },
             error: function(xhr, ajaxOptions, thrownError) {

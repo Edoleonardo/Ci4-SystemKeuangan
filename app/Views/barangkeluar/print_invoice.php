@@ -19,7 +19,7 @@ function barcodegenerate($kode)
   <tbody>
     <tr>
       <td style='border:none; width: 160mm;'><?= barcodegenerate($datajual['no_transaksi_jual']) ?></td>
-      <td style='border:none;'>No.Nota : <?= $datajual['no_transaksi_jual'] ?><br>Tangerang, <?= date('d-m-y') ?><br>Bpk/Ibu: <?= $datajual['nama_customer'] ?></td>
+      <td style='border:none;'>No.Nota : <?= $datajual['no_transaksi_jual'] ?><br>Tangerang, <?= date('d-m-y') ?><br>Bpk/Ibu: <?= $datacust['nama'] ?></td>
     </tr>
   </tbody>
 </table>
@@ -38,15 +38,17 @@ function barcodegenerate($kode)
         </tr>
       </thead>
       <?php $total = 0;
+      $ongkos = 0;
       foreach ($datadetailjual as $row) : ?>
         <tr>
           <td><?= $row['qty'] ?></td>
           <td><?= $row['jenis'] ?>, <?= $row['keterangan'] ?>, <?= $row['model'] ?>, (<?= $row['kode'] ?>)</td>
-          <td><?= $row['berat_kotor'] ?></td>
+          <td><?= $row['berat'] ?></td>
           <td>0</td>
-          <td><?= $row['total_harga'] ?></td>
+          <td><?= number_format($row['total_harga'], '2', ',', '.') ?></td>
         </tr>
-      <?php $total = $total +  $row['total_harga'];
+      <?php $total = $total +  $row['total_harga'] + $row['ongkos'];
+        $ongkos = $ongkos + $row['ongkos'];
       endforeach; ?>
       <?php if ($datajual['charge']) : $total = $total + ($total / 100 * $datajual['charge']) ?>
         <tr>
@@ -55,6 +57,15 @@ function barcodegenerate($kode)
           <td style='border:none;'></td>
           <td>Charge</td>
           <td><?= $datajual['charge'] ?> %</td>
+        </tr>
+      <?php endif ?>
+      <?php if ($ongkos != 0) : ?>
+        <tr>
+          <td style='border:none;'></td>
+          <td style='border:none;'></td>
+          <td style='border:none;'></td>
+          <td>Ongkos</td>
+          <td><?= number_format($ongkos, 2, ",", ".") ?></td>
         </tr>
       <?php endif ?>
       <tr>
