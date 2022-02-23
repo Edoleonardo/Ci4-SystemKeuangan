@@ -96,7 +96,7 @@
                         <input type="hidden" name="iddate" value="<?= $datapenjualan['id_date_penjualan'] ?>">
                         <div class="form-group" style="margin: 1mm;">
                             <label>Nomor Tlp Customer</label>
-                            <input autocomplete="off" type="number" class="form-control inputcustomer" id="inputcustomer" name="inputcustomer" value="<?= (isset($datapenjualan['nohp_cust'])) ? $datapenjualan['nohp_cust'] : '' ?>" placeholder="Masukan data customer">
+                            <input autocomplete="off" type="tel" class="form-control inputcustomer" id="inputcustomer" name="inputcustomer" value="<?= (isset($datapenjualan['nohp_cust'])) ? $datapenjualan['nohp_cust'] : '' ?>" placeholder="Masukan data customer">
                             <div id="validationServerUsernameFeedback" class="invalid-feedback inputcustomermsg">
                             </div>
                         </div>
@@ -169,8 +169,8 @@
                                             <th>Jenis</th>
                                             <th>Model</th>
                                             <th>Keterangan</th>
-                                            <th>Berat Kotor</th>
-                                            <th>Berat Bersih</th>
+                                            <th>Berat</th>
+                                            <th>Berat Murni</th>
                                             <th>Kadar</th>
                                             <th>Nilai Tukar</th>
                                             <th>Merek</th>
@@ -580,28 +580,30 @@
     }
 
     function checkcust() {
-        if (document.getElementById('inputcustomer').value.length != 1) {
-            $.ajax({
-                type: "GET",
-                dataType: "json",
-                data: {
-                    nohp_cust: document.getElementById('inputcustomer').value
-                },
-                url: "<?php echo base_url('checkcust'); ?>",
-                success: function(result) {
-                    console.log(result)
-                    if (result == 'gagal') {
-                        isicust = document.getElementById('inputcustomer').value
-                        document.getElementById("nohp").value = isicust
-                        $('#tambahcustomer').trigger('click');
-                    }
-                },
-                error: function(xhr, ajaxOptions, thrownError) {
-                    alert(xhr.status + "\n" + xhr.responseText + "\n" + thrownError);
+        $.ajax({
+            type: "GET",
+            dataType: "json",
+            data: {
+                nohp_cust: document.getElementById('inputcustomer').value
+            },
+            url: "<?php echo base_url('checkcust'); ?>",
+            success: function(result) {
+                console.log(result)
+                if (result == 'gagal') {
+                    isicust = document.getElementById('inputcustomer').value
+                    document.getElementById("nohp").value = isicust
+                    $('#tambahcustomer').trigger('click');
+                    return false;
+                } else {
+                    return true;
                 }
-            })
-        }
+            },
+            error: function(xhr, ajaxOptions, thrownError) {
+                alert(xhr.status + "\n" + xhr.responseText + "\n" + thrownError);
+            }
+        })
     }
+
 
     function pembulatankoma(berat) {
         var num = Number(berat) // The Number() only visualizes the type and is not needed
@@ -1000,7 +1002,7 @@
     };
 
     function ScanBarcode() {
-        checkcust()
+        // checkcust()
         $('#btnsubmitform').trigger('click');
     }
 
@@ -1063,8 +1065,6 @@
 
 
     $(document).ready(function() {
-        $("#refreshtombol").load("/draftpenjualan/" + document.getElementById('dateid').value + " #refreshtombol");
-
         tampildata()
         myDataBayar()
         tampilcustomer()

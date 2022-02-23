@@ -50,6 +50,14 @@ class ModelHome extends Model
         //  $this->get();
         // return $query;
     }
+    public function getKodeBahan24k()
+    {
+        $db = db_connect();
+        $data = $db->query('select * from tbl_stock where substr(barcode,1,1) = 3 ');
+        return $data->getResult('array');
+        //  $this->get();
+        // return $query;
+    }
     public function returdelete($id)
     {
         $db = db_connect();

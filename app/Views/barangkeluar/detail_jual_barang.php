@@ -415,7 +415,7 @@
             success: function(result) {
                 var totalharga = (parseFloat(result.totalbersih.harga_beli) * parseFloat(result.totalberatkotor.berat)) + parseFloat(result.totalongkos.ongkos)
 
-                $('#totalbersih01').html(totalharga.toString().replace(/\B(?=(\d{3})+(?!\d))/g, "."))
+                $('#totalbersih01').html(result.totalbersih.total_harga.toString().replace(/\B(?=(\d{3})+(?!\d))/g, "."))
                 $('#totalberatbersihhtml01').html(pembulatankoma(result.totalberatbersih.berat_murni))
                 $('#totalberatkotorhtml01').html(pembulatankoma(result.totalberatkotor.berat))
                 $('#totalongkoshtml01').html(pembulatankoma(result.totalongkos.ongkos).toString().replace(/\B(?=(\d{3})+(?!\d))/g, "."))

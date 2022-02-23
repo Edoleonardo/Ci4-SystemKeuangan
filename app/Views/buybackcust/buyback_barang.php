@@ -2,8 +2,6 @@
 <?= $this->section('content') ?>
 <script type="text/javascript" src="/js/jquery.js"></script>
 <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/webcamjs/1.0.26/webcam.min.js"></script>
-
 <style>
     .table>tbody>tr>* {
         vertical-align: middle;
@@ -21,13 +19,14 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1 class="m-0">Data Buyback Customer</h1>
+                    <h1 class="m-0">Form Penjualan Barang</h1>
                 </div><!-- /.col -->
                 <!-- /.content-header -->
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
                         <li class="breadcrumb-item"><a href="/buybackcust">Home</a></li>
-                        <li class="breadcrumb-item active">Buyback Customer</li>
+                        <li class="breadcrumb-item"><a href="/buybackcust">Buyback Customer</a></li>
+                        <li class="breadcrumb-item active">Form Penjualan</li>
                     </ol>
                 </div><!-- /.col -->
             </div><!-- /.row -->
@@ -35,92 +34,145 @@
     </div>
     <!-- Main content -->
     <section class="content">
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-12">
+        <div class="row">
+            <div class="col-6">
+                <form action="/scantrans" name="scannotrans" id="scannotrans" class="scannotrans" method="post">
                     <div class="card">
-                        <div class="card-header ">
-                            <a class="btn btn-app" href="/adanota">
-                                <i class="fas fa-plus"></i> Dengan Nota
-                            </a>
-                            <a class="btn btn-app" data-toggle="modal" data-target="#modal-nota">
-                                <i class="fas fa-plus"></i> Tanpa Nota
-                            </a>
-                        </div>
-                        <!-- /.card-header -->
-                        <div id="refrestbl">
-                            <div class="card-body table ">
-                                <table id="example1" class="table table-bordered table-striped tableasd">
-                                    <thead>
-                                        <tr>
-                                            <th>Gambar</th>
-                                            <th>Kode</th>
-                                            <th>Qty</th>
-                                            <th>Harga Beli</th>
-                                            <th>Ongkos</th>
-                                            <th>Berat Murni</th>
-                                            <th>Nilai Tukar</th>
-                                            <th>Jenis</th>
-                                            <th>Detail</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <?php foreach ($databuyback as $row) : ?>
-                                            <tr>
-                                                <td><img src='/img/<?= $row['nama_img'] ?>' class='imgg'></td>
-                                                <td><?= $row['kode'] ?></td>
-                                                <td><?= $row['qty'] ?></td>
-                                                <td><?= number_format($row['harga_beli'], 2, ',', '.') ?></td>
-                                                <td><?= number_format($row['ongkos'], 2, ',', '.') ?></td>
-                                                <td><?= $row['berat_murni'] ?></td>
-                                                <td><?= $row['nilai_tukar'] ?></td>
-                                                <td><?= $row['jenis'] ?></td>
-                                                <td><a type='button' href="detailbuyback/<?= $row['id_detail_buyback'] ?>" class='btn btn-block bg-gradient-primary'>Edit</a></td>
-                                            </tr>
-                                        <?php endforeach; ?>
-                                    </tbody>
-                                    <tfoot>
-                                        <tr>
-                                            <th>Gambar</th>
-                                            <th>Kode</th>
-                                            <th>Qty</th>
-                                            <th>Harga Beli</th>
-                                            <th>Ongkos</th>
-                                            <th>Berat Murni</th>
-                                            <th>Nilai Tukar</th>
-                                            <th>Jenis</th>
-                                            <th>Detail</th>
-                                        </tr>
-                                    </tfoot>
-                                </table>
+                        <div class="form-group" style="margin: 1mm;">
+                            <label>Masukan No Invoce</label>
+                            <div class="input-group input-group-sm">
+                                <input type="text" class="form-control notrans" id="notrans" onkeyup="ScannoTrans()" name="notrans" placeholder="Masukan Nomor Nota">
+                                <span class="input-group-append">
+                                    <button type="submit" id="scannotransbtn" class="btn btn-info btn-flat scannotransbtn">Ok</button>
+                                </span>
+                                <div id="validationServerUsernameFeedback" class="invalid-feedback notransmsg">
+                                </div>
                             </div>
                         </div>
+                </form>
+
+            </div>
+            <!-- /.card -->
+        </div>
+
+</div>
+<div class="card ">
+    <!-- /.card-header -->
+    <div class="card-body">
+        <br>
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <!-- /.card-header -->
+                    <div class="card-body table-responsive p-0">
+                        <table class="table table-hover text-nowrap">
+                            <thead>
+                                <tr>
+                                    <th>Gambar</th>
+                                    <th>Kode</th>
+                                    <th>Qty</th>
+                                    <th>Harga Beli</th>
+                                    <th>Ongkos</th>
+                                    <th>Jenis</th>
+                                    <th>Model</th>
+                                    <th>Keterangan</th>
+                                    <th>Berat</th>
+                                    <th>Berat Murni</th>
+                                    <th>Kadar</th>
+                                    <th>Nilai Tukar</th>
+                                    <th>Merek</th>
+                                    <th>Buyback</th>
+                                </tr>
+                            </thead>
+                            <tbody id="databuyback">
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- /.card-body -->
+                </div>
+                <!-- /.card -->
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="card">
+                    <!-- /.card-header -->
+                    <div class="card-body p-0" id="refreshpembayaran">
+
+                        <table class="table table-striped">
+                            <tbody>
+                                <?php if (isset($datapenjualan)) : ?>
+                                    <tr>
+                                        <td>Metode Pembayaran</td>
+                                        <td><?= $datapenjualan['pembayaran'] ?></td>
+                                    </tr>
+                                    <?php if ($datapenjualan['nama_bank']) : ?>
+                                        <tr>
+                                            <td>Nama Bank</td>
+                                            <td><?= $datapenjualan['nama_bank'] ?></td>
+                                        </tr>
+                                    <?php endif ?>
+                                    <?php if ($datapenjualan['pembulatan']) : ?>
+                                        <tr>
+                                            <td>Pembulatan</td>
+                                            <td><?= number_format($datapenjualan['pembulatan'], 2, ",", ".") ?></td>
+                                        </tr>
+                                    <?php endif ?>
+                                    <?php if ($datapenjualan['charge']) : ?>
+                                        <tr>
+                                            <td>Charge</td>
+                                            <td><?= $datapenjualan['charge'] ?> %</td>
+                                        </tr>
+                                    <?php endif ?>
+                                    <?php if ($datapenjualan['tunai']) : ?>
+                                        <tr>
+                                            <td>Tunai</td>
+                                            <td><?= number_format($datapenjualan['tunai'], 2, ',', '.') ?></td>
+                                        </tr>
+                                    <?php endif ?>
+                                    <?php if ($datapenjualan['debitcc']) : ?>
+                                        <tr>
+                                            <td>Debit / CC</td>
+                                            <td><?= number_format($datapenjualan['debitcc'], 2, ',', '.') ?></td>
+                                        </tr>
+                                    <?php endif ?>
+                                    <?php if ($datapenjualan['transfer']) : ?>
+                                        <tr>
+                                            <td>Transfer</td>
+                                            <td><?= number_format($datapenjualan['transfer'], 2, ',', '.') ?></td>
+                                        </tr>
+                                    <?php endif ?>
+                                <?php endif ?>
+
+                            </tbody>
+                        </table>
                         <!-- /.card-body -->
                     </div>
-                    <!-- /.card -->
                 </div>
-                <!-- /.col -->
             </div>
-            <!-- /.row -->
+
         </div>
-        <!-- /.container-fluid -->
-    </section>
-    <!-- /.content -->
+    </div>
+    <!-- /.card-body -->
+</div>
+<!-- /.container-fluid -->
+</section>
+<!-- /.content -->
 </div>
 <!-- /.content-wrapper -->
-<div class="modal fade" id="modal-nota">
+<div class="modal fade" id="modal-edit">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title">Buyback Tanpa Nota</h4>
+                <h4 class="modal-title">Update Data</h4>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
-                <form action="/tambahbuybacknonota" id="tambahbuybacknonota" class="tambahbuybacknonota" name="tambahbuybacknonota">
+                <form action="/tambahbuyback" id="tambahbuyback" class="tambahbuyback" name="tambahbuyback">
                     <div class="row">
-                        <div class="col-sm-3">
+                        <div class="col-sm-2">
                             <!-- text input -->
                             <div class="form-group">
                                 <label>Merek</label>
@@ -142,7 +194,7 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="col-sm-3">
+                        <div class="col-sm-2">
                             <!-- text input -->
                             <div class="form-group">
                                 <label>Jenis</label>
@@ -155,7 +207,7 @@
                             <!-- text input -->
                             <div class="form-group">
                                 <label>Berat</label>
-                                <input type="number" onkeyup="HarusBayar()" step="0.01" id="berat" name="berat" class="form-control" placeholder="Masukan Berat Bersih">
+                                <input type="number" step="0.01" id="berat" onkeyup="HarusBayar()" name="berat" class="form-control" placeholder="Masukan Berat Bersih">
                                 <div id="validationServerUsernameFeedback" class="invalid-feedback beratmsg">
                                 </div>
                             </div>
@@ -164,7 +216,7 @@
                             <!-- text input -->
                             <div class="form-group">
                                 <label>Qty</label>
-                                <input type="Number" id="qty" name="qty" min="1" class="form-control" placeholder="Masukan jumlah">
+                                <input type="Number" id="qty" name="qty" min="1" onkeyup="HarusBayar()" class="form-control" placeholder="Masukan jumlah">
                                 <div id="validationServerUsernameFeedback" class="invalid-feedback qtymsg">
                                 </div>
                             </div>
@@ -210,17 +262,7 @@
                                 <input type="number" value="0" name="ongkos" onkeyup="HarusBayar()" id="ongkos" class="form-control ongkos" placeholder="Masukan Ongkos">
                                 <div id="validationServerUsernameFeedback" class="invalid-feedback ongkosmsg">
                                 </div>
-                                <input type="hidden" id="id" name="id" value="">
-                            </div>
-                        </div>
-                        <div class="col-sm-1">
-                            <!-- text input -->
-                            <div class="form-group">
-                                <label>Foto</label><br>
-                                <button type="button" id="ambilgbr" class="btn btn-primary" data-toggle="modal" data-target="#modal-foto" onclick="cameranyala()">
-                                    <i class="fa fa-camera"></i>
-                                </button>
-                                <div id="validationServerUsernameFeedback" class="invalid-feedback ambilgbrmsg"></div>
+                                <input type="hidden" id="kode" name="kode" value="">
                             </div>
                         </div>
                     </div>
@@ -291,57 +333,13 @@
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                 <button type="submit" class="btn btn-primary btnedit">Tambah</button>
             </div>
-            <div class="modal fade" id="modal-foto">
-                <div class="modal-dialog modal-default">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h4 class="modal-title">Ambil Foto</h4>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            <div class="row">
-                                <div class="col-sm-12">
-                                    <div class="form-group">
-                                        <div class="form-group"><label>Gambar</label>
-                                            <div class="custom-file">
-                                                <input type="file" name="gambar" class="custom-file-input" id="gambar" accept="image/*">
-                                                <label style="text-align: left" class="custom-file-label" for="gambar">Pilih Gambar</label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="form-group">
-                                    <div class="col-sm-12">
-                                        <div id='my_camera'>
-                                        </div>
-                                        <button style="text-align: center;" type='button' id='ambilfoto' class='btn btn-info ambilfoto' onclick='Foto_ulang()'>
-                                            <i class='fa fa-trash'></i></button>
-                                        <button type='button' id='ambilfoto' class='btn btn-info ambilfoto' onclick='Ambil_foto()'>Foto <i class='fa fa-camera'></i>
-                                        </button>
-                                        <input type='hidden' name='gambar' id='gambar' class='image-tag'>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="modal-footer justify-content-between">
-                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                                <button type="button" class="btn btn-primary" onclick="Webcam.reset()" data-dismiss="modal">Done</button>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- /.modal-content -->
-                </div>
-                <!-- /.modal-dialog -->
-            </div>
             </form>
         </div>
         <!-- /.modal-content -->
     </div>
     <!-- /.modal-dialog -->
+</div>
+<!-- /.modal-dialog -->
 </div>
 <!-- Control Sidebar -->
 <aside class="control-sidebar control-sidebar-dark">
@@ -352,17 +350,27 @@
 <footer class="main-footer">
 
 </footer>
-
-<script>
+<script type="text/javascript">
     function HarusBayar() {
+        var kode = document.getElementById('kode').value.substring(0, 1)
         var ongkos = parseFloat(document.getElementById('ongkos').value)
         var hargabeli = parseFloat(document.getElementById('harga_beli').value)
         var nilaitukar = parseFloat(document.getElementById('nilai_tukar').value)
         var berat = parseFloat(document.getElementById('berat').value)
+        var qty = parseFloat(document.getElementById('qty').value)
         const hrsbyr = document.getElementById('harusbayar')
         const brtmurni = document.getElementById('brtmurni')
         beratmurni = berat * nilaitukar / 100
-        harusbyr = hargabeli * beratmurni
+        if (kode == 1 || 4 || 5 || 9) {
+            harusbyr = (beratmurni * hargabeli) + ongkos;
+        }
+        if (kode == 2) {
+            harusbyr = hargabeli + ongkos;
+        }
+        if (kode == 3) {
+            harusbyr = (beratmurni * hargabeli * qty) + ongkos;
+        }
+
         brtmurni.innerHTML = beratmurni.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
         hrsbyr.innerHTML = harusbyr.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
         console.log(harusbyr)
@@ -401,9 +409,95 @@
 
         }
     }
-    $('.tambahbuybacknonota').submit(function(e) {
+
+    function pembulatankoma(berat) {
+        var num = Number(berat) // The Number() only visualizes the type and is not needed
+        var roundedString = num.toFixed(2);
+        var rounded = Number(roundedString);
+        return rounded
+    }
+
+
+    function tampildata() {
+        $.ajax({
+            type: "GET",
+            dataType: "json",
+            url: "<?php echo base_url('tampilpenjualan'); ?>",
+            success: function(result) {
+                var totalharga = parseFloat(result.totalbersih.total_harga) + parseFloat(result.totalongkos.ongkos)
+                $('#datajual').html(result.data)
+                $('#totalbersih01').html(totalharga.toString().replace(/\B(?=(\d{3})+(?!\d))/g, "."))
+                $('#totalberatbersihhtml01').html(pembulatankoma(result.totalberatbersih.berat_murni))
+                $('#totalberatkotorhtml01').html(pembulatankoma(result.totalberatkotor.berat))
+                $('#totalongkoshtml01').html(pembulatankoma(result.totalongkos.ongkos).toString().replace(/\B(?=(\d{3})+(?!\d))/g, "."))
+
+
+            },
+            error: function(xhr, ajaxOptions, thrownError) {
+                alert(xhr.status + "\n" + xhr.responseText + "\n" + thrownError);
+            }
+        })
+    }
+
+
+
+    function Batal() {
+        Swal.fire({
+            title: 'Batal Penjualan ',
+            text: "Apakah Ingin Batal Penjualan ?",
+            icon: 'info',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Batal',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = "<?php echo base_url('batalpenjualan'); ?>"
+            }
+        })
+
+    };
+
+    function ScannoTrans() {
+        $('#scannotransbtn').trigger('click');
+    }
+
+    $('.scannotrans').submit(function(e) {
         e.preventDefault()
-        let form = $('.tambahbuybacknonota')[0];
+        let form = $('.scannotrans')[0];
+        let data = new FormData(form)
+        $.ajax({
+            type: "POST",
+            data: data,
+            url: "<?php echo base_url('scantrans'); ?>",
+            contentType: false,
+            processData: false,
+            cache: false,
+            dataType: "json",
+            success: function(result) {
+                if (result.pesan_error) {
+                    console.log(result)
+                    $('#notrans').addClass('is-invalid')
+                    $('.notransmsg').html(result.pesan_error)
+
+                } else {
+                    $('#notrans').removeClass('is-invalid')
+                    $('.notransmsg').html('')
+                    document.getElementById('notrans').setAttribute("onkeyup", "ScannoTrans()");
+                    document.getElementById('notrans').value = ''
+                    $('#databuyback').html(result.data)
+                }
+            },
+            error: function(xhr, ajaxOptions, thrownError) {
+                alert(xhr.status + "\n" + xhr.responseText + "\n" + thrownError);
+            }
+        })
+
+    })
+
+    $('.tambahbuyback').submit(function(e) {
+        e.preventDefault()
+        let form = $('.tambahbuyback')[0];
         let data = new FormData(form)
         Swal.fire({
             title: 'Tambah',
@@ -419,13 +513,15 @@
                 $.ajax({
                     type: "POST",
                     data: data,
-                    url: "<?php echo base_url('/tambahbuybacknonota'); ?>",
+                    url: "<?php echo base_url('/tambahbuyback'); ?>",
                     contentType: false,
                     processData: false,
                     cache: false,
                     dataType: "json",
                     success: function(result) {
                         console.log(result)
+                        console.log('asd')
+
                         if (result.error) {
                             if (result.error.qty) {
                                 $('#qty').addClass('is-invalid')
@@ -468,13 +564,6 @@
                             } else {
                                 $('#ongkos').removeClass('is-invalid')
                                 $('.ongkosmsg').html('')
-                            }
-                            if (result.error.gambar) {
-                                $('#ambilgbr').addClass('is-invalid')
-                                $('.ambilgbrmsg').html(result.error.gambar)
-                            } else {
-                                $('#ambilgbr').removeClass('is-invalid')
-                                $('.ambilgbrmsg').html('')
                             }
                             if (result.error.namabank) {
                                 $('#namabank').addClass('is-invalid')
@@ -519,8 +608,6 @@
                             $('.harga_belimsg').html('')
                             $('#ongkos').removeClass('is-invalid')
                             $('.ongkosmsg').html('')
-                            $('#ambilgbr').removeClass('is-invalid')
-                            $('.ambilgbrmsg').html('')
                             $('#namabank').removeClass('is-invalid')
                             $('.namabank').html('')
                             $('#transfer').removeClass('is-invalid')
@@ -538,8 +625,8 @@
                                 allowOutsideClick: false
                             }).then((choose) => {
                                 if (choose.isConfirmed) {
-                                    $('#modal-nota').modal('toggle');
-                                    $("#refrestbl").load("/buybackcust #refrestbl");
+                                    $('#modal-edit').modal('toggle');
+                                    window.location.href = '/buybackcust'
                                 }
                             })
                         }
@@ -552,41 +639,72 @@
         })
     })
 
-    Webcam.set({
-        width: 320,
-        height: 240,
-        image_format: 'jpeg',
-        jpeg_quality: 100,
-        flip_horiz: true,
-    });
 
-    function cameranyala() {
-        if ($(".image-tag").val()) {
-            document.getElementById('my_camera').innerHTML = '<img src="' + data_uri + '">'
-        } else {
-            Webcam.attach('#my_camera');
-        }
-    }
+    function tambah(id) {
+        $.ajax({
+            type: "get",
+            dataType: "json",
+            url: "<?php echo base_url('tampilbuyback'); ?>",
+            data: {
+                id: id,
+            },
+            success: function(result) {
+                $('#modal-edit').modal('show');
+                $('#merek').val(result.data.merek)
+                $('#kadar').val(result.data.kadar)
+                $('#berat').val(result.data.berat)
+                $('#qty').val(result.data.qty)
+                $('#model').val(result.data.model)
+                $('#keterangan').val(result.data.keterangan)
+                $('#nilai_tukar').val(result.data.nilai_tukar)
+                $('#harga_beli').val(result.data.harga_beli)
+                $('#ongkos').val(result.data.ongkos)
+                $('#jenis').val(result.data.jenis)
+                $('#kode').val(result.data.kode)
+                $('#id').val(result.data.id_detail_penjualan)
+                HarusBayar()
 
-    function Ambil_foto() {
-        Webcam.snap(function(data_uri) {
-            $(".image-tag").val(data_uri);
-            Webcam.reset()
-            // Webcam.attach('#my_camera');
-            // console.log($(".image-tag").val())
-            document.getElementById('my_camera').innerHTML = '<img src="' + data_uri + '">'
+            },
+            error: function(xhr, ajaxOptions, thrownError) {
+                alert(xhr.status + "\n" + xhr.responseText + "\n" + thrownError);
+            }
         })
+
+
+
     }
 
-    function Foto_ulang() {
-        document.getElementById('my_camera').innerHTML = ''
-        $(".image-tag").val('');
-        Webcam.attach('#my_camera');
-    }
     $(document).ready(function() {
-        $(".modal").on("hidden.bs.modal", function() {
-            Webcam.reset('#my_camera')
-        });
+        // $("#refreshtombol").load("/draftpenjualan/" + document.getElementById('dateid').value + " #refreshtombol");
+        tampildata()
+
+        $('.insertcust').submit(function(e) {
+            e.preventDefault()
+            let form = $('.insertcust')[0];
+            let data = new FormData(form)
+            $.ajax({
+                type: "POST",
+                data: data,
+                url: "<?php echo base_url('insertcustomer'); ?>",
+                dataType: "json",
+                contentType: false,
+                processData: false,
+                cache: false,
+                beforeSend: function() {
+                    $('.btntambah').html('<i class="fa fa-spin fa-spinner">')
+                },
+                complete: function() {
+                    $('.btntambah').html('Tambah')
+                },
+                success: function(result) {
+                    tampilcustomer()
+                    $('#modal-lg').modal('toggle');
+                },
+                error: function(xhr, ajaxOptions, thrownError) {
+                    alert(xhr.status + "\n" + xhr.responseText + "\n" + thrownError);
+                }
+            })
+        })
     })
 </script>
 <?= $this->endSection(); ?>

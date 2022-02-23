@@ -52,7 +52,7 @@ class Barangkeluar extends BaseController
         $session = session();
         $session->remove('date_id_penjualan');
         //-------------------------------------------------------------
-        $dateidjual = date('dmyhis');
+        $dateidjual = date('ymdhis');
         $session->set('date_id_penjualan', $dateidjual);
         $this->penjualan->save([
             // 'created_at' => date("y-m-d"),
@@ -598,8 +598,8 @@ class Barangkeluar extends BaseController
                     'qty' => $row['qty']
                 ]);
             }
-            $this->detailbeli->query('DELETE FROM tbl_detail_penjualan WHERE id_date_penjualan =' . $session->get('date_id_penjualan') . ';');
-            $this->datapembelian->query('DELETE FROM tbl_penjualan WHERE id_date_penjualan =' . $session->get('date_id_penjualan') . ';');
+            $this->modeldetailpenjualan->query('DELETE FROM tbl_detail_penjualan WHERE id_date_penjualan =' . $session->get('date_id_penjualan') . ';');
+            $this->penjualan->query('DELETE FROM tbl_penjualan WHERE id_date_penjualan =' . $session->get('date_id_penjualan') . ';');
 
             return redirect()->to('/barangkeluar');
         } else {

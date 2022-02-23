@@ -19,11 +19,17 @@ class ModelPenjualan extends Model
             //     ->select('*')
             //     ->get();
             // $data[0] = $query;
-            $data = $this->findAll();
-            return $data;
+            $this->findAll();
+            $this->orderBy('created_at', 'DESC');
+            $data = $this->get();
+            return $data->getResult('array');
             //return $this->findAll();
         }
         return $this->where(['id_date_penjualan' => $id])->first();
+    }
+    public function getDataNoTrans($id)
+    {
+        return $this->where(['no_transaksi_jual' => $id])->first();
     }
     public function getNoTransJual()
     {

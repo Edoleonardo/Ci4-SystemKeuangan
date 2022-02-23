@@ -468,19 +468,52 @@
                     },
                     url: "<?php echo base_url('stockdata'); ?>",
                     success: function(result) {
-                        if (result.pesan == 'error') {
-                            Swal.fire({
-                                icon: 'warning',
-                                title: 'Tidak ada data',
-                            })
+                        console.log(result)
+                        if (result.error) {
+
+                            if (result.error.total_berat_m) {
+                                $('#total_berat_m').addClass('is-invalid')
+                                $('.total_berat_mmsg').html(result.error.total_berat_m)
+                            } else {
+                                $('#total_berat_m').removeClass('is-invalid')
+                                $('.total_berat_mmsg').html('')
+                            }
+                            if (result.error.no_nota_supp) {
+                                $('#no_nota_supp').addClass('is-invalid')
+                                $('.no_nota_suppmsg').html(result.error.no_nota_supp)
+                            } else {
+                                $('#no_nota_supp').removeClass('is-invalid')
+                                $('.no_nota_suppmsg').html('')
+                            }
                         } else {
-                            Swal.fire({
-                                icon: 'info',
-                                title: 'Data Berhasil DI masukan',
-                            })
-                            window.location.href = "<?php echo base_url('barangmasuk'); ?>";
+                            $('#total_berat_m').removeClass('is-invalid')
+                            $('.total_berat_mmsg').html('')
+                            $('#no_nota_supp').removeClass('is-invalid')
+                            $('.no_nota_suppmsg').html('')
+                            if (result.pesan == 'error') {
+                                Swal.fire({
+                                    icon: 'warning',
+                                    title: 'Tidak ada data',
+                                })
+                            } else {
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Data Berhasil dimasukan ke stock master',
+                                    confirmButtonColor: '#3085d6',
+                                    confirmButtonText: 'OK',
+                                    allowOutsideClick: false
+                                }).then((result) => {
+                                    if (result.isConfirmed) {
+                                        window.location.href = "<?php echo base_url('barangmasuk'); ?>";
+
+                                    }
+                                })
+                            }
                         }
 
+                    },
+                    error: function(xhr, ajaxOptions, thrownError) {
+                        alert(xhr.status + "\n" + xhr.responseText + "\n" + thrownError);
                     }
                 })
 

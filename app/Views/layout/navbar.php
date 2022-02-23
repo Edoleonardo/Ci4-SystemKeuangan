@@ -186,7 +186,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="/databuyback" class="nav-link ">
+                            <a href="/buybackcust" class="nav-link ">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>Buyback Customer</p>
                             </a>
@@ -205,7 +205,7 @@
                         <li class="nav-item">
                             <a href="/barangkeluar" class="nav-link ">
                                 <i class="far fa-circle nav-icon"></i>
-                                <p>Data Barang Keluar</p>
+                                <p>Jual Barang</p>
                             </a>
                         </li>
                     </ul>

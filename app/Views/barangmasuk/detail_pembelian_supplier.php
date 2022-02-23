@@ -90,33 +90,35 @@
             </div>
             <div class="col-6">
                 <!-- Application buttons -->
-                <div class="card">
-                    <div class="card-body">
-                        <a class="btn btn-app">
-                            <i class="fas fa-edit"></i> Edit
-                        </a>
-                        <a class="btn btn-app" href="/printbarcode/<?= $datapembelian['id_date_pembelian'] ?>" target="_blank">
-                            <i class="fas fa-barcode"></i> Print Barcode
-                        </a>
-                        <a class="btn btn-app" type="button" data-toggle="modal" data-target="#modal-xl">
-                            <i class="fas fa-redo"></i> Retur Barang
-                        </a>
-                        <form id="cancelform" action="/cancelbarang/<?= $datapembelian['id_date_pembelian'] ?>" method="POST" class="d-inline">
-                            <?= csrf_field(); ?>
-                            <input type="hidden" name="_method" value="DELETE">
-                            <button type="button" class="btn btn-app" onclick="return konfrimcancel()"><i class="fas fa-window-close"></i> Cancel Pembelian </button>
-                        </form>
-                        <?php if ($datapembelian['cara_pembayaran'] == 'Bayar Nanti') : ?>
-                            <a class="btn btn-app bg-danger" type="button" data-toggle="modal" data-target="#modal-bayar">
-                                <i class="fas fa-money-bill"></i> Bayar
+                <div id="cardbayar">
+                    <div class="card">
+                        <div class="card-body">
+                            <a class="btn btn-app">
+                                <i class="fas fa-edit"></i> Edit
                             </a>
-                        <?php else : ?>
-                            <a class="btn btn-app bg-primary" type="button" data-toggle="modal" data-target="#modal-bayar">
-                                <i class="fas fa-check"></i> Lunas
+                            <a class="btn btn-app" href="/printbarcode/<?= $datapembelian['id_date_pembelian'] ?>" target="_blank">
+                                <i class="fas fa-barcode"></i> Print Barcode
                             </a>
-                        <?php endif ?>
+                            <a class="btn btn-app" type="button" data-toggle="modal" data-target="#modal-xl">
+                                <i class="fas fa-redo"></i> Retur Barang
+                            </a>
+                            <form id="cancelform" action="/cancelbarang/<?= $datapembelian['id_date_pembelian'] ?>" method="POST" class="d-inline">
+                                <?= csrf_field(); ?>
+                                <input type="hidden" name="_method" value="DELETE">
+                                <button type="button" class="btn btn-app" onclick="return konfrimcancel()"><i class="fas fa-window-close"></i> Cancel Pembelian </button>
+                            </form>
+                            <?php if ($datapembelian['byr_berat_murni'] > 0) : ?>
+                                <a class="btn btn-app bg-danger" type="button" data-toggle="modal" data-target="#modal-bayar">
+                                    <i class="fas fa-money-bill"></i> Bayar
+                                </a>
+                            <?php else : ?>
+                                <a class="btn btn-app bg-primary" type="button" data-toggle="modal" data-target="#modal-bayar">
+                                    <i class="fas fa-check"></i> Lunas
+                                </a>
+                            <?php endif ?>
+                        </div>
+                        <!-- /.card-body -->
                     </div>
-                    <!-- /.card-body -->
                 </div>
             </div>
         </div>
@@ -146,7 +148,6 @@
                                             <th>Nilai Tukar</th>
                                             <th>Merek</th>
                                             <th>Total Harga</th>
-                                            <th>Edit</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -166,7 +167,6 @@
                                                 <td><?= $row['nilai_tukar'] ?></td>
                                                 <td><?= $row['merek'] ?></td>
                                                 <td><?= number_format($row['total_harga'], 2, ",", ".") ?></td>
-                                                <td><a class="btn btn-block bg-gradient-primary" type="button" onclick="EditData(<?= $row['kode'] ?>)">Edit</a></td>
                                             </tr>
                                         <?php endforeach; ?>
                                     </tbody>
@@ -193,11 +193,6 @@
                                                 <td>Total Berat Murni</td>
                                                 <td><?= number_format($totalberatmurni['berat_murni'], 2, ',', '.') ?></td>
                                             </tr>
-
-                                            <tr>
-                                                <td>Total Bersih</td>
-                                                <td id="totalbersihconst"><?= number_format($datapembelian['total_bayar'], 2, ",", ".") ?></td>
-                                            </tr>
                                         </tbody>
                                     </table>
                                 </div>
@@ -207,52 +202,7 @@
                         <div class="col-sm-6">
                             <div class="card">
                                 <!-- /.card-header -->
-                                <div class="card-body p-0">
-                                    <table class="table table-striped">
-                                        <tbody>
-                                            <tr>
-                                                <td>Metode Pembayaran</td>
-                                                <td><?= $datapembelian['cara_pembayaran'] ?></td>
-                                            </tr>
-                                            <?php if ($datapembelian['nama_bank']) : ?>
-                                                <tr>
-                                                    <td>Nama Bank</td>
-                                                    <td><?= $datapembelian['nama_bank'] ?></td>
-                                                </tr>
-                                            <?php endif ?>
-                                            <?php if ($datapembelian['pembulatan']) : ?>
-                                                <tr>
-                                                    <td>Pembulatan</td>
-                                                    <td><?= number_format($datapembelian['pembulatan'], 2, ",", ".") ?></td>
-                                                </tr>
-                                            <?php endif ?>
-                                            <?php if ($datapembelian['charge']) : ?>
-                                                <tr>
-                                                    <td>Charge</td>
-                                                    <td><?= $datapembelian['charge'] ?> %</td>
-                                                </tr>
-                                            <?php endif ?>
-                                            <?php if ($datapembelian['tunai']) : ?>
-                                                <tr>
-                                                    <td>Tunai</td>
-                                                    <td><?= number_format($datapembelian['tunai'], 2, ',', '.') ?></td>
-                                                </tr>
-                                            <?php endif ?>
-                                            <?php if ($datapembelian['debitcc']) : ?>
-                                                <tr>
-                                                    <td>Debit / CC</td>
-                                                    <td><?= number_format($datapembelian['debitcc'], 2, ',', '.') ?></td>
-                                                </tr>
-                                            <?php endif ?>
-                                            <?php if ($datapembelian['transfer']) : ?>
-                                                <tr>
-                                                    <td>Transfer</td>
-                                                    <td><?= number_format($datapembelian['transfer'], 2, ',', '.') ?></td>
-                                                </tr>
-                                            <?php endif ?>
-                                        </tbody>
-                                    </table>
-                                </div>
+
                                 <!-- /.card-body -->
                             </div>
                         </div>
@@ -348,13 +298,16 @@
                     <div class="modal-body">
                         <form action="/pembayaranform" id="pembayaranform" class="pembayaranform" name="pembayaranform">
                             <div class="row">
-                                <div class="col-sm-6">
+                                <div class="col-sm-5">
                                     <div class="col-sm-12">
                                         <!-- text input -->
                                         <div class="form-group">
-                                            <label>Pembulatan</label>
-                                            <input onkeyup="myPembulatan()" type="number" value="<?= (isset($datapembelian['pembulatan'])) ? $datapembelian['pembulatan'] : ''; ?>" min="0" id="pembulatan" name="pembulatan" class="form-control" placeholder="Masukan Pembulatan">
-                                            <input type="hidden" name="dateid" value="<?= $datapembelian['id_date_pembelian'] ?>">
+                                            <label>Harga Murni Saat Ini </label>
+                                            <input type="number" min="0" value="<?= $datapembelian['harga_murni'] ?>" id="harga_murni" name="harga_murni" onkeyup="Harganow()" class="form-control harga_murni" placeholder="Masukan harga murni">
+                                            <div id="validationServerUsernameFeedback" class="invalid-feedback harga_murnimsg">
+                                            </div>
+                                            <input type="hidden" id="dateid" name="dateid" value="<?= $datapembelian['id_date_pembelian'] ?>">
+
                                         </div>
                                     </div>
                                     <div class="col-sm-12">
@@ -366,14 +319,12 @@
                                                     <div class="col-sm-6">
                                                         <div class="form-group">
                                                             <label>Cara Pembayaran</label>
-                                                            <select onchange="myPembayaran()" name="pembayaran" class="form-control" id="pembayaran" name="pembayaran">
-                                                                <option value="Bayar Nanti" selected>Bayar Nanti</option>
-                                                                <option value="Debit/CC">Debit/CC</option>
-                                                                <option value="Debit/CCTranfer">Debit/CC & Tranfer</option>
-                                                                <option value="Transfer">Transfer</option>
+                                                            <select onclick="myPembayaran()" onchange="myPembayaran()" name="pembayaran" class="form-control" id="pembayaran" name="pembayaran">
                                                                 <option value="Tunai">Tunai</option>
-                                                                <option value="Tunai&Debit/CC">Tunai & Debit/CC</option>
-                                                                <option value="Tunai&Transfer">Tunai & Transfer</option>
+                                                                <option value="Transfer">Transfer</option>
+                                                                <option value="Rongsok">Rongsok</option>
+                                                                <option value="Bahan24K">Bahan 24K</option>
+                                                                <option value="ReturSales">Retur Sales</option>
                                                             </select>
                                                         </div>
                                                     </div>
@@ -389,191 +340,308 @@
                                                     </div>
                                                     <div class="col-sm-6">
                                                         <div class="form-group metodebayar2">
-                                                            <!-- <label>Debit/CC</label> -->
-                                                            <!-- <input type="number" min="0" id="debitcc" name="debitcc" class="form-control" placeholder="Masukan Debit"> -->
                                                         </div>
                                                     </div>
                                                     <div class="col-sm-6">
-                                                        <div class="form-group chargehtml">
+                                                        <div class="form-group returhtml">
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
                                             <!-- /.card-body -->
+                                            <button type="submit" class="btn btn-primary btnadd">Add</button>
+
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-sm-6">
+                                <div class="col-sm-7">
                                     <div class="card">
                                         <!-- /.card-header -->
-                                        <div class="card-body p-0">
+                                        <div class="card-body table-responsive p-0" id="refresbayartbl">
                                             <table class="table table-hover text-nowrap">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Cara Pembayaran</th>
+                                                        <th>Jumlah Bayar</th>
+                                                        <th>Kode</th>
+                                                        <th>Berat Murni</th>
+                                                        <th>Hapus</th>
+                                                    </tr>
+                                                </thead>
                                                 <tbody>
+                                                    <?php foreach ($databayar as $byr) : ?>
+                                                        <tr>
+                                                            <td> <?= $byr['cara_pembayaran'] ?> </td>
+                                                            <td><?= number_format($byr['jumlah_pembayaran'], 2, ',', '.') ?></td>
+                                                            <td><?= $byr['kode_retur'] ?><?= $byr['kode_rongsok'] ?><?= $byr['kode_24k'] ?></td>
+                                                            <td><?= $byr['berat_murni'] ?></td>
+                                                            <td><button type='button' class='btn btn-block bg-gradient-danger' onclick="hapus(<?= $byr['id_pembayaran'] ?>)"><i class='fas fa-trash'></i></button></td>
+                                                        </tr>
+                                                    <?php endforeach; ?>
                                                     <tr>
-                                                        <td>Total Berat</td>
-                                                        <td id="totalberathtml"></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Total Berat Murni</td>
-                                                        <td id="totalberatmurnihtml"></td>
-                                                    </tr>
-                                                    <tr id="tabelbank">
-                                                    </tr>
-                                                    <tr id="tabelbayar1">
-                                                    </tr>
-                                                    <tr id="tabelbayar2">
-                                                    </tr>
-                                                    <tr id="tabelbayar3">
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Pembulatan</td>
-                                                        <td id="pembulatanhtml"></td>
+                                                        <td style="background-color: lightblue;">Harga Saat ini</td>
+                                                        <td style="background-color: lightblue;" id="harga_murnihtml"></td>
+                                                        <td style="background-color: lightblue;">Bayar Berat Murni</td>
+                                                        <td style="background-color: lightblue;" id="totalberatmurnihtml1"></td>
+                                                        <td style="background-color: lightblue;"></td>
                                                     </tr>
                                                     <tr>
-                                                        <td>Total Bersih</td>
-                                                        <td id="totalbersih"></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Harus Bayar</td>
-                                                        <td id="totalbersih1"></td>
+                                                        <td style="background-color: lightblue;">Berat Murni</td>
+                                                        <td style="background-color: lightblue;" id="totalberatmurnihtml"></td>
+                                                        <td style="background-color: lightblue;">Harga Bayar</td>
+                                                        <td style="background-color: lightblue;" id="totalbersih1"></td>
+                                                        <td style="background-color: lightblue;"></td>
                                                     </tr>
                                                 </tbody>
                                             </table>
+                                            <div class="card-body p-0">
+                                                <table class="table table-hover text-nowrap">
+                                                    <tbody>
+                                                        <tr id="tabelbank">
+                                                        </tr>
+                                                        <tr id="tabelbayar1">
+                                                        </tr>
+                                                        <tr id="tabelbayar2">
+                                                        </tr>
+                                                        <tr id="tabelbayar3">
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                            <!-- /.card-body -->
                                         </div>
-                                        <!-- /.card-body -->
                                     </div>
                                 </div>
                             </div>
+                            <div class="modal-footer justify-content-between">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                <button type="button" class="btn btn-primary" onclick="SelesaiBayar()">Selesai</button>
+                            </div>
+                        </form>
                     </div>
-                    <div class="modal-footer justify-content-between">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary btntambah">Bayar</button>
-                    </div>
-                    </form>
+                    <!-- /.modal-content -->
                 </div>
-                <!-- /.modal-content -->
+                <!-- /.modal-dialog -->
             </div>
-            <!-- /.modal-dialog -->
-        </div>
-        <div class="modal fade" id="modal-edit">
-            <div class="modal-dialog modal-xl">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h4 class="modal-title">Edit</h4>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <form action="/editdataform" id="editdataform" class="editdataform" name="editdataform">
-                            <div class="row">
-                                <div class="col-sm-2">
-                                    <!-- text input -->
-                                    <div class="form-group">
-                                        <label>Merek</label>
-                                        <select name="merek" class="form-control" id="merek">
-                                            <?php foreach ($merek as $m) : ?>
-                                                <option value="<?= $m['nama_merek'] ?>"><?= $m['nama_merek'] ?> </option>
-                                            <?php endforeach; ?>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="col-sm-2">
-                                    <!-- text input -->
-                                    <div class="form-group">
-                                        <label>Kadar</label>
-                                        <select name="kadar" class="form-control" id="kadar">
-                                            <?php foreach ($kadar as $m) : ?>
-                                                <option value="<?= $m['nama_kadar'] ?>"><?= $m['nama_kadar'] ?> </option>
-                                            <?php endforeach; ?>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="col-sm-2">
-                                    <!-- text input -->
-                                    <div class="form-group">
-                                        <label>Jenis</label>
-                                        <input type="text" name="jenis" id="jenis" class="form-control" placeholder="Masukan Jenis">
-                                        <div id="validationServerUsernameFeedback" class="invalid-feedback jenismsg">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-sm-2">
-                                    <!-- text input -->
-                                    <div class="form-group">
-                                        <label>Berat</label>
-                                        <input type="number" step="0.01" id="berat" name="berat" class="form-control" placeholder="Masukan Berat Bersih">
-                                        <div id="validationServerUsernameFeedback" class="invalid-feedback beratmsg">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-sm-2">
-                                    <!-- text input -->
-                                    <div class="form-group">
-                                        <label>Qty</label>
-                                        <input type="Number" id="qty" name="qty" min="1" class="form-control" placeholder="Masukan jumlah">
-                                        <div id="validationServerUsernameFeedback" class="invalid-feedback qtymsg">
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-sm-2">
-                                    <!-- text input -->
-                                    <div class="form-group">
-                                        <label>Model</label>
-                                        <input type="text" name="model" id="model" class="form-control" placeholder="Masukan Model Barang">
-                                    </div>
-                                </div>
-                                <div class="col-sm-3">
-                                    <!-- text input -->
-                                    <div class="form-group">
-                                        <label>Keterangan</label>
-                                        <input type="text" name="keterangan" id="keterangan" class="form-control" placeholder="Masukan Keterangan">
-                                    </div>
-                                </div>
-                                <div class="col-sm-2">
-                                    <!-- text input -->
-                                    <div class="form-group">
-                                        <label>Nilai Tukar</label>
-                                        <input type="number" id="nilai_tukar" name="nilai_tukar" class="form-control" placeholder="Masukan Nilai Tukar">
-                                        <div id="validationServerUsernameFeedback" class="invalid-feedback nilai_tukarmsg">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-sm-2">
-                                    <!-- text input -->
-                                    <div class="form-group">
-                                        <label>Harga Beli</label>
-                                        <input type="number" name="harga_beli" id="harga_beli" class="form-control harga_beli" placeholder="Masukan Harga Beli">
-                                        <div id="validationServerUsernameFeedback" class="invalid-feedback harga_belimsg">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-sm-2">
-                                    <!-- text input -->
-                                    <div class="form-group">
-                                        <label>Ongkos</label>
-                                        <input type="number" value="0" name="ongkos" id="ongkos" class="form-control ongkos" placeholder="Masukan Ongkos">
-                                        <div id="validationServerUsernameFeedback" class="invalid-feedback ongkosmsg">
-                                        </div>
-                                        <input type="hidden" id="kode" name="kode">
-                                        <input type="hidden" id="dateid" name="dateid" value="<?= $datapembelian['id_date_pembelian'] ?>">
+            <div class="modal fade" id="modal-barangrongsok">
+                <div class="modal-dialog modal-xl">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title">Pilih Barang Rongsok</h4>
+                            <button type="button" class="close" onclick=" $('#modal-barangrongsok').modal('toggle');" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="card">
+                                <!-- /.card-header -->
+                                <div class="card-header">
+                                    <h3 class="card-title" id="titletable"></h3>
 
-                                    </div>
                                 </div>
+                                <div class="card-body table-responsive p-0">
+                                    <table id="example1" class="table table-bordered table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th>Gambar</th>
+                                                <th>Kode</th>
+                                                <th>Qty</th>
+                                                <th>Jenis</th>
+                                                <th>Model</th>
+                                                <th>Keterangan</th>
+                                                <th>Berat</th>
+                                                <th>Berat Murni</th>
+                                                <th>Harga Beli</th>
+                                                <th>ongkos</th>
+                                                <th>Kadar</th>
+                                                <th>Nilai Tukar</th>
+                                                <th>Merek</th>
+                                                <th>Total Harga</th>
+                                                <th>Tambah</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <?php foreach ($tampilrongsok as $row) : ?>
+                                                <tr>
+                                                    <td><img src='/img/<?= $row['nama_img'] ?>' class='imgg'></td>
+                                                    <td><?= $row['kode'] ?></td>
+                                                    <td><?= $row['qty'] ?></td>
+                                                    <td><?= $row['jenis'] ?></td>
+                                                    <td><?= $row['model'] ?></td>
+                                                    <td><?= $row['keterangan'] ?></td>
+                                                    <td><?= $row['berat'] ?></td>
+                                                    <td><?= $row['berat_murni'] ?></td>
+                                                    <td><?= number_format($row['harga_beli'], 2, ",", ".") ?></td>
+                                                    <td><?= number_format($row['ongkos'], 2, ",", ".") ?></td>
+                                                    <td><?= $row['kadar'] ?></td>
+                                                    <td><?= $row['nilai_tukar'] ?></td>
+                                                    <td><?= $row['merek'] ?></td>
+                                                    <td><?= number_format($row['total_harga'], 2, ",", ".") ?></td>
+                                                    <td>
+                                                        <button type="button" onclick="DataRongsok(<?= $row['kode'] ?>)" class="btn btn-primary">Pilih </button>
+                                                    </td>
+                                                </tr>
+                                            <?php endforeach; ?>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <!-- /.card-body -->
                             </div>
+                        </div>
+                        <div class="modal-footer justify-content-between">
+                            <button type="button" class="btn btn-default" onclick=" $('#modal-barangrongsok').modal('toggle');">Close</button>
+                        </div>
                     </div>
-                    <div class="modal-footer justify-content-between">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary btnedit">Edit</button>
-                    </div>
-                    </form>
+                    <!-- /.modal-content -->
                 </div>
-                <!-- /.modal-content -->
+                <!-- /.modal-dialog -->
             </div>
-            <!-- /.modal-dialog -->
-        </div>
+            <div class="modal fade" id="modal-bahan24k">
+                <div class="modal-dialog modal-xl">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title">Pilih Barang Bahan 24K</h4>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="card">
+                                <!-- /.card-header -->
+                                <div class="card-header">
+                                    <h3 class="card-title" id="titletable"></h3>
+
+                                </div>
+                                <div class="card-body table-responsive p-0">
+                                    <table id="bahan24k" class="table table-bordered table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th>Gambar</th>
+                                                <th>Kode</th>
+                                                <th>Qty</th>
+                                                <th>Jenis</th>
+                                                <th>Model</th>
+                                                <th>Keterangan</th>
+                                                <th>Berat</th>
+                                                <th>Berat Murni</th>
+                                                <th>Harga Beli</th>
+                                                <th>ongkos</th>
+                                                <th>Kadar</th>
+                                                <th>Nilai Tukar</th>
+                                                <th>Merek</th>
+                                                <th>Total Harga</th>
+                                                <th>Tambah</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <?php foreach ($tampil24k as $row) : ?>
+                                                <tr>
+                                                    <td><img src='/img/<?= $row['gambar'] ?>' class='imgg'></td>
+                                                    <td><?= $row['barcode'] ?></td>
+                                                    <td><?= $row['qty'] ?></td>
+                                                    <td><?= $row['jenis'] ?></td>
+                                                    <td><?= $row['model'] ?></td>
+                                                    <td><?= $row['keterangan'] ?></td>
+                                                    <td><?= $row['berat'] ?></td>
+                                                    <td><?= $row['berat_murni'] ?></td>
+                                                    <td><?= number_format($row['harga_beli'], 2, ",", ".") ?></td>
+                                                    <td><?= number_format($row['ongkos'], 2, ",", ".") ?></td>
+                                                    <td><?= $row['kadar'] ?></td>
+                                                    <td><?= $row['nilai_tukar'] ?></td>
+                                                    <td><?= $row['merek'] ?></td>
+                                                    <td><?= number_format($row['total_harga'], 2, ",", ".") ?></td>
+                                                    <td>
+                                                        <button type="button" onclick="DataBahan24k(<?= $row['barcode'] ?>)" class="btn btn-primary">Pilih </button>
+                                                    </td>
+                                                </tr>
+                                            <?php endforeach; ?>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <!-- /.card-body -->
+                            </div>
+                        </div>
+                        <div class="modal-footer justify-content-between">
+                            <button type="button" class="btn btn-default" onclick=" $('#modal-bahan24k').modal('toggle');">Close</button>
+                        </div>
+                    </div>
+                    <!-- /.modal-content -->
+                </div>
+                <!-- /.modal-dialog -->
+            </div>
+            <div class="modal fade" id="modal-retur">
+                <div class="modal-dialog modal-xl">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title">Pilih Barang Retur Sales</h4>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="card">
+                                <!-- /.card-header -->
+                                <div class="card-header">
+                                    <h3 class="card-title" id="titletable"></h3>
+
+                                </div>
+                                <div class="card-body table-responsive p-0">
+                                    <table id="retursales" class="table table-bordered table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th>Gambar</th>
+                                                <th>Kode</th>
+                                                <th>Qty</th>
+                                                <th>Jenis</th>
+                                                <th>Model</th>
+                                                <th>Keterangan</th>
+                                                <th>Berat</th>
+                                                <th>Berat Murni</th>
+                                                <th>Harga Beli</th>
+                                                <th>ongkos</th>
+                                                <th>Kadar</th>
+                                                <th>Nilai Tukar</th>
+                                                <th>Merek</th>
+                                                <th>Total Harga</th>
+                                                <th>Tambah</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <?php foreach ($tampilretur as $row) : ?>
+                                                <tr>
+                                                    <td><img src='/img/<?= $row['nama_img'] ?>' class='imgg'></td>
+                                                    <td><?= $row['kode'] ?></td>
+                                                    <td><?= $row['qty'] ?></td>
+                                                    <td><?= $row['jenis'] ?></td>
+                                                    <td><?= $row['model'] ?></td>
+                                                    <td><?= $row['keterangan'] ?></td>
+                                                    <td><?= $row['berat'] ?></td>
+                                                    <td><?= $row['berat_murni'] ?></td>
+                                                    <td><?= number_format($row['harga_beli'], 2, ",", ".") ?></td>
+                                                    <td><?= number_format($row['ongkos'], 2, ",", ".") ?></td>
+                                                    <td><?= $row['kadar'] ?></td>
+                                                    <td><?= $row['nilai_tukar'] ?></td>
+                                                    <td><?= $row['merek'] ?></td>
+                                                    <td><?= number_format($row['total_harga'], 2, ",", ".") ?></td>
+                                                    <td>
+                                                        <button type="button" onclick="DataReturSales(<?= $row['kode'] ?>)" class="btn btn-primary">Pilih </button>
+                                                    </td>
+                                                </tr>
+                                            <?php endforeach; ?>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <!-- /.card-body -->
+                            </div>
+                        </div>
+                        <div class="modal-footer justify-content-between">
+                            <button type="button" class="btn btn-default" onclick=" $('#modal-retur').modal('toggle');">Close</button>
+                        </div>
+                    </div>
+                    <!-- /.modal-content -->
+                </div>
+                <!-- /.modal-dialog -->
+            </div>
     </section>
     <!-- /.content -->
 </div>
@@ -589,38 +657,68 @@
 
 </footer>
 <script type="text/javascript">
-    function EditData(id) {
-        $.ajax({
-            type: "GET",
-            dataType: "json",
-            url: "<?php echo base_url('editdetail'); ?>",
-            data: {
-                kode: id
-            },
-            success: function(result) {
-                console.log(result.data.jenis)
-                $('#modal-edit').modal('show');
-                $('#merek').val(result.data.merek)
-                $('#kadar').val(result.data.kadar)
-                $('#berat').val(result.data.berat)
-                $('#qty').val(result.data.qty)
-                $('#model').val(result.data.model)
-                $('#keterangan').val(result.data.keterangan)
-                $('#nilai_tukar').val(result.data.nilai_tukar)
-                $('#harga_beli').val(result.data.harga_beli)
-                $('#ongkos').val(result.data.ongkos)
-                $('#jenis').val(result.data.jenis)
-                $('#kode').val(result.data.kode)
-            },
-            error: function(xhr, ajaxOptions, thrownError) {
-                alert(xhr.status + "\n" + xhr.responseText + "\n" + thrownError);
+    function hapus(id) {
+        Swal.fire({
+            title: 'Hapus',
+            text: "Yakin ingin Hapus Pembayaran ini ?",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Hapus',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    type: "GET",
+                    dataType: "json",
+                    url: "<?php echo base_url('deletepembayaran'); ?>",
+                    data: {
+                        id: id,
+                        dateid: document.getElementById('dateid').value
+                    },
+                    success: function(result) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Data Berhasil Dihapus',
+                        })
+                        $("#refresbayartbl").load("/detailpembelian/" + document.getElementById('dateid').value + " #refresbayartbl");
+
+                        myDataBayar()
+                    },
+                    error: function(xhr, ajaxOptions, thrownError) {
+                        alert(xhr.status + "\n" + xhr.responseText + "\n" + thrownError);
+                    }
+                })
+
             }
         })
-    }
-
-    function loaddata() {
 
     }
+
+    function SelesaiBayar() {
+        $('#modal-bayar').modal('toggle');
+        $("#cardbayar").load("/detailpembelian/" + document.getElementById('dateid').value + " #cardbayar");
+
+    }
+
+    function DataRongsok(id) {
+        console.log(id)
+        $('#kode_rongsok').val(id)
+        $('#modal-barangrongsok').modal('toggle');
+    }
+
+    function DataBahan24k(id) {
+        console.log(id)
+        $('#kode_bahan24k').val(id)
+        $('#modal-bahan24k').modal('toggle');
+    }
+
+    function DataReturSales(id) {
+        $('#kode_retur').val(id)
+        $('#modal-retur').modal('toggle');
+    }
+
+
     $('.editdataform').submit(function(e) {
         e.preventDefault()
         let form = $('.editdataform')[0];
@@ -746,14 +844,13 @@
                 dateid: '<?php echo $datapembelian['id_date_pembelian'] ?>'
             },
             success: function(result) {
-                $('#totalberatmurnihtml').html(pembulatankoma(result.totalberatmurni.berat_murni))
-                $('#totalberathtml').html(pembulatankoma(result.totalberat.berat))
+                $('#totalberatmurnihtml').html(pembulatankoma(result.totalberatmurni.total_berat_murni))
 
-
-                document.getElementById('totalbersih1').innerHTML = pembulatankoma(result.totalbersih.total_harga).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
-                document.getElementById('totalbersih').innerHTML = pembulatankoma(result.totalbersih.total_harga).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
-                document.getElementById('pembulatanhtml').innerHTML = ''
-                document.getElementById('pembulatan').value = ''
+                document.getElementById('totalberatmurnihtml1').innerHTML = pembulatankoma(result.totalberatmurni.byr_berat_murni)
+                // document.getElementById('totalbersih').innerHTML = pembulatankoma(result.totalbersih.total_harga).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
+                document.getElementById('harga_murnihtml').innerHTML = ''
+                // document.getElementById('harga_murni').value = ''
+                Harganow()
 
             },
             error: function(xhr, ajaxOptions, thrownError) {
@@ -796,6 +893,30 @@
         })
     }
 
+    function tampilbarangbayar() {
+        $.ajax({
+            type: "GET",
+            dataType: "json",
+            url: "<?php echo base_url('ajaxdetailpembelian'); ?>",
+            data: {
+                dateid: '<?php echo $datapembelian['id_date_pembelian'] ?>'
+            },
+            success: function(result) {
+                $('#totalberatmurnihtml').html(pembulatankoma(result.totalberatmurni.total_berat_murni))
+
+                document.getElementById('totalberatmurnihtml1').innerHTML = pembulatankoma(result.totalberatmurni.byr_berat_murni)
+                // document.getElementById('totalbersih').innerHTML = pembulatankoma(result.totalbersih.total_harga).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
+                document.getElementById('harga_murnihtml').innerHTML = ''
+                // document.getElementById('harga_murni').value = ''
+                Harganow()
+
+            },
+            error: function(xhr, ajaxOptions, thrownError) {
+                alert(xhr.status + "\n" + xhr.responseText + "\n" + thrownError);
+            }
+        })
+    }
+
     $('.pembayaranform').submit(function(e) {
         e.preventDefault()
         let form = $('.pembayaranform')[0];
@@ -817,13 +938,6 @@
             success: function(result) {
                 if (result != 'error') {
                     if (result.error) {
-                        if (result.error.debitcc) {
-                            $('#debitcc').addClass('is-invalid')
-                            $('.debitccmsg').html(result.error.debitcc)
-                        } else {
-                            $('#debitcc').removeClass('is-invalid')
-                            $('.debitccmsg').html('')
-                        }
                         if (result.error.namabank) {
                             $('#namabank').addClass('is-invalid')
                             $('.namabankmsg').html(result.error.namabank)
@@ -845,29 +959,75 @@
                             $('#tunai').removeClass('is-invalid')
                             $('.tunai').html('')
                         }
+                        if (result.error.harga_murni) {
+                            $('#harga_murni').addClass('is-invalid')
+                            $('.harga_murnimsg').html(result.error.harga_murni)
+                        } else {
+                            $('#harga_murni').removeClass('is-invalid')
+                            $('.harga_murni').html('')
+                        }
+                        if (result.error.kode_rongsok) {
+                            $('#kode_rongsok').addClass('is-invalid')
+                            $('.kode_rongsokmsg').html(result.error.kode_rongsok)
+                        } else {
+                            $('#kode_rongsok').removeClass('is-invalid')
+                            $('.kode_rongsok').html('')
+                        }
+                        if (result.error.kode_bahan24k) {
+                            $('#kode_bahan24k').addClass('is-invalid')
+                            $('.kode_bahan24kmsg').html(result.error.kode_bahan24k)
+                        } else {
+                            $('#kode_bahan24k').removeClass('is-invalid')
+                            $('.kode_bahan24k').html('')
+                        }
+                        if (result.error.kode_retur) {
+                            $('#kode_retur').addClass('is-invalid')
+                            $('.kode_returmsg').html(result.error.kode_retur)
+                        } else {
+                            $('#kode_retur').removeClass('is-invalid')
+                            $('.kode_retur').html('')
+                        }
                     } else {
-                        $('#debitcc').removeClass('is-invalid')
-                        $('.debitccmsg').html('')
                         $('#namabank').removeClass('is-invalid')
                         $('.namabank').html('')
                         $('#transfer').removeClass('is-invalid')
                         $('.transfer').html('')
                         $('#tunai').removeClass('is-invalid')
                         $('.tunai').html('')
+                        $('#harga_murni').removeClass('is-invalid')
+                        $('.harga_murni').html('')
+                        $('#kode_rongsok').removeClass('is-invalid')
+                        $('.kode_rongsok').html('')
+                        $('#kode_bahan24k').removeClass('is-invalid')
+                        $('.kode_bahan24k').html('')
+                        $('#kode_retur').removeClass('is-invalid')
+                        $('.kode_retur').html('')
 
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Berhasil Bayar',
-                            confirmButtonColor: '#3085d6',
-                            confirmButtonText: 'OK',
-                            allowOutsideClick: false
-                        }).then((result) => {
-                            if (result.isConfirmed) {
-                                $('#modal-bayar').modal('toggle');
-                                window.location.reload();
+                        $("#refresbayartbl").load("/detailpembelian/" + document.getElementById('dateid').value + " #refresbayartbl");
 
-                            }
-                        })
+                        myDataBayar()
+
+                        if (result.pesan_lebih.pesan) {
+                            Swal.fire({
+                                icon: 'info',
+                                title: 'Lebih Bayar',
+                                confirmButtonColor: '#3085d6',
+                                confirmButtonText: 'OK',
+                            })
+                        }
+                        // Swal.fire({
+                        //     icon: 'success',
+                        //     title: 'Berhasil Bayar',
+                        //     confirmButtonColor: '#3085d6',
+                        //     confirmButtonText: 'OK',
+                        //     allowOutsideClick: false
+                        // }).then((result) => {
+                        //     if (result.isConfirmed) {
+                        //         $('#modal-bayar').modal('toggle');
+                        //         window.location.reload();
+
+                        //     }
+                        // })
 
 
 
@@ -892,114 +1052,79 @@
         const carabyr = document.getElementById('pembayaran').value
         const metod1 = $('.metodebayar')
         const nmbank = $('.namabankhtml')
-        const charge = $('.chargehtml')
-        const table1 = $('#tabelbayar1')
-        const table2 = $('#tabelbayar2')
-        const table3 = $('#tabelbayar3')
+        const title = document.getElementById('titletable')
         const bank = $('#tabelbank')
         const metod2 = document.getElementsByClassName('metodebayar2')
         metod1[0].innerHTML = ''
         nmbank[0].innerHTML = ''
-        charge[0].innerHTML = ''
         metod2[0].innerHTML = ''
-        table1[0].innerHTML = ''
-        table2[0].innerHTML = ''
-        table3[0].innerHTML = ''
         bank[0].innerHTML = ''
 
-        var DebitCC = '<label>Debit/CC</label><input type="number" onkeyup = "byrdebitcc()" min="0" id="debitcc" name="debitcc" class="form-control" placeholder="Masukan debit/cc"><div id="validationServerUsernameFeedback" class="invalid-feedback debitccmsg"></div>'
-        var NamaBank = '<label>Nama Bank Debit/CC</label><input onkeyup = "byrnamabank()" type="text" id="namabank" name="namabank" class="form-control" placeholder="Masukan Nama Bank"><div id="validationServerUsernameFeedback" class="invalid-feedback namabankmsg"></div>'
-        var Charge = '<label>Charge %</label><input type="number" onkeyup = "brycas()" min="0" id="charge" name="charge" class="form-control" placeholder="Masukan Charge"><div id="validationServerUsernameFeedback" class="invalid-feedback chargemsg"></div>'
-        var Transfer = '<label>Transfer</label><input type="number" onkeyup = "byrtransfer()" min="0" id="transfer" name="transfer" class="form-control" placeholder="Masukan transfer"><div id="validationServerUsernameFeedback" class="invalid-feedback transfermsg"></div>'
-        var Tunai = '<label>Tunai</label><input type="number" onkeyup = "byrtunai()" min="0" id="tunai" name="tunai" class="form-control" placeholder="Masukan tunai"><div id="validationServerUsernameFeedback" class="invalid-feedback tunaimsg"></div>'
-
+        var NamaBank = '<label>Nama Bank Debit/CC</label><input  type="text" id="namabank" name="namabank" class="form-control" placeholder="Masukan Nama Bank"><div id="validationServerUsernameFeedback" class="invalid-feedback namabankmsg"></div>'
+        var retur = '<label>retur %</label><input type="number"  min="0" id="retur" name="retur" class="form-control" placeholder="Masukan retur"><div id="validationServerUsernameFeedback" class="invalid-feedback returmsg"></div>'
+        var Transfer = '<label>Transfer</label><input type="number"  min="0" id="transfer" name="transfer" class="form-control" placeholder="Masukan transfer"><div id="validationServerUsernameFeedback" class="invalid-feedback transfermsg"></div>'
+        var Tunai = '<label>Tunai</label><input type="number" min="0" id="tunai" name="tunai" class="form-control" placeholder="Masukan tunai"><div id="validationServerUsernameFeedback" class="invalid-feedback tunaimsg"></div>'
+        var Rongsok = '<label>Masukan Kode Barang Rongsok</label><input type="number"  min="0" id="kode_rongsok" name="kode_rongsok" class="form-control" placeholder="Masukan kode rongsok"><div id="validationServerUsernameFeedback" class="invalid-feedback kode_rongsokmsg"></div>'
+        var Bahan24k = '<label>Masukan Kode Bahan 24K</label><input type="number" min="0" id="kode_bahan24k" name="kode_bahan24k" class="form-control" placeholder="Masukan kode Bahan"><div id="validationServerUsernameFeedback" class="invalid-feedback kode_bahan24kmsg"></div>'
+        var Retursales = '<label>Masukan Kode Barang Retur</label><input type="number"  min="0" id="kode_retur" name="kode_retur" class="form-control" placeholder="Masukan kode rongsok"><div id="validationServerUsernameFeedback" class="invalid-feedback kode_returmsg"></div>'
+        var modalpilihrongsok = '<label>Pilih Barang Ronsok</label><a class="form-control btn bg-green" type="button" data-toggle="modal" data-target="#modal-barangrongsok"><i class="fas fa-plus"></i></a>'
+        var modalpilihr24k = '<label>Pilih Barang 24K</label><a class="form-control btn bg-green" type="button" data-toggle="modal" data-target="#modal-bahan24k"><i class="fas fa-plus"></i></a>'
+        var modalpilihretur = '<label>Pilih Barang Retur</label><a class="form-control btn bg-green" type="button" data-toggle="modal" data-target="#modal-retur"><i class="fas fa-plus"></i></a>'
         if (carabyr == 'Bayar Nanti') {
             myDataBayar()
             metod1[0].innerHTML = ''
             nmbank[0].innerHTML = ''
-            charge[0].innerHTML = ''
+            retur[0].innerHTML = ''
             metod2[0].innerHTML = ''
-            table1[0].innerHTML = ''
-            table2[0].innerHTML = ''
-            table3[0].innerHTML = ''
             bank[0].innerHTML = ''
-        }
-        if (carabyr == 'Debit/CC') {
-            myDataBayar()
-            metod1[0].innerHTML = DebitCC
-            nmbank[0].innerHTML = NamaBank
-            charge[0].innerHTML = Charge
-            bank[0].innerHTML = '<td>Nama Bank</td><td id="bankbyr"></td>'
-            table1[0].innerHTML = '<td>Charge</td><td id="chargebyr"></td>'
-            table2[0].innerHTML = '<td>Debit/CC</td><td id="debitccbyr"></td>'
-        }
-        if (carabyr == 'Debit/CCTranfer') {
-            myDataBayar()
-            metod1[0].innerHTML = DebitCC
-            nmbank[0].innerHTML = NamaBank
-            charge[0].innerHTML = Charge
-            metod2[0].innerHTML = Transfer
-            bank[0].innerHTML = '<td>Nama Bank</td><td id="bankbyr"></td>'
-            table1[0].innerHTML = '<td>Charge</td><td id="chargebyr"></td>'
-            table2[0].innerHTML = '<td>Debit/CC</td><td id="debitccbyr"></td>'
-            table3[0].innerHTML = '<td>Tranfer</td><td id="transferbyr"></td>'
         }
         if (carabyr == 'Transfer') {
             myDataBayar()
             metod1[0].innerHTML = Transfer
             nmbank[0].innerHTML = NamaBank
-            bank[0].innerHTML = '<td>Nama Bank</td><td id="bankbyr"></td>'
-            table2[0].innerHTML = '<td>Tranfer</td><td id="transferbyr"></td>'
 
         }
         if (carabyr == 'Tunai') {
             myDataBayar()
             metod1[0].innerHTML = Tunai
-            table1[0].innerHTML = '<td>Tunai</td><td id="tunaibyr"></td>'
 
         }
-        if (carabyr == 'Tunai&Debit/CC') {
+        if (carabyr == 'Rongsok') {
             myDataBayar()
-            metod1[0].innerHTML = DebitCC
-            nmbank[0].innerHTML = NamaBank
-            charge[0].innerHTML = Charge
-            metod2[0].innerHTML = Tunai
-            bank[0].innerHTML = '<td>Nama Bank</td><td id="bankbyr"></td>'
-            table1[0].innerHTML = '<td>Charge</td><td id="chargebyr"></td>'
-            table2[0].innerHTML = '<td>Debit/CC</td><td id="debitccbyr"></td>'
-            table3[0].innerHTML = '<td>Tunai</td><td id="tunaibyr"></td>'
-        }
+            metod1[0].innerHTML = Rongsok
+            metod2[0].innerHTML = modalpilihrongsok
+            title.innerHTML = "Pilih Barang Rongsok"
 
-        if (carabyr == 'Tunai&Transfer') {
+        }
+        if (carabyr == 'Bahan24K') {
             myDataBayar()
-            metod1[0].innerHTML = Transfer
-            nmbank[0].innerHTML = NamaBank
-            metod2[0].innerHTML = Tunai
-            bank[0].innerHTML = '<td>Nama Bank</td><td id="bankbyr"></td>'
-            table3[0].innerHTML = '<td>Tunai</td><td id="tunaibyr"></td>'
-            table2[0].innerHTML = '<td>Tranfer</td><td id="transferbyr"></td>'
+            metod1[0].innerHTML = Bahan24k
+            metod2[0].innerHTML = modalpilihr24k
+            title.innerHTML = "Pilih Barang Rongsok"
+
+        }
+        if (carabyr == 'ReturSales') {
+            myDataBayar()
+            metod1[0].innerHTML = Retursales
+            metod2[0].innerHTML = modalpilihretur
+            title.innerHTML = "Pilih Barang Rongsok"
 
         }
         console.log(carabyr)
     }
 
-    function byrnamabank() {
-        const totalbersih = document.getElementById('totalbersih').innerHTML
-        totalbersihval = parseFloat(totalbersih.replaceAll('.', ''))
-        var bank = document.getElementById('namabank').value
-        document.getElementById('bankbyr').innerHTML = bank
-    }
+    // function byrnamabank() {
+    //     const totalbersih = document.getElementById('totalbersih').innerHTML
+    //     totalbersihval = parseFloat(totalbersih.replaceAll('.', ''))
+    //     var bank = document.getElementById('namabank').value
+    //     document.getElementById('bankbyr').innerHTML = bank
+    // }
 
-    function myPembulatan() {
-        if (document.getElementById('pembulatan')) {
-            bulat = (isNaN(parseFloat(document.getElementById('pembulatan').value))) ? 0 : parseFloat(document.getElementById('pembulatan').value)
+    function Harganow() {
+        if (document.getElementById('harga_murni')) {
+            harga_murni = (isNaN(parseFloat(document.getElementById('harga_murni').value))) ? 0 : parseFloat(document.getElementById('harga_murni').value)
         } else {
-            bulat = 0
-        }
-        if (document.getElementById('debitcc')) {
-            debitcc = (isNaN(parseFloat(document.getElementById('debitcc').value))) ? 0 : parseFloat(document.getElementById('debitcc').value)
-        } else {
-            debitcc = 0
+            harga_murni = 0
         }
         if (document.getElementById('transfer')) {
             transfer = (isNaN(parseFloat(document.getElementById('transfer').value))) ? 0 : parseFloat(document.getElementById('transfer').value)
@@ -1012,112 +1137,73 @@
             tunai = 0
         }
 
-        const totalbersih = document.getElementById('totalbersih').innerHTML
-        totalbersihval = parseFloat(totalbersih.replaceAll('.', ''))
-        var hasil = totalbersihval - (bulat + debitcc + transfer + tunai)
+        const beratmurni = document.getElementById('totalberatmurnihtml1').innerHTML
+        beratmurnival = parseFloat(beratmurni)
+        var hasil = (beratmurnival * harga_murni)
         document.getElementById('totalbersih1').innerHTML = hasil.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
-        document.getElementById('pembulatanhtml').innerHTML = bulat.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
-    }
-
-    function brycas() {
-        var val = document.getElementById('charge').value
-        const totalbersih = document.getElementById('totalbersihconst').innerHTML
-        totalbersihval = parseFloat(totalbersih.replaceAll('.', ''))
-        hasil = totalbersihval + (val * (totalbersihval / 100))
-        document.getElementById('totalbersih').innerHTML = hasil.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
-        document.getElementById('totalbersih1').innerHTML = hasil.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
-        document.getElementById('chargebyr').innerHTML = val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".") + '%'
-        myPembulatan()
-        byrdebitcc()
-        byrtransfer()
-        byrtunai()
-    }
-
-    function byrdebitcc() {
-        if (document.getElementById('pembulatan')) {
-            bulat = (isNaN(parseFloat(document.getElementById('pembulatan').value))) ? 0 : parseFloat(document.getElementById('pembulatan').value)
-        } else {
-            bulat = 0
-        }
-        if (document.getElementById('debitcc')) {
-            debitcc = (isNaN(parseFloat(document.getElementById('debitcc').value))) ? 0 : parseFloat(document.getElementById('debitcc').value)
-        } else {
-            debitcc = 0
-        }
-        if (document.getElementById('transfer')) {
-            transfer = (isNaN(parseFloat(document.getElementById('transfer').value))) ? 0 : parseFloat(document.getElementById('transfer').value)
-        } else {
-            transfer = 0
-        }
-        if (document.getElementById('tunai')) {
-            tunai = (isNaN(parseFloat(document.getElementById('tunai').value))) ? 0 : parseFloat(document.getElementById('tunai').value)
-        } else {
-            tunai = 0
-        }
-        const totalbersih = document.getElementById('totalbersih').innerHTML
-        totalbersihval = parseFloat(totalbersih.replaceAll('.', ''))
-        hasil = totalbersihval - (debitcc + bulat + tunai + transfer)
-        document.getElementById('debitccbyr').innerHTML = debitcc.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
-        document.getElementById('totalbersih1').innerHTML = hasil.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
+        document.getElementById('harga_murnihtml').innerHTML = harga_murni.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
 
     }
 
-    function byrtransfer() {
-        if (document.getElementById('pembulatan')) {
-            bulat = (isNaN(parseFloat(document.getElementById('pembulatan').value))) ? 0 : parseFloat(document.getElementById('pembulatan').value)
-        } else {
-            bulat = 0
-        }
-        if (document.getElementById('debitcc')) {
-            debitcc = (isNaN(parseFloat(document.getElementById('debitcc').value))) ? 0 : parseFloat(document.getElementById('debitcc').value)
-        } else {
-            debitcc = 0
-        }
-        if (document.getElementById('transfer')) {
-            transfer = (isNaN(parseFloat(document.getElementById('transfer').value))) ? 0 : parseFloat(document.getElementById('transfer').value)
-        } else {
-            transfer = 0
-        }
-        if (document.getElementById('tunai')) {
-            tunai = (isNaN(parseFloat(document.getElementById('tunai').value))) ? 0 : parseFloat(document.getElementById('tunai').value)
-        } else {
-            tunai = 0
-        }
-        const totalbersih = document.getElementById('totalbersih').innerHTML
-        totalbersihval = parseFloat(totalbersih.replaceAll('.', ''))
-        hasil = totalbersihval - (debitcc + bulat + tunai + transfer)
-        document.getElementById('transferbyr').innerHTML = transfer.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
-        document.getElementById('totalbersih1').innerHTML = hasil.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
-    }
+    // function brycas() {
+    //     var val = document.getElementById('retur').value
+    //     const totalbersih = document.getElementById('totalbersihconst').innerHTML
+    //     totalbersihval = parseFloat(totalbersih.replaceAll('.', ''))
+    //     hasil = totalbersihval + (val * (totalbersihval / 100))
+    //     document.getElementById('totalbersih').innerHTML = hasil.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
+    //     document.getElementById('totalbersih1').innerHTML = hasil.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
+    //     document.getElementById('returbyr').innerHTML = val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".") + '%'
+    //     Harganow()
+    //     byrtransfer()
+    //     byrtunai()
+    // }
 
-    function byrtunai() {
-        if (document.getElementById('pembulatan')) {
-            bulat = (isNaN(parseFloat(document.getElementById('pembulatan').value))) ? 0 : parseFloat(document.getElementById('pembulatan').value)
-        } else {
-            bulat = 0
-        }
-        if (document.getElementById('debitcc')) {
-            debitcc = (isNaN(parseFloat(document.getElementById('debitcc').value))) ? 0 : parseFloat(document.getElementById('debitcc').value)
-        } else {
-            debitcc = 0
-        }
-        if (document.getElementById('transfer')) {
-            transfer = (isNaN(parseFloat(document.getElementById('transfer').value))) ? 0 : parseFloat(document.getElementById('transfer').value)
-        } else {
-            transfer = 0
-        }
-        if (document.getElementById('tunai')) {
-            tunai = (isNaN(parseFloat(document.getElementById('tunai').value))) ? 0 : parseFloat(document.getElementById('tunai').value)
-        } else {
-            tunai = 0
-        }
-        const totalbersih = document.getElementById('totalbersih').innerHTML
-        totalbersihval = parseFloat(totalbersih.replaceAll('.', ''))
-        hasil = totalbersihval - (debitcc + bulat + tunai + transfer)
-        document.getElementById('tunaibyr').innerHTML = tunai.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
-        document.getElementById('totalbersih1').innerHTML = hasil.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
+    // function byrtransfer() {
+    //     if (document.getElementById('harga_murni')) {
+    //         bulat = (isNaN(parseFloat(document.getElementById('harga_murni').value))) ? 0 : parseFloat(document.getElementById('harga_murni').value)
+    //     } else {
+    //         bulat = 0
+    //     }
+    //     if (document.getElementById('transfer')) {
+    //         transfer = (isNaN(parseFloat(document.getElementById('transfer').value))) ? 0 : parseFloat(document.getElementById('transfer').value)
+    //     } else {
+    //         transfer = 0
+    //     }
+    //     if (document.getElementById('tunai')) {
+    //         tunai = (isNaN(parseFloat(document.getElementById('tunai').value))) ? 0 : parseFloat(document.getElementById('tunai').value)
+    //     } else {
+    //         tunai = 0
+    //     }
+    //     const totalbersih = document.getElementById('totalbersih').innerHTML
+    //     totalbersihval = parseFloat(totalbersih.replaceAll('.', ''))
+    //     hasil = totalbersihval - (bulat + tunai + transfer)
+    //     document.getElementById('transferbyr').innerHTML = transfer.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
+    //     document.getElementById('totalbersih1').innerHTML = hasil.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
+    // }
 
-    }
+    // function byrtunai() {
+    //     if (document.getElementById('harga_murni')) {
+    //         bulat = (isNaN(parseFloat(document.getElementById('harga_murni').value))) ? 0 : parseFloat(document.getElementById('harga_murni').value)
+    //     } else {
+    //         bulat = 0
+    //     }
+    //     if (document.getElementById('transfer')) {
+    //         transfer = (isNaN(parseFloat(document.getElementById('transfer').value))) ? 0 : parseFloat(document.getElementById('transfer').value)
+    //     } else {
+    //         transfer = 0
+    //     }
+    //     if (document.getElementById('tunai')) {
+    //         tunai = (isNaN(parseFloat(document.getElementById('tunai').value))) ? 0 : parseFloat(document.getElementById('tunai').value)
+    //     } else {
+    //         tunai = 0
+    //     }
+    //     const totalbersih = document.getElementById('totalbersih').innerHTML
+    //     totalbersihval = parseFloat(totalbersih.replaceAll('.', ''))
+    //     hasil = totalbersihval - (bulat + tunai + transfer)
+    //     document.getElementById('tunaibyr').innerHTML = tunai.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
+    //     document.getElementById('totalbersih1').innerHTML = hasil.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
+
+    // }
 
 
     $(document).ready(function() {

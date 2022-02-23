@@ -25,7 +25,7 @@ class ModelDetailMasuk extends Model
         // }
         //$query = $this->select('(SELECT * FROM tbl_detail_pembelian WHERE id_date_pembelian = ' . $id . ')');
         $this->Where(['id_date_pembelian' => $id]);
-        $this->orderBy('kode', 'DESC');
+        $this->orderBy('created_at', 'DESC');
         $query = $this->get();
         return $query->getResult('array');
     }

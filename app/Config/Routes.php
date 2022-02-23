@@ -58,6 +58,8 @@ $routes->get('/ajaxdetailpembelian', 'Barangmasuk::pembelian_detail_read');
 $routes->post('/ajaxpembayaran', 'Barangmasuk::Pembayaran_beli');
 $routes->get('/editdetail', 'Barangmasuk::GetDataDetail');
 $routes->post('/editdataform', 'Barangmasuk::EditDataPost');
+$routes->get('/deletepembayaran', 'Barangmasuk::DeletePembayaran');
+
 
 
 
@@ -79,8 +81,15 @@ $routes->get('/detailpenjualan/(:any)', 'Barangkeluar::DetailDataPenjualan/$1');
 $routes->get('/tampilcust', 'Barangkeluar::TampilCustomer');
 $routes->get('/checkcust', 'Barangkeluar::CheckCustomer');
 
-//----------------------------buyback---------------------------------
-$routes->get('/databuyback', 'Barangkeluar::Databuyback');
+//----------------------------------
+$routes->get('/buybackcust', 'BuybackCust::BuyBack');
+$routes->get('/adanota', 'BuybackCust::AdaNota');
+$routes->post('/scantrans', 'BuybackCust::Cari_notrans');
+$routes->get('/tampilbuyback', 'BuybackCust::TampilBuyback');
+$routes->post('/tambahbuyback', 'BuybackCust::TambahBuyback');
+$routes->post('/tambahbuybacknonota', 'BuybackCust::TambahBuybackNonota');
+$routes->get('/detailbuyback/(:any)', 'BuybackCust::DetailBuyback/$1');
+
 
 
 
