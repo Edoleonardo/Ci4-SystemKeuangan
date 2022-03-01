@@ -27,13 +27,6 @@ class ModelHome extends Model
     }
     public function getBarangkode($id)
     {
-        // $db = db_connect();
-        // $data = $db->query('SELECT * FROM `tbl_stock` WHERE barcode = ' . $id . ' && qty > 0');
-        // if ($data) {
-        //     return $data->getResult('array')[0];
-        // } else {
-        //     return (false);
-        // }
         return $this->where(['barcode' => $id])->first();
     }
     public function CheckData($id)

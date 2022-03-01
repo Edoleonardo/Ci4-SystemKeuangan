@@ -35,6 +35,7 @@ class BuybackCust extends BaseController
     }
     public function BuyBack()
     {
+        // dd($this->modeldetailpenjualan->getDetailJual(198)[0]);
         $data = [
             'databuyback' => $this->modeldetailbuyback->getDetailAllBuyback(),
             'merek' => $this->datamerek->getMerek(),
@@ -130,12 +131,6 @@ class BuybackCust extends BaseController
                                 'required' => 'Berat Bersih Harus di isi',
                             ]
                         ],
-                        'ongkos' => [
-                            'rules' => 'required',
-                            'errors' => [
-                                'required' => 'Ongkos Harus di isi',
-                            ]
-                        ],
                         'transfer' => [
                             'rules' => 'required',
                             'errors' => [
@@ -180,12 +175,6 @@ class BuybackCust extends BaseController
                             'rules' => 'required',
                             'errors' => [
                                 'required' => 'Berat Bersih Harus di isi',
-                            ]
-                        ],
-                        'ongkos' => [
-                            'rules' => 'required',
-                            'errors' => [
-                                'required' => 'Ongkos Harus di isi',
                             ]
                         ],
                         'gambar' => [
@@ -247,12 +236,6 @@ class BuybackCust extends BaseController
                                 'required' => 'Berat Bersih Harus di isi',
                             ]
                         ],
-                        'ongkos' => [
-                            'rules' => 'required',
-                            'errors' => [
-                                'required' => 'Ongkos Harus di isi',
-                            ]
-                        ],
                         'tunai' => [
                             'rules' => 'required',
                             'errors' => [
@@ -291,12 +274,6 @@ class BuybackCust extends BaseController
                             'rules' => 'required',
                             'errors' => [
                                 'required' => 'Berat Bersih Harus di isi',
-                            ]
-                        ],
-                        'ongkos' => [
-                            'rules' => 'required',
-                            'errors' => [
-                                'required' => 'Ongkos Harus di isi',
                             ]
                         ],
                         'gambar' => [
@@ -352,12 +329,6 @@ class BuybackCust extends BaseController
                                 'required' => 'Berat Bersih Harus di isi',
                             ]
                         ],
-                        'ongkos' => [
-                            'rules' => 'required',
-                            'errors' => [
-                                'required' => 'Ongkos Harus di isi',
-                            ]
-                        ],
                         'tunai' => [
                             'rules' => 'required',
                             'errors' => [
@@ -410,12 +381,6 @@ class BuybackCust extends BaseController
                                 'required' => 'Berat Bersih Harus di isi',
                             ]
                         ],
-                        'ongkos' => [
-                            'rules' => 'required',
-                            'errors' => [
-                                'required' => 'Ongkos Harus di isi',
-                            ]
-                        ],
                         'gambar' => [
                             'rules' => 'uploaded[gambar]|is_image[gambar]|mime_in[gambar,image/jpg,image/jpeg,image/png]',
                             'errors' => [
@@ -455,7 +420,6 @@ class BuybackCust extends BaseController
                         'jenis' => $validation->getError('jenis'),
                         'berat' => $validation->getError('berat'),
                         'harga_beli' => $validation->getError('harga_beli'),
-                        'ongkos' => $validation->getError('ongkos'),
                         'gambar' => $validation->getError('gambar'),
                         'tunai' => $validation->getError('tunai'),
                         'transfer' => $validation->getError('transfer'),
@@ -505,22 +469,22 @@ class BuybackCust extends BaseController
                     'qty' => $this->request->getVar('qty'),
                     'jenis' =>  $this->request->getVar('jenis'),
                     'model' =>  $this->request->getVar('model'),
-                    'status' => 'C',
+                    'status' => $this->request->getVar('status_proses'),
                     'keterangan' =>  $this->request->getVar('keterangan'),
                     'berat' =>  $this->request->getVar('berat'),
                     'berat_murni' =>  $beratmurni,
                     'harga_beli' =>  $this->request->getVar('harga_beli'),
-                    'ongkos' => $this->request->getVar('ongkos'),
+                    'ongkos' => 0,
                     'kadar' =>   $this->request->getVar('kadar'),
                     'nilai_tukar' => $this->request->getVar('nilai_tukar'),
                     'merek' => $this->request->getVar('merek'),
                     'cara_pembayaran' => $this->request->getVar('pembayaran'),
-                    'total_harga' => $totalharga + $this->request->getVar('ongkos'),
+                    'total_harga' => $totalharga,
                     'nama_bank' => $this->request->getVar('namabank'),
                     'tunai' => $this->request->getVar('tunai'),
                     'transfer' => $this->request->getVar('transfer'),
                     'no_nota' => 'No Nota',
-                    'status_proses' => 'Pending'
+                    'status_proses' => $this->request->getVar('status_proses')
                 ]);
                 $msg = 'sukses';
                 echo json_encode($msg);
@@ -561,18 +525,6 @@ class BuybackCust extends BaseController
                             'required' => 'Nilai Tukar Harus di isi',
                         ]
                     ],
-                    'qty' => [
-                        'rules' => 'required',
-                        'errors' => [
-                            'required' => 'Qty Harus di isi',
-                        ]
-                    ],
-                    'jenis' => [
-                        'rules' => 'required',
-                        'errors' => [
-                            'required' => 'Jenis Harus di isi',
-                        ]
-                    ],
                     'berat' => [
                         'rules' => 'required',
                         'errors' => [
@@ -583,12 +535,6 @@ class BuybackCust extends BaseController
                         'rules' => 'required',
                         'errors' => [
                             'required' => 'Berat Bersih Harus di isi',
-                        ]
-                    ],
-                    'ongkos' => [
-                        'rules' => 'required',
-                        'errors' => [
-                            'required' => 'Ongkos Harus di isi',
                         ]
                     ],
                     'transfer' => [
@@ -614,18 +560,6 @@ class BuybackCust extends BaseController
                             'required' => 'Nilai Tukar Harus di isi',
                         ]
                     ],
-                    'qty' => [
-                        'rules' => 'required',
-                        'errors' => [
-                            'required' => 'Qty Harus di isi',
-                        ]
-                    ],
-                    'jenis' => [
-                        'rules' => 'required',
-                        'errors' => [
-                            'required' => 'Jenis Harus di isi',
-                        ]
-                    ],
                     'berat' => [
                         'rules' => 'required',
                         'errors' => [
@@ -636,12 +570,6 @@ class BuybackCust extends BaseController
                         'rules' => 'required',
                         'errors' => [
                             'required' => 'Berat Bersih Harus di isi',
-                        ]
-                    ],
-                    'ongkos' => [
-                        'rules' => 'required',
-                        'errors' => [
-                            'required' => 'Ongkos Harus di isi',
                         ]
                     ],
                     'tunai' => [
@@ -661,18 +589,6 @@ class BuybackCust extends BaseController
                             'required' => 'Nilai Tukar Harus di isi',
                         ]
                     ],
-                    'qty' => [
-                        'rules' => 'required',
-                        'errors' => [
-                            'required' => 'Qty Harus di isi',
-                        ]
-                    ],
-                    'jenis' => [
-                        'rules' => 'required',
-                        'errors' => [
-                            'required' => 'Jenis Harus di isi',
-                        ]
-                    ],
                     'berat' => [
                         'rules' => 'required',
                         'errors' => [
@@ -683,12 +599,6 @@ class BuybackCust extends BaseController
                         'rules' => 'required',
                         'errors' => [
                             'required' => 'Berat Bersih Harus di isi',
-                        ]
-                    ],
-                    'ongkos' => [
-                        'rules' => 'required',
-                        'errors' => [
-                            'required' => 'Ongkos Harus di isi',
                         ]
                     ],
                     'tunai' => [
@@ -716,12 +626,9 @@ class BuybackCust extends BaseController
             if (!$valid) {
                 $msg = [
                     'error' => [
-                        'qty' => $validation->getError('qty'),
                         'nilai_tukar' => $validation->getError('nilai_tukar'),
-                        'jenis' => $validation->getError('jenis'),
                         'berat' => $validation->getError('berat'),
                         'harga_beli' => $validation->getError('harga_beli'),
-                        'ongkos' => $validation->getError('ongkos'),
                         'tunai' => $validation->getError('tunai'),
                         'transfer' => $validation->getError('transfer'),
                         'namabank' => $validation->getError('namabank'),
@@ -732,6 +639,7 @@ class BuybackCust extends BaseController
             } else {
                 $id = $this->request->getVar('id');
                 $databarang = $this->modeldetailpenjualan->getDetailJual($id)[0];
+                $datamaster = $this->datastock->getBarangkode($databarang['kode']);
                 $kode = substr($databarang['kode'], 0, 1);
                 $qty = $this->request->getVar('qty');
                 $harga = $this->request->getVar('harga_beli');
@@ -751,25 +659,29 @@ class BuybackCust extends BaseController
                     'nama_img' => $databarang['nama_img'],
                     'id_date_buyback' => $databarang['id_date_penjualan'],
                     'kode' =>  $databarang['kode'],
-                    'qty' => $this->request->getVar('qty'),
-                    'jenis' =>  $this->request->getVar('jenis'),
-                    'model' =>  $this->request->getVar('model'),
-                    'status' => 'C',
-                    'keterangan' =>  $this->request->getVar('keterangan'),
+                    'qty' => $databarang['qty'],
+                    'jenis' =>  $databarang['jenis'],
+                    'model' =>  $databarang['model'],
+                    'status' => $this->request->getVar('status_proses'),
+                    'keterangan' =>  $databarang['keterangan'],
                     'berat' =>  $this->request->getVar('berat'),
                     'berat_murni' =>  $beratmurni,
                     'harga_beli' =>  $this->request->getVar('harga_beli'),
-                    'ongkos' => $this->request->getVar('ongkos'),
-                    'kadar' =>   $this->request->getVar('kadar'),
+                    'ongkos' => $databarang['ongkos'],
+                    'kadar' =>   $databarang['kadar'],
                     'nilai_tukar' => $this->request->getVar('nilai_tukar'),
-                    'merek' => $this->request->getVar('merek'),
+                    'merek' => $databarang['merek'],
                     'cara_pembayaran' => $this->request->getVar('pembayaran'),
                     'total_harga' => $totalharga + $this->request->getVar('ongkos'),
                     'nama_bank' => $this->request->getVar('namabank'),
                     'tunai' => $this->request->getVar('tunai'),
                     'transfer' => $this->request->getVar('transfer'),
                     'no_nota' => $datapenjualan['no_transaksi_jual'],
-                    'status_proses' => 'Pending'
+                    'status_proses' => $this->request->getVar('status_proses')
+                ]);
+                $this->datastock->save([
+                    'id_stock' => $datamaster['id_stock'],
+                    'qty' => $databarang['qty']
                 ]);
                 $msg = 'sukses';
                 echo json_encode($msg);

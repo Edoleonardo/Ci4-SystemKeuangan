@@ -7,7 +7,7 @@
     <div class="container-fluid">
       <div class="row mb-2">
         <div class="col-sm-6">
-          <h1 class="m-0">Detail Barang</h1>
+          <h1 class="m-0">Detail Barang Buyback</h1>
         </div><!-- /.col -->
         <div class="col-sm-6">
           <ol class="breadcrumb float-sm-right">
@@ -31,7 +31,8 @@
               <img src="/img/<?= $barang['nama_img'] ?>" class="product-image" alt="Product Image">
             </div>
             <div class="col-12 product-image-thumbs">
-              <div class="product-image-thumb active"><img src="/img/<?= $barang['nama_img'] ?>" alt="Product Image"></div>
+              <div class="product-image-thumb active"><img src="/img/<?= $barang['nama_img'] ?>" alt="Product Image">
+              </div>
               <!-- <div class="product-image-thumb"><img src="../../dist/img/prod-2.jpg" alt="Product Image"></div>
               <div class="product-image-thumb"><img src="../../dist/img/prod-3.jpg" alt="Product Image"></div>
               <div class="product-image-thumb"><img src="../../dist/img/prod-4.jpg" alt="Product Image"></div>
@@ -68,92 +69,88 @@
             <h3 class="my-3"><?= $barang['jenis'] . ' ' . $barang['model'] . ' ' . $barang['keterangan'] . ' ' . $barang['merek'] ?></h3>
             <div class="card">
               <div class="card-body table-responsive p-0">
-                <table class="table table-head-fixed text-nowrap">
-                  <tbody>
-                    <tr>
-                      <td>Tanggal Input :</td>
-                      <td>
-                        <?= $barang['created_at'] ?>
-                      </td>
-                      <td>Qty :</td>
-                      <td>
-                        <?= $barang['qty'] ?>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>Jenis Barang :</td>
-                      <td>
-                        <?= $barang['jenis'] ?>
-                      </td>
-                      <td>Satus :</td>
-                      <td>
-                        <?= $barang['status'] ?>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>Model Barang :</td>
-                      <td>
-                        <?= $barang['model'] ?>
-                      </td>
-                      <td>Keterangan Barang :</td>
-                      <td>
-                        <?= $barang['keterangan'] ?>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>Merek Barang :</td>
-                      <td>
-                        <?= $barang['merek'] ?>
-                      </td>
-                      <td>Kadar Barang :</td>
-                      <td>
-                        <?= $barang['kadar'] ?>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>Berat :</td>
-                      <td>
-                        <?= $barang['berat'] ?>
-                      </td>
-                      <td>Berat Murni :</td>
-                      <td>
-                        <?= $barang['berat_murni'] ?>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>Nilai Tukar :</td>
-                      <td>
-                        <?= $barang['nilai_tukar'] ?> %
-                      </td>
-                      <td>Ongkos :</td>
-                      <td>
-                        <?= number_format($barang['ongkos'], 2, ',', '.') ?>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>Harga Beli :</td>
-                      <td>
-                        <?= number_format($barang['harga_beli'], 2, ',', '.') ?>
-                      </td>
-                      <td>Total Harga Murni :</td>
-                      <td>
-                        <?= number_format($barang['total_harga'], 2, ',', '.') ?>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>Barcode :</td>
-                      <td>
-                        <div class="btn-group btn-group-toggle" data-toggle="buttons">
-                          <div>
-                            <a href="/print/<?= $barang['id_detail_buyback'] ?>" rel="noopener" target="_blank" class="btn btn-default"><i class="fas fa-print"></i> <br> <?= $barcode ?></a>
-                            </h4>
-                          </div>
-                        </div>
-                      </td>
-                      <td>Metode Pembayaran</td>
-                      <td><?= $barang['cara_pembayaran'] ?></td>
-                    </tr>
-                  </tbody>
+                <table class="table text-nowrap">
+                  <tr>
+                    <td>Tanggal Input :</td>
+                    <td>
+                      <?= $barang['created_at'] ?>
+                    </td>
+                    <td>Qty :</td>
+                    <td>
+                      <?= $barang['qty'] ?>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Jenis Barang :</td>
+                    <td>
+                      <?= $barang['jenis'] ?>
+                    </td>
+                    <td>Satus :</td>
+                    <td style="background-color: lightblue;">
+                      <?= $barang['status'] ?>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Model Barang :</td>
+                    <td>
+                      <?= $barang['model'] ?>
+                    </td>
+                    <td>Keterangan Barang :</td>
+                    <td>
+                      <?= $barang['keterangan'] ?>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Merek Barang :</td>
+                    <td>
+                      <?= $barang['merek'] ?>
+                    </td>
+                    <td>Kadar Barang :</td>
+                    <td>
+                      <?= $barang['kadar'] ?>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Berat :</td>
+                    <td>
+                      <?= $barang['berat'] ?>
+                    </td>
+                    <td>Berat Murni :</td>
+                    <td>
+                      <?= $barang['berat_murni'] ?>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Nilai Tukar :</td>
+                    <td>
+                      <?= $barang['nilai_tukar'] ?> %
+                    </td>
+                    <td>Ongkos :</td>
+                    <td>
+                      <?= number_format($barang['ongkos'], 2, ',', '.') ?>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Harga Beli :</td>
+                    <td>
+                      <?= number_format($barang['harga_beli'], 2, ',', '.') ?>
+                    </td>
+                    <td>Total Harga Murni :</td>
+                    <td>
+                      <?= number_format($barang['total_harga'], 2, ',', '.') ?>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Barcode :</td>
+                    <td>
+                      <div>
+                        <a href="/print/<?= $barang['id_detail_buyback'] ?>" rel="noopener" target="_blank" class="btn btn-default"><i class="fas fa-print"></i> <br> <?= $barcode ?></a>
+                        </h4>
+                      </div>
+                    </td>
+                    <td>Metode Pembayaran</td>
+                    <td><?= $barang['cara_pembayaran'] ?></td>
+                  </tr>
                 </table>
               </div>
               <!-- /.card-body -->
@@ -188,21 +185,19 @@
       <!-- /.card-body -->
     </div>
     <!-- /.card -->
-
-
   </section>
   <!-- /.content -->
 </div>
 <!-- /.content-wrapper -->
 
-<!-- Control Sidebar -->
-<aside class="control-sidebar control-sidebar-dark">
-  <!-- Control sidebar content goes here -->
-</aside>
-<!-- /.control-sidebar -->
 
 <!-- Main Footer -->
 <footer class="main-footer">
 
 </footer>
+<!-- Control Sidebar -->
+<aside class="control-sidebar control-sidebar-dark">
+  <!-- Control sidebar content goes here -->
+</aside>
+<!-- /.control-sidebar -->
 <?= $this->endSection(); ?>

@@ -3,7 +3,6 @@
 <script type="text/javascript" src="/js/jquery.js"></script>
 <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/webcamjs/1.0.26/webcam.min.js"></script>
-
 <style>
     .table>tbody>tr>* {
         vertical-align: middle;
@@ -75,7 +74,7 @@
                                                 <td><?= $row['berat_murni'] ?></td>
                                                 <td><?= $row['nilai_tukar'] ?></td>
                                                 <td><?= $row['jenis'] ?></td>
-                                                <td><a type='button' href="detailbuyback/<?= $row['id_detail_buyback'] ?>" class='btn btn-block bg-gradient-primary'>Edit</a></td>
+                                                <td><a type='button' href="detailbuyback/<?= $row['id_detail_buyback'] ?>" class='btn btn-block bg-gradient-primary'>Detail</a></td>
                                             </tr>
                                         <?php endforeach; ?>
                                     </tbody>
@@ -189,7 +188,7 @@
                             <!-- text input -->
                             <div class="form-group">
                                 <label>Nilai Tukar</label>
-                                <input type="number" id="nilai_tukar" onkeyup="HarusBayar()" name="nilai_tukar" class="form-control" placeholder="Masukan Nilai Tukar">
+                                <input type="number" value="100" id="nilai_tukar" onkeyup="HarusBayar()" name="nilai_tukar" class="form-control" placeholder="Masukan Nilai Tukar">
                                 <div id="validationServerUsernameFeedback" class="invalid-feedback nilai_tukarmsg">
                                 </div>
                             </div>
@@ -206,11 +205,12 @@
                         <div class="col-sm-2">
                             <!-- text input -->
                             <div class="form-group">
-                                <label>Ongkos</label>
-                                <input type="number" value="0" name="ongkos" onkeyup="HarusBayar()" id="ongkos" class="form-control ongkos" placeholder="Masukan Ongkos">
-                                <div id="validationServerUsernameFeedback" class="invalid-feedback ongkosmsg">
-                                </div>
-                                <input type="hidden" id="id" name="id" value="">
+                                <label>Status Barang</label>
+                                <select name="status_proses" class="form-control" id="status" name="status">
+                                    <option value="Cuci">Cuci</option>
+                                    <option value="Retur">Retur Sales</option>
+                                    <option value="Lebur">Lebur</option>
+                                </select>
                             </div>
                         </div>
                         <div class="col-sm-1">
@@ -223,6 +223,7 @@
                                 <div id="validationServerUsernameFeedback" class="invalid-feedback ambilgbrmsg"></div>
                             </div>
                         </div>
+
                     </div>
                     <div class="row">
                         <div class="col-sm-12">
@@ -234,7 +235,7 @@
                                         <div class="col-sm-6">
                                             <div class="form-group">
                                                 <label>Cara Pembayaran</label>
-                                                <select onchange="myPembayaran()" onclick="myPembayaran()" name="pembayaran" class="form-control pembayaran" id="pembayaran">
+                                                <select onchange="myPembayaran()" onclick="myPembayaran()" onclick="HarusBayar()" name="pembayaran" class="form-control pembayaran" id="pembayaran">
                                                     <option value="Transfer">Transfer</option>
                                                     <option value="Tunai">Tunai</option>
                                                     <option value="Tunai&Transfer">Tunai & Transfer</option>
@@ -355,7 +356,6 @@
 
 <script>
     function HarusBayar() {
-        var ongkos = parseFloat(document.getElementById('ongkos').value)
         var hargabeli = parseFloat(document.getElementById('harga_beli').value)
         var nilaitukar = parseFloat(document.getElementById('nilai_tukar').value)
         var berat = parseFloat(document.getElementById('berat').value)
@@ -380,17 +380,19 @@
         metod2[0].innerHTML = ''
 
         var NamaBank = '<label>Nama Bank Debit/CC</label><input type="text" id="namabank" name="namabank" class="form-control" placeholder="Masukan Nama Bank"><div id="validationServerUsernameFeedback" class="invalid-feedback namabankmsg"></div>'
-        var Transfer = '<label>Transfer</label><input type="number" min="0" id="transfer" name="transfer" class="form-control" placeholder="Masukan transfer"><div id="validationServerUsernameFeedback" class="invalid-feedback transfermsg"></div>'
-        var Tunai = '<label>Tunai</label><input type="number" min="0" id="tunai" name="tunai" class="form-control" placeholder="Masukan tunai"><div id="validationServerUsernameFeedback" class="invalid-feedback tunaimsg"></div>'
+        var Transfer = '<label>Transfer</label><input type="number" onkeyup="transfer__()" min="0" id="transfer" name="transfer" class="form-control" placeholder="Masukan transfer"><div id="validationServerUsernameFeedback" class="invalid-feedback transfermsg"></div>'
+        var Tunai = '<label>Tunai</label><input type="number" onkeyup="tunai__()" min="0" id="tunai" name="tunai" class="form-control" placeholder="Masukan tunai"><div id="validationServerUsernameFeedback" class="invalid-feedback tunaimsg"></div>'
         console.log(carabyr)
 
         if (carabyr == 'Transfer') {
             metod1[0].innerHTML = Transfer
             nmbank[0].innerHTML = NamaBank
+            document.getElementById('transfer').value = document.getElementById('harusbayar').innerHTML.replaceAll('.', '')
 
         }
         if (carabyr == 'Tunai') {
             metod1[0].innerHTML = Tunai
+            document.getElementById('tunai').value = document.getElementById('harusbayar').innerHTML.replaceAll('.', '')
 
         }
 
@@ -398,7 +400,36 @@
             metod1[0].innerHTML = Transfer
             nmbank[0].innerHTML = NamaBank
             metod2[0].innerHTML = Tunai
+            document.getElementById('transfer').value = document.getElementById('harusbayar').innerHTML.replaceAll('.', '')
 
+        }
+    }
+
+    function transfer__() {
+        var tunai = document.getElementById('tunai').value
+        var trnsfr = document.getElementById('transfer').value
+        var harga = document.getElementById('harusbayar').innerHTML.replaceAll('.', '')
+        hasiltrnsfr = harga - trnsfr
+        // Math.abs(hasiltrnsfr)
+        // document.getElementById('tunai').value = hasiltunai
+        if (hasiltrnsfr < 0) {
+            document.getElementById('tunai').value = 0
+        } else {
+            document.getElementById('tunai').value = Math.abs(hasiltrnsfr)
+        }
+    }
+
+    function tunai__() {
+        var tunai = document.getElementById('tunai').value
+        var harga = document.getElementById('harusbayar').innerHTML.replaceAll('.', '')
+        var trnsfr = document.getElementById('transfer').value
+        hasiltrnsfr = harga - tunai
+        // Math.abs(hasiltrnsfr)
+        // document.getElementById('tunai').value = hasiltunai
+        if (hasiltrnsfr < 0) {
+            document.getElementById('transfer').value = 0
+        } else {
+            document.getElementById('transfer').value = Math.abs(hasiltrnsfr)
         }
     }
     $('.tambahbuybacknonota').submit(function(e) {

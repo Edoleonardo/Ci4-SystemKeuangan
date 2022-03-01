@@ -14,7 +14,7 @@
         <td><?= $row['nilai_tukar'] ?></td>
         <td><?= $row['merek'] ?></td>
         <?php foreach ($tampildatabuyback as $rowbuyback) :
-            if ($row['kode'] == $rowbuyback['kode']) {
+            if ($row['kode'] == $rowbuyback['kode'] && $row['id_date_penjualan'] == $rowbuyback['id_date_buyback']) {
                 $check = true;
                 break;
             } else {

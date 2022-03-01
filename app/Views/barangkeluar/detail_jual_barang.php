@@ -144,11 +144,11 @@
                                 <table class="table table-striped">
                                     <tbody>
                                         <tr>
-                                            <td>Total Berat Bersih</td>
+                                            <td>Total Berat Murni</td>
                                             <td id="totalberatbersihhtml01"></td>
                                         </tr>
                                         <tr>
-                                            <td>Total Berat Kotor</td>
+                                            <td>Total Berat</td>
                                             <td id="totalberatkotorhtml01"></td>
                                         </tr>
                                         <tr>

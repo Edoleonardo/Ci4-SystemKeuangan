@@ -42,8 +42,8 @@
           <div class="col-12 col-sm-6">
             <h3 class="my-3"><?= $barang['jenis'] . ' ' . $barang['keterangan'] . ' ' . $barang['merek'] ?></h3>
             <div class="card">
-              <div class="card-body p-0">
-                <table class="table table-striped">
+              <div class="card-body table-responsive p-0">
+                <table class="table table-head-fixed text-nowrap">
                   <tbody>
                     <tr>
                       <td>Tanggal Faktur :</td>
@@ -128,11 +128,9 @@
                     <tr>
                       <td>Barcode :</td>
                       <td>
-                        <div class="btn-group btn-group-toggle" data-toggle="buttons">
-                          <div>
-                            <a href="/print/<?= $barang['id_stock'] ?>" rel="noopener" target="_blank" class="btn btn-default"><i class="fas fa-print"></i> <br> <?= $barcode ?></a>
-                            </h4>
-                          </div>
+                        <div>
+                          <a href="/print/<?= $barang['id_stock'] ?>" rel="noopener" target="_blank" class="btn btn-default"><i class="fas fa-print"></i> <br> <?= $barcode ?></a>
+                          </h4>
                         </div>
                       </td>
                       <td>Kode Beli :</td>
