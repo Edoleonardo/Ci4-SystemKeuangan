@@ -134,8 +134,8 @@
 <aside class="main-sidebar sidebar-dark-primary elevation-4">
     <!-- Brand Logo -->
     <a href="index3.html" class="brand-link">
-        <img src="/dist/img/AdminLTELogo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
-        <span class="brand-text font-weight-light">AdminLTE 3</span>
+        <img src="/dist/img/AdminLTELogo.png" class="brand-image img-circle elevation-3" style="opacity: .8">
+        <span class="brand-text font-weight-light">TokoMas</span>
     </a>
 
     <!-- Sidebar -->
@@ -206,6 +206,52 @@
                             <a href="/barangkeluar" class="nav-link ">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>Jual Barang</p>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="nav-item menu-open">
+                    <a href="#" class="nav-link">
+                        <i class="nav-icon fas fa-book"></i>
+                        <p>
+                            Proses Barang
+                            <i class="right fas fa-angle-left"></i>
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="/dataretur" class="nav-link ">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Barang Retur</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/datacuci" class="nav-link ">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Barang Cuci</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/datalebur" class="nav-link ">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Barang Lebur</p>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="nav-item menu-open">
+                    <a href="#" class="nav-link">
+                        <i class="nav-icon fas fa-book"></i>
+                        <p>
+                            Custom Barang
+                            <i class="right fas fa-angle-left"></i>
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="/barangkeluar" class="nav-link ">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Pemesanan</p>
                             </a>
                         </li>
                     </ul>

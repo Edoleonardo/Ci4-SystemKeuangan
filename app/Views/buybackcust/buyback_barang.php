@@ -178,8 +178,8 @@
                                     <label>Berat</label>
                                     <input type="number" step="0.01" id="berat" onkeyup="HarusBayar()" name="berat" class="form-control" placeholder="Masukan Berat Bersih">
                                     <div id="validationServerUsernameFeedback" class="invalid-feedback beratmsg">
-                                        <input type="hidden" name="id" id="id" value="">
                                     </div>
+                                    <input type="hidden" name="id" id="id" value="">
                                 </div>
                             </div>
                             <div class="col-sm-3">
@@ -587,17 +587,9 @@
             success: function(result) {
                 // console.log(result)
                 $('#modal-edit').modal('show');
-                $('#merek').val(result.data.merek)
-                $('#kadar').val(result.data.kadar)
                 $('#berat').val(result.data.berat)
-                $('#qty').val(result.data.qty)
-                $('#model').val(result.data.model)
-                $('#keterangan').val(result.data.keterangan)
                 $('#nilai_tukar').val(result.data.nilai_tukar)
                 $('#harga_beli').val(result.data.harga_beli)
-                $('#ongkos').val(result.data.ongkos)
-                $('#jenis').val(result.data.jenis)
-                $('#kode').val(result.data.kode)
                 $('#id').val(result.data.id_detail_penjualan)
                 console.log($('#id').val())
                 HarusBayar()

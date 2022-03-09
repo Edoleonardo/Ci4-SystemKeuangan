@@ -1,5 +1,15 @@
 <?= $this->extend('layout/template'); ?>
 <?= $this->section('content') ?>
+<style>
+  .table>tbody>tr>* {
+    vertical-align: middle;
+    text-align: center;
+  }
+
+  .imgg {
+    width: 100px;
+  }
+</style>
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
   <!-- Content Header (Page header) -->
@@ -50,7 +60,7 @@
                 <tbody>
                   <?php foreach ($barang as $r) : ?>
                     <tr>
-                      <td><img src="/img/<?= $r['gambar'] ?>" style="width : 100px" alt=""></td>
+                      <td class="imgg"><img class="imgg" src="/img/<?= $r['gambar'] ?>" alt=""></td>
                       <td><?= $r['barcode'] ?></td>
                       <td><?= $r['jenis'] ?></td>
                       <td><?= $r['model'] ?></td>
@@ -95,97 +105,33 @@
 </aside>
 <!-- /.control-sidebar -->
 
-<!-- modall -->
-<div class="modal fade" id="modal-xl">
-  <div class="modal-dialog modal-xl">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h4 style="text-align: center;">Form Barang Baru</h4>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <!-- form -->
-        <!-- /.card-header -->
-        <!-- form start -->
-        <form action="/home/save" method="POST" enctype="multipart/form-data">
-          <?= csrf_field(); ?>
-          <div class="card-body">
-            <div class="form-group">
-              <label for="NamaBarang">Nama Barang</label>
-              <input type="text" class="form-control" id="namabarang" name="namabarang" value="<?= old('namabarang'); ?>" placeholder="Masukan Barang">
-            </div>
-            <div class="form-group">
-              <label for="idbarcode">Id Barcode</label>
-              <input type="text" class="form-control" id="idbarcode" name="idbarcode" value="<?= old('idbarcode'); ?>" placeholder="Masukan ID Barcode">
-            </div>
-            <div class="form-group">
-              <label for="jenisbarang">Jenis Barang</label>
-              <input type="text" class="form-control" id="jenisbarang" name="jenisbarang" value="<?= old('jenisbarang'); ?>" placeholder="Masukan Jenis Barang">
-            </div>
-            <div class="form-group">
-              <label for="jumlahbarang">Jumlah Barang</label>
-              <input type="number" class="form-control" id="jumlahbarang" name="jumlahbarang" value="<?= old('jumlahbarang'); ?>" placeholder="Masukan Jumlah Barang">
-            </div>
-            <div class="form-group">
-              <label for="beratbarang">Berat Barang / gram</label>
-              <input type="number" class="form-control" id="beratbarang" name="beratbarang" value="<?= old('beratbarang'); ?>" placeholder="Masukan Berat Barang">
-            </div>
-            <div class="form-group">
-              <label for="hargabarang">Harga Barang</label>
-              <input type="number" class="form-control" id="hargabarang" name="hargabarang" value="<?= old('hargabarang'); ?>" placeholder="Masukan Harga Barang">
-            </div>
-            <div class="form-group">
-              <label for="gambar">Masukan Foto</label>
-              <div class="input-group">
-                <div class="custom-file">
-                  <input type="file" class="custom-file-input" name="gambar" id="gambar">
-                  <label class="custom-file-label" for="gambar">Masukan Foto</label>
-                </div>
-              </div>
-            </div>
-          </div>
-      </div>
-      <div class="modal-footer justify-content-between">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Tutup</button>
-        <button type="submit" name="submit" class="btn btn-primary">Tambah</button>
-      </div>
-      </form>
-    </div>
-    <!-- /.modal-content -->
-  </div>
-  <!-- /.modal-dialog -->
-</div>
-<!-- tutup modal -->
-
 <!-- Main Footer -->
 <footer class="main-footer">
 
 </footer>
 
 <script>
-  let timerInterval
-  Swal.fire({
-    title: 'Auto close alert!',
-    html: 'I will close in <b></b> milliseconds.',
-    timer: 2000,
-    timerProgressBar: true,
-    didOpen: () => {
-      Swal.showLoading()
-      const b = Swal.getHtmlContainer().querySelector('b')
-      timerInterval = setInterval(() => {
-        b.textContent = Swal.getTimerLeft()
-      }, 100)
-    },
-    willClose: () => {
-      clearInterval(timerInterval)
-    }
-  }).then((result) => {
-    /* Read more about handling dismissals below */
-    if (result.dismiss === Swal.DismissReason.timer) {
-      console.log('I was closed by the timer')
-    }
-  })
+  // let timerInterval
+  // Swal.fire({
+  //   title: 'Auto close alert!',
+  //   html: 'I will close in <b></b> milliseconds.',
+  //   timer: 2000,
+  //   timerProgressBar: true,
+  //   didOpen: () => {
+  //     Swal.showLoading()
+  //     const b = Swal.getHtmlContainer().querySelector('b')
+  //     timerInterval = setInterval(() => {
+  //       b.textContent = Swal.getTimerLeft()
+  //     }, 100)
+  //   },
+  //   willClose: () => {
+  //     clearInterval(timerInterval)
+  //   }
+  // }).then((result) => {
+  //   /* Read more about handling dismissals below */
+  //   if (result.dismiss === Swal.DismissReason.timer) {
+  //     console.log('I was closed by the timer')
+  //   }
+  // })
 </script>
 <?= $this->endSection(); ?>

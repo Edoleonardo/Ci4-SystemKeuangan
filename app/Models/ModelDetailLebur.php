@@ -4,15 +4,15 @@ namespace App\Models;
 
 use CodeIgniter\Model;
 
-class ModelDetailBuyback extends Model
+class ModelDetailLebur extends Model
 {
 
-    protected $table = 'tbl_detail_buyback';
-    protected $primaryKey = 'id_detail_buyback';
+    protected $table = 'tbl_detail_lebur';
+    protected $primaryKey = 'id_detail_lebur';
     protected $useTimestamps = true;
-    protected $allowedFields = ['id_date_buyback', 'nama_img', 'kode', 'jenis', 'qty', 'model', 'keterangan', 'berat_murni', 'berat', 'harga_beli', 'ongkos', 'kadar', 'status', 'nilai_tukar', 'merek', 'total_harga', 'no_nota', 'status_proses', 'nama_bank', 'tunai', 'transfer', 'cara_pembayaran', 'no_nota_jual'];
+    protected $allowedFields = ['id_date_lebur', 'id_detail_buyback', 'nama_img', 'kode', 'jenis', 'qty', 'model', 'keterangan', 'berat_murni', 'berat', 'harga_beli', 'ongkos', 'kadar', 'status', 'nilai_tukar', 'merek', 'total_harga', 'no_nota', 'status_proses', 'nama_bank', 'tunai', 'transfer', 'cara_pembayaran', 'no_nota_jual'];
 
-    public function getDetailAllBuyback($id = false)
+    public function getDetailAllLebur($id = false)
     {
         if ($id == false) {
             $this->findAll();
@@ -20,10 +20,29 @@ class ModelDetailBuyback extends Model
             $data = $this->get();
             return $data->getResult('array');
         } else {
-            $query = $this->getWhere(['id_date_buyback' => $id]);
-            return $query->getResult('array');
+            $this->Where(['id_date_lebur' => $id]);
+            $this->orderBy('created_at', 'DESC');
+            $data = $this->get();
+            return $data->getResult('array');
         }
     }
+    public function getDataDetailLebur($id)
+    {
+        return $this->where(['id_detail_lebur' => $id])->first();
+    }
+    public function CheckDataLebur($id)
+    {
+        return $this->where(['kode' => $id])->first();
+    }
+    public function getDetailLebur($id)
+    {
+        // dd($id);
+        $this->Where(['id_date_lebur' => $id]);
+        $this->orderBy('created_at', 'DESC');
+        $data = $this->get();
+        return $data->getResult('array');
+    }
+
     public function getDataReturAll()
     {
         $this->where(['status_proses' => 'Retur']);
@@ -45,14 +64,7 @@ class ModelDetailBuyback extends Model
         $query = $this->get();
         return $query->getResult('array');
     }
-    public function getDataDetailRetur($id)
-    {
-        return $this->where(['kode' => $id])->first();
-    }
-    public function getDataDetailKode($id)
-    {
-        return $this->where(['id_detail_buyback' => $id])->first();
-    }
+
     public function getDataRetur()
     {
         $this->getWhere(['status_proses' => 'Retur']);

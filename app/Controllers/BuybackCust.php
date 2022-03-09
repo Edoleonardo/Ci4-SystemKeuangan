@@ -35,7 +35,6 @@ class BuybackCust extends BaseController
     }
     public function BuyBack()
     {
-        // dd($this->modeldetailpenjualan->getDetailJual(198)[0]);
         $data = [
             'databuyback' => $this->modeldetailbuyback->getDetailAllBuyback(),
             'merek' => $this->datamerek->getMerek(),
@@ -83,7 +82,7 @@ class BuybackCust extends BaseController
         if ($this->request->isAJAX()) {
 
             $id = $this->request->getVar('id');
-            $data = $this->modeldetailpenjualan->getDetailJual($id)[0];
+            $data = $this->modeldetailpenjualan->getDetailoneJual($id);
             $msg = [
                 'data' => $data
             ];
@@ -462,10 +461,11 @@ class BuybackCust extends BaseController
                 if ($kode == 3) {
                     $totalharga =  $beratmurni *  $harga * $qty;
                 }
+                $barcode = $this->KodeDatailGenerate($this->request->getVar('kelompok'));
                 $this->modeldetailbuyback->save([
                     'nama_img' => $namafile,
-                    'id_date_buyback' => "1234",
-                    'kode' =>  $this->KodeDatailGenerate(9),
+                    'id_date_buyback' => date('ymdhis'),
+                    'kode' =>  $barcode,
                     'qty' => $this->request->getVar('qty'),
                     'jenis' =>  $this->request->getVar('jenis'),
                     'model' =>  $this->request->getVar('model'),
@@ -483,8 +483,30 @@ class BuybackCust extends BaseController
                     'nama_bank' => $this->request->getVar('namabank'),
                     'tunai' => $this->request->getVar('tunai'),
                     'transfer' => $this->request->getVar('transfer'),
-                    'no_nota' => 'No Nota',
+                    'no_nota' => 'NoNota',
                     'status_proses' => $this->request->getVar('status_proses')
+                ]);
+
+                $this->datastock->save([
+                    'barcode' => $barcode,
+                    'status' => $this->request->getVar('status_proses'),
+                    'no_faktur' => 'NoFaktur',
+                    'tgl_faktur' => 'NoFaktur',
+                    'nama_supplier' => 'Buyback',
+                    'qty' => 0,
+                    'jenis' =>  $this->request->getVar('jenis'),
+                    'model' =>  $this->request->getVar('model'),
+                    'keterangan' =>  $this->request->getVar('keterangan'),
+                    'merek' => $this->request->getVar('merek'),
+                    'kadar' =>   $this->request->getVar('kadar'),
+                    'berat' =>  $this->request->getVar('berat'),
+                    'berat_murni' =>  $beratmurni,
+                    'nilai_tukar' => $this->request->getVar('nilai_tukar'),
+                    'ongkos' => 0,
+                    'harga_beli' =>  $this->request->getVar('harga_beli'),
+                    'total_harga' => $totalharga,
+                    'kode_beli' =>  'JN',
+                    'gambar' =>  $namafile,
                 ]);
                 $msg = 'sukses';
                 echo json_encode($msg);
@@ -638,7 +660,7 @@ class BuybackCust extends BaseController
                 echo json_encode($msg);
             } else {
                 $id = $this->request->getVar('id');
-                $databarang = $this->modeldetailpenjualan->getDetailJual($id)[0];
+                $databarang = $this->modeldetailpenjualan->getDetailoneJual($id);
                 $datamaster = $this->datastock->getBarangkode($databarang['kode']);
                 $kode = substr($databarang['kode'], 0, 1);
                 $qty = $this->request->getVar('qty');
@@ -679,10 +701,10 @@ class BuybackCust extends BaseController
                     'no_nota' => $datapenjualan['no_transaksi_jual'],
                     'status_proses' => $this->request->getVar('status_proses')
                 ]);
-                $this->datastock->save([
-                    'id_stock' => $datamaster['id_stock'],
-                    'qty' => $databarang['qty']
-                ]);
+                // $this->datastock->save([
+                //     'id_stock' => $datamaster['id_stock'],
+                //     'qty' => $databarang['qty']
+                // ]);
                 $msg = 'sukses';
                 echo json_encode($msg);
             }

@@ -81,7 +81,7 @@ $routes->get('/detailpenjualan/(:any)', 'Barangkeluar::DetailDataPenjualan/$1');
 $routes->get('/tampilcust', 'Barangkeluar::TampilCustomer');
 $routes->get('/checkcust', 'Barangkeluar::CheckCustomer');
 
-//----------------------------------
+//------------------buyback----------------
 $routes->get('/buybackcust', 'BuybackCust::BuyBack');
 $routes->get('/adanota', 'BuybackCust::AdaNota');
 $routes->post('/scantrans', 'BuybackCust::Cari_notrans');
@@ -90,9 +90,26 @@ $routes->post('/tambahbuyback', 'BuybackCust::TambahBuyback');
 $routes->post('/tambahbuybacknonota', 'BuybackCust::TambahBuybackNonota');
 $routes->get('/detailbuyback/(:any)', 'BuybackCust::DetailBuyback/$1');
 
+//-------------------------------------------------------
+
+$routes->get('/dataretur', 'Prosesbarang::HomeRetur');
+$routes->get('/datacuci', 'Prosesbarang::HomeCuci');
+$routes->get('/tampilcuci', 'Prosesbarang::TampilCuci');
+$routes->post('/updatecuci', 'Prosesbarang::UpdateCuci');
+
+//------------------------------
+$routes->get('/datalebur', 'Prosesbarang::HomeLebur');
+$routes->get('/leburbarang', 'Prosesbarang::LeburBarang');
+$routes->get('/hapuslebur', 'Prosesbarang::DeleteLebur');
+$routes->get('/leburbarang/(:any)', 'Prosesbarang::TampilLeburBarang/$1');
+$routes->get('/batallebur/(:any)', 'Prosesbarang::BatalLebur/$1');
+$routes->get('/tambahlebur', 'Prosesbarang::TambahLebur');
+$routes->post('/selesailebur', 'Prosesbarang::SelesaiLebur');
 
 
 
+
+// $routes->get('/leburbarang/(:any)', 'Prosesbarang::LeburBarang/$1');
 
 
 

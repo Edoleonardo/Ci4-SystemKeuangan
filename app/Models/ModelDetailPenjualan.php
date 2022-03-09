@@ -27,11 +27,11 @@ class ModelDetailPenjualan extends Model
         $query = $this->getWhere(['id_date_penjualan' => $id]);
         return $query->getResult('array');
     }
-    public function getDetailJual($id)
-    {
-        $query = $this->getWhere(['id_detail_penjualan' => $id]);
-        return $query->getResult('array');
-    }
+    // public function getDetailJual($id)
+    // {
+    //     $query = $this->getWhere(['id_detail_penjualan' => $id]);
+    //     return $query->getResult('array');
+    // }
     public function getDetailoneJual($id)
     {
         return $this->where(['id_detail_penjualan' => $id])->first();

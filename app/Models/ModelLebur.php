@@ -4,26 +4,23 @@ namespace App\Models;
 
 use CodeIgniter\Model;
 
-class ModelHome extends Model
+class ModelLebur extends Model
 {
 
-    protected $table = 'tbl_stock';
-    protected $primaryKey = 'id_stock';
+    protected $table = 'tbl_lebur';
+    protected $primaryKey = 'id_lebur';
     protected $useTimestamps = true;
-    protected $allowedFields = ['barcode', 'status', 'no_faktur', 'tgl_faktur', 'nama_supplier', 'qty', 'jenis', 'model', 'keterangan', 'merek', 'kadar', 'berat_murni', 'berat', 'nilai_tukar', 'ongkos', 'harga_beli', 'total_harga', 'kode_beli', 'gambar'];
+    protected $allowedFields = ['nama_img', 'id_date_lebur', 'id_karyawan', 'kode', 'model', 'berat_murni', 'qty', 'tanggal_lebur', 'status_dokumen'];
 
-    public function getBarang($id = false)
+    public function getDataLeburAll($id = false)
     {
         if ($id == false) {
-            // $query =  $this->db->table('tbl_img')
-            //     ->select('*')
-            //     ->get();
-            // $data[0] = $query;
-            $data = $this->findAll();
-            return $data;
-            //return $this->findAll();
+            $this->findAll();
+            $this->orderBy('created_at', 'DESC');
+            $data = $this->get();
+            return $data->getResult('array');
         }
-        return $this->where(['id_stock' => $id])->first();
+        return $this->where(['id_date_lebur' => $id])->first();
     }
     public function getBarangkode($id)
     {
@@ -56,6 +53,14 @@ class ModelHome extends Model
         $db = db_connect();
         $data = $db->query('DELETE FROM tbl_stock WHERE barcode = ' . $id . '');
         return 0;
+        //  $this->get();
+        // return $query;
+    }
+    public function getKode($id)
+    {
+        $db = db_connect();
+        $data = $db->query('select max(substr(kode,2,7)) kode from tbl_lebur where substr(kode,1,1) = ' . $id . ' limit 1');
+        return $data->getResult('array')[0];
         //  $this->get();
         // return $query;
     }

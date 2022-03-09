@@ -162,7 +162,7 @@ class Barangmasuk extends BaseController
                     $datapembelian = $this->datapembelian->getPembelianSupplier($this->request->getVar('dateid'));
                     if ($datapembelian['byr_berat_murni'] > 0) {
                         if ($this->request->getVar('pembayaran') == 'Rongsok') {
-                            $datarongsok = $this->modelbuyback->getDataDetailRongsok($this->request->getVar('kode_rongsok'));
+                            $datarongsok = $this->modelbuyback->getDataDetailRetur($this->request->getVar('kode_rongsok'));
                             if ($datarongsok != null && $datarongsok['status_proses'] == 'Pending') {
                                 $byrberatmurni = $datapembelian['byr_berat_murni'] - $datarongsok['berat_murni'];
                                 $jmlbyr = $this->request->getVar('harga_murni') * $datarongsok['berat_murni'];
@@ -244,8 +244,8 @@ class Barangmasuk extends BaseController
                             }
                         }
                         if ($this->request->getVar('pembayaran') == 'ReturSales') {
-                            $dataretur = $this->modelretur->getDetailRetur($this->request->getVar('kode_retur'));
-                            if ($dataretur != null && $dataretur['status_proses'] == 'Pending') {
+                            $dataretur = $this->modelbuyback->getDataDetailRetur($this->request->getVar('kode_retur'));
+                            if ($dataretur != null && $dataretur['status_proses'] == 'Retur') {
                                 $byrberatmurni = $datapembelian['byr_berat_murni'] - $dataretur['berat_murni'];
                                 $jmlbyr = $this->request->getVar('harga_murni') * $dataretur['berat_murni'];
                                 $this->datapembelian->save([
@@ -267,9 +267,10 @@ class Barangmasuk extends BaseController
                                     'harga_murni' => $this->request->getVar('harga_murni'),
                                     'berat_murni' => $dataretur['berat_murni'],
                                 ]);
-                                $this->modelretur->save([
-                                    'id_retur' => $dataretur['id_retur'],
-                                    'status_proses' => 'BayarRetur'
+                                $this->modelbuyback->save([
+                                    'id_detail_buyback' => $dataretur['id_detail_buyback'],
+                                    'status_proses' => 'BayarRetur',
+                                    'no_nota_jual' => $datapembelian['no_transaksi']
                                 ]);
                                 $msg = [
                                     'pesan' => [
@@ -950,10 +951,8 @@ class Barangmasuk extends BaseController
         $data = [
             'datapembelian' => $this->datapembelian->getPembelianSupplier($id),
             'tampildata' =>  $this->detailbeli->getDetailAll($id),
-
-            'tampilrongsok' =>  $this->modelbuyback->getDetailRongsok(),
             'tampil24k' =>  $this->datastock->getKodeBahan24k(),
-            'tampilretur' =>  $this->modelretur->getDataRetur(),
+            'tampilretur' =>  $this->modelbuyback->getDataRetur(),
             'databarang' => $this->detailbeli->getDetailAll($id),
             'totalberat' => $this->detailbeli->SumBeratDetail($id),
             'totalberatmurni' => $this->detailbeli->SumBeratMurniDetail($id),

@@ -119,7 +119,21 @@
             <div class="modal-body">
                 <form action="/tambahbuybacknonota" id="tambahbuybacknonota" class="tambahbuybacknonota" name="tambahbuybacknonota">
                     <div class="row">
-                        <div class="col-sm-3">
+                        <div class="col-sm-2">
+                            <!-- text input -->
+                            <div class="form-group">
+                                <label>Kelompok</label>
+                                <select name="kelompok" class="form-control" id="cars" name="cars">
+                                    <option value="1">Perhiasan Mas</option>
+                                    <option value="2">Perhiasan Berlian</option>
+                                    <option value="3">Logam Mulia (Antam, UBS, HWT)</option>
+                                    <option value="4">Bahan Murni</option>
+                                    <option value="5">Loose Diamond</option>
+                                    <option value="9">Barang Dagang</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-sm-2">
                             <!-- text input -->
                             <div class="form-group">
                                 <label>Merek</label>
@@ -141,7 +155,7 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="col-sm-3">
+                        <div class="col-sm-2">
                             <!-- text input -->
                             <div class="form-group">
                                 <label>Jenis</label>
@@ -159,17 +173,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-sm-2">
-                            <!-- text input -->
-                            <div class="form-group">
-                                <label>Qty</label>
-                                <input type="Number" id="qty" name="qty" min="1" class="form-control" placeholder="Masukan jumlah">
-                                <div id="validationServerUsernameFeedback" class="invalid-feedback qtymsg">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
+
                         <div class="col-sm-2">
                             <!-- text input -->
                             <div class="form-group">
@@ -177,11 +181,22 @@
                                 <input type="text" name="model" id="model" class="form-control" placeholder="Masukan Model Barang">
                             </div>
                         </div>
+                    </div>
+                    <div class="row">
                         <div class="col-sm-3">
                             <!-- text input -->
                             <div class="form-group">
                                 <label>Keterangan</label>
                                 <input type="text" name="keterangan" id="keterangan" class="form-control" placeholder="Masukan Keterangan">
+                            </div>
+                        </div>
+                        <div class="col-sm-2">
+                            <!-- text input -->
+                            <div class="form-group">
+                                <label>Qty</label>
+                                <input type="Number" id="qty" name="qty" min="1" class="form-control" placeholder="Masukan jumlah">
+                                <div id="validationServerUsernameFeedback" class="invalid-feedback qtymsg">
+                                </div>
                             </div>
                         </div>
                         <div class="col-sm-2">

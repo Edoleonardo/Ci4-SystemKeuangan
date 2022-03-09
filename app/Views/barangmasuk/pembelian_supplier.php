@@ -140,7 +140,7 @@
                                                             <option value="3">Logam Mulia (Antam, UBS, HWT)</option>
                                                             <option value="4">Bahan Murni</option>
                                                             <option value="5">Loose Diamond</option>
-                                                            <option value="6">Barang Dagang</option>
+                                                            <option value="9">Barang Dagang</option>
                                                         </select>
                                                     </div>
                                                 </div>

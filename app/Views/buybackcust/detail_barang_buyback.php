@@ -87,7 +87,7 @@
                     </td>
                     <td>Satus :</td>
                     <td style="background-color: lightblue;">
-                      <?= $barang['status'] ?>
+                      <?= $barang['status_proses'] ?> <?= ($barang['no_nota_jual']) ? $barang['no_nota_jual'] : '' ?>
                     </td>
                   </tr>
                   <tr>
@@ -148,8 +148,8 @@
                         </h4>
                       </div>
                     </td>
-                    <td>Metode Pembayaran</td>
-                    <td><?= $barang['cara_pembayaran'] ?></td>
+                    <td>Nomor Nota</td>
+                    <td><?= ($barang['no_nota_jual']) ? $barang['no_nota_jual'] : 'Tanpa Nota' ?></td>
                   </tr>
                 </table>
               </div>

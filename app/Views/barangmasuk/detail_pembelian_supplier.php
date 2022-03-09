@@ -322,7 +322,6 @@
                                                             <select onclick="myPembayaran()" onchange="myPembayaran()" name="pembayaran" class="form-control" id="pembayaran" name="pembayaran">
                                                                 <option value="Tunai">Tunai</option>
                                                                 <option value="Transfer">Transfer</option>
-                                                                <option value="Rongsok">Rongsok</option>
                                                                 <option value="Bahan24K">Bahan 24K</option>
                                                                 <option value="ReturSales">Retur Sales</option>
                                                             </select>
@@ -363,7 +362,7 @@
                                                     <tr>
                                                         <th>Cara Pembayaran</th>
                                                         <th>Jumlah Bayar</th>
-                                                        <th>Kode</th>
+                                                        <th style="text-align: center;">Kode</th>
                                                         <th>Berat Murni</th>
                                                         <th>Hapus</th>
                                                     </tr>
@@ -373,7 +372,7 @@
                                                         <tr>
                                                             <td> <?= $byr['cara_pembayaran'] ?> </td>
                                                             <td><?= number_format($byr['jumlah_pembayaran'], 2, ',', '.') ?></td>
-                                                            <td><?= $byr['kode_retur'] ?><?= $byr['kode_rongsok'] ?><?= $byr['kode_24k'] ?></td>
+                                                            <td><?= ($byr['kode_retur']) ? $byr['kode_retur'] : $byr['kode_24k'] ?></td>
                                                             <td><?= $byr['berat_murni'] ?></td>
                                                             <td><button type='button' class='btn btn-block bg-gradient-danger' onclick="hapus(<?= $byr['id_pembayaran'] ?>)"><i class='fas fa-trash'></i></button></td>
                                                         </tr>
@@ -423,79 +422,7 @@
                 </div>
                 <!-- /.modal-dialog -->
             </div>
-            <div class="modal fade" id="modal-barangrongsok">
-                <div class="modal-dialog modal-xl">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h4 class="modal-title">Pilih Barang Rongsok</h4>
-                            <button type="button" class="close" onclick=" $('#modal-barangrongsok').modal('toggle');" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            <div class="card">
-                                <!-- /.card-header -->
-                                <div class="card-header">
-                                    <h3 class="card-title" id="titletable"></h3>
 
-                                </div>
-                                <div class="card-body table-responsive p-0">
-                                    <table id="example1" class="table table-bordered table-striped">
-                                        <thead>
-                                            <tr>
-                                                <th>Gambar</th>
-                                                <th>Kode</th>
-                                                <th>Qty</th>
-                                                <th>Jenis</th>
-                                                <th>Model</th>
-                                                <th>Keterangan</th>
-                                                <th>Berat</th>
-                                                <th>Berat Murni</th>
-                                                <th>Harga Beli</th>
-                                                <th>ongkos</th>
-                                                <th>Kadar</th>
-                                                <th>Nilai Tukar</th>
-                                                <th>Merek</th>
-                                                <th>Total Harga</th>
-                                                <th>Tambah</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <?php foreach ($tampilrongsok as $row) : ?>
-                                                <tr>
-                                                    <td><img src='/img/<?= $row['nama_img'] ?>' class='imgg'></td>
-                                                    <td><?= $row['kode'] ?></td>
-                                                    <td><?= $row['qty'] ?></td>
-                                                    <td><?= $row['jenis'] ?></td>
-                                                    <td><?= $row['model'] ?></td>
-                                                    <td><?= $row['keterangan'] ?></td>
-                                                    <td><?= $row['berat'] ?></td>
-                                                    <td><?= $row['berat_murni'] ?></td>
-                                                    <td><?= number_format($row['harga_beli'], 2, ",", ".") ?></td>
-                                                    <td><?= number_format($row['ongkos'], 2, ",", ".") ?></td>
-                                                    <td><?= $row['kadar'] ?></td>
-                                                    <td><?= $row['nilai_tukar'] ?></td>
-                                                    <td><?= $row['merek'] ?></td>
-                                                    <td><?= number_format($row['total_harga'], 2, ",", ".") ?></td>
-                                                    <td>
-                                                        <button type="button" onclick="DataRongsok(<?= $row['kode'] ?>)" class="btn btn-primary">Pilih </button>
-                                                    </td>
-                                                </tr>
-                                            <?php endforeach; ?>
-                                        </tbody>
-                                    </table>
-                                </div>
-                                <!-- /.card-body -->
-                            </div>
-                        </div>
-                        <div class="modal-footer justify-content-between">
-                            <button type="button" class="btn btn-default" onclick=" $('#modal-barangrongsok').modal('toggle');">Close</button>
-                        </div>
-                    </div>
-                    <!-- /.modal-content -->
-                </div>
-                <!-- /.modal-dialog -->
-            </div>
             <div class="modal fade" id="modal-bahan24k">
                 <div class="modal-dialog modal-xl">
                     <div class="modal-content">
@@ -699,12 +626,6 @@
         $('#modal-bayar').modal('toggle');
         $("#cardbayar").load("/detailpembelian/" + document.getElementById('dateid').value + " #cardbayar");
 
-    }
-
-    function DataRongsok(id) {
-        console.log(id)
-        $('#kode_rongsok').val(id)
-        $('#modal-barangrongsok').modal('toggle');
     }
 
     function DataBahan24k(id) {
@@ -966,13 +887,6 @@
                             $('#harga_murni').removeClass('is-invalid')
                             $('.harga_murni').html('')
                         }
-                        if (result.error.kode_rongsok) {
-                            $('#kode_rongsok').addClass('is-invalid')
-                            $('.kode_rongsokmsg').html(result.error.kode_rongsok)
-                        } else {
-                            $('#kode_rongsok').removeClass('is-invalid')
-                            $('.kode_rongsok').html('')
-                        }
                         if (result.error.kode_bahan24k) {
                             $('#kode_bahan24k').addClass('is-invalid')
                             $('.kode_bahan24kmsg').html(result.error.kode_bahan24k)
@@ -996,8 +910,6 @@
                         $('.tunai').html('')
                         $('#harga_murni').removeClass('is-invalid')
                         $('.harga_murni').html('')
-                        $('#kode_rongsok').removeClass('is-invalid')
-                        $('.kode_rongsok').html('')
                         $('#kode_bahan24k').removeClass('is-invalid')
                         $('.kode_bahan24k').html('')
                         $('#kode_retur').removeClass('is-invalid')
@@ -1064,10 +976,8 @@
         var retur = '<label>retur %</label><input type="number"  min="0" id="retur" name="retur" class="form-control" placeholder="Masukan retur"><div id="validationServerUsernameFeedback" class="invalid-feedback returmsg"></div>'
         var Transfer = '<label>Transfer</label><input type="number"  min="0" id="transfer" name="transfer" class="form-control" placeholder="Masukan transfer"><div id="validationServerUsernameFeedback" class="invalid-feedback transfermsg"></div>'
         var Tunai = '<label>Tunai</label><input type="number" min="0" id="tunai" name="tunai" class="form-control" placeholder="Masukan tunai"><div id="validationServerUsernameFeedback" class="invalid-feedback tunaimsg"></div>'
-        var Rongsok = '<label>Masukan Kode Barang Rongsok</label><input type="number"  min="0" id="kode_rongsok" name="kode_rongsok" class="form-control" placeholder="Masukan kode rongsok"><div id="validationServerUsernameFeedback" class="invalid-feedback kode_rongsokmsg"></div>'
         var Bahan24k = '<label>Masukan Kode Bahan 24K</label><input type="number" min="0" id="kode_bahan24k" name="kode_bahan24k" class="form-control" placeholder="Masukan kode Bahan"><div id="validationServerUsernameFeedback" class="invalid-feedback kode_bahan24kmsg"></div>'
-        var Retursales = '<label>Masukan Kode Barang Retur</label><input type="number"  min="0" id="kode_retur" name="kode_retur" class="form-control" placeholder="Masukan kode rongsok"><div id="validationServerUsernameFeedback" class="invalid-feedback kode_returmsg"></div>'
-        var modalpilihrongsok = '<label>Pilih Barang Ronsok</label><a class="form-control btn bg-green" type="button" data-toggle="modal" data-target="#modal-barangrongsok"><i class="fas fa-plus"></i></a>'
+        var Retursales = '<label>Masukan Kode Barang Retur</label><input type="number"  min="0" id="kode_retur" name="kode_retur" class="form-control" placeholder="Masukan kode"><div id="validationServerUsernameFeedback" class="invalid-feedback kode_returmsg"></div>'
         var modalpilihr24k = '<label>Pilih Barang 24K</label><a class="form-control btn bg-green" type="button" data-toggle="modal" data-target="#modal-bahan24k"><i class="fas fa-plus"></i></a>'
         var modalpilihretur = '<label>Pilih Barang Retur</label><a class="form-control btn bg-green" type="button" data-toggle="modal" data-target="#modal-retur"><i class="fas fa-plus"></i></a>'
         if (carabyr == 'Bayar Nanti') {
@@ -1089,36 +999,21 @@
             metod1[0].innerHTML = Tunai
 
         }
-        if (carabyr == 'Rongsok') {
-            myDataBayar()
-            metod1[0].innerHTML = Rongsok
-            metod2[0].innerHTML = modalpilihrongsok
-            title.innerHTML = "Pilih Barang Rongsok"
-
-        }
         if (carabyr == 'Bahan24K') {
             myDataBayar()
             metod1[0].innerHTML = Bahan24k
             metod2[0].innerHTML = modalpilihr24k
-            title.innerHTML = "Pilih Barang Rongsok"
 
         }
         if (carabyr == 'ReturSales') {
             myDataBayar()
             metod1[0].innerHTML = Retursales
             metod2[0].innerHTML = modalpilihretur
-            title.innerHTML = "Pilih Barang Rongsok"
 
         }
         console.log(carabyr)
     }
 
-    // function byrnamabank() {
-    //     const totalbersih = document.getElementById('totalbersih').innerHTML
-    //     totalbersihval = parseFloat(totalbersih.replaceAll('.', ''))
-    //     var bank = document.getElementById('namabank').value
-    //     document.getElementById('bankbyr').innerHTML = bank
-    // }
 
     function Harganow() {
         if (document.getElementById('harga_murni')) {
