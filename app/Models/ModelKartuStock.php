@@ -4,15 +4,15 @@ namespace App\Models;
 
 use CodeIgniter\Model;
 
-class ModelHome extends Model
+class ModelKartuStock extends Model
 {
 
-    protected $table = 'tbl_stock';
-    protected $primaryKey = 'id_stock';
+    protected $table = 'tbl_kartustock';
+    protected $primaryKey = 'id_kartustock';
     protected $useTimestamps = true;
-    protected $allowedFields = ['barcode', 'status', 'no_faktur', 'tgl_faktur', 'nama_supplier', 'qty', 'jenis', 'model', 'keterangan', 'merek', 'kadar', 'berat_murni', 'berat', 'nilai_tukar', 'ongkos', 'harga_beli', 'total_harga', 'kode_beli', 'gambar'];
+    protected $allowedFields = ['kode', 'total_masuk', 'total_keluar', 'saldo_akhir'];
 
-    public function getBarang($id = false)
+    public function getKartuStock($id = false)
     {
         if ($id == false) {
             // $query =  $this->db->table('tbl_img')

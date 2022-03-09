@@ -4,7 +4,12 @@ namespace App\Controllers;
 
 use CodeItNow\BarcodeBundle\Utils\BarcodeGenerator;
 use App\Models\ModelHome;
+use App\Models\ModelKartuStock;
+use App\Models\ModelDetailKartuStock;
+
 use CodeIgniter\Validation\Rules;
+use app\Config\Cache;
+use Config\Cache as ConfigCache;
 
 class Home extends BaseController
 {
@@ -16,6 +21,10 @@ class Home extends BaseController
 
         $this->barcodeG =  new BarcodeGenerator();
         $this->barangmodel = new ModelHome();
+        $this->modelkartustock = new ModelKartuStock();
+        $this->modeldetailkartustock = new ModelDetailKartuStock();
+
+        $this->chace = new ConfigCache();
     }
     public function index()
     {
@@ -35,6 +44,26 @@ class Home extends BaseController
         ];
         return view('home/data_barang', $data);
     }
+    public function KatruStock()
+    {
+        $data = [
+            'kartustock' => $this->modelkartustock->getKartuStock(),
+            'detailkartustock' => $this->modeldetailkartustock->getDetailKartuStock(),
+        ];
+        return view('home/data_kartustock', $data);
+    }
+    public function DetailKartuStock()
+    {
+        if ($this->request->isAJAX()) {
+            $datadetail = [
+                'detailkartustock' => $this->modeldetailkartustock->getDetailKartuStock($this->request->getVar('kode')),
+            ];
+            $data = [
+                'modal' => view('home/modalkartustock', $datadetail)
+            ];
+            echo json_encode($data);
+        }
+    }
     public function detail($id)
     {
         $data = $this->barangmodel->getBarang($id);
@@ -51,7 +80,7 @@ class Home extends BaseController
             'barcode' => '<img src="data:image/png;base64,' . $code . '" />',
             // 'img' => $this->barangmodel->getImg($id)
         ];
-
+        $this->chace->cachePage(100);
         return view('home/detail_barang', $data1);
     }
 

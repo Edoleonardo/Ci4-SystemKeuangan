@@ -37,6 +37,9 @@ $routes->get('/', 'Home::index');
 $routes->get('/databarang', 'Home::databarang');
 $routes->get('/detail/(:any)', 'Home::detail/$1');
 $routes->get('/print/(:any)', 'Home::print/$1');
+$routes->get('/kartustock', 'Home::KatruStock');
+$routes->get('/modaldetailkartustock', 'Home::DetailKartuStock');
+
 
 // --------------------BarangMasuk-----------
 
