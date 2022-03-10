@@ -406,7 +406,7 @@ class Barangmasuk extends BaseController
                 $qty = $this->request->getVar('qty');
                 $harga = $this->request->getVar('harga_beli');
                 $berat = $this->request->getVar('berat');
-                $beratmurni = $berat * ($this->request->getVar('nilai_tukar') / 100);
+                $beratmurni = round($berat * ($this->request->getVar('nilai_tukar') / 100), 2);
                 if ($kode == 1 || 4 || 5) {
                     $totalharga =  $beratmurni *  $harga;
                 }
@@ -664,7 +664,7 @@ class Barangmasuk extends BaseController
                 $qty = $this->request->getVar('qty');
                 $harga = $this->request->getVar('harga_beli');
                 $berat = $this->request->getVar('berat');
-                $beratmurni = $berat * ($this->request->getVar('nilai_tukar') / 100);
+                $beratmurni = round($berat * ($this->request->getVar('nilai_tukar') / 100), 2);
                 if ($kode == 1 || 4 || 5) {
                     $totalharga =  $beratmurni *  $harga;
                 }

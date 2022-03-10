@@ -2,8 +2,12 @@
     <tr>
         <td><img src='/img/<?= $row['nama_img'] ?>' class='imgg'></td>
         <td><?= $row['kode'] ?></td>
-        <td><?= $row['qty'] ?></td>
-        <td><input style="width: 100px;" id="harganow <?= $row['id_detail_penjualan'] ?>" class="harganow" onchange="UbahHarga(<?= $row['id_detail_penjualan'] ?>,<?= $row['id_date_penjualan'] ?>)" type="number" class="form-control" value="<?= $row['harga_beli'] ?>"></td>
+        <?php if (substr($row['kode'], 0, 1) == 3) : ?>
+            <td><input style="width: 100px;" id="qty <?= $row['id_detail_penjualan'] ?>" onchange="UbahHarga(<?= $row['id_detail_penjualan'] ?>,<?= $row['id_date_penjualan'] ?>,<?= substr($row['kode'], 0, 1) ?>,<?= $row['qty'] ?>)" type="number" class="form-control" value="<?= $row['qty'] ?>"></td>
+        <?php else : ?>
+            <td><?= $row['qty'] ?></td>
+        <?php endif; ?>
+        <td><input style="width: 100px;" id="harganow <?= $row['id_detail_penjualan'] ?>" class="harganow" onchange="UbahHarga(<?= $row['id_detail_penjualan'] ?>,<?= $row['id_date_penjualan'] ?>,<?= substr($row['kode'], 0, 1) ?>,<?= $row['qty'] ?>)" type="number" class="form-control" value="<?= $row['harga_beli'] ?>"></td>
         <td><?= number_format($row['ongkos'], 2, ',', '.') ?></td>
         <td><?= $row['jenis'] ?></td>
         <td><?= $row['model'] ?></td>
@@ -56,7 +60,14 @@
 
     }
 
-    function UbahHarga(id, iddate) {
+    function UbahHarga(id, iddate, kode, qty) {
+        if (kode == 3) {
+            var qty = document.getElementById('qty ' + id).value
+            var hargabaru = document.getElementById('harganow ' + id).value
+        } else {
+            var hargabaru = document.getElementById('harganow ' + id).value
+            var qty = qty
+        }
         $.ajax({
             type: "post",
             dataType: "json",
@@ -64,12 +75,26 @@
             data: {
                 id: id,
                 iddate: iddate,
-                hargabaru: document.getElementById('harganow ' + id).value
+                qty: qty,
+                hargabaru: hargabaru
 
             },
             success: function(result) {
+                console.log(result)
                 tampildata()
                 myDataBayar()
+                if (result == 'habis') {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Stock Kurang',
+                    })
+                }
+                if (result == 'kecil') {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Tidak Boleh 0',
+                    })
+                }
             },
             error: function(xhr, ajaxOptions, thrownError) {
                 alert(xhr.status + "\n" + xhr.responseText + "\n" + thrownError);

@@ -27,7 +27,7 @@
       <div class="card-body">
         <div class="row">
           <div class="col-12 col-sm-6">
-            <h3 class="d-inline-block d-sm-none"><?= $barang['jenis'] . ' ' . $barang['keterangan'] . ' ' . $barang['merek']  ?></h3>
+            <h3 class="d-inline-block d-sm-none"><?= $barang['jenis'] . ' ' . $barang['keterangan'] . ' ' . $barang['merek']  . ' ' . $barang['barcode'] ?></h3>
             <div class="col-12">
               <img src="/img/<?= $barang['gambar'] ?>" class="product-image" alt="Product Image">
             </div>
@@ -40,7 +40,7 @@
             </div>
           </div>
           <div class="col-12 col-sm-6">
-            <h3 class="my-3"><?= $barang['jenis'] . ' ' . $barang['keterangan'] . ' ' . $barang['merek'] ?></h3>
+            <h3 class="my-3"><?= $barang['jenis'] . ' ' . $barang['keterangan'] . ' ' . $barang['merek'] . ' ' . $barang['barcode'] ?></h3>
             <div class="card">
               <div class="card-body table-responsive p-0">
                 <table class="table table-head-fixed text-nowrap">

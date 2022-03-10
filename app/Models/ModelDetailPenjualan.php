@@ -36,6 +36,10 @@ class ModelDetailPenjualan extends Model
     {
         return $this->where(['id_detail_penjualan' => $id])->first();
     }
+    public function getDetailCheckJual($id)
+    {
+        return $this->where(['kode' => $id])->first();
+    }
     public function SumBeratKotorDetailjual($id)
     {
         $this->selectSum('berat');

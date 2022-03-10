@@ -93,7 +93,7 @@
                 <div class="card">
                     <!-- /.card-header -->
                     <form action="/kodebarcode" name="formkodebarcode" id="formkodebarcode" class="formkodebarcode" method="post">
-                        <input type="hidden" name="iddate" value="<?= $datapenjualan['id_date_penjualan'] ?>">
+                        <input type="hidden" name="iddate" id="iddate" value="<?= $datapenjualan['id_date_penjualan'] ?>">
                         <div class="form-group" style="margin: 1mm;">
                             <label>Nomor Tlp Customer</label>
                             <input autocomplete="off" type="tel" class="form-control inputcustomer" id="inputcustomer" name="inputcustomer" value="<?= (isset($datapenjualan['nohp_cust'])) ? $datapenjualan['nohp_cust'] : '' ?>" placeholder="Masukan data customer">
@@ -617,13 +617,16 @@
         $.ajax({
             type: "GET",
             dataType: "json",
+            data: {
+                dateid: document.getElementById('iddate').value
+            },
             url: "<?php echo base_url('tampilpenjualan'); ?>",
             success: function(result) {
                 var totalharga = parseFloat(result.totalbersih.total_harga) + parseFloat(result.totalongkos.ongkos)
                 $('#datajual').html(result.data)
                 $('#totalbersih01').html(totalharga.toString().replace(/\B(?=(\d{3})+(?!\d))/g, "."))
                 $('#totalberatbersihhtml01').html(pembulatankoma(result.totalberatbersih.berat_murni))
-                $('#totalberatkotorhtml01').html(pembulatankoma(result.totalberatkotor.berat))
+                $('#totalberatkotorhtml01').html(pembulatankoma(result.totalberatkotor))
                 $('#totalongkoshtml01').html(pembulatankoma(result.totalongkos.ongkos).toString().replace(/\B(?=(\d{3})+(?!\d))/g, "."))
 
 
