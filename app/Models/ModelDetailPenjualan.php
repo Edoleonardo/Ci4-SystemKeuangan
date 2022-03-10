@@ -36,9 +36,11 @@ class ModelDetailPenjualan extends Model
     {
         return $this->where(['id_detail_penjualan' => $id])->first();
     }
-    public function getDetailCheckJual($id)
+    public function getDetailCheckJual($kode, $id)
     {
-        return $this->where(['kode' => $id])->first();
+        $db = db_connect();
+        $data = $db->query('select * from tbl_detail_penjualan where kode = ' . $kode . ' AND id_date_penjualan = ' . $id . ' limit 1');
+        return $data->getResult('array');
     }
     public function SumBeratKotorDetailjual($id)
     {

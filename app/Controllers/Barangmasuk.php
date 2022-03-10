@@ -986,7 +986,7 @@ class Barangmasuk extends BaseController
                     foreach ($datadetailbeli as $row) {
                         $datacheck = $this->datastock->CheckData($row['kode']);
                         if ($datacheck) {
-                            $datadetailkartu = $this->modeldetailkartustock->getKartuDetailStockKode($row['kode']);
+                            // $datadetailkartu = $this->modeldetailkartustock->getKartuDetailStockKode($row['kode']);
                             $datakartu = $this->modelkartustock->getKartuStockkode($row['kode']);
                             $this->datastock->save([
                                 'id_stock' => $datacheck['id_stock'],
@@ -1011,7 +1011,7 @@ class Barangmasuk extends BaseController
                             $this->modeldetailkartustock->save([
                                 // 'id_detail_kartustock' => $datadetailkartu['id_detail_kartustock'],
                                 'barcode' => $row['kode'],
-                                'status' => $this->StatusBarang(substr($row['kode'], 0, 1)),
+                                'status' => 'Masuk',
                                 'no_faktur' => $datapembelian['no_faktur_supp'],
                                 'tgl_faktur' => $datapembelian['tgl_faktur'],
                                 'nama_customer' => $datapembelian['nama_supplier'],
@@ -1066,7 +1066,7 @@ class Barangmasuk extends BaseController
                             ]);
                             $this->modeldetailkartustock->save([
                                 'barcode' => $row['kode'],
-                                'status' => $this->StatusBarang(substr($row['kode'], 0, 1)),
+                                'status' => 'Masuk',
                                 'no_faktur' => $datapembelian['no_faktur_supp'],
                                 'tgl_faktur' => $datapembelian['tgl_faktur'],
                                 'nama_customer' => $datapembelian['nama_supplier'],

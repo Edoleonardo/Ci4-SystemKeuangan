@@ -712,6 +712,12 @@
                             $('#tunai').removeClass('is-invalid')
                             $('.tunaimsg').html('')
                         }
+                        if (result.error.kurang) {
+                            Swal.fire({
+                                icon: 'warning',
+                                title: result.error.kurang,
+                            })
+                        }
                     } else {
                         $('#debitcc').removeClass('is-invalid')
                         $('.debitccmsg').html('')
@@ -722,6 +728,8 @@
                         $('#tunai').removeClass('is-invalid')
                         $('.tunaimsg').html('')
 
+                        console.log(result)
+
                         Swal.fire({
                             icon: 'success',
                             title: 'Berhasil Bayar',
@@ -730,10 +738,10 @@
                             allowOutsideClick: false
                         }).then((result) => {
                             if (result.isConfirmed) {
-                                $('#modal-bayar').modal('toggle');
-                                $("#refreshpembayaran").load("/draftpenjualan/" + document.getElementById('dateid').value + " #refreshpembayaran");
-                                $("#refreshtombol").load("/draftpenjualan/" + document.getElementById('dateid').value + " #refreshtombol");
-
+                                // $('#modal-bayar').modal('toggle');
+                                // $("#refreshpembayaran").load("/draftpenjualan/" + document.getElementById('dateid').value + " #refreshpembayaran");
+                                // $("#refreshtombol").load("/draftpenjualan/" + document.getElementById('dateid').value + " #refreshtombol");
+                                window.location.href = "/detailpenjualan/" + document.getElementById('dateid').value
                             }
                         })
 

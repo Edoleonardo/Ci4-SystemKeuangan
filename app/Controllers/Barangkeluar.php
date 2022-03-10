@@ -61,7 +61,7 @@ class Barangkeluar extends BaseController
         $session->set('date_id_penjualan', $dateidjual);
         $this->penjualan->save([
             // 'created_at' => date("y-m-d"),
-            'id_date_penjualan' => $session->get('date_id_penjualan'),
+            'id_date_penjualan' => $dateidjual,
             'no_transaksi_jual' => $this->NoTransaksiGenerateJual(),
             'id_customer' => '',
             'id_karyawan' => '1',
@@ -76,7 +76,7 @@ class Barangkeluar extends BaseController
             'status_dokumen' => 'Draft'
         ]);
         //---------------------------------------------------
-        return redirect()->to('/draftpenjualan/' . $session->get('date_id_penjualan'));
+        return redirect()->to('/draftpenjualan/' . $dateidjual);
     }
     public function InsertCust()
     {
@@ -152,7 +152,7 @@ class Barangkeluar extends BaseController
                     } else {
                         $totalharga = $databarang['harga_beli'] * $databarang['berat'];
                     }
-                    $checkdata = $this->modeldetailpenjualan->getDetailCheckJual($databarang['barcode']);
+                    $checkdata = $this->modeldetailpenjualan->getDetailCheckJual($databarang['barcode'], $this->request->getVar('iddate'));
                     if (!$checkdata) {
                         $this->modeldetailpenjualan->save([
                             'id_date_penjualan' => $this->request->getVar('iddate'),
@@ -295,12 +295,15 @@ class Barangkeluar extends BaseController
         $session = session();
         $session->set('date_id_penjualan', $id);
         $data = $this->penjualan->getDataPenjualan($id);
-        $datapenjualan = [
-            'datapenjualan' => $data,
-            'datacust' => $this->datacust->getDataCustomer(),
-        ];
-
-        return view('barangkeluar/jual_barang', $datapenjualan);
+        if ($data['status_dokumen'] == 'Draft') {
+            $datapenjualan = [
+                'datapenjualan' => $data,
+                'datacust' => $this->datacust->getDataCustomer(),
+            ];
+            return view('barangkeluar/jual_barang', $datapenjualan);
+        } else {
+            return redirect()->to('/detailpenjualan/' . $data['id_date_penjualan']);
+        }
     }
     public function DetailDataPenjualan($id)
     {
@@ -333,6 +336,7 @@ class Barangkeluar extends BaseController
         $validation = \Config\Services::validation();
         if ($this->request->isAJAX()) {
             if ($this->request->getVar('pembayaran') != 'Bayar Nanti') {
+                $datapenjualan = $this->penjualan->getDataPenjualan($this->request->getVar('dateid'));
                 if ($this->request->getVar('pembayaran') == 'Debit/CC') {
                     if (!$this->validate([
                         'debitcc' => [
@@ -355,23 +359,35 @@ class Barangkeluar extends BaseController
                             ]
                         ];
                     } else {
-                        $datapenjualan = $this->penjualan->getDataPenjualan($this->request->getVar('dateid'));
-                        $this->penjualan->save([
-                            'id_penjualan' =>  $datapenjualan['id_penjualan'],
-                            'pembayaran' => $this->request->getVar('pembayaran'),
-                            'nama_bank' => $this->request->getVar('namabank'),
-                            'tunai' =>  $this->request->getVar('tunai'),
-                            'debitcc' =>  $this->request->getVar('debitcc'),
-                            'transfer' =>  $this->request->getVar('transfer'),
-                            'charge' =>   $this->request->getVar('charge'),
-                            'pembulatan' => $this->request->getVar('pembulatan'),
-                            'status_dokumen' => 'Selesai',
-                        ]);
-                        $msg = [
-                            'pesan' => [
-                                'pesan' => 'berhasil'
-                            ]
-                        ];
+                        $cas = ($this->request->getVar('charge') != null) ? $this->request->getVar('charge') : 0;
+                        $blt = ($this->request->getVar('pembulatan') != null) ? $this->request->getVar('pembulatan') : 0;
+                        $totalbayar = $datapenjualan['total_harga'] + ($cas * ($datapenjualan['total_harga'] / 100));
+                        $hasil = $totalbayar - ($this->request->getVar('debitcc') + $blt);
+                        if ($hasil == 0) {
+                            $this->penjualan->save([
+                                'id_penjualan' =>  $datapenjualan['id_penjualan'],
+                                'pembayaran' => $this->request->getVar('pembayaran'),
+                                'nama_bank' => $this->request->getVar('namabank'),
+                                'tunai' =>  $this->request->getVar('tunai'),
+                                'debitcc' =>  $this->request->getVar('debitcc'),
+                                'transfer' =>  $this->request->getVar('transfer'),
+                                'charge' =>   $this->request->getVar('charge'),
+                                'pembulatan' => $this->request->getVar('pembulatan'),
+                                'status_dokumen' => 'Selesai',
+                            ]);
+                            $msg = [
+                                'pesan' => [
+                                    'pesan' => 'berhasil'
+                                ]
+                            ];
+                            $status = true;
+                        } else {
+                            $msg = [
+                                'error' => [
+                                    'kurang' => 'Bayar Kurang / lebih'
+                                ]
+                            ];
+                        }
                     }
                 }
                 if ($this->request->getVar('pembayaran') == 'Debit/CCTranfer') {
@@ -403,23 +419,36 @@ class Barangkeluar extends BaseController
                             ]
                         ];
                     } else {
-                        $datapenjualan = $this->penjualan->getDataPenjualan($this->request->getVar('dateid'));
-                        $this->penjualan->save([
-                            'id_penjualan' =>  $datapenjualan['id_penjualan'],
-                            'pembayaran' => $this->request->getVar('pembayaran'),
-                            'nama_bank' => $this->request->getVar('namabank'),
-                            'tunai' =>  $this->request->getVar('tunai'),
-                            'debitcc' =>  $this->request->getVar('debitcc'),
-                            'transfer' =>  $this->request->getVar('transfer'),
-                            'charge' =>   $this->request->getVar('charge'),
-                            'pembulatan' => $this->request->getVar('pembulatan'),
-                            'status_dokumen' => 'Selesai',
-                        ]);
-                        $msg = [
-                            'pesan' => [
-                                'pesan' => 'berhasil'
-                            ]
-                        ];
+                        $cas = ($this->request->getVar('charge') != null) ? $this->request->getVar('charge') : 0;
+                        $blt = ($this->request->getVar('pembulatan') != null) ? $this->request->getVar('pembulatan') : 0;
+                        $totalbayar = $datapenjualan['total_harga'] + ($cas * ($datapenjualan['total_harga'] / 100));
+                        $hasil = $totalbayar - ($this->request->getVar('debitcc') + $this->request->getVar('transfer') + $blt);
+                        if ($hasil == 0) {
+                            $this->penjualan->save([
+                                'id_penjualan' =>  $datapenjualan['id_penjualan'],
+                                'pembayaran' => $this->request->getVar('pembayaran'),
+                                'nama_bank' => $this->request->getVar('namabank'),
+                                'tunai' =>  $this->request->getVar('tunai'),
+                                'debitcc' =>  $this->request->getVar('debitcc'),
+                                'transfer' =>  $this->request->getVar('transfer'),
+                                'charge' =>   $this->request->getVar('charge'),
+                                'pembulatan' => $this->request->getVar('pembulatan'),
+                                'status_dokumen' => 'Selesai',
+                            ]);
+                            $msg = [
+                                'pesan' => [
+                                    'pesan' => 'berhasil'
+                                ]
+                            ];
+                            $status = true;
+                        } else {
+                            $msg = [
+                                'error' => [
+                                    'kurang' => 'Bayar Kurang / lebih'
+                                ]
+                            ];
+                        }
+                        // $msg = $asd;
                     }
                 }
                 if ($this->request->getVar('pembayaran') == 'Transfer') {
@@ -444,23 +473,33 @@ class Barangkeluar extends BaseController
                             ]
                         ];
                     } else {
-                        $datapenjualan = $this->penjualan->getDataPenjualan($this->request->getVar('dateid'));
-                        $this->penjualan->save([
-                            'id_penjualan' =>  $datapenjualan['id_penjualan'],
-                            'pembayaran' => $this->request->getVar('pembayaran'),
-                            'nama_bank' => $this->request->getVar('namabank'),
-                            'tunai' =>  $this->request->getVar('tunai'),
-                            'debitcc' =>  $this->request->getVar('debitcc'),
-                            'transfer' =>  $this->request->getVar('transfer'),
-                            'charge' =>   $this->request->getVar('charge'),
-                            'pembulatan' => $this->request->getVar('pembulatan'),
-                            'status_dokumen' => 'Selesai',
-                        ]);
-                        $msg = [
-                            'pesan' => [
-                                'pesan' => 'berhasil'
-                            ]
-                        ];
+                        $blt = ($this->request->getVar('pembulatan') != null) ? $this->request->getVar('pembulatan') : 0;
+                        $hasil = $datapenjualan['total_harga'] - ($this->request->getVar('transfer') + $blt);
+                        if ($hasil == 0) {
+                            $this->penjualan->save([
+                                'id_penjualan' =>  $datapenjualan['id_penjualan'],
+                                'pembayaran' => $this->request->getVar('pembayaran'),
+                                'nama_bank' => $this->request->getVar('namabank'),
+                                'tunai' =>  $this->request->getVar('tunai'),
+                                'debitcc' =>  $this->request->getVar('debitcc'),
+                                'transfer' =>  $this->request->getVar('transfer'),
+                                'charge' =>   $this->request->getVar('charge'),
+                                'pembulatan' => $this->request->getVar('pembulatan'),
+                                'status_dokumen' => 'Selesai',
+                            ]);
+                            $msg = [
+                                'pesan' => [
+                                    'pesan' => 'berhasil'
+                                ]
+                            ];
+                            $status = true;
+                        } else {
+                            $msg = [
+                                'error' => [
+                                    'kurang' => 'Bayar Kurang / lebih'
+                                ]
+                            ];
+                        }
                     }
                 }
                 if ($this->request->getVar('pembayaran') == 'Tunai') {
@@ -478,23 +517,33 @@ class Barangkeluar extends BaseController
                             ]
                         ];
                     } else {
-                        $datapenjualan = $this->penjualan->getDataPenjualan($this->request->getVar('dateid'));
-                        $this->penjualan->save([
-                            'id_penjualan' =>  $datapenjualan['id_penjualan'],
-                            'pembayaran' => $this->request->getVar('pembayaran'),
-                            'nama_bank' => $this->request->getVar('namabank'),
-                            'tunai' =>  $this->request->getVar('tunai'),
-                            'debitcc' =>  $this->request->getVar('debitcc'),
-                            'transfer' =>  $this->request->getVar('transfer'),
-                            'charge' =>   $this->request->getVar('charge'),
-                            'pembulatan' => $this->request->getVar('pembulatan'),
-                            'status_dokumen' => 'Selesai',
-                        ]);
-                        $msg = [
-                            'pesan' => [
-                                'pesan' => 'berhasil'
-                            ]
-                        ];
+                        $blt = ($this->request->getVar('pembulatan') != null) ? $this->request->getVar('pembulatan') : 0;
+                        $hasil = $datapenjualan['total_harga'] - ($this->request->getVar('tunai') + $blt);
+                        if ($hasil == 0) {
+                            $this->penjualan->save([
+                                'id_penjualan' =>  $datapenjualan['id_penjualan'],
+                                'pembayaran' => $this->request->getVar('pembayaran'),
+                                'nama_bank' => $this->request->getVar('namabank'),
+                                'tunai' =>  $this->request->getVar('tunai'),
+                                'debitcc' =>  $this->request->getVar('debitcc'),
+                                'transfer' =>  $this->request->getVar('transfer'),
+                                'charge' =>   $this->request->getVar('charge'),
+                                'pembulatan' => $this->request->getVar('pembulatan'),
+                                'status_dokumen' => 'Selesai',
+                            ]);
+                            $msg = [
+                                'pesan' => [
+                                    'pesan' => 'berhasil'
+                                ]
+                            ];
+                            $status = true;
+                        } else {
+                            $msg = [
+                                'error' => [
+                                    'kurang' => 'Bayar Kurang / lebih'
+                                ]
+                            ];
+                        }
                     }
                 }
                 if ($this->request->getVar('pembayaran') == 'Tunai&Debit/CC') {
@@ -526,23 +575,35 @@ class Barangkeluar extends BaseController
                             ]
                         ];
                     } else {
-                        $datapenjualan = $this->penjualan->getDataPenjualan($this->request->getVar('dateid'));
-                        $this->penjualan->save([
-                            'id_penjualan' =>  $datapenjualan['id_penjualan'],
-                            'pembayaran' => $this->request->getVar('pembayaran'),
-                            'nama_bank' => $this->request->getVar('namabank'),
-                            'tunai' =>  $this->request->getVar('tunai'),
-                            'debitcc' =>  $this->request->getVar('debitcc'),
-                            'transfer' =>  $this->request->getVar('transfer'),
-                            'charge' =>   $this->request->getVar('charge'),
-                            'pembulatan' => $this->request->getVar('pembulatan'),
-                            'status_dokumen' => 'Selesai',
-                        ]);
-                        $msg = [
-                            'pesan' => [
-                                'pesan' => 'berhasil'
-                            ]
-                        ];
+                        $cas = ($this->request->getVar('charge') != null) ? $this->request->getVar('charge') : 0;
+                        $blt = ($this->request->getVar('pembulatan') != null) ? $this->request->getVar('pembulatan') : 0;
+                        $totalbayar = $datapenjualan['total_harga'] + ($cas * ($datapenjualan['total_harga'] / 100));
+                        $hasil = $totalbayar - ($this->request->getVar('debitcc') + $this->request->getVar('tunai') + $blt);
+                        if ($hasil == 0) {
+                            $this->penjualan->save([
+                                'id_penjualan' =>  $datapenjualan['id_penjualan'],
+                                'pembayaran' => $this->request->getVar('pembayaran'),
+                                'nama_bank' => $this->request->getVar('namabank'),
+                                'tunai' =>  $this->request->getVar('tunai'),
+                                'debitcc' =>  $this->request->getVar('debitcc'),
+                                'transfer' =>  $this->request->getVar('transfer'),
+                                'charge' =>   $this->request->getVar('charge'),
+                                'pembulatan' => $this->request->getVar('pembulatan'),
+                                'status_dokumen' => 'Selesai',
+                            ]);
+                            $msg = [
+                                'pesan' => [
+                                    'pesan' => 'berhasil'
+                                ]
+                            ];
+                            $status = true;
+                        } else {
+                            $msg = [
+                                'error' => [
+                                    'kurang' => 'Bayar Kurang / lebih'
+                                ]
+                            ];
+                        }
                     }
                 }
                 if ($this->request->getVar('pembayaran') == 'Tunai&Transfer') {
@@ -574,23 +635,68 @@ class Barangkeluar extends BaseController
                             ]
                         ];
                     } else {
-                        $datapenjualan = $this->penjualan->getDataPenjualan($this->request->getVar('dateid'));
-                        $this->penjualan->save([
-                            'id_penjualan' =>  $datapenjualan['id_penjualan'],
-                            'pembayaran' => $this->request->getVar('pembayaran'),
-                            'nama_bank' => $this->request->getVar('namabank'),
-                            'tunai' =>  $this->request->getVar('tunai'),
-                            'debitcc' =>  $this->request->getVar('debitcc'),
-                            'transfer' =>  $this->request->getVar('transfer'),
-                            'charge' =>   $this->request->getVar('charge'),
-                            'pembulatan' => $this->request->getVar('pembulatan'),
-                            'status_dokumen' => 'Selesai',
+                        $blt = ($this->request->getVar('pembulatan') != null) ? $this->request->getVar('pembulatan') : 0;
+                        $hasil = $datapenjualan['total_harga'] - ($this->request->getVar('transfer') + $this->request->getVar('tunai') + $blt);
+                        if ($hasil == 0) {
+                            $this->penjualan->save([
+                                'id_penjualan' =>  $datapenjualan['id_penjualan'],
+                                'pembayaran' => $this->request->getVar('pembayaran'),
+                                'nama_bank' => $this->request->getVar('namabank'),
+                                'tunai' =>  $this->request->getVar('tunai'),
+                                'debitcc' =>  $this->request->getVar('debitcc'),
+                                'transfer' =>  $this->request->getVar('transfer'),
+                                'charge' =>   $this->request->getVar('charge'),
+                                'pembulatan' => $this->request->getVar('pembulatan'),
+                                'status_dokumen' => 'Selesai',
+                            ]);
+                            $msg = [
+                                'pesan' => [
+                                    'pesan' => 'berhasil'
+                                ]
+                            ];
+                            $status = true;
+                        } else {
+                            $msg = [
+                                'error' => [
+                                    'kurang' => 'Bayar Kurang / lebih'
+                                ]
+                            ];
+                        }
+                    }
+                }
+                if (isset($status)) {
+                    $datadetailpenjualan = $this->modeldetailpenjualan->getDetailAllJual($datapenjualan['id_date_penjualan']);
+                    foreach ($datadetailpenjualan as $row) {
+                        $datakartu = $this->modelkartustock->getKartuStockkode($row['kode']);
+                        $saldoakhir = (substr($row['kode'], 0, 1) == 4) ? $datakartu['saldo_akhir'] - $row['berat'] : $datakartu['saldo_akhir'] - $row['qty'];
+                        $this->modeldetailkartustock->save([
+                            // 'id_detail_kartustock' => $datadetailkartu['id_detail_kartustock'],
+                            'barcode' => $row['kode'],
+                            'status' => 'Keluar',
+                            'no_faktur' => $datapenjualan['no_transaksi_jual'],
+                            'tgl_faktur' => $datapenjualan['created_at'],
+                            'nama_customer' => $datapenjualan['nohp_cust'],
+                            'saldo' => $saldoakhir,
+                            'masuk' => 0,
+                            'keluar' => (substr($row['kode'], 0, 1) == 4) ? $row['berat'] : $row['qty'],
+                            'jenis' => $row['jenis'],
+                            'model' => $row['model'],
+                            'keterangan' => $row['keterangan'],
+                            'merek' => $row['merek'],
+                            'kadar' => $row['kadar'],
+                            'berat' => $row['berat'],
+                            'nilai_tukar' =>  $row['nilai_tukar'],
+                            'harga_beli' => $row['harga_beli'],
+                            'total_harga' => $row['total_harga'],
+                            'gambar' =>  $row['nama_img'],
                         ]);
-                        $msg = [
-                            'pesan' => [
-                                'pesan' => 'berhasil'
-                            ]
-                        ];
+
+                        $this->modelkartustock->save([
+                            'id_kartustock' => $datakartu['id_kartustock'],
+                            'total_masuk' => $this->modeldetailkartustock->SumMasukKartu($row['kode']),
+                            'total_keluar' => $this->modeldetailkartustock->SumKeluarKartu($row['kode']),
+                            'saldo_akhir' => $saldoakhir,
+                        ]);
                     }
                 }
 
@@ -600,7 +706,6 @@ class Barangkeluar extends BaseController
             }
         }
     }
-
     public function penjualan_read()
     {
         $session = session();
