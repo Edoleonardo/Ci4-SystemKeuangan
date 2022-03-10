@@ -297,8 +297,8 @@ class Barangmasuk extends BaseController
                                 $jumlah_pembayaran = $this->request->getVar('tunai');
                             }
 
-                            $beratmurni = $jumlah_pembayaran / $this->request->getVar('harga_murni');
-                            $byrberatmurni = $datapembelian['byr_berat_murni'] - $beratmurni;
+                            $beratmurni = round($jumlah_pembayaran / $this->request->getVar('harga_murni'), 2);
+                            $byrberatmurni = round($datapembelian['byr_berat_murni'] - $beratmurni, 2);
                             $this->datapembelian->save([
                                 'id_pembelian' =>  $datapembelian['id_pembelian'],
                                 'cara_pembayaran' => 'Belum Selesai',

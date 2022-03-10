@@ -623,6 +623,7 @@
     }
 
     function SelesaiBayar() {
+        console.log('selesai')
         $('#modal-bayar').modal('toggle');
         $("#cardbayar").load("/detailpembelian/" + document.getElementById('dateid').value + " #cardbayar");
 
