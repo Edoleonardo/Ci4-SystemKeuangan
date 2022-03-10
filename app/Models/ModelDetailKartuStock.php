@@ -20,14 +20,44 @@ class ModelDetailKartuStock extends Model
             //     ->get();
             // $data[0] = $query;
             $this->findAll();
-            $this->limit(10);
+            $this->orderBy('created_at', 'DESC');
+            // $this->limit(10);
             $data = $this->get();
             return $data->getResult('array');
             //return $this->findAll();
         }
         return $this->where(['barcode' => $id])->first();
     }
-    public function getBarangkode($id)
+    public function getAllDetailKartuStock($id = false)
+    {
+        $this->Where(['barcode' => $id]);
+        $this->orderBy('created_at', 'ASC');
+        $data = $this->get();
+        return $data->getResult('array');
+    }
+    public function SaldoAkhir($id = false)
+    {
+        $this->select('saldo');
+        $this->Where(['barcode' => $id]);
+        $this->orderBy('created_at', 'DESC');
+        $data = $this->get();
+        return $data->getResult('array')[0];
+    }
+    public function SumMasukKartu($id = false)
+    {
+        $this->selectSum('masuk');
+        $this->where('barcode', $id);
+        $query = $this->get();
+        return $query->getResult('array')[0];
+    }
+    public function SumKeluarKartu($id = false)
+    {
+        $this->selectSum('keluar');
+        $this->where('barcode', $id);
+        $query = $this->get();
+        return $query->getResult('array')[0];
+    }
+    public function getKartuDetailStockKode($id)
     {
         return $this->where(['barcode' => $id])->first();
     }

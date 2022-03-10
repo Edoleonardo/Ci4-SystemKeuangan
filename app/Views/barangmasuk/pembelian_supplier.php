@@ -54,7 +54,7 @@
                     <div class="card-body p-0">
                         <table class="table table-hover">
                             <tbody>
-                                <tr data-widget="expandable-table" aria-expanded="false">
+                                <tr data-widget="expandable-table" aria-expanded="true">
                                     <td>
                                         Input Data Master
                                     </td>
@@ -76,7 +76,8 @@
                                                         <!-- text input -->
                                                         <div class="form-group">
                                                             <label>Tanggal Nota Supplier</label>
-                                                            <input type="date" name="tanggal_nota_sup" id="tanggal_nota_sup" class="form-control" value="<?= (isset($datapembelian['tgl_faktur'])) ? $datapembelian['tgl_faktur'] : date('Y-m-d'); ?>">
+                                                            <input type="date" name="tanggal_nota_sup" id="tanggal_nota_sup" class="form-control" value="<?= (isset($datapembelian['tgl_faktur'])) ? date_format(date_create(substr($datapembelian['tgl_faktur'], 0, 10)), "Y-m-d") : date('Y-m-d'); ?>">
+                                                            <input type="hidden" name="dateid" id="dateid" value="<?= $datapembelian['id_date_pembelian'] ?>">
                                                             <div id="validationServerUsernameFeedback" class="invalid-feedback tanggal_nota_supmsg">
                                                             </div>
                                                         </div>
@@ -86,7 +87,7 @@
                                                         <!-- text input -->
                                                         <div class="form-group">
                                                             <label>Tanggal Jatuh Tempo </label>
-                                                            <input type="date" id="tanggal_tempo" name="tanggal_tempo" class="form-control" value="<?= (isset($datapembelian['tgl_jatuh_tempo'])) ? $datapembelian['tgl_jatuh_tempo'] : date('Y-m-d'); ?>">
+                                                            <input type="date" id="tanggal_tempo" name="tanggal_tempo" class="form-control" value="<?= (isset($datapembelian['tgl_jatuh_tempo'])) ? date_format(date_create(substr($datapembelian['tgl_jatuh_tempo'], 0, 10)), "Y-m-d") : date('Y-m-d'); ?>">
                                                         </div>
                                                     </div>
                                                     <div class="col-sm-2">
@@ -112,7 +113,7 @@
                                                         <!-- text input -->
                                                         <div class="form-group">
                                                             <label>Total Berat Murni (Gr)</label>
-                                                            <input type="number" step="0.01" id="total_berat_m" name="total_berat_m" class="form-control" placeholder="Masukan Total Berat Murni" value="<?= (isset($datapembelian['total_berat_murni'])) ? $datapembelian['total_berat_murni'] : ''; ?>">
+                                                            <input type="number" step="0.01" min="0" id="total_berat_m" name="total_berat_m" class="form-control" placeholder="Masukan Total Berat Murni" value="<?= (isset($datapembelian['total_berat_murni'])) ? $datapembelian['total_berat_murni'] : ''; ?>">
                                                             <div id="validationServerUsernameFeedback" class="invalid-feedback total_berat_mmsg">
                                                             </div>
                                                         </div>
@@ -121,7 +122,7 @@
                                         </div>
                                     </td>
                                 </tr>
-                                <tr data-widget="expandable-table" aria-expanded="false">
+                                <tr data-widget="expandable-table" aria-expanded="true">
                                     <td>
                                         Input Data Berulang
                                     </td>
@@ -134,24 +135,31 @@
                                                     <!-- text input -->
                                                     <div class="form-group">
                                                         <label>Kelompok</label>
-                                                        <select name="kelompok" class="form-control" id="cars" name="cars">
+                                                        <select name="kelompok" onchange="ModalBarcode()" class="form-control" id="kelompok" name="kelompok">
                                                             <option value="1">Perhiasan Mas</option>
                                                             <option value="2">Perhiasan Berlian</option>
                                                             <option value="3">Logam Mulia (Antam, UBS, HWT)</option>
                                                             <option value="4">Bahan Murni</option>
                                                             <option value="5">Loose Diamond</option>
-                                                            <option value="9">Barang Dagang</option>
+                                                            <option value="6">Barang Dagang</option>
                                                         </select>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-2">
-                                                    <!-- text input -->
                                                     <div class="form-group">
+                                                        <a href="#" data-toggle="modal" data-target="#modal-xl"><label>Barcode</label></a>
+                                                        <input type="text" onkeyup="PilihBarcode($('#barcode').val())" id="barcode" name="barcode" class="form-control" placeholder="Masukan barcode">
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-2">
+                                                    <!-- text input -->
+                                                    <div class="form-group merek">
                                                         <label>Merek</label>
-                                                        <select name="merek" class="form-control" id="cars" name="cars">
+                                                        <select name="merek" class="form-control" id="merek">
                                                             <?php foreach ($merek as $m) : ?>
                                                                 <option value="<?= $m['nama_merek'] ?>"><?= $m['nama_merek'] ?> </option>
                                                             <?php endforeach; ?>
+                                                            <option value="-">-</option>
                                                         </select>
                                                     </div>
                                                 </div>
@@ -159,10 +167,11 @@
                                                     <!-- text input -->
                                                     <div class="form-group">
                                                         <label>Kadar</label>
-                                                        <select name="kadar" class="form-control" id="cars" name="cars">
+                                                        <select name="kadar" class="form-control" id="kadar">
                                                             <?php foreach ($kadar as $m) : ?>
                                                                 <option value="<?= $m['nama_kadar'] ?>"><?= $m['nama_kadar'] ?> </option>
                                                             <?php endforeach; ?>
+                                                            <option value="-">-</option>
                                                         </select>
                                                     </div>
                                                 </div>
@@ -184,7 +193,23 @@
                                                         </div>
                                                     </div>
                                                 </div>
+                                            </div>
+                                            <div class="row">
                                                 <div class="col-sm-2">
+                                                    <!-- text input -->
+                                                    <div class="form-group">
+                                                        <label>Model</label>
+                                                        <input type="text" name="model" id="model" class="form-control" placeholder="Masukan Model Barang">
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-3">
+                                                    <!-- text input -->
+                                                    <div class="form-group">
+                                                        <label>Keterangan</label>
+                                                        <input type="text" name="keterangan" id="keterangan" class="form-control" placeholder="Masukan Keterangan">
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-1">
                                                     <!-- text input -->
                                                     <div class="form-group">
                                                         <label>Qty</label>
@@ -193,24 +218,7 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                            <div class="row">
-
-                                                <div class="col-sm-2">
-                                                    <!-- text input -->
-                                                    <div class="form-group">
-                                                        <label>Model</label>
-                                                        <input type="text" name="model" class="form-control" placeholder="Masukan Model Barang">
-                                                    </div>
-                                                </div>
-                                                <div class="col-sm-3">
-                                                    <!-- text input -->
-                                                    <div class="form-group">
-                                                        <label>Keterangan</label>
-                                                        <input type="text" name="keterangan" class="form-control" placeholder="Masukan Keterangan">
-                                                    </div>
-                                                </div>
-                                                <div class="col-sm-2">
+                                                <div class="col-sm-1">
                                                     <!-- text input -->
                                                     <div class="form-group">
                                                         <label>Nilai Tukar</label>
@@ -419,7 +427,63 @@
 <footer class="main-footer">
 
 </footer>
+<div id="barcodeview">
+
+</div>
+
 <script type="text/javascript">
+    function PilihBarcode(kode) {
+        document.getElementById('barcode').value = kode
+        $.ajax({
+            type: "GET",
+            dataType: "json",
+            data: {
+                kode: kode
+            },
+            url: "<?php echo base_url('detailbarcode') ?>",
+            success: function(result) {
+                console.log(result.datadetail.merek)
+                $('#merek').val(result.datadetail.merek)
+                $('#kadar').val(result.datadetail.kadar)
+                $('#jenis').val(result.datadetail.jenis)
+                $('#model').val(result.datadetail.model)
+                $('#berat').val(result.datadetail.berat)
+                $('#keterangan').val(result.datadetail.keterangan)
+                $('#qty').val(result.datadetail.qty)
+                $('#nilai_tukar').val(result.datadetail.nilai_tukar)
+                $('#harga_beli').val(result.datadetail.harga_beli)
+                $('#ongkos').val(result.datadetail.ongkos)
+            },
+            error: function(xhr, ajaxOptions, thrownError) {
+                alert(xhr.status + "\n" + xhr.responseText + "\n" + thrownError);
+
+            }
+        })
+        $('#modal-xl').modal('hide');
+    }
+
+    function ModalBarcode() {
+        document.getElementById('barcode').value = ''
+        var kel = document.getElementById('kelompok').value
+        $.ajax({
+            type: "GET",
+            dataType: "json",
+            data: {
+                kel: kel
+            },
+            url: "<?php echo base_url('modalbarcode') ?>",
+            success: function(result) {
+                $('#barcodeview').html(result.modalbarcode)
+                // $('#modal-xl').modal('toggle');
+                // console.log(result)
+            },
+            error: function(xhr, ajaxOptions, thrownError) {
+                alert(xhr.status + "\n" + xhr.responseText + "\n" + thrownError);
+
+            }
+        })
+    }
+
     function Batal() {
         Swal.fire({
             title: 'Batal Input ',
@@ -431,7 +495,21 @@
             confirmButtonText: 'Batal',
         }).then((result) => {
             if (result.isConfirmed) {
-                window.location.href = "<?php echo base_url('batalpembelian'); ?>"
+                var dateid = document.getElementById('dateid').value
+                $.ajax({
+                    type: "GET",
+                    dataType: "json",
+                    data: {
+                        dateid: dateid
+                    },
+                    url: "<?php echo base_url('batalpembelian'); ?>",
+                    success: function(result) {
+                        window.location.href = '/barangmasuk'
+                    },
+                    error: function(xhr, ajaxOptions, thrownError) {
+                        alert(xhr.status + "\n" + xhr.responseText + "\n" + thrownError);
+                    }
+                })
             }
         })
 
@@ -444,6 +522,7 @@
         var tanggal_nota_sup = document.getElementById('tanggal_nota_sup').value
         var total_berat_m = document.getElementById('total_berat_m').value
         var tanggal_tempo = document.getElementById('tanggal_tempo').value
+        var dateid = document.getElementById('dateid').value
 
         Swal.fire({
             title: 'Sudah Selesai ',
@@ -464,7 +543,8 @@
                         no_nota_supp: no_nota_supp,
                         tanggal_nota_sup: tanggal_nota_sup,
                         total_berat_m: total_berat_m,
-                        tanggal_tempo: tanggal_tempo
+                        tanggal_tempo: tanggal_tempo,
+                        dateid: dateid
                     },
                     url: "<?php echo base_url('stockdata'); ?>",
                     success: function(result) {
@@ -589,6 +669,7 @@
     }
 
     $(document).ready(function() {
+        ModalBarcode()
         tampildata()
         $('.ajaxform').submit(function(e) {
             e.preventDefault()

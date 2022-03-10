@@ -42,12 +42,7 @@
                 <div class="col-12">
                     <div class="card">
                         <div class="card-header ">
-                            <button class="btn btn-app" data-toggle="modal" data-target="#modal-xl">
-                                <i class="fas fa-plus"></i> Barang Baru
-                            </button>
-                            <a class="btn btn-app">
-                                <i class="fas fa-print"></i> Print Barcode
-                            </a>
+                            <input type="number" placeholder="filter kode">
                         </div>
                         <!-- /.card-header -->
                         <div class="card-body table">
@@ -62,7 +57,8 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <?php foreach ($kartustock as $r) : ?>
+                                    <?php
+                                    foreach ($kartustock as $r) :  ?>
                                         <tr>
                                             <td><?= $r['kode'] ?></td>
                                             <td><?= $r['total_masuk'] ?></td>
@@ -72,7 +68,9 @@
                                                 <a type="button" onclick="openmodal(<?= $r['kode'] ?>)" class="btn btn-block btn-outline-info btn-sm">Detail</a>
                                             </td>
                                         </tr>
-                                    <?php endforeach; ?>
+                                    <?php
+                                    endforeach;
+                                    ?>
                                 </tbody>
                                 <tfoot>
                                     <tr>
@@ -122,6 +120,7 @@
             success: function(result) {
                 console.log(result)
                 $('.viewmodal').html(result.modal).show();
+                $('#title').html('Detail Kartu Stock ' + kode)
                 $('#modal-xl').modal('show');
             },
             error: function(xhr, ajaxOptions, thrownError) {

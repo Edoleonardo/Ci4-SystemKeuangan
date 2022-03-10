@@ -13,7 +13,10 @@ use App\Models\ModelHome;
 use App\Models\ModelPembayaranBeli;
 use App\Models\ModelReturSales;
 use App\Models\ModelDetailBuyback;
+use App\Models\ModelKartuStock;
+use App\Models\ModelDetailKartuStock;
 
+use CodeIgniter\CLI\Console;
 use CodeIgniter\Validation\Rules;
 use PhpParser\Node\Expr\Isset_;
 
@@ -43,6 +46,8 @@ class Barangmasuk extends BaseController
         $this->modelpembayaran =  new ModelPembayaranBeli();
         $this->modelretur =  new ModelReturSales();
         $this->modelbuyback =  new ModelDetailBuyback();
+        $this->modelkartustock = new ModelKartuStock();
+        $this->modeldetailkartustock = new ModelDetailKartuStock();
     }
     public function supplier()
     {
@@ -443,15 +448,24 @@ class Barangmasuk extends BaseController
     public function detail_pembelian()
     {
         $session = session();
-        $session->remove('date_id');
-        $data = [
-            'merek' => $this->datamerek->getMerek(),
-            'kadar' => $this->datakadar->getKadar(),
-            'supplier' => $this->datasupplier->getSupplier()
-
-            // 'img' => $this->barangmodel->getBarang()[0]->getResult()
-        ];
-        return view('barangmasuk/pembelian_supplier', $data);
+        $dateid = date("ymdhis");
+        $session->set('date_id', $dateid);
+        $notransaksi = $this->NoTransaksiGenerate();
+        $this->datapembelian->save([
+            'id_date_pembelian' => $session->get('date_id'),
+            'nama_supplier' => '-',
+            'id_karyawan' => '2',
+            // 'no_faktur_supp' => '-',
+            'no_transaksi' => $notransaksi,
+            'tgl_faktur' => date('Y-m-d h:i:s'),
+            // 'total_berat_murni' => 0,
+            'byr_berat_murni' => 0,
+            'tgl_jatuh_tempo' => date('Y-m-d h:i:s'),
+            'cara_pembayaran' => 'Bayar Nanti',
+            'total_bayar' => 0,
+            'status_dokumen' => 'Draft'
+        ]);
+        return redirect()->to('/draft/' . $dateid);
     }
     public function pembelian_read()
     {
@@ -497,7 +511,6 @@ class Barangmasuk extends BaseController
             $validation = \Config\Services::validation();
             $filesampul = $this->request->getFile('gambar');
             if ($filesampul->getError() != 4 || $this->request->getPost('gambar')) {
-
                 $valid = $this->validate([
                     'nilai_tukar' => [
                         'rules' => 'required',
@@ -646,132 +659,71 @@ class Barangmasuk extends BaseController
                     }
                 }
                 // $dateid = $session->get('date_id');
-                if ($session->get('date_id')) {
-                    $datapembelian1 = $this->datapembelian->getPembelianSupplier($session->get('date_id'));
-                    $kode = $this->request->getVar('kelompok');
-                    $qty = $this->request->getVar('qty');
-                    $harga = $this->request->getVar('harga_beli');
-                    $berat = $this->request->getVar('berat');
-                    $beratmurni = $berat * ($this->request->getVar('nilai_tukar') / 100);
-                    if ($kode == 1 || 4 || 5) {
-                        $totalharga =  $beratmurni *  $harga;
-                    }
-                    if ($kode == 2) {
-                        $totalharga = $harga;
-                    }
-                    if ($kode == 3) {
-                        $totalharga =  $beratmurni *  $harga * $qty;
-                    }
-
-                    $simpandetailpembelian = [
-                        'created_at' => $this->request->getVar('tanggal_input'),
-                        'id_date_pembelian' => $session->get('date_id'),
-                        'nama_img' => $namafile,
-                        'kode' =>  $this->KodeDatailGenerate($kode),
-                        'qty' => $this->request->getVar('qty'),
-                        'jenis' => $this->request->getVar('jenis'),
-                        'model' => $this->request->getVar('model'),
-                        'keterangan' => $this->request->getVar('keterangan'),
-                        'berat' => $this->request->getVar('berat'),
-                        'berat_murni' => $beratmurni,
-                        'ongkos' => $this->request->getVar('ongkos'),
-                        'harga_beli' => $this->request->getVar('harga_beli'),
-                        'kadar' =>  $this->request->getVar('kadar'),
-                        'nilai_tukar' =>  $this->request->getVar('nilai_tukar'),
-                        'merek' => $this->request->getVar('merek'),
-                        'total_harga' => $totalharga + $this->request->getVar('ongkos'),
-                    ];
-                    $this->detailbeli->insert($simpandetailpembelian);
-
-
-                    $this->datapembelian->save([
-                        'id_pembelian' =>  $datapembelian1['id_pembelian'],
-                        'created_at' => $this->request->getVar('tanggal_input'),
-                        'id_date_pembelian' => $session->get('date_id'),
-                        'nama_supplier' => $this->request->getVar('supplier'),
-                        'id_karyawan' => '2',
-                        'no_faktur_supp' => $this->request->getVar('no_nota_supp'),
-                        'no_transaksi' => $datapembelian1['no_transaksi'],
-                        'tgl_faktur' => $this->request->getVar('tanggal_nota_sup'),
-                        'total_berat_murni' => $this->request->getVar('total_berat_m'),
-                        'byr_berat_murni' => $this->request->getVar('total_berat_m'),
-                        'tgl_jatuh_tempo' => $this->request->getVar('tanggal_tempo'),
-                        'cara_pembayaran' => 'Bayar Nanti',
-                        'total_bayar' => $this->detailbeli->SumDataDetail($session->get('date_id')),
-                        'status_dokumen' => 'Draft'
-                    ]);
-                    $msg = [
-                        'sukses' => 'berhasil'
-                    ];
-                    echo json_encode($msg);
-                } else {
-                    $dateid = date("ymdhis");
-                    $session->set('date_id', $dateid);
-                    $notransaksi = $this->NoTransaksiGenerate();
-                    // ----------------------------------------------------------------------------------------
-                    $kode = $this->request->getVar('kelompok');
-                    $qty = $this->request->getVar('qty');
-                    $harga = $this->request->getVar('harga_beli');
-                    $berat = $this->request->getVar('berat');
-                    $beratmurni = $berat * ($this->request->getVar('nilai_tukar') / 100);
-                    if ($kode == 1 || 4 || 5) {
-                        $totalharga =  $beratmurni *  $harga;
-                    }
-                    if ($kode == 2) {
-                        $totalharga = $harga;
-                    }
-                    if ($kode == 3) {
-                        $totalharga =  $beratmurni *  $harga * $qty;
-                    }
-
-                    $simpandetailpembelian = [
-                        'created_at' => $this->request->getVar('tanggal_input'),
-                        'id_date_pembelian' => $session->get('date_id'),
-                        'nama_img' => $namafile,
-                        'kode' =>  $this->KodeDatailGenerate($kode),
-                        'qty' => $this->request->getVar('qty'),
-                        'jenis' => $this->request->getVar('jenis'),
-                        'model' => $this->request->getVar('model'),
-                        'keterangan' => $this->request->getVar('keterangan'),
-                        'berat' => $this->request->getVar('berat'),
-                        'berat_murni' => $beratmurni,
-                        'ongkos' => $this->request->getVar('ongkos'),
-                        'harga_beli' => $this->request->getVar('harga_beli'),
-                        'kadar' =>  $this->request->getVar('kadar'),
-                        'nilai_tukar' =>  $this->request->getVar('nilai_tukar'),
-                        'merek' => $this->request->getVar('merek'),
-                        'total_harga' => $totalharga + $this->request->getVar('ongkos'),
-                    ];
-                    $this->detailbeli->insert($simpandetailpembelian);
-
-                    $this->datapembelian->save([
-                        'created_at' => $this->request->getVar('tanggal_input'),
-                        'id_date_pembelian' => $session->get('date_id'),
-                        'nama_supplier' => $this->request->getVar('supplier'),
-                        'id_karyawan' => '2',
-                        'no_faktur_supp' => $this->request->getVar('no_nota_supp'),
-                        'no_transaksi' => $notransaksi,
-                        'tgl_faktur' => $this->request->getVar('tanggal_nota_sup'),
-                        'total_berat_murni' => $this->request->getVar('total_berat_m'),
-                        'byr_berat_murni' => $this->request->getVar('total_berat_m'),
-                        'tgl_jatuh_tempo' => $this->request->getVar('tanggal_tempo'),
-                        'cara_pembayaran' => 'Bayar Nanti',
-                        'total_bayar' => $this->detailbeli->SumDataDetail($session->get('date_id')),
-                        'status_dokumen' => 'Draft'
-                    ]);
-
-                    $msg = [
-                        'sukses' => 'berhasil'
-                    ];
-                    echo json_encode($this->KodeDatailGenerate($kode));
+                $datapembelian1 = $this->datapembelian->getPembelianSupplier($session->get('date_id'));
+                $kode = $this->request->getVar('kelompok');
+                $qty = $this->request->getVar('qty');
+                $harga = $this->request->getVar('harga_beli');
+                $berat = $this->request->getVar('berat');
+                $beratmurni = $berat * ($this->request->getVar('nilai_tukar') / 100);
+                if ($kode == 1 || 4 || 5) {
+                    $totalharga =  $beratmurni *  $harga;
                 }
+                if ($kode == 2) {
+                    $totalharga = $harga;
+                }
+                if ($kode == 3) {
+                    $totalharga =  $beratmurni *  $harga * $qty;
+                }
+                if ($this->request->getVar('barcode')) {
+                    $barcode = $this->request->getVar('barcode');
+                } else {
+                    $barcode = $this->KodeDatailGenerate($kode);
+                }
+                $this->detailbeli->save([
+                    'created_at' => $this->request->getVar('tanggal_input'),
+                    'id_date_pembelian' => $session->get('date_id'),
+                    'nama_img' => $namafile,
+                    'kode' =>   $barcode,
+                    'qty' => $this->request->getVar('qty'),
+                    'jenis' => $this->request->getVar('jenis'),
+                    'model' => $this->request->getVar('model'),
+                    'keterangan' => $this->request->getVar('keterangan'),
+                    'berat' => $this->request->getVar('berat'),
+                    'berat_murni' => $beratmurni,
+                    'ongkos' => $this->request->getVar('ongkos'),
+                    'harga_beli' => $this->request->getVar('harga_beli'),
+                    'kadar' =>  $this->request->getVar('kadar'),
+                    'nilai_tukar' =>  $this->request->getVar('nilai_tukar'),
+                    'merek' => $this->request->getVar('merek'),
+                    'total_harga' => $totalharga + $this->request->getVar('ongkos'),
+                ]);
+
+                $this->datapembelian->save([
+                    'id_pembelian' =>  $datapembelian1['id_pembelian'],
+                    'created_at' => $this->request->getVar('tanggal_input'),
+                    'id_date_pembelian' => $session->get('date_id'),
+                    'nama_supplier' => $this->request->getVar('supplier'),
+                    'id_karyawan' => '2',
+                    'no_faktur_supp' => $this->request->getVar('no_nota_supp'),
+                    'no_transaksi' => $datapembelian1['no_transaksi'],
+                    'tgl_faktur' => $this->request->getVar('tanggal_nota_sup') . ' ' . date('h:i:s'),
+                    'total_berat_murni' => $this->request->getVar('total_berat_m'),
+                    'byr_berat_murni' => $this->request->getVar('total_berat_m'),
+                    'tgl_jatuh_tempo' => $this->request->getVar('tanggal_tempo') . ' ' . date('h:i:s'),
+                    'cara_pembayaran' => 'Bayar Nanti',
+                    'total_bayar' => $this->detailbeli->SumDataDetail($session->get('date_id')),
+                    'status_dokumen' => 'Draft'
+                ]);
+                $msg = [
+                    'sukses' => 'berhasil'
+                ];
+                echo json_encode($msg);
             }
         } else {
             exit('TIdak bisa masuk');
         }
         // return view('barangmasuk/pembelian_supplier');
     }
-
     public function NoTransaksiGenerate()
     {
         $data = $this->datapembelian->getNoTrans();
@@ -939,7 +891,9 @@ class Barangmasuk extends BaseController
             'datapembelian' => $data,
             'merek' => $this->datamerek->getMerek(),
             'kadar' => $this->datakadar->getKadar(),
-            'supplier' => $this->datasupplier->getSupplier()
+            'supplier' => $this->datasupplier->getSupplier(),
+            // 'databarcode' => $this->datastock->getBarcode()
+
         ];
 
         return view('barangmasuk/pembelian_supplier', $datapembelian);
@@ -966,12 +920,22 @@ class Barangmasuk extends BaseController
 
         return view('barangmasuk/detail_pembelian_supplier', $data);
     }
-
+    function ModalBarcode()
+    {
+        if ($this->request->isAJAX()) {
+            $databarcode = $this->datastock->getBarcode($this->request->getVar('kel'));
+            $databar = [
+                'databarcode' => $databarcode,
+            ];
+            $data = [
+                'modalbarcode' => view('barangmasuk/modalbarcode',  $databar),
+            ];
+            echo json_encode($data);
+        }
+    }
     function StockDataMasuk()
     {
-
         if ($this->request->isAJAX()) {
-            $session = session();
             $validation = \Config\Services::validation();
             $valid = $this->validate([
                 'no_nota_supp' => [
@@ -996,13 +960,12 @@ class Barangmasuk extends BaseController
                 ];
                 echo json_encode($msg);
             } else {
-                if ($session->get('date_id')) {
-                    $totalbersih = $this->detailbeli->SumDataDetail($session->get('date_id'));
+                $datadetailbeli = $this->detailbeli->getDetailAll($this->request->getVar('dateid'));
+                if ($datadetailbeli) {
+                    $totalbersih = $this->detailbeli->SumDataDetail($this->request->getVar('dateid'));
                     $totalharga = $totalbersih['total_harga'];
-                    $datapembelian = $this->datapembelian->getPembelianSupplier($session->get('date_id'));
-                    $datadetailbeli = $this->detailbeli->getDetailAll($session->get('date_id'));
+                    $datapembelian = $this->datapembelian->getPembelianSupplier($this->request->getVar('dateid'));
                     //$datastock = $this->datastock->CheckData(1);
-
                     $this->datapembelian->save([
                         'id_pembelian' =>  $datapembelian['id_pembelian'],
                         'created_at' => $this->request->getVar('tanggal_input'),
@@ -1014,40 +977,115 @@ class Barangmasuk extends BaseController
                         'total_berat_murni' => $this->request->getVar('total_berat_m'),
                         'byr_berat_murni' => $this->request->getVar('total_berat_m'),
                         'tgl_jatuh_tempo' => $this->request->getVar('tanggal_tempo'),
-                        'total_berat_rill' => $this->detailbeli->SumBeratDetail($session->get('date_id'))['berat'],
-                        'berat_murni_rill' => $this->detailbeli->SumBeratMurniDetail($session->get('date_id'))['berat_murni'],
-                        'total_qty' => $this->detailbeli->SumQty($session->get('date_id'))['qty'],
+                        'total_berat_rill' => $this->detailbeli->SumBeratDetail($this->request->getVar('dateid'))['berat'],
+                        'berat_murni_rill' => $this->detailbeli->SumBeratMurniDetail($this->request->getVar('dateid'))['berat_murni'],
+                        'total_qty' => $this->detailbeli->SumQty($this->request->getVar('dateid'))['qty'],
                         'total_bayar' =>  $totalharga,
                         'status_dokumen' => 'Selesai'
                     ]);
-
                     foreach ($datadetailbeli as $row) {
-                        // $datastock = $this->datastock->CheckData($row['kode']);
-                        $this->datastock->save([
-                            'barcode' => $row['kode'],
-                            'status' => $this->StatusBarang(substr($row['kode'], 0, 1)),
-                            'no_faktur' => $datapembelian['no_faktur_supp'],
-                            'tgl_faktur' => $datapembelian['tgl_faktur'],
-                            'nama_supplier' => $datapembelian['nama_supplier'],
-                            'qty' => $row['qty'],
-                            'jenis' => $row['jenis'],
-                            'model' => $row['model'],
-                            'keterangan' => $row['keterangan'],
-                            'merek' => $row['merek'],
-                            'kadar' => $row['kadar'],
-                            'berat_murni' => $row['berat_murni'],
-                            'berat' => $row['berat'],
-                            'nilai_tukar' =>  $row['nilai_tukar'],
-                            'ongkos' => $row['ongkos'],
-                            'harga_beli' => $row['harga_beli'],
-                            'total_harga' => $row['total_harga'],
-                            'kode_beli' =>  'JN',
-                            'gambar' =>  $row['nama_img'],
+                        $datacheck = $this->datastock->CheckData($row['kode']);
+                        if ($datacheck) {
+                            $datadetailkartu = $this->modeldetailkartustock->getKartuDetailStockKode($row['kode']);
+                            $datakartu = $this->modelkartustock->getKartuStockkode($row['kode']);
+                            $this->datastock->save([
+                                'id_stock' => $datacheck['id_stock'],
+                                'status' => $this->StatusBarang(substr($row['kode'], 0, 1)),
+                                'no_faktur' => $datapembelian['no_faktur_supp'],
+                                'tgl_faktur' => $datapembelian['tgl_faktur'],
+                                'nama_supplier' => $datapembelian['nama_supplier'],
+                                'qty' => (substr($row['kode'], 0, 1) == 4) ? $row['qty'] : $row['qty'] + $datacheck['qty'],
+                                'jenis' => $row['jenis'],
+                                'model' => $row['model'],
+                                'keterangan' => $row['keterangan'],
+                                'merek' => $row['merek'],
+                                'kadar' => $row['kadar'],
+                                'berat_murni' => $row['berat_murni'],
+                                'berat' => (substr($row['kode'], 0, 1) == 4) ? $row['berat'] + $datakartu['saldo_akhir'] : $row['berat'],
+                                'nilai_tukar' =>  $row['nilai_tukar'],
+                                'ongkos' => $row['ongkos'],
+                                'harga_beli' => $row['harga_beli'],
+                                'total_harga' => $row['total_harga'] + $datacheck['total_harga'],
+                            ]);
+                            $saldoakhir = (substr($row['kode'], 0, 1) == 4) ? $row['berat'] + $datakartu['saldo_akhir'] : $row['qty'] + $datakartu['saldo_akhir'];
+                            $this->modeldetailkartustock->save([
+                                // 'id_detail_kartustock' => $datadetailkartu['id_detail_kartustock'],
+                                'barcode' => $row['kode'],
+                                'status' => $this->StatusBarang(substr($row['kode'], 0, 1)),
+                                'no_faktur' => $datapembelian['no_faktur_supp'],
+                                'tgl_faktur' => $datapembelian['tgl_faktur'],
+                                'nama_customer' => $datapembelian['nama_supplier'],
+                                'saldo' => $saldoakhir,
+                                'masuk' => (substr($row['kode'], 0, 1) == 4) ? $row['berat'] : $row['qty'],
+                                'keluar' => 0,
+                                'jenis' => $row['jenis'],
+                                'model' => $row['model'],
+                                'keterangan' => $row['keterangan'],
+                                'merek' => $row['merek'],
+                                'kadar' => $row['kadar'],
+                                'berat' => $row['berat'],
+                                'nilai_tukar' =>  $row['nilai_tukar'],
+                                'harga_beli' => $row['harga_beli'],
+                                'total_harga' => $row['total_harga'],
+                                'gambar' =>  $row['nama_img'],
+                            ]);
 
-
-                        ]);
+                            $this->modelkartustock->save([
+                                'id_kartustock' => $datakartu['id_kartustock'],
+                                'total_masuk' => $this->modeldetailkartustock->SumMasukKartu($row['kode']),
+                                'total_keluar' => $this->modeldetailkartustock->SumKeluarKartu($row['kode']),
+                                'saldo_akhir' => $saldoakhir,
+                            ]);
+                        } else {
+                            $this->datastock->save([
+                                'barcode' => $row['kode'],
+                                'status' => $this->StatusBarang(substr($row['kode'], 0, 1)),
+                                'no_faktur' => $datapembelian['no_faktur_supp'],
+                                'tgl_faktur' => $datapembelian['tgl_faktur'],
+                                'nama_supplier' => $datapembelian['nama_supplier'],
+                                'qty' => $row['qty'],
+                                'jenis' => $row['jenis'],
+                                'model' => $row['model'],
+                                'keterangan' => $row['keterangan'],
+                                'merek' => $row['merek'],
+                                'kadar' => $row['kadar'],
+                                'berat_murni' => $row['berat_murni'],
+                                'berat' => $row['berat'],
+                                'nilai_tukar' =>  $row['nilai_tukar'],
+                                'ongkos' => $row['ongkos'],
+                                'harga_beli' => $row['harga_beli'],
+                                'total_harga' => $row['total_harga'],
+                                'kode_beli' =>  'JN',
+                                'gambar' =>  $row['nama_img'],
+                            ]);
+                            $this->modelkartustock->save([
+                                'total_masuk' => 0,
+                                'total_keluar' => 0,
+                                'saldo_akhir' => (substr($row['kode'], 0, 1) == 4) ? $row['berat'] : $row['qty'],
+                                'kode' => $row['kode']
+                            ]);
+                            $this->modeldetailkartustock->save([
+                                'barcode' => $row['kode'],
+                                'status' => $this->StatusBarang(substr($row['kode'], 0, 1)),
+                                'no_faktur' => $datapembelian['no_faktur_supp'],
+                                'tgl_faktur' => $datapembelian['tgl_faktur'],
+                                'nama_customer' => $datapembelian['nama_supplier'],
+                                'saldo' => (substr($row['kode'], 0, 1) == 4) ? $row['berat'] : $row['qty'],
+                                'masuk' => (substr($row['kode'], 0, 1) == 4) ? $row['berat'] : $row['qty'],
+                                'keluar' => 0,
+                                'jenis' => $row['jenis'],
+                                'model' => $row['model'],
+                                'keterangan' => $row['keterangan'],
+                                'merek' => $row['merek'],
+                                'kadar' => $row['kadar'],
+                                'berat' => $row['berat'],
+                                'nilai_tukar' =>  $row['nilai_tukar'],
+                                'harga_beli' => $row['harga_beli'],
+                                'total_harga' => $row['total_harga'],
+                                'gambar' =>  $row['nama_img'],
+                            ]);
+                        }
                     }
-
                     $msg = [
                         'pesan' => 'berhasil'
                     ];
@@ -1061,6 +1099,15 @@ class Barangmasuk extends BaseController
         }
     }
 
+    public function DetailBarcode()
+    {
+        if ($this->request->isAJAX()) {
+            $data = [
+                'datadetail' => $this->datastock->getBarangkode($this->request->getVar('kode'))
+            ];
+            echo json_encode($data);
+        }
+    }
     public function StatusBarang($id)
     {
         if ($id == 1) {
@@ -1069,18 +1116,19 @@ class Barangmasuk extends BaseController
         if ($id == 2) {
             return 'D';
         }
-        if ($id == 3) {
+        if ($id == 3 || $id == 4) {
             return '24K';
+        }
+        if ($id == 5 || 6) {
+            return 'A';
         }
     }
 
     public function BarcodeGenerate($id)
     {
-
-
         $data1 = [
             'databarcode' => $this->detailbeli->getDetailAll($id),
-            'datapembelian' => $this->datapembelian->getPembelianSupplier($id)
+            'datapembelian' => $this->datapembelian->getPembelianSupplier($id),
             // 'img' => $this->barangmodel->getImg($id)
         ];
 
@@ -1090,7 +1138,7 @@ class Barangmasuk extends BaseController
     public function BatalPembelian()
     {
         $session = session();
-        if ($session->get('date_id')) {
+        if ($this->request->isAJAX()) {
             $data = $this->detailbeli->getDetailAll($session->get('date_id'));
             foreach ($data as $row) {
                 if ($row['nama_img'] != 'default.jpg') {
@@ -1099,13 +1147,9 @@ class Barangmasuk extends BaseController
             }
             $this->detailbeli->query('DELETE FROM tbl_detail_pembelian WHERE id_date_pembelian =' . $session->get('date_id') . ';');
             $this->datapembelian->query('DELETE FROM tbl_pembelian WHERE id_date_pembelian =' . $session->get('date_id') . ';');
-
-            return redirect()->to('/barangmasuk');
-        } else {
-            return redirect()->to('/barangmasuk');
+            echo json_encode($this->request->getVar('dateid'));
         }
     }
-
     public function ReturBarang($id)
     {
         $datapembelian = $this->datapembelian->getPembelianSupplier($this->request->getVar('dateid'));

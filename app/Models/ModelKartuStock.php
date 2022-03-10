@@ -20,16 +20,17 @@ class ModelKartuStock extends Model
             //     ->get();
             // $data[0] = $query;
             $this->findAll();
-            $this->limit(10);
+            $this->orderBy('created_at', 'DESC');
+            // $this->limit(10);
             $data = $this->get();
             return $data->getResult('array');
             //return $this->findAll();
         }
         return $this->where(['id_stock' => $id])->first();
     }
-    public function getBarangkode($id)
+    public function getKartuStockkode($id)
     {
-        return $this->where(['barcode' => $id])->first();
+        return $this->where(['kode' => $id])->first();
     }
     public function CheckData($id)
     {

@@ -20,7 +20,8 @@ class ModelHome extends Model
             //     ->get();
             // $data[0] = $query;
             $this->findAll();
-            $this->limit(10);
+            $this->orderBy('created_at', 'DESC');
+            // $this->limit(10);
             $data = $this->get();
             return $data->getResult('array');
             //return $this->findAll();
@@ -30,6 +31,12 @@ class ModelHome extends Model
     public function getBarangkode($id)
     {
         return $this->where(['barcode' => $id])->first();
+    }
+    public function getBarcode($id)
+    {
+        $db = db_connect();
+        $data = $db->query('select * from tbl_stock where substr(barcode,1,1) = ' . $id . ' order by created_at DESC limit 10');
+        return $data->getResult('array');
     }
     public function CheckData($id)
     {

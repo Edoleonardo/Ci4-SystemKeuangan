@@ -62,6 +62,8 @@ $routes->post('/ajaxpembayaran', 'Barangmasuk::Pembayaran_beli');
 $routes->get('/editdetail', 'Barangmasuk::GetDataDetail');
 $routes->post('/editdataform', 'Barangmasuk::EditDataPost');
 $routes->get('/deletepembayaran', 'Barangmasuk::DeletePembayaran');
+$routes->get('/modalbarcode', 'Barangmasuk::ModalBarcode');
+$routes->get('/detailbarcode', 'Barangmasuk::DetailBarcode');
 
 
 

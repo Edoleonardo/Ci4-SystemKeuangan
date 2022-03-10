@@ -42,6 +42,7 @@ class Home extends BaseController
 
             // 'img' => $this->barangmodel->getBarang()[0]->getResult()
         ];
+        $this->cachePage(1);
         return view('home/data_barang', $data);
     }
     public function KatruStock()
@@ -56,7 +57,7 @@ class Home extends BaseController
     {
         if ($this->request->isAJAX()) {
             $datadetail = [
-                'detailkartustock' => $this->modeldetailkartustock->getDetailKartuStock($this->request->getVar('kode')),
+                'detailkartustock' => $this->modeldetailkartustock->getAllDetailKartuStock($this->request->getVar('kode')),
             ];
             $data = [
                 'modal' => view('home/modalkartustock', $datadetail)
@@ -80,7 +81,7 @@ class Home extends BaseController
             'barcode' => '<img src="data:image/png;base64,' . $code . '" />',
             // 'img' => $this->barangmodel->getImg($id)
         ];
-        $this->chace->cachePage(100);
+        $this->cachePage(1);
         return view('home/detail_barang', $data1);
     }
 
