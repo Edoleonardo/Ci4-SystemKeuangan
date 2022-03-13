@@ -144,20 +144,12 @@
                                 <table class="table table-striped">
                                     <tbody>
                                         <tr>
-                                            <td>Total Berat Murni</td>
-                                            <td id="totalberatbersihhtml01"></td>
-                                        </tr>
-                                        <tr>
                                             <td>Total Berat</td>
-                                            <td id="totalberatkotorhtml01"></td>
-                                        </tr>
-                                        <tr>
-                                            <td>Total Ongkos</td>
-                                            <td id="totalongkoshtml01"></td>
+                                            <td><?= $totalberat['berat'] ?></td>
                                         </tr>
                                         <tr>
                                             <td>Total Harga</td>
-                                            <td id="totalbersih01"></td>
+                                            <td><?= $datapenjualan['total_harga'] ?></td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -272,125 +264,7 @@
 <!-- /.modal-dialog -->
 </div>
 <!-- Control Sidebar -->
-<div class="modal fade" id="modal-bayar">
-    <div class="modal-dialog modal-xl">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title">Pembayaran</h4>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <form action="/pembayaranform" id="pembayaranform" class="pembayaranform" name="pembayaranform">
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <div class="col-sm-12">
-                                <!-- text input -->
-                                <div class="form-group">
-                                    <label>Pembulatan</label>
-                                    <input onkeyup="myPembulatan()" type="number" value="<?= (isset($datapenjualan['pembulatan'])) ? $datapenjualan['pembulatan'] : ''; ?>" min="0" id="pembulatan" name="pembulatan" class="form-control" placeholder="Masukan Pembulatan">
-                                    <input type="hidden" name="dateid" value="<?= (isset($datapenjualan['id_date_penjualan'])) ? $datapenjualan['id_date_penjualan'] : ''; ?>">
-                                </div>
-                            </div>
-                            <div class="col-sm-12">
-                                <div class="card">
-                                    <!-- ./card-header -->
-                                    <div class="p-0">
-                                        <!-- text input -->
-                                        <div class="row">
-                                            <div class="col-sm-6">
-                                                <div class="form-group">
-                                                    <label>Cara Pembayaran</label>
-                                                    <select onchange="myPembayaran()" name="pembayaran" class="form-control" id="pembayaran" name="pembayaran">
-                                                        <option value="Bayar Nanti" selected>Bayar Nanti</option>
-                                                        <option value="Debit/CC">Debit/CC</option>
-                                                        <option value="Debit/CCTranfer">Debit/CC & Tranfer</option>
-                                                        <option value="Transfer">Transfer</option>
-                                                        <option value="Tunai">Tunai</option>
-                                                        <option value="Tunai&Debit/CC">Tunai & Debit/CC</option>
-                                                        <option value="Tunai&Transfer">Tunai & Transfer</option>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                            <div class="col-sm-6">
-                                                <div class="form-group metodebayar">
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-sm-6">
-                                                <div class="form-group namabankhtml">
-                                                </div>
-                                            </div>
-                                            <div class="col-sm-6">
-                                                <div class="form-group metodebayar2">
-                                                    <!-- <label>Debit/CC</label> -->
-                                                    <!-- <input type="number" min="0" id="debitcc" name="debitcc" class="form-control" placeholder="Masukan Debit"> -->
-                                                </div>
-                                            </div>
-                                            <div class="col-sm-6">
-                                                <div class="form-group chargehtml">
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <!-- /.card-body -->
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-sm-6">
-                            <div class="card">
-                                <!-- /.card-header -->
-                                <div class="card-body p-0">
-                                    <table class="table table-hover text-nowrap">
-                                        <tbody>
-                                            <tr>
-                                                <td>Total Berat Kotor</td>
-                                                <td id="totalberatkotorhtml"></td>
-                                            </tr>
-                                            <tr>
-                                                <td>Total Berat Bersih</td>
-                                                <td id="totalberatbersihhtml"></td>
-                                            </tr>
-                                            <tr id="tabelbank">
-                                            </tr>
-                                            <tr id="tabelbayar1">
-                                            </tr>
-                                            <tr id="tabelbayar2">
-                                            </tr>
-                                            <tr id="tabelbayar3">
-                                            </tr>
-                                            <tr>
-                                                <td>Pembulatan</td>
-                                                <td id="pembulatanhtml"></td>
-                                            </tr>
-                                            <tr>
-                                                <td>Total Bersih</td>
-                                                <td id="totalbersih"></td>
-                                            </tr>
-                                            <tr>
-                                                <td>Harus Bayar</td>
-                                                <td id="totalbersih1"></td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                                <!-- /.card-body -->
-                            </div>
-                        </div>
-                    </div>
-            </div>
-            <div class="modal-footer justify-content-between">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <button type="submit" class="btn btn-primary btnbayar">Bayar</button>
-            </div>
-            </form>
-        </div>
-        <!-- /.modal-content -->
-    </div>
-    <!-- /.modal-dialog -->
-</div>
+
 <aside class="control-sidebar control-sidebar-dark">
     <!-- Control sidebar content goes here -->
 </aside>
@@ -400,40 +274,6 @@
 
 </footer>
 <script type="text/javascript">
-    function pembulatankoma(berat) {
-        var num = Number(berat) // The Number() only visualizes the type and is not needed
-        var roundedString = num.toFixed(2);
-        var rounded = Number(roundedString);
-        return rounded
-    }
 
-    function tampildata() {
-        $.ajax({
-            type: "GET",
-            dataType: "json",
-            url: "<?php echo base_url('tampilpenjualan'); ?>",
-            success: function(result) {
-                var totalharga = (parseFloat(result.totalbersih.harga_beli) * parseFloat(result.totalberatkotor.berat)) + parseFloat(result.totalongkos.ongkos)
-
-                $('#totalbersih01').html(result.totalbersih.total_harga.toString().replace(/\B(?=(\d{3})+(?!\d))/g, "."))
-                $('#totalberatbersihhtml01').html(pembulatankoma(result.totalberatbersih.berat_murni))
-                $('#totalberatkotorhtml01').html(pembulatankoma(result.totalberatkotor.berat))
-                $('#totalongkoshtml01').html(pembulatankoma(result.totalongkos.ongkos).toString().replace(/\B(?=(\d{3})+(?!\d))/g, "."))
-
-
-
-            },
-            error: function(xhr, ajaxOptions, thrownError) {
-                alert(xhr.status + "\n" + xhr.responseText + "\n" + thrownError);
-            }
-        })
-    }
-
-
-
-
-    $(document).ready(function() {
-        tampildata()
-    })
 </script>
 <?= $this->endSection(); ?>

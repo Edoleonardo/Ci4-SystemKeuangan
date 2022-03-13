@@ -20,7 +20,9 @@ class ModelDetailBuyback extends Model
             $data = $this->get();
             return $data->getResult('array');
         } else {
-            $query = $this->getWhere(['id_date_buyback' => $id]);
+            $this->where(['id_date_buyback' => $id]);
+            $this->orderBy('created_at', 'DESC');
+            $query = $this->get();
             return $query->getResult('array');
         }
     }
@@ -83,7 +85,7 @@ class ModelDetailBuyback extends Model
         $query = $this->get();
         return $query->getResult('array')[0];
     }
-    public function SumDataDetailBuyback($id)
+    public function SumTotalHargaBuyback($id)
     {
         $this->selectSum('total_harga');
         $this->where('id_date_buyback', $id);
@@ -110,6 +112,12 @@ class ModelDetailBuyback extends Model
         $this->where('id_date_buyback', $id);
         $query = $this->get();
         return $query->getResult('array')[0];
+    }
+    public function JumlahDataBuyback($id)
+    {
+        $db = db_connect();
+        $data = $db->query('SELECT count(*) as total FROM tbl_detail_buyback where id_date_buyback = ' . $id . ';');
+        return $data->getResult('array')[0];
     }
     public function getKode($id)
     {

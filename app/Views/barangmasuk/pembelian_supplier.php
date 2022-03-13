@@ -453,6 +453,8 @@
                 $('#nilai_tukar').val(result.datadetail.nilai_tukar)
                 $('#harga_beli').val(result.datadetail.harga_beli)
                 $('#ongkos').val(result.datadetail.ongkos)
+                $('#kelompok').val($('#barcode').val().substr(0, 1))
+
             },
             error: function(xhr, ajaxOptions, thrownError) {
                 alert(xhr.status + "\n" + xhr.responseText + "\n" + thrownError);

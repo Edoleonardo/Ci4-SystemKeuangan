@@ -66,7 +66,7 @@ class Barangkeluar extends BaseController
             'id_customer' => '',
             'id_karyawan' => '1',
             'nohp_cust' => '',
-            'jumlah' => '1',
+            'jumlah' => '0',
             'pembulatan' => '0',
             'total_harga' => '0',
             'pembayaran' => 'Bayar Nanti',
@@ -81,18 +81,43 @@ class Barangkeluar extends BaseController
     public function InsertCust()
     {
         if ($this->request->isAJAX()) {
-            $this->datacust->save([
-                'nama' => $this->request->getVar('nama_cust'),
-                'nohp_cust' => $this->request->getVar('nohp'),
-                'alamat_cust' => $this->request->getVar('alamat'),
-                'kota_cust' => $this->request->getVar('kota'),
-                'sales_cust' => '-',
-                'point' => '0',
+            $validation = \Config\Services::validation();
+            if (!$this->validate([
+                'nohp' => [
+                    'rules' => 'required|is_unique[tbl_customer.nohp_cust]',
+                    'errors' => [
+                        'required' => 'NpHp Harus di isi',
+                        'is_unique' => 'NoHp Sudah Ada'
+                    ]
+                ],
+                'nama_cust' => [
+                    'rules' => 'required',
+                    'errors' => [
+                        'required' => 'Nama Harus di isi',
+                    ]
+                ],
+            ])) {
+                $msg = [
+                    'error' => [
+                        // 'inputcustomer' => $validation->getError('inputcustomer'),
+                        'nohp_cust' => $validation->getError('nohp'),
+                        'nama_cust' => $validation->getError('nama_cust'),
+                    ]
+                ];
+            } else {
+                $this->datacust->save([
+                    'nama' => $this->request->getVar('nama_cust'),
+                    'nohp_cust' => $this->request->getVar('nohp'),
+                    'alamat_cust' => $this->request->getVar('alamat'),
+                    'kota_cust' => $this->request->getVar('kota'),
+                    'sales_cust' => '-',
+                    'point' => '0',
 
-            ]);
-            $msg = [
-                'pesan' => 'Berahasil'
-            ];
+                ]);
+                $msg = [
+                    'pesan' => 'Berahasil'
+                ];
+            }
             echo json_encode($msg);
         }
     }
@@ -125,12 +150,12 @@ class Barangkeluar extends BaseController
             $databarang = $this->datastock->getBarangkode($kode);
 
             if (!$this->validate([
-                'inputcustomer' => [
-                    'rules' => 'required',
-                    'errors' => [
-                        'required' => 'Customer Harus di isi',
-                    ]
-                ],
+                // 'inputcustomer' => [
+                //     'rules' => 'required',
+                //     'errors' => [
+                //         'required' => 'Customer Harus di isi',
+                //     ]
+                // ],
                 'kodebarang' => [
                     'rules' => 'required',
                     'errors' => [
@@ -140,7 +165,7 @@ class Barangkeluar extends BaseController
             ])) {
                 $msg = [
                     'error' => [
-                        'inputcustomer' => $validation->getError('inputcustomer'),
+                        // 'inputcustomer' => $validation->getError('inputcustomer'),
                         'kodebarang' => $validation->getError('kodebarang'),
                     ]
                 ];
@@ -159,6 +184,7 @@ class Barangkeluar extends BaseController
                             'nama_img' => $databarang['gambar'],
                             'kode' =>  $databarang['barcode'],
                             'qty' => $databarang['qty'],
+                            'qty_akhir' => $databarang['qty'],
                             'jenis' =>  $databarang['jenis'],
                             'model' =>  $databarang['model'],
                             'keterangan' =>  $databarang['keterangan'],
@@ -175,12 +201,11 @@ class Barangkeluar extends BaseController
 
                         $this->penjualan->save([
                             'id_penjualan' =>  $data['id_penjualan'],
-                            'id_customer' => $this->datacust->getDataCustomerone($this->request->getVar('inputcustomer'))['id_customer'],
                             'id_karyawan' => '1',
-                            'nohp_cust' => $this->request->getVar('inputcustomer'),
-                            'jumlah' => 1 + $data['jumlah'],
+                            // 'nohp_cust' => $this->request->getVar('inputcustomer'),
+                            'jumlah' => $this->modeldetailpenjualan->JumlahData($this->request->getVar('iddate'))['jumlah'],
                             'pembulatan' => '0',
-                            'total_harga' => $this->modeldetailpenjualan->SumDataOngkosJual($this->request->getVar('iddate'))['ongkos'] + $this->modeldetailpenjualan->SumDataDetailBeliJual($this->request->getVar('iddate'))['harga_beli'],
+                            'total_harga' => $this->modeldetailpenjualan->SumDataOngkosJual($this->request->getVar('iddate'))['ongkos'] + $this->modeldetailpenjualan->SumDataDetailJual($this->request->getVar('iddate'))['total_harga'],
                             'pembayaran' => 'Bayar Nanti',
                             'tunai' => '-',
                             'debitcc' => '0',
@@ -198,7 +223,7 @@ class Barangkeluar extends BaseController
                     } else {
                         $msg = [
                             'error' => [
-                                'kodebarang' => 'Barang Sudah Masuk',
+                                'kodebarang' => 'Barang Sudah Masuk / Draft lain',
                             ]
                         ];
                     }
@@ -240,6 +265,7 @@ class Barangkeluar extends BaseController
                         'id_detail_penjualan' =>  $data['id_detail_penjualan'],
                         'harga_beli' => $this->request->getVar('hargabaru'),
                         'qty' => $this->request->getVar('qty'),
+                        'qty_akhir' => $this->request->getVar('qty'),
                         'total_harga' => $totalharga
                     ]);
                     $this->penjualan->save([
@@ -264,7 +290,7 @@ class Barangkeluar extends BaseController
             // $session = session();
             $datapenjualan = $this->penjualan->getDataPenjualan($this->request->getVar('iddate'));
             $totalharga = $this->modeldetailpenjualan->SumDataOngkosJual($this->request->getVar('iddate'))['ongkos'] + $this->modeldetailpenjualan->SumDataDetailBeliJual($this->request->getVar('iddate'))['harga_beli'];
-            if ($totalharga != null) {
+            if ($totalharga == null) {
                 $totalharga = 0;
             }
             //$datastock = $this->datastock->CheckData(1);
@@ -312,7 +338,8 @@ class Barangkeluar extends BaseController
         $data = $this->penjualan->getDataPenjualan($id);
         $datapenjualan = [
             'datapenjualan' => $data,
-            'datacust' => $this->datacust->getDataCustomer($data['id_customer']),
+            'totalberat' => $this->modeldetailpenjualan->SumBeratDetailJual($data['id_date_penjualan']),
+            'datacust' => $this->datacust->getDataCustomerone($data['nohp_cust']),
             'tampildata' => $this->modeldetailpenjualan->getDetailAllJual($id),
         ];
 
@@ -339,6 +366,12 @@ class Barangkeluar extends BaseController
                 $datapenjualan = $this->penjualan->getDataPenjualan($this->request->getVar('dateid'));
                 if ($this->request->getVar('pembayaran') == 'Debit/CC') {
                     if (!$this->validate([
+                        'inputcustomer' => [
+                            'rules' => 'required',
+                            'errors' => [
+                                'required' => 'Customer Harus di isi',
+                            ]
+                        ],
                         'debitcc' => [
                             'rules' => 'required',
                             'errors' => [
@@ -354,6 +387,7 @@ class Barangkeluar extends BaseController
                     ])) {
                         $msg = [
                             'error' => [
+                                'inputcustomer' => $validation->getError('inputcustomer'),
                                 'debitcc' => $validation->getError('debitcc'),
                                 'namabank' => $validation->getError('namabank'),
                             ]
@@ -366,6 +400,7 @@ class Barangkeluar extends BaseController
                         if ($hasil == 0) {
                             $this->penjualan->save([
                                 'id_penjualan' =>  $datapenjualan['id_penjualan'],
+                                'nohp_cust' => $this->request->getVar('inputcustomer'),
                                 'pembayaran' => $this->request->getVar('pembayaran'),
                                 'nama_bank' => $this->request->getVar('namabank'),
                                 'tunai' =>  $this->request->getVar('tunai'),
@@ -392,6 +427,12 @@ class Barangkeluar extends BaseController
                 }
                 if ($this->request->getVar('pembayaran') == 'Debit/CCTranfer') {
                     if (!$this->validate([
+                        'inputcustomer' => [
+                            'rules' => 'required',
+                            'errors' => [
+                                'required' => 'Customer Harus di isi',
+                            ]
+                        ],
                         'debitcc' => [
                             'rules' => 'required',
                             'errors' => [
@@ -413,6 +454,7 @@ class Barangkeluar extends BaseController
                     ])) {
                         $msg = [
                             'error' => [
+                                'inputcustomer' => $validation->getError('inputcustomer'),
                                 'debitcc' => $validation->getError('debitcc'),
                                 'namabank' => $validation->getError('namabank'),
                                 'transfer' => $validation->getError('transfer'),
@@ -426,6 +468,7 @@ class Barangkeluar extends BaseController
                         if ($hasil == 0) {
                             $this->penjualan->save([
                                 'id_penjualan' =>  $datapenjualan['id_penjualan'],
+                                'nohp_cust' => $this->request->getVar('inputcustomer'),
                                 'pembayaran' => $this->request->getVar('pembayaran'),
                                 'nama_bank' => $this->request->getVar('namabank'),
                                 'tunai' =>  $this->request->getVar('tunai'),
@@ -453,6 +496,12 @@ class Barangkeluar extends BaseController
                 }
                 if ($this->request->getVar('pembayaran') == 'Transfer') {
                     if (!$this->validate([
+                        'inputcustomer' => [
+                            'rules' => 'required',
+                            'errors' => [
+                                'required' => 'Customer Harus di isi',
+                            ]
+                        ],
                         'transfer' => [
                             'rules' => 'required',
                             'errors' => [
@@ -468,6 +517,7 @@ class Barangkeluar extends BaseController
                     ])) {
                         $msg = [
                             'error' => [
+                                'inputcustomer' => $validation->getError('inputcustomer'),
                                 'transfer' => $validation->getError('transfer'),
                                 'namabank' => $validation->getError('namabank'),
                             ]
@@ -478,6 +528,7 @@ class Barangkeluar extends BaseController
                         if ($hasil == 0) {
                             $this->penjualan->save([
                                 'id_penjualan' =>  $datapenjualan['id_penjualan'],
+                                'nohp_cust' => $this->request->getVar('inputcustomer'),
                                 'pembayaran' => $this->request->getVar('pembayaran'),
                                 'nama_bank' => $this->request->getVar('namabank'),
                                 'tunai' =>  $this->request->getVar('tunai'),
@@ -504,6 +555,12 @@ class Barangkeluar extends BaseController
                 }
                 if ($this->request->getVar('pembayaran') == 'Tunai') {
                     if (!$this->validate([
+                        'inputcustomer' => [
+                            'rules' => 'required',
+                            'errors' => [
+                                'required' => 'Customer Harus di isi',
+                            ]
+                        ],
                         'tunai' => [
                             'rules' => 'required',
                             'errors' => [
@@ -513,6 +570,7 @@ class Barangkeluar extends BaseController
                     ])) {
                         $msg = [
                             'error' => [
+                                'inputcustomer' => $validation->getError('inputcustomer'),
                                 'tunai' => $validation->getError('tunai'),
                             ]
                         ];
@@ -522,6 +580,7 @@ class Barangkeluar extends BaseController
                         if ($hasil == 0) {
                             $this->penjualan->save([
                                 'id_penjualan' =>  $datapenjualan['id_penjualan'],
+                                'nohp_cust' => $this->request->getVar('inputcustomer'),
                                 'pembayaran' => $this->request->getVar('pembayaran'),
                                 'nama_bank' => $this->request->getVar('namabank'),
                                 'tunai' =>  $this->request->getVar('tunai'),
@@ -543,11 +602,18 @@ class Barangkeluar extends BaseController
                                     'kurang' => 'Bayar Kurang / lebih'
                                 ]
                             ];
+                            // $msg = $hasil;
                         }
                     }
                 }
                 if ($this->request->getVar('pembayaran') == 'Tunai&Debit/CC') {
                     if (!$this->validate([
+                        'inputcustomer' => [
+                            'rules' => 'required',
+                            'errors' => [
+                                'required' => 'Customer Harus di isi',
+                            ]
+                        ],
                         'tunai' => [
                             'rules' => 'required',
                             'errors' => [
@@ -569,6 +635,7 @@ class Barangkeluar extends BaseController
                     ])) {
                         $msg = [
                             'error' => [
+                                'inputcustomer' => $validation->getError('inputcustomer'),
                                 'debitcc' => $validation->getError('debitcc'),
                                 'tunai' => $validation->getError('tunai'),
                                 'namabank' => $validation->getError('namabank'),
@@ -582,6 +649,7 @@ class Barangkeluar extends BaseController
                         if ($hasil == 0) {
                             $this->penjualan->save([
                                 'id_penjualan' =>  $datapenjualan['id_penjualan'],
+                                'nohp_cust' => $this->request->getVar('inputcustomer'),
                                 'pembayaran' => $this->request->getVar('pembayaran'),
                                 'nama_bank' => $this->request->getVar('namabank'),
                                 'tunai' =>  $this->request->getVar('tunai'),
@@ -608,6 +676,12 @@ class Barangkeluar extends BaseController
                 }
                 if ($this->request->getVar('pembayaran') == 'Tunai&Transfer') {
                     if (!$this->validate([
+                        'inputcustomer' => [
+                            'rules' => 'required',
+                            'errors' => [
+                                'required' => 'Customer Harus di isi',
+                            ]
+                        ],
                         'tunai' => [
                             'rules' => 'required',
                             'errors' => [
@@ -629,6 +703,7 @@ class Barangkeluar extends BaseController
                     ])) {
                         $msg = [
                             'error' => [
+                                'inputcustomer' => $validation->getError('inputcustomer'),
                                 'tunai' => $validation->getError('tunai'),
                                 'transfer' => $validation->getError('transfer'),
                                 'namabank' => $validation->getError('namabank'),
@@ -640,6 +715,7 @@ class Barangkeluar extends BaseController
                         if ($hasil == 0) {
                             $this->penjualan->save([
                                 'id_penjualan' =>  $datapenjualan['id_penjualan'],
+                                'nohp_cust' => $this->request->getVar('inputcustomer'),
                                 'pembayaran' => $this->request->getVar('pembayaran'),
                                 'nama_bank' => $this->request->getVar('namabank'),
                                 'tunai' =>  $this->request->getVar('tunai'),
@@ -744,9 +820,10 @@ class Barangkeluar extends BaseController
             foreach ($data as $row) {
 
                 $databarang = $this->datastock->getBarangkode($row['kode']);
+                $datakartu = $this->modelkartustock->getKartuStockkode($row['kode']);
                 $this->datastock->save([
                     'id_stock' => $databarang['id_stock'],
-                    'qty' => $row['qty']
+                    'qty' => $datakartu['saldo_akhir']
                 ]);
             }
             $this->modeldetailpenjualan->query('DELETE FROM tbl_detail_penjualan WHERE id_date_penjualan =' . $session->get('date_id_penjualan') . ';');

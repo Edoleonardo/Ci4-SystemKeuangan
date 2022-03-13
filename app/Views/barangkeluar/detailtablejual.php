@@ -9,9 +9,7 @@
         <?php endif; ?>
         <td><input style="width: 100px;" id="harganow <?= $row['id_detail_penjualan'] ?>" class="harganow" onchange="UbahHarga(<?= $row['id_detail_penjualan'] ?>,<?= $row['id_date_penjualan'] ?>,<?= substr($row['kode'], 0, 1) ?>,<?= $row['qty'] ?>)" type="number" class="form-control" value="<?= $row['harga_beli'] ?>"></td>
         <td><?= number_format($row['ongkos'], 2, ',', '.') ?></td>
-        <td><?= $row['jenis'] ?></td>
-        <td><?= $row['model'] ?></td>
-        <td><?= $row['keterangan'] ?></td>
+        <td><?= $row['jenis'] ?> <?= $row['model'] ?> <?= $row['keterangan'] ?></td>
         <td><?= $row['berat'] ?></td>
         <td><?= $row['berat_murni'] ?></td>
         <td><?= $row['kadar'] ?></td>

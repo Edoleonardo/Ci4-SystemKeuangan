@@ -90,237 +90,175 @@
     <section class="content">
         <div class="row">
             <div class="col-6">
+                <!-- /.card-header -->
+                <form action="/kodebarcode" name="formkodebarcode" id="formkodebarcode" class="formkodebarcode" method="post">
+                    <input type="hidden" name="iddate" id="iddate" value="<?= $datapenjualan['id_date_penjualan'] ?>">
+                    <div class="card">
+                        <div class="form-group" style="margin: 1mm;">
+                            <label>Kode Barang</label>
+                            <div class="input-group input-group-sm">
+                                <input type="text" class="form-control kodebarang" id="kodebarang" onkeyup="ScanBarcode()" name="kodebarang" placeholder="Masukan Nomor Nota Supplier">
+                                <span class="input-group-append">
+                                    <button type="submit" id="btnsubmitform" class="btn btn-info btn-flat btnsubmitform">Ok</button>
+                                </span>
+                                <div id="validationServerUsernameFeedback" class="invalid-feedback kodebarangmsg">
+                                </div>
+                            </div>
+                        </div>
+                </form>
+            </div>
+            <!-- /.card -->
+        </div>
+        <div class="col-6">
+            <!-- Application buttons -->
+            <div class="card">
+                <div class="card-body" id="refreshtombol">
+                    <a class="btn btn-app tambahcustomer" id="tambahcustomer" data-toggle="modal" data-target="#modal-lg">
+                        <i class="fas fa-users"></i> Tambah Customer
+                    </a>
+                    <a type="button" onclick="Batal()" class="btn btn-app">
+                        <i class="fas fa-window-close"></i> Batal Jual
+                    </a>
+                    <a class="btn btn-app bg-danger" type="button" data-toggle="modal" data-target="#modal-bayar">
+                        <i class="fas fa-money-bill"></i> Bayar
+                    </a>
+                </div>
+                <!-- /.card-body -->
+            </div>
+        </div>
+</div>
+<div class="card ">
+    <!-- /.card-header -->
+    <div class="card-body">
+        <br>
+        <div class="row">
+            <div class="col-12">
                 <div class="card">
                     <!-- /.card-header -->
-                    <form action="/kodebarcode" name="formkodebarcode" id="formkodebarcode" class="formkodebarcode" method="post">
-                        <input type="hidden" name="iddate" id="iddate" value="<?= $datapenjualan['id_date_penjualan'] ?>">
-                        <div class="form-group" style="margin: 1mm;">
-                            <label>Nomor Tlp Customer</label>
-                            <input autocomplete="off" type="tel" class="form-control inputcustomer" id="inputcustomer" name="inputcustomer" value="<?= (isset($datapenjualan['nohp_cust'])) ? $datapenjualan['nohp_cust'] : '' ?>" placeholder="Masukan data customer">
-                            <div id="validationServerUsernameFeedback" class="invalid-feedback inputcustomermsg">
-                            </div>
-                        </div>
-                </div>
-                <div class="card">
-                    <div class="form-group" style="margin: 1mm;">
-                        <label>Kode Barang</label>
-                        <div class="input-group input-group-sm">
-                            <input type="text" class="form-control kodebarang" id="kodebarang" onkeyup="ScanBarcode()" name="kodebarang" placeholder="Masukan Nomor Nota Supplier">
-                            <span class="input-group-append">
-                                <button type="submit" id="btnsubmitform" class="btn btn-info btn-flat btnsubmitform">Ok</button>
-                            </span>
-                            <div id="validationServerUsernameFeedback" class="invalid-feedback kodebarangmsg">
-                            </div>
-                        </div>
+                    <div class="card-body table-responsive p-0">
+                        <table class="table table-hover text-nowrap">
+                            <thead>
+                                <tr>
+                                    <th>Gambar</th>
+                                    <th>Kode</th>
+                                    <th>Qty</th>
+                                    <th>Harga Jual</th>
+                                    <th>Ongkos</th>
+                                    <th>Keterangan</th>
+                                    <th>Berat</th>
+                                    <th>Berat Murni</th>
+                                    <th>Kadar</th>
+                                    <th>Nilai Tukar</th>
+                                    <th>Merek</th>
+                                    <th>Delete</th>
+                                </tr>
+                            </thead>
+                            <tbody id="datajual">
+                            </tbody>
+                        </table>
                     </div>
-
-                    </form>
-
+                    <!-- /.card-body -->
                 </div>
                 <!-- /.card -->
             </div>
-            <div class="col-6">
-                <!-- Application buttons -->
+        </div>
+        <div class="row">
+            <div class="col-sm-6">
                 <div class="card">
-                    <div class="card-body" id="refreshtombol">
-                        <a class="btn btn-app tambahcustomer" id="tambahcustomer" data-toggle="modal" data-target="#modal-lg">
-                            <i class="fas fa-users"></i> Tambah Customer
-                        </a>
-                        <a type="button" onclick="Batal()" class="btn btn-app">
-                            <i class="fas fa-window-close"></i> Batal Jual
-                        </a>
-                        <?php if (isset($datapenjualan)) : ?>
-                            <?php if ($datapenjualan['pembayaran'] == 'Bayar Nanti') : ?>
-                                <a class="btn btn-app bg-danger" type="button" data-toggle="modal" data-target="#modal-bayar">
-                                    <i class="fas fa-money-bill"></i> Bayar
-                                </a>
-                            <?php else : ?>
-                                <a class="btn btn-app" target="_blank" href="/printinvoice/<?= $datapenjualan['id_date_penjualan'] ?>" target="_blank">
-                                    <i class="fas fa-print"></i> Print Invoce
-                                </a>
-                                <a class="btn btn-app bg-primary" type="button" data-toggle="modal" data-target="#modal-bayar">
-                                    <i class="fas fa-check"></i> Lunas
-                                </a>
-                            <?php endif ?>
-                        <?php endif ?>
-
+                    <!-- /.card-header -->
+                    <div class="card-body p-0">
+                        <table class="table table-striped">
+                            <tbody>
+                                <tr>
+                                    <td>Total Berat Murni</td>
+                                    <td id="totalberatbersihhtml01"></td>
+                                </tr>
+                                <tr>
+                                    <td>Total Berat</td>
+                                    <td id="totalberatkotorhtml01"></td>
+                                </tr>
+                                <tr>
+                                    <td>Total Ongkos</td>
+                                    <td id="totalongkoshtml01"></td>
+                                </tr>
+                                <tr>
+                                    <td>Total Harga</td>
+                                    <td id="totalbersih01"></td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
                     <!-- /.card-body -->
                 </div>
             </div>
-        </div>
-        <div class="card ">
-            <!-- /.card-header -->
-            <div class="card-body">
-                <br>
-                <div class="row">
-                    <div class="col-12">
-                        <div class="card">
-                            <!-- /.card-header -->
-                            <div class="card-body table-responsive p-0">
-                                <table class="table table-hover text-nowrap">
-                                    <thead>
-                                        <tr>
-                                            <th>Gambar</th>
-                                            <th>Kode</th>
-                                            <th>Qty</th>
-                                            <th>Harga Jual</th>
-                                            <th>Ongkos</th>
-                                            <th>Jenis</th>
-                                            <th>Model</th>
-                                            <th>Keterangan</th>
-                                            <th>Berat</th>
-                                            <th>Berat Murni</th>
-                                            <th>Kadar</th>
-                                            <th>Nilai Tukar</th>
-                                            <th>Merek</th>
-                                            <th>Delete</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="datajual">
-                                    </tbody>
-                                </table>
-                            </div>
-                            <!-- /.card-body -->
-                        </div>
-                        <!-- /.card -->
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-sm-6">
-                        <div class="card">
-                            <!-- /.card-header -->
-                            <div class="card-body p-0">
-                                <table class="table table-striped">
-                                    <tbody>
-                                        <tr>
-                                            <td>Total Berat Murni</td>
-                                            <td id="totalberatbersihhtml01"></td>
-                                        </tr>
-                                        <tr>
-                                            <td>Total Berat</td>
-                                            <td id="totalberatkotorhtml01"></td>
-                                        </tr>
-                                        <tr>
-                                            <td>Total Ongkos</td>
-                                            <td id="totalongkoshtml01"></td>
-                                        </tr>
-                                        <tr>
-                                            <td>Total Harga</td>
-                                            <td id="totalbersih01"></td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                            <!-- /.card-body -->
-                        </div>
-                    </div>
-                    <div class="col-sm-6">
-                        <div class="card">
-                            <!-- /.card-header -->
-                            <div class="card-body p-0" id="refreshpembayaran">
+            <div class="col-sm-6">
+                <div class="card">
+                    <!-- /.card-header -->
+                    <div class="card-body p-0" id="refreshpembayaran">
 
-                                <table class="table table-striped">
-                                    <tbody>
-                                        <?php if (isset($datapenjualan)) : ?>
-                                            <tr>
-                                                <td>Metode Pembayaran</td>
-                                                <td><?= $datapenjualan['pembayaran'] ?></td>
-                                            </tr>
-                                            <?php if ($datapenjualan['nama_bank']) : ?>
-                                                <tr>
-                                                    <td>Nama Bank</td>
-                                                    <td><?= $datapenjualan['nama_bank'] ?></td>
-                                                </tr>
-                                            <?php endif ?>
-                                            <?php if ($datapenjualan['pembulatan']) : ?>
-                                                <tr>
-                                                    <td>Pembulatan</td>
-                                                    <td><?= number_format($datapenjualan['pembulatan'], 2, ",", ".") ?></td>
-                                                </tr>
-                                            <?php endif ?>
-                                            <?php if ($datapenjualan['charge']) : ?>
-                                                <tr>
-                                                    <td>Charge</td>
-                                                    <td><?= $datapenjualan['charge'] ?> %</td>
-                                                </tr>
-                                            <?php endif ?>
-                                            <?php if ($datapenjualan['tunai']) : ?>
-                                                <tr>
-                                                    <td>Tunai</td>
-                                                    <td><?= number_format($datapenjualan['tunai'], 2, ',', '.') ?></td>
-                                                </tr>
-                                            <?php endif ?>
-                                            <?php if ($datapenjualan['debitcc']) : ?>
-                                                <tr>
-                                                    <td>Debit / CC</td>
-                                                    <td><?= number_format($datapenjualan['debitcc'], 2, ',', '.') ?></td>
-                                                </tr>
-                                            <?php endif ?>
-                                            <?php if ($datapenjualan['transfer']) : ?>
-                                                <tr>
-                                                    <td>Transfer</td>
-                                                    <td><?= number_format($datapenjualan['transfer'], 2, ',', '.') ?></td>
-                                                </tr>
-                                            <?php endif ?>
-                                        <?php endif ?>
+                        <table class="table table-striped">
+                            <tbody>
+                                <?php if (isset($datapenjualan)) : ?>
+                                    <tr>
+                                        <td>Metode Pembayaran</td>
+                                        <td><?= $datapenjualan['pembayaran'] ?></td>
+                                    </tr>
+                                    <?php if ($datapenjualan['nama_bank']) : ?>
+                                        <tr>
+                                            <td>Nama Bank</td>
+                                            <td><?= $datapenjualan['nama_bank'] ?></td>
+                                        </tr>
+                                    <?php endif ?>
+                                    <?php if ($datapenjualan['pembulatan']) : ?>
+                                        <tr>
+                                            <td>Pembulatan</td>
+                                            <td><?= number_format($datapenjualan['pembulatan'], 2, ",", ".") ?></td>
+                                        </tr>
+                                    <?php endif ?>
+                                    <?php if ($datapenjualan['charge']) : ?>
+                                        <tr>
+                                            <td>Charge</td>
+                                            <td><?= $datapenjualan['charge'] ?> %</td>
+                                        </tr>
+                                    <?php endif ?>
+                                    <?php if ($datapenjualan['tunai']) : ?>
+                                        <tr>
+                                            <td>Tunai</td>
+                                            <td><?= number_format($datapenjualan['tunai'], 2, ',', '.') ?></td>
+                                        </tr>
+                                    <?php endif ?>
+                                    <?php if ($datapenjualan['debitcc']) : ?>
+                                        <tr>
+                                            <td>Debit / CC</td>
+                                            <td><?= number_format($datapenjualan['debitcc'], 2, ',', '.') ?></td>
+                                        </tr>
+                                    <?php endif ?>
+                                    <?php if ($datapenjualan['transfer']) : ?>
+                                        <tr>
+                                            <td>Transfer</td>
+                                            <td><?= number_format($datapenjualan['transfer'], 2, ',', '.') ?></td>
+                                        </tr>
+                                    <?php endif ?>
+                                <?php endif ?>
 
-                                    </tbody>
-                                </table>
-                                <!-- /.card-body -->
-                            </div>
-                        </div>
+                            </tbody>
+                        </table>
+                        <!-- /.card-body -->
                     </div>
-
                 </div>
             </div>
-            <!-- /.card-body -->
-        </div>
-        <!-- /.container-fluid -->
-    </section>
-    <!-- /.content -->
-</div>
-<!-- /.content-wrapper -->
-<div class="modal fade" id="modal-lg">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title">Tambah Data Customer</h4>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <form action="/insertcustomer" name="insertcust" id="insertcust" class="insertcust" method="post">
-                <div class="row" style="margin: 10px;">
-                    <div class="col-12">
-                        <div class="form-group">
-                            <label>Nama Customer</label>
-                            <input type="text" id="nama_cust" name="nama_cust" class="form-control" placeholder="Masukan Nomor Nota Supplier">
-                        </div>
-                        <div class="form-group">
-                            <label>Nomor Hp</label>
-                            <input type="number" id="nohp" name="nohp" class="form-control" placeholder="Masukan Nomor Nota Supplier">
-                        </div>
-                        <div class="form-group">
-                            <label>Alamat</label>
-                            <input type="text" id="alamat" name="alamat" class="form-control" placeholder="Masukan Nomor Nota Supplier">
-                        </div>
-                        <div class="form-group">
-                            <label>Kota</label>
-                            <input type="text" id="kota" name="kota" class="form-control" placeholder="Masukan Nomor Nota Supplier">
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer justify-content-between">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Tutup</button>
-                    <button type="submit" class="btn btn-primary btntambah">Tambah</button>
-            </form>
+
         </div>
     </div>
-    <!-- /.modal-content -->
+    <!-- /.card-body -->
 </div>
-<!-- /.modal-dialog -->
+<!-- /.container-fluid -->
+</section>
+<!-- /.content -->
 </div>
+<!-- /.content-wrapper -->
+
+
 <!-- Control Sidebar -->
 <div class="modal fade" id="modal-bayar">
     <div class="modal-dialog modal-xl">
@@ -337,6 +275,14 @@
                         <div class="col-sm-6">
                             <div class="col-sm-12">
                                 <!-- text input -->
+                                <div class="card">
+                                    <div class="form-group" style="margin: 1mm;">
+                                        <label>Nomor Tlp Customer</label>
+                                        <input autocomplete="off" type="tel" class="form-control inputcustomer" id="inputcustomer" name="inputcustomer" value="<?= (isset($datapenjualan['nohp_cust'])) ? $datapenjualan['nohp_cust'] : '' ?>" placeholder="Masukan data customer">
+                                        <div id="validationServerUsernameFeedback" class="invalid-feedback inputcustomermsg">
+                                        </div>
+                                    </div>
+                                </div>
                                 <div class="form-group">
                                     <label>Pembulatan</label>
                                     <input onkeyup="myPembulatan()" type="number" value="<?= (isset($datapenjualan['pembulatan'])) ? $datapenjualan['pembulatan'] : ''; ?>" min="0" id="pembulatan" name="pembulatan" class="form-control" placeholder="Masukan Pembulatan">
@@ -444,6 +390,50 @@
         <!-- /.modal-content -->
     </div>
     <!-- /.modal-dialog -->
+</div>
+<div class="modal fade" id="modal-lg">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Tambah Data Customer</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form action="/insertcustomer" name="insertcust" id="insertcust" class="insertcust" method="post">
+                <div class="row" style="margin: 10px;">
+                    <div class="col-12">
+                        <div class="form-group">
+                            <label>Nama Customer</label>
+                            <input type="text" id="nama_cust" name="nama_cust" class="form-control nama_cust" placeholder="Masukan Nomor Nota Supplier">
+                            <div id="validationServerUsernameFeedback" class="invalid-feedback nama_custmsg">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Nomor Hp</label>
+                            <input type="number" id="nohp" name="nohp" class="form-control nohp" placeholder="Masukan Nomor Nota Supplier">
+                            <div id="validationServerUsernameFeedback" class="invalid-feedback nohpmsg">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Alamat</label>
+                            <input type="text" id="alamat" name="alamat" class="form-control" placeholder="Masukan Nomor Nota Supplier">
+                        </div>
+                        <div class="form-group">
+                            <label>Kota</label>
+                            <input type="text" id="kota" name="kota" class="form-control" placeholder="Masukan Nomor Nota Supplier">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Tutup</button>
+                    <button type="submit" class="btn btn-primary btntambah">Tambah</button>
+            </form>
+        </div>
+    </div>
+    <!-- /.modal-content -->
+</div>
+<!-- /.modal-dialog -->
 </div>
 <aside class="control-sidebar control-sidebar-dark">
     <!-- Control sidebar content goes here -->
@@ -588,7 +578,6 @@
             },
             url: "<?php echo base_url('checkcust'); ?>",
             success: function(result) {
-                console.log(result)
                 if (result == 'gagal') {
                     isicust = document.getElementById('inputcustomer').value
                     document.getElementById("nohp").value = isicust
@@ -664,6 +653,7 @@
     }
 
     $('.pembayaranform').submit(function(e) {
+        checkcust()
         e.preventDefault()
         let form = $('.pembayaranform')[0];
         let data = new FormData(form)
@@ -712,6 +702,13 @@
                             $('#tunai').removeClass('is-invalid')
                             $('.tunaimsg').html('')
                         }
+                        if (result.error.inputcustomer) {
+                            $('#inputcustomer').addClass('is-invalid')
+                            $('.inputcustomermsg').html(result.error.inputcustomer)
+                        } else {
+                            $('#inputcustomer').removeClass('is-invalid')
+                            $('.inputcustomermsg').html('')
+                        }
                         if (result.error.kurang) {
                             Swal.fire({
                                 icon: 'warning',
@@ -727,8 +724,8 @@
                         $('.transfermsg').html('')
                         $('#tunai').removeClass('is-invalid')
                         $('.tunaimsg').html('')
-
-                        console.log(result)
+                        $('#inputcustomer').removeClass('is-invalid')
+                        $('.inputcustomermsg').html('')
 
                         Swal.fire({
                             icon: 'success',
@@ -764,7 +761,6 @@
 
 
     function myPembayaran() {
-        console.log('masuk')
         const carabyr = document.getElementById('pembayaran').value
         const metod1 = $('.metodebayar')
         const nmbank = $('.namabankhtml')
@@ -856,7 +852,6 @@
             table2[0].innerHTML = '<td>Tranfer</td><td id="transferbyr"></td>'
 
         }
-        console.log(carabyr)
     }
 
     function byrnamabank() {
@@ -1018,7 +1013,7 @@
     }
 
     $('.formkodebarcode').submit(function(e) {
-        checkcust()
+        // checkcust()
         e.preventDefault()
         let form = $('.formkodebarcode')[0];
         let data = new FormData(form)
@@ -1032,13 +1027,13 @@
             dataType: "json",
             success: function(result) {
                 if (result.error) {
-                    if (result.error.inputcustomer) {
-                        $('#inputcustomer').addClass('is-invalid')
-                        $('.inputcustomermsg').html(result.error.inputcustomer)
-                    } else {
-                        $('#inputcustomer').removeClass('is-invalid')
-                        $('.inputcustomermsg').html('')
-                    }
+                    // if (result.error.inputcustomer) {
+                    //     $('#inputcustomer').addClass('is-invalid')
+                    //     $('.inputcustomermsg').html(result.error.inputcustomer)
+                    // } else {
+                    //     $('#inputcustomer').removeClass('is-invalid')
+                    //     $('.inputcustomermsg').html('')
+                    // }
                     if (result.error.kodebarang) {
                         $('#kodebarang').addClass('is-invalid')
                         $('.kodebarangmsg').html(result.error.kodebarang)
@@ -1054,8 +1049,8 @@
                     } else {
                         $('#kodebarang').removeClass('is-invalid')
                         $('.kodebarangmsg').html('')
-                        $('#inputcustomer').removeClass('is-invalid')
-                        $('.inputcustomermsg').html('')
+                        // $('#inputcustomer').removeClass('is-invalid')
+                        // $('.inputcustomermsg').html('')
                         tampildata()
                         document.getElementById('kodebarang').setAttribute("onkeyup", "ScanBarcode()");
                         document.getElementById('kodebarang').value = ''
@@ -1072,8 +1067,6 @@
         })
 
     })
-
-
 
     $(document).ready(function() {
         tampildata()
@@ -1098,8 +1091,30 @@
                     $('.btntambah').html('Tambah')
                 },
                 success: function(result) {
-                    tampilcustomer()
-                    $('#modal-lg').modal('toggle');
+                    if (result.error) {
+                        if (result.error.nohp_cust) {
+                            $('#nohp').addClass('is-invalid')
+                            $('.nohpmsg').html(result.error.nohp_cust)
+                        } else {
+                            $('#nohp').removeClass('is-invalid')
+                            $('.nohpmsg').html('')
+                        }
+                        if (result.error.nama_cust) {
+                            $('#nama_cust').addClass('is-invalid')
+                            $('.nama_custmsg').html(result.error.nama_cust)
+                        } else {
+                            $('#nama_cust').removeClass('is-invalid')
+                            $('.nama_custmsg').html('')
+                        }
+                    } else {
+                        $('#nohp').removeClass('is-invalid')
+                        $('.nohpmsg').html('')
+                        $('#nama_cust').removeClass('is-invalid')
+                        $('.nama_custmsg').html('')
+                        tampilcustomer()
+                        $('#modal-lg').modal('toggle');
+                    }
+
                 },
                 error: function(xhr, ajaxOptions, thrownError) {
                     alert(xhr.status + "\n" + xhr.responseText + "\n" + thrownError);

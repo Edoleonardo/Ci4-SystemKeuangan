@@ -4,15 +4,15 @@ namespace App\Models;
 
 use CodeIgniter\Model;
 
-class ModelPenjualan extends Model
+class ModelBuyback extends Model
 {
 
-    protected $table = 'tbl_penjualan';
-    protected $primaryKey = 'id_penjualan';
+    protected $table = 'tbl_buyback';
+    protected $primaryKey = 'id_buyback';
     protected $useTimestamps = true;
-    protected $allowedFields = ['id_date_penjualan', 'no_transaksi_jual', 'id_karyawan', 'nohp_cust', 'jumlah', 'nama_bank', 'pembulatan', 'total_harga', 'pembayaran', 'charge', 'tunai', 'debitcc', 'transfer', 'status_dokumen'];
+    protected $allowedFields = ['id_date_buyback', 'no_transaksi_buyback', 'id_karyawan', 'total_berat', 'jumlah', 'nama_bank', 'total_harga', 'total_harga', 'pembayaran', 'tunai', 'transfer', 'status_dokumen'];
 
-    public function getDataPenjualan($id = false)
+    public function getDataBuyback($id = false)
     {
         if ($id == false) {
             // $query =  $this->db->table('tbl_img')
@@ -25,15 +25,15 @@ class ModelPenjualan extends Model
             return $data->getResult('array');
             //return $this->findAll();
         }
-        return $this->where(['id_date_penjualan' => $id])->first();
+        return $this->where(['id_date_buyback' => $id])->first();
     }
     public function getDataNoTrans($id)
     {
-        return $this->where(['no_transaksi_jual' => $id])->first();
+        return $this->where(['no_transaksi_buyback' => $id])->first();
     }
-    public function getNoTransJual()
+    public function getNoTransBuyback()
     {
-        $this->selectMax('no_transaksi_jual');
+        $this->selectMax('no_transaksi_buyback');
         $query = $this->get();
         return $query->getResult('array');
     }
@@ -41,7 +41,7 @@ class ModelPenjualan extends Model
     public function getNoTrans()
     {
         $db = db_connect();
-        $data = $db->query('select max(substr(no_transaksi_jual,3,10)) no_transaksi_jual from tbl_penjualan limit 1');
+        $data = $db->query('select max(substr(no_transaksi_buyback,3,10)) no_transaksi_buyback from tbl_buyback limit 1');
         return $data->getResult('array')[0];
     }
 }

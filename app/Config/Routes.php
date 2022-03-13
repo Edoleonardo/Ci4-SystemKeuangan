@@ -88,12 +88,16 @@ $routes->get('/checkcust', 'Barangkeluar::CheckCustomer');
 
 //------------------buyback----------------
 $routes->get('/buybackcust', 'BuybackCust::BuyBack');
-$routes->get('/adanota', 'BuybackCust::AdaNota');
+$routes->get('/halamanbuyback', 'BuybackCust::HalamanTambah');
 $routes->post('/scantrans', 'BuybackCust::Cari_notrans');
 $routes->get('/tampilbuyback', 'BuybackCust::TampilBuyback');
+$routes->get('/tampildatabuyback', 'BuybackCust::TampilDataBuyback');
 $routes->post('/tambahbuyback', 'BuybackCust::TambahBuyback');
 $routes->post('/tambahbuybacknonota', 'BuybackCust::TambahBuybackNonota');
 $routes->get('/detailbuyback/(:any)', 'BuybackCust::DetailBuyback/$1');
+$routes->get('/draftbuyback/(:any)', 'BuybackCust::DraftBuyback/$1');
+$routes->get('/deletedetailbuyback', 'BuybackCust::DeleteDetailBuyback');
+
 
 //-------------------------------------------------------
 

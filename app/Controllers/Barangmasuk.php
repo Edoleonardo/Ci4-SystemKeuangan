@@ -660,12 +660,18 @@ class Barangmasuk extends BaseController
                 }
                 // $dateid = $session->get('date_id');
                 $datapembelian1 = $this->datapembelian->getPembelianSupplier($session->get('date_id'));
-                $kode = $this->request->getVar('kelompok');
                 $qty = $this->request->getVar('qty');
                 $harga = $this->request->getVar('harga_beli');
                 $berat = $this->request->getVar('berat');
                 $beratmurni = round($berat * ($this->request->getVar('nilai_tukar') / 100), 2);
-                if ($kode == 1 || 4 || 5) {
+                if ($this->request->getVar('barcode')) {
+                    $barcode = $this->request->getVar('barcode');
+                    $kode = substr($this->request->getVar('barcode'), 0, 1);
+                } else {
+                    $kode = $this->request->getVar('kelompok');
+                    $barcode = $this->KodeDatailGenerate($kode);
+                }
+                if ($kode == 1 || $kode == 4 || $kode == 5) {
                     $totalharga =  $beratmurni *  $harga;
                 }
                 if ($kode == 2) {
@@ -674,11 +680,7 @@ class Barangmasuk extends BaseController
                 if ($kode == 3) {
                     $totalharga =  $beratmurni *  $harga * $qty;
                 }
-                if ($this->request->getVar('barcode')) {
-                    $barcode = $this->request->getVar('barcode');
-                } else {
-                    $barcode = $this->KodeDatailGenerate($kode);
-                }
+
                 $this->detailbeli->save([
                     'created_at' => $this->request->getVar('tanggal_input'),
                     'id_date_pembelian' => $session->get('date_id'),
@@ -1006,6 +1008,7 @@ class Barangmasuk extends BaseController
                                 'ongkos' => $row['ongkos'],
                                 'harga_beli' => $row['harga_beli'],
                                 'total_harga' => $row['total_harga'] + $datacheck['total_harga'],
+                                'gambar' =>  $row['nama_img'],
                             ]);
                             $saldoakhir = (substr($row['kode'], 0, 1) == 4) ? $row['berat'] + $datakartu['saldo_akhir'] : $row['qty'] + $datakartu['saldo_akhir'];
                             $this->modeldetailkartustock->save([

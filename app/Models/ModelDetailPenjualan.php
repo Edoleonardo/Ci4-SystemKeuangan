@@ -10,7 +10,7 @@ class ModelDetailPenjualan extends Model
     protected $table = 'tbl_detail_penjualan';
     protected $primaryKey = 'id_detail_penjualan';
     protected $useTimestamps = true;
-    protected $allowedFields = ['id_date_penjualan', 'nama_img', 'kode', 'jenis', 'qty', 'model', 'keterangan', 'berat_murni', 'berat', 'harga_beli', 'ongkos', 'kadar', 'nilai_tukar', 'merek', 'total_harga'];
+    protected $allowedFields = ['id_date_penjualan', 'nama_img', 'kode', 'jenis', 'qty', 'qty_akhir', 'model', 'keterangan', 'berat_murni', 'berat', 'harga_beli', 'ongkos', 'kadar', 'nilai_tukar', 'merek', 'total_harga'];
 
     public function getDetailAllJual($id)
     {
@@ -39,7 +39,7 @@ class ModelDetailPenjualan extends Model
     public function getDetailCheckJual($kode, $id)
     {
         $db = db_connect();
-        $data = $db->query('select * from tbl_detail_penjualan where kode = ' . $kode . ' AND id_date_penjualan = ' . $id . ' limit 1');
+        $data = $db->query("SELECT * FROM `tbl_detail_penjualan` INNER JOIN tbl_penjualan on tbl_penjualan.id_date_penjualan = tbl_detail_penjualan.id_date_penjualan where status_dokumen = 'Draft' AND kode = " . $kode . ";");
         return $data->getResult('array');
     }
     public function SumBeratKotorDetailjual($id)
@@ -84,12 +84,18 @@ class ModelDetailPenjualan extends Model
         $query = $this->get();
         return $query->getResult('array')[0];
     }
-    public function getKodeJual($id)
+    public function JumlahData($id)
     {
         $db = db_connect();
-        $data = $db->query('select max(substr(kode,2,7)) kode from tbl_detail_pembelian where substr(kode,1,1) = ' . $id . ' limit 1');
+        $data = $db->query('SELECT count(*) as jumlah FROM tbl_detail_penjualan where id_date_penjualan = ' . $id . ';');
         return $data->getResult('array')[0];
-        //  $this->get();
-        // return $query;
     }
+    // public function getKodeJual($id)
+    // {
+    //     $db = db_connect();
+    //     $data = $db->query('select max(substr(kode,2,7)) kode from tbl_detail_pembelian where substr(kode,1,1) = ' . $id . ' limit 1');
+    //     return $data->getResult('array')[0];
+    //     //  $this->get();
+    //     // return $query;
+    // }
 }
