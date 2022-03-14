@@ -97,6 +97,8 @@ $routes->post('/tambahbuybacknonota', 'BuybackCust::TambahBuybackNonota');
 $routes->get('/detailbuyback/(:any)', 'BuybackCust::DetailBuyback/$1');
 $routes->get('/draftbuyback/(:any)', 'BuybackCust::DraftBuyback/$1');
 $routes->get('/deletedetailbuyback', 'BuybackCust::DeleteDetailBuyback');
+$routes->post('/pembayaranform', 'BuybackCust::PembayaranBuyback');
+$routes->get('/batalbuyback/(:any)', 'BuybackCust::BatalBuyback/$1');
 
 
 //-------------------------------------------------------

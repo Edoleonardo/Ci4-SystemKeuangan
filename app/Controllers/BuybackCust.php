@@ -11,7 +11,8 @@ use App\Models\ModelMerek;
 use App\Models\ModelSupplier;
 use App\Models\ModelHome;
 use App\Models\ModelBuyback;
-
+use App\Models\ModelKartuStock;
+use App\Models\ModelDetailKartuStock;
 
 use CodeIgniter\Model;
 use CodeIgniter\Validation\Rules;
@@ -34,6 +35,8 @@ class BuybackCust extends BaseController
         $this->datamerek = new ModelMerek();
         $this->datastock = new ModelHome();
         $this->modelbuyback = new ModelBuyback();
+        $this->modelkartustock = new ModelKartuStock();
+        $this->modeldetailkartustock = new ModelDetailKartuStock();
     }
 
     public function BuyBack()
@@ -102,11 +105,13 @@ class BuybackCust extends BaseController
     }
     public function DraftBuyback($id)
     {
+        $databuyback = $this->modelbuyback->getDataBuyback($id);
+
         $data = [
             'merek' => $this->datamerek->getMerek(),
             'kadar' => $this->datakadar->getKadar(),
             'supplier' => $this->datasupplier->getSupplier(),
-            'databuyback' => $this->modelbuyback->getDataBuyback($id)
+            'databuyback' => $databuyback
         ];
         return view('buybackcust/buyback_barang', $data);
     }
@@ -128,6 +133,18 @@ class BuybackCust extends BaseController
                     'pesan_error' => 'Tidak ada Data No Trans'
                 ];
             }
+            echo json_encode($msg);
+        }
+    }
+    public function TampilBuyback()
+    {
+        if ($this->request->isAJAX()) {
+
+            $id = $this->request->getVar('id');
+            $data = $this->modeldetailpenjualan->getDetailoneJual($id);
+            $msg = [
+                'data' => $data
+            ];
             echo json_encode($msg);
         }
     }
@@ -165,436 +182,160 @@ class BuybackCust extends BaseController
             echo json_encode($msg);
         }
     }
-    public function TampilBuyback()
-    {
-        if ($this->request->isAJAX()) {
-
-            $id = $this->request->getVar('id');
-            $data = $this->modeldetailpenjualan->getDetailoneJual($id);
-            $msg = [
-                'data' => $data
-            ];
-            echo json_encode($msg);
-        }
-    }
-    public function asdasdasdasdas()
+    public function PembayaranBuyback()
     {
         if ($this->request->isAJAX()) {
             $validation = \Config\Services::validation();
-            $filesampul = $this->request->getFile('gambar');
             if ($this->request->getVar('pembayaran') == 'Transfer') {
-
-                if ($filesampul->getError() != 4 || $this->request->getPost('gambar')) {
-                    $valid = $this->validate([
-                        'nilai_tukar' => [
-                            'rules' => 'required',
-                            'errors' => [
-                                'required' => 'Nilai Tukar Harus di isi',
-                            ]
-                        ],
-                        'qty' => [
-                            'rules' => 'required',
-                            'errors' => [
-                                'required' => 'Qty Harus di isi',
-                            ]
-                        ],
-                        'jenis' => [
-                            'rules' => 'required',
-                            'errors' => [
-                                'required' => 'Jenis Harus di isi',
-                            ]
-                        ],
-                        'berat' => [
-                            'rules' => 'required',
-                            'errors' => [
-                                'required' => 'Berat Harus di isi',
-                            ]
-                        ],
-                        'harga_beli' => [
-                            'rules' => 'required',
-                            'errors' => [
-                                'required' => 'Berat Bersih Harus di isi',
-                            ]
-                        ],
-                        'transfer' => [
-                            'rules' => 'required',
-                            'errors' => [
-                                'required' => 'Transfer Harus di isi',
-                            ]
-                        ],
-                        'namabank' => [
-                            'rules' => 'required',
-                            'errors' => [
-                                'required' => 'Nama Bank Harus di isi',
-                            ]
+                $valid = $this->validate([
+                    'transfer' => [
+                        'rules' => 'required',
+                        'errors' => [
+                            'required' => 'Transfer Harus di isi',
                         ]
-
-                    ]);
-                } else {
-                    $valid = $this->validate([
-                        'nilai_tukar' => [
-                            'rules' => 'required',
-                            'errors' => [
-                                'required' => 'Nilai Tukar Harus di isi',
-                            ]
-                        ],
-                        'qty' => [
-                            'rules' => 'required',
-                            'errors' => [
-                                'required' => 'Qty Harus di isi',
-                            ]
-                        ],
-                        'jenis' => [
-                            'rules' => 'required',
-                            'errors' => [
-                                'required' => 'Jenis Harus di isi',
-                            ]
-                        ],
-                        'berat' => [
-                            'rules' => 'required',
-                            'errors' => [
-                                'required' => 'Berat Harus di isi',
-                            ]
-                        ],
-                        'harga_beli' => [
-                            'rules' => 'required',
-                            'errors' => [
-                                'required' => 'Berat Bersih Harus di isi',
-                            ]
-                        ],
-                        'gambar' => [
-                            'rules' => 'uploaded[gambar]|is_image[gambar]|mime_in[gambar,image/jpg,image/jpeg,image/png]',
-                            'errors' => [
-                                'uploaded' => 'gambar harus diisi',
-                                'mime_in' => 'extention tidak cocok',
-                                'is_image' => 'Bukan Gambar',
-
-                            ]
-                        ],
-                        'transfer' => [
-                            'rules' => 'required',
-                            'errors' => [
-                                'required' => 'Transfer Harus di isi',
-                            ]
-                        ],
-                        'namabank' => [
-                            'rules' => 'required',
-                            'errors' => [
-                                'required' => 'Nama Bank Harus di isi',
-                            ]
+                    ],
+                    'namabank' => [
+                        'rules' => 'required',
+                        'errors' => [
+                            'required' => 'Nama Bank Harus di isi',
                         ]
+                    ]
 
-                    ]);
-                }
+                ]);
             }
             if ($this->request->getVar('pembayaran') == 'Tunai') {
+                $valid = $this->validate([
+                    'tunai' => [
+                        'rules' => 'required',
+                        'errors' => [
+                            'required' => 'Tunai Harus di isi',
+                        ]
+                    ],
 
-                if ($filesampul->getError() != 4 || $this->request->getPost('gambar')) {
-                    $valid = $this->validate([
-                        'nilai_tukar' => [
-                            'rules' => 'required',
-                            'errors' => [
-                                'required' => 'Nilai Tukar Harus di isi',
-                            ]
-                        ],
-                        'qty' => [
-                            'rules' => 'required',
-                            'errors' => [
-                                'required' => 'Qty Harus di isi',
-                            ]
-                        ],
-                        'jenis' => [
-                            'rules' => 'required',
-                            'errors' => [
-                                'required' => 'Jenis Harus di isi',
-                            ]
-                        ],
-                        'berat' => [
-                            'rules' => 'required',
-                            'errors' => [
-                                'required' => 'Berat Harus di isi',
-                            ]
-                        ],
-                        'harga_beli' => [
-                            'rules' => 'required',
-                            'errors' => [
-                                'required' => 'Berat Bersih Harus di isi',
-                            ]
-                        ],
-                        'tunai' => [
-                            'rules' => 'required',
-                            'errors' => [
-                                'required' => 'Tunai Harus di isi',
-                            ]
-                        ],
-
-                    ]);
-                } else {
-                    $valid = $this->validate([
-                        'nilai_tukar' => [
-                            'rules' => 'required',
-                            'errors' => [
-                                'required' => 'Nilai Tukar Harus di isi',
-                            ]
-                        ],
-                        'qty' => [
-                            'rules' => 'required',
-                            'errors' => [
-                                'required' => 'Qty Harus di isi',
-                            ]
-                        ],
-                        'jenis' => [
-                            'rules' => 'required',
-                            'errors' => [
-                                'required' => 'Jenis Harus di isi',
-                            ]
-                        ],
-                        'berat' => [
-                            'rules' => 'required',
-                            'errors' => [
-                                'required' => 'Berat Harus di isi',
-                            ]
-                        ],
-                        'harga_beli' => [
-                            'rules' => 'required',
-                            'errors' => [
-                                'required' => 'Berat Bersih Harus di isi',
-                            ]
-                        ],
-                        'gambar' => [
-                            'rules' => 'uploaded[gambar]|is_image[gambar]|mime_in[gambar,image/jpg,image/jpeg,image/png]',
-                            'errors' => [
-                                'uploaded' => 'gambar harus diisi',
-                                'mime_in' => 'extention tidak cocok',
-                                'is_image' => 'Bukan Gambar',
-
-                            ]
-                        ],
-                        'tunai' => [
-                            'rules' => 'required',
-                            'errors' => [
-                                'required' => 'Tunai Harus di isi',
-                            ]
-                        ],
-
-                    ]);
-                }
+                ]);
             }
             if ($this->request->getVar('pembayaran') == 'Tunai&Transfer' || $this->request->getVar('pembayaran') == null) {
 
-                if ($filesampul->getError() != 4 || $this->request->getPost('gambar')) {
-                    $valid = $this->validate([
-                        'nilai_tukar' => [
-                            'rules' => 'required',
-                            'errors' => [
-                                'required' => 'Nilai Tukar Harus di isi',
-                            ]
-                        ],
-                        'qty' => [
-                            'rules' => 'required',
-                            'errors' => [
-                                'required' => 'Qty Harus di isi',
-                            ]
-                        ],
-                        'jenis' => [
-                            'rules' => 'required',
-                            'errors' => [
-                                'required' => 'Jenis Harus di isi',
-                            ]
-                        ],
-                        'berat' => [
-                            'rules' => 'required',
-                            'errors' => [
-                                'required' => 'Berat Harus di isi',
-                            ]
-                        ],
-                        'harga_beli' => [
-                            'rules' => 'required',
-                            'errors' => [
-                                'required' => 'Berat Bersih Harus di isi',
-                            ]
-                        ],
-                        'tunai' => [
-                            'rules' => 'required',
-                            'errors' => [
-                                'required' => 'Tunai Harus di isi',
-                            ]
-                        ],
-                        'transfer' => [
-                            'rules' => 'required',
-                            'errors' => [
-                                'required' => 'Transfer Harus di isi',
-                            ]
-                        ],
-                        'namabank' => [
-                            'rules' => 'required',
-                            'errors' => [
-                                'required' => 'Nama Bank Harus di isi',
-                            ]
+                $valid = $this->validate([
+                    'tunai' => [
+                        'rules' => 'required',
+                        'errors' => [
+                            'required' => 'Tunai Harus di isi',
                         ]
-
-                    ]);
-                } else {
-                    $valid = $this->validate([
-                        'nilai_tukar' => [
-                            'rules' => 'required',
-                            'errors' => [
-                                'required' => 'Nilai Tukar Harus di isi',
-                            ]
-                        ],
-                        'qty' => [
-                            'rules' => 'required',
-                            'errors' => [
-                                'required' => 'Qty Harus di isi',
-                            ]
-                        ],
-                        'jenis' => [
-                            'rules' => 'required',
-                            'errors' => [
-                                'required' => 'Jenis Harus di isi',
-                            ]
-                        ],
-                        'berat' => [
-                            'rules' => 'required',
-                            'errors' => [
-                                'required' => 'Berat Harus di isi',
-                            ]
-                        ],
-                        'harga_beli' => [
-                            'rules' => 'required',
-                            'errors' => [
-                                'required' => 'Berat Bersih Harus di isi',
-                            ]
-                        ],
-                        'gambar' => [
-                            'rules' => 'uploaded[gambar]|is_image[gambar]|mime_in[gambar,image/jpg,image/jpeg,image/png]',
-                            'errors' => [
-                                'uploaded' => 'gambar harus diisi',
-                                'mime_in' => 'extention tidak cocok',
-                                'is_image' => 'Bukan Gambar',
-
-                            ]
-                        ],
-                        'tunai' => [
-                            'rules' => 'required',
-                            'errors' => [
-                                'required' => 'Tunai Harus di isi',
-                            ]
-                        ],
-                        'transfer' => [
-                            'rules' => 'required',
-                            'errors' => [
-                                'required' => 'Transfer Harus di isi',
-                            ]
-                        ],
-                        'namabank' => [
-                            'rules' => 'required',
-                            'errors' => [
-                                'required' => 'Nama Bank Harus di isi',
-                            ]
+                    ],
+                    'transfer' => [
+                        'rules' => 'required',
+                        'errors' => [
+                            'required' => 'Transfer Harus di isi',
                         ]
+                    ],
+                    'namabank' => [
+                        'rules' => 'required',
+                        'errors' => [
+                            'required' => 'Nama Bank Harus di isi',
+                        ]
+                    ]
 
-                    ]);
-                }
+                ]);
             }
             if (!$valid) {
                 $msg = [
                     'error' => [
-                        'qty' => $validation->getError('qty'),
-                        'nilai_tukar' => $validation->getError('nilai_tukar'),
-                        'jenis' => $validation->getError('jenis'),
-                        'berat' => $validation->getError('berat'),
-                        'harga_beli' => $validation->getError('harga_beli'),
-                        'gambar' => $validation->getError('gambar'),
                         'tunai' => $validation->getError('tunai'),
                         'transfer' => $validation->getError('transfer'),
                         'namabank' => $validation->getError('namabank'),
                         'pembayaran' => 'Pembayaran Harus di Isi',
-
-
                     ]
                 ];
                 echo json_encode($msg);
             } else {
-                if ($this->request->getPost('gambar')) {
-                    $image = $this->request->getPost('gambar');
-                    $image = str_replace('data:image/jpeg;base64,', '', $image);
-                    $image = base64_decode($image, true);
-                    $namafile = date('ymdhis') . '.jpg';
-                    file_put_contents(FCPATH . '/img/' . $namafile, $image);
-                } else {
-                    $filesampul = $this->request->getFile('gambar');
-                    if ($filesampul->getError() == 4) {
-                        $namafile = 'default.jpg';
-                    } else {
-                        $namafile = $filesampul->getRandomName(); // pake nama random
-                        // $namafile = $filesampul->getName(); // ini pake nama asli di foto
-                        $filesampul->move('img', $namafile);
-                    }
-                }
-                //$id = $this->request->getVar('id');
-                $kode = 9;
-                $qty = $this->request->getVar('qty');
-                $harga = $this->request->getVar('harga_beli');
-                $berat = $this->request->getVar('berat');
-                $beratmurni = $berat * ($this->request->getVar('nilai_tukar') / 100);
-                if ($kode == 1 || 4 || 5 || 9) {
-                    $totalharga =  $beratmurni *  $harga;
-                }
-                if ($kode == 2) {
-                    $totalharga = $harga;
-                }
-                if ($kode == 3) {
-                    $totalharga =  $beratmurni *  $harga * $qty;
-                }
-                $barcode = $this->KodeDatailGenerate($this->request->getVar('kelompok'));
-                $this->modeldetailbuyback->save([
-                    'nama_img' => $namafile,
-                    'id_date_buyback' => date('ymdhis'),
-                    'kode' =>  $barcode,
-                    'qty' => $this->request->getVar('qty'),
-                    'jenis' =>  $this->request->getVar('jenis'),
-                    'model' =>  $this->request->getVar('model'),
-                    'status' => $this->request->getVar('status_proses'),
-                    'keterangan' =>  $this->request->getVar('keterangan'),
-                    'berat' =>  $this->request->getVar('berat'),
-                    'berat_murni' =>  $beratmurni,
-                    'harga_beli' =>  $this->request->getVar('harga_beli'),
-                    'ongkos' => 0,
-                    'kadar' =>   $this->request->getVar('kadar'),
-                    'nilai_tukar' => $this->request->getVar('nilai_tukar'),
-                    'merek' => $this->request->getVar('merek'),
-                    'cara_pembayaran' => $this->request->getVar('pembayaran'),
-                    'total_harga' => $totalharga,
-                    'nama_bank' => $this->request->getVar('namabank'),
-                    'tunai' => $this->request->getVar('tunai'),
-                    'transfer' => $this->request->getVar('transfer'),
-                    'no_nota' => 'NoNota',
-                    'status_proses' => $this->request->getVar('status_proses')
-                ]);
 
-                $this->datastock->save([
-                    'barcode' => $barcode,
-                    'status' => $this->request->getVar('status_proses'),
-                    'no_faktur' => 'NoFaktur',
-                    'tgl_faktur' => 'NoFaktur',
-                    'nama_supplier' => 'Buyback',
-                    'qty' => 0,
-                    'jenis' =>  $this->request->getVar('jenis'),
-                    'model' =>  $this->request->getVar('model'),
-                    'keterangan' =>  $this->request->getVar('keterangan'),
-                    'merek' => $this->request->getVar('merek'),
-                    'kadar' =>   $this->request->getVar('kadar'),
-                    'berat' =>  $this->request->getVar('berat'),
-                    'berat_murni' =>  $beratmurni,
-                    'nilai_tukar' => $this->request->getVar('nilai_tukar'),
-                    'ongkos' => 0,
-                    'harga_beli' =>  $this->request->getVar('harga_beli'),
-                    'total_harga' => $totalharga,
-                    'kode_beli' =>  'JN',
-                    'gambar' =>  $namafile,
-                ]);
-                $msg = 'sukses';
+                $databuyback = $this->modelbuyback->getDataBuyback($this->request->getVar('iddate'));
+                $hasilbayar = $databuyback['total_harga'] - ($this->request->getVar('tunai') + $this->request->getVar('transfer'));
+                if ($hasilbayar == 0) {
+                    $datadetail = $this->modeldetailbuyback->getDetailAllBuyback($this->request->getVar('iddate'));
+                    $this->modelbuyback->save([
+                        'id_buyback' => $databuyback['id_buyback'],
+                        'pembayaran' => $this->request->getVar('pembayaran'),
+                        'tunai' => $this->request->getVar('tunai'),
+                        'transfer' => $this->request->getVar('transfer'),
+                        'tgl_selesai' => date("Y-m-d h:i:s"),
+                        'status_dokumen' => 'Selesai'
+                    ]);
+
+                    foreach ($datadetail as $row) {
+                        if ($row['no_nota'] == 'NoNota') {
+                            $saldoakhir = (substr($row['kode'], 0, 1) == 4) ? $row['berat'] : $row['qty'];
+                            $this->modeldetailkartustock->save([
+                                // 'id_detail_kartustock' => $datadetailkartu['id_detail_kartustock'],
+                                'barcode' => $row['kode'],
+                                'status' => 'Keluar',
+                                'no_faktur' => $databuyback['no_transaksi_buyback'],
+                                'tgl_faktur' => $databuyback['created_at'],
+                                'nama_customer' => $row['no_nota'],
+                                'saldo' => $saldoakhir,
+                                'masuk' => $saldoakhir,
+                                'keluar' => 0,
+                                'jenis' => $row['jenis'],
+                                'model' => $row['model'],
+                                'keterangan' => $row['keterangan'],
+                                'merek' => $row['merek'],
+                                'kadar' => $row['kadar'],
+                                'berat' => $row['berat'],
+                                'nilai_tukar' =>  $row['nilai_tukar'],
+                                'harga_beli' => $row['harga_beli'],
+                                'total_harga' => $row['total_harga'],
+                                'gambar' =>  $row['nama_img'],
+                            ]);
+
+                            $this->modelkartustock->save([
+                                'kode' => $row['kode'],
+                                'total_masuk' => $this->modeldetailkartustock->SumMasukKartu($row['kode']),
+                                'total_keluar' => $this->modeldetailkartustock->SumKeluarKartu($row['kode']),
+                                'saldo_akhir' => $saldoakhir,
+                            ]);
+                        } else {
+                            $datakartu = $this->modelkartustock->getKartuStockkode($row['kode']);
+                            $saldoakhir = (substr($row['kode'], 0, 1) == 4) ? $datakartu['saldo_akhir'] + $row['berat'] : $datakartu['saldo_akhir'] + $row['qty'];
+                            $this->modeldetailkartustock->save([
+                                // 'id_detail_kartustock' => $datadetailkartu['id_detail_kartustock'],
+                                'barcode' => $row['kode'],
+                                'status' => 'Keluar',
+                                'no_faktur' => $databuyback['no_transaksi_buyback'],
+                                'tgl_faktur' => $databuyback['created_at'],
+                                'nama_customer' => $row['no_nota'],
+                                'saldo' => $saldoakhir,
+                                'masuk' => (substr($row['kode'], 0, 1) == 4) ? $row['berat'] : $row['qty'],
+                                'keluar' => 0,
+                                'jenis' => $row['jenis'],
+                                'model' => $row['model'],
+                                'keterangan' => $row['keterangan'],
+                                'merek' => $row['merek'],
+                                'kadar' => $row['kadar'],
+                                'berat' => $row['berat'],
+                                'nilai_tukar' =>  $row['nilai_tukar'],
+                                'harga_beli' => $row['harga_beli'],
+                                'total_harga' => $row['total_harga'],
+                                'gambar' =>  $row['nama_img'],
+                            ]);
+
+                            $this->modelkartustock->save([
+                                'id_kartustock' => $datakartu['id_kartustock'],
+                                'total_masuk' => $this->modeldetailkartustock->SumMasukKartu($row['kode']),
+                                'total_keluar' => $this->modeldetailkartustock->SumKeluarKartu($row['kode']),
+                                'saldo_akhir' => $saldoakhir,
+                            ]);
+                        }
+                    }
+
+                    $msg = 'sukses';
+                } else {
+                    $msg = [
+                        'error' => [
+                            'bayar' => 'Bayar Lebih / Kurang',
+                        ]
+                    ];
+                }
                 echo json_encode($msg);
             }
         }
@@ -794,7 +535,7 @@ class BuybackCust extends BaseController
                 $datadetailpenjualan = $this->modeldetailpenjualan->getDetailoneJual($data['id_detail_penjualan']);
                 $this->modeldetailpenjualan->save([
                     'id_detail_penjualan' => $data['id_detail_penjualan'],
-                    'saldo' => $data['qty'] + $datadetailpenjualan['saldo']
+                    'saldo' => (substr($data['kode'], 0, 1) == 4) ? $data['berat'] + $datadetailpenjualan['saldo'] : $data['qty'] + $datadetailpenjualan['saldo']
                 ]);
             }
 
@@ -805,6 +546,31 @@ class BuybackCust extends BaseController
             ];
             echo json_encode($msg);
         }
+    }
+    public function BatalBuyback($id)
+    {
+        $databuyback = $this->modelbuyback->getDataBuyback($id);
+        $datadetailbb = $this->modeldetailbuyback->getDetailAllBuyback($id);
+        foreach ($datadetailbb as $row) {
+            // $data = $this->modeldetailbuyback->getDataDetailKode($row['id_detail_buyback']);
+            if ($row['no_nota'] == 'NoNota') {
+                $datastock = $this->datastock->getBarangkode($row['kode']);
+                $this->datastock->delete($datastock['id_stock']);
+                if ($row['nama_img'] != 'default.jpg') { //buyback dengan nota, foto ikut terhapus
+                    unlink('img/' . $row['nama_img']); //untuk hapus file
+                }
+            } else {
+                $datadetailpenjualan = $this->modeldetailpenjualan->getDetailoneJual($row['id_detail_penjualan']);
+                $this->modeldetailpenjualan->save([
+                    'id_detail_penjualan' => $row['id_detail_penjualan'],
+                    'saldo' => (substr($row['kode'], 0, 1) == 4) ? $row['berat'] + $datadetailpenjualan['saldo'] : $row['qty'] + $datadetailpenjualan['saldo']
+                ]);
+            }
+
+            $this->modeldetailbuyback->delete($id);
+        }
+        $this->modelbuyback->delete($databuyback['id_buyback']);
+        return redirect()->to('/buybackcust');
     }
     public function DetailBuyback($id)
     {
@@ -879,7 +645,12 @@ class BuybackCust extends BaseController
                 $qty = $this->request->getVar('qty1');
                 $harga = $this->request->getVar('harga_beli1');
                 $berat = $this->request->getVar('berat1');
-                if ($databarang['saldo'] >= $this->request->getVar('qty1') && $this->request->getVar('qty1') >= 0 && $this->request->getVar('qty1') != 0) {
+                if ($kode == 4) {
+                    $check = $berat;
+                } else {
+                    $check = $qty;
+                }
+                if ($databarang['saldo'] >= $check && $check >= 0 && $check != 0) {
                     $beratmurni = $berat * ($this->request->getVar('nilai_tukar1') / 100);
                     if ($kode == 1 || 4 || 5) {
                         $totalharga =  $beratmurni * $harga;
@@ -914,14 +685,14 @@ class BuybackCust extends BaseController
                     ]);
                     $this->modeldetailpenjualan->save([
                         'id_detail_penjualan' => $databarang['id_detail_penjualan'],
-                        'saldo' =>  $databarang['saldo'] - $this->request->getVar('qty1'),
+                        'saldo' => ($kode == 4) ? $databarang['saldo'] - $this->request->getVar('berat1') : $databarang['saldo'] - $this->request->getVar('qty1'),
                     ]);
 
                     $msg = 'sukses';
                 } else {
                     $msg = [
                         'error' => [
-                            'kurang' => 'Qty Kurang'
+                            'kurang' => 'Saldo Kurang'
 
                         ]
                     ];

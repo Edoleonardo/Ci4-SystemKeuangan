@@ -19,7 +19,7 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1 class="m-0">Form Penjualan Barang</h1>
+                    <h1 class="m-0">Form Buyback Barang</h1>
                 </div><!-- /.col -->
                 <!-- /.content-header -->
                 <div class="col-sm-6">
@@ -35,49 +35,56 @@
     <!-- Main content -->
     <section class="content">
         <div class="row">
-            <!-- <div class="col-6">
-                    <form action="/scantrans" name="scannotrans" id="scannotrans" class="scannotrans" method="post">
-                        <div class="form-group" style="margin: 1mm;">
-                            <label>Masukan No Invoce (Nota)</label>
-                            <div class="input-group input-group-sm">
-                                <input type="text" class="form-control notrans" id="notrans" onkeyup="ScannoTrans()" name="notrans" placeholder="Masukan Nomor Nota">
-                                <span class="input-group-append">
-                                    <button type="submit" id="scannotransbtn" class="btn btn-info btn-flat scannotransbtn">Ok</button>
-                                </span>
-                                <div id="validationServerUsernameFeedback" class="invalid-feedback notransmsg">
-                                </div>
-                            </div>
-                        </div>
-                    </form>
-                </div> -->
             <div class="col-6">
                 <div class="card">
-                    <div class="form-group" style="margin: 1mm;">
-                        <div class="input-group input-group-sm">
-                            <a class="btn btn-app" data-toggle="modal" data-target="#modal-nonota">
-                                <i class="fas fa-plus"></i> Tanpa Nota
-                            </a>
-                            <a class="btn btn-app" data-toggle="modal" data-target="#modal-nota">
-                                <i class="fas fa-plus"></i> Dengan Nota
-                            </a>
+                    <?php if ($databuyback['status_dokumen'] == 'Draft') : ?>
+                        <div class="form-group" style="margin: 1mm;">
+                            <div class="input-group input-group-sm">
+                                <a class="btn btn-app" data-toggle="modal" data-target="#modal-nonota">
+                                    <i class="fas fa-plus"></i> Tanpa Nota
+                                </a>
+                                <a class="btn btn-app" data-toggle="modal" data-target="#modal-nota">
+                                    <i class="fas fa-plus"></i> Dengan Nota
+                                </a>
+                            </div>
                         </div>
-                    </div>
+                    <?php else : ?>
+                        <div class="card-body p-0" id="refreshpembayaran">
+                            <table class="table table-striped">
+                                <tbody>
+                                    <tr>
+                                        <td>No Buyback</td>
+                                        <td><?= $databuyback['no_transaksi_buyback'] ?></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Tanggal Input</td>
+                                        <td><?= $databuyback['created_at'] ?></td>
+                                    </tr>
+
+
+                                </tbody>
+                            </table>
+                            <!-- /.card-body -->
+                        </div>
+                    <?php endif ?>
                 </div>
             </div>
             <div class="col-6">
                 <!-- Application buttons -->
                 <div class="card">
                     <div class="card-body" id="refreshtombol">
-                        <a type="button" onclick="Batal()" class="btn btn-app">
-                            <i class="fas fa-window-close"></i> Batal Jual
-                        </a>
+                        <?php if ($databuyback['status_dokumen'] == 'Draft') : ?>
+                            <a type="button" onclick="BatalBuyback()" class="btn btn-app">
+                                <i class="fas fa-window-close"></i> Batal Buyback
+                            </a>
+                        <?php endif; ?>
                         <?php if (isset($databuyback)) : ?>
                             <?php if ($databuyback['pembayaran'] == 'Bayar Nanti') : ?>
                                 <a class="btn btn-app bg-danger" type="button" data-toggle="modal" data-target="#modal-bayar">
                                     <i class="fas fa-money-bill"></i> Bayar
                                 </a>
                             <?php else : ?>
-                                <a class="btn btn-app bg-primary" type="button" data-toggle="modal" data-target="#modal-bayar">
+                                <a class="btn btn-app bg-primary" type="button">
                                     <i class="fas fa-check"></i> Lunas
                                 </a>
                             <?php endif ?>
@@ -152,27 +159,27 @@
 
                                     <table class="table table-striped">
                                         <tbody>
-                                            <?php if (isset($datapenjualan)) : ?>
+                                            <?php if (isset($databuyback)) : ?>
                                                 <tr>
                                                     <td>Metode Pembayaran</td>
-                                                    <td><?= $datapenjualan['pembayaran'] ?></td>
+                                                    <td><?= $databuyback['pembayaran'] ?></td>
                                                 </tr>
-                                                <?php if ($datapenjualan['nama_bank']) : ?>
+                                                <?php if ($databuyback['nama_bank']) : ?>
                                                     <tr>
                                                         <td>Nama Bank</td>
-                                                        <td><?= $datapenjualan['nama_bank'] ?></td>
+                                                        <td><?= $databuyback['nama_bank'] ?></td>
                                                     </tr>
                                                 <?php endif ?>
-                                                <?php if ($datapenjualan['tunai']) : ?>
+                                                <?php if ($databuyback['tunai']) : ?>
                                                     <tr>
                                                         <td>Tunai</td>
-                                                        <td><?= number_format($datapenjualan['tunai'], 2, ',', '.') ?></td>
+                                                        <td><?= number_format($databuyback['tunai'], 2, ',', '.') ?></td>
                                                     </tr>
                                                 <?php endif ?>
-                                                <?php if ($datapenjualan['transfer']) : ?>
+                                                <?php if ($databuyback['transfer']) : ?>
                                                     <tr>
                                                         <td>Transfer</td>
-                                                        <td><?= number_format($datapenjualan['transfer'], 2, ',', '.') ?></td>
+                                                        <td><?= number_format($databuyback['transfer'], 2, ',', '.') ?></td>
                                                     </tr>
                                                 <?php endif ?>
                                             <?php endif ?>
@@ -589,6 +596,7 @@
                                     <div class="row">
                                         <div class="col-sm-6">
                                             <div class="form-group">
+                                                <input type="hidden" name="iddate" id="iddate" value="<?= $databuyback['id_date_buyback'] ?>">
                                                 <label>Cara Pembayaran</label>
                                                 <select onchange="myPembayaran()" onclick="myPembayaran()" onclick="HarusBayar()" name="pembayaran" class="form-control pembayaran" id="pembayaran">
                                                     <option value="Transfer">Transfer</option>
@@ -722,34 +730,6 @@
                                 $('#ambilgbr').removeClass('is-invalid')
                                 $('.ambilgbrmsg').html('')
                             }
-                            // if (result.error.namabank) {
-                            //     $('#namabank').addClass('is-invalid')
-                            //     $('.namabankmsg').html(result.error.namabank)
-                            // } else {
-                            //     $('#namabank').removeClass('is-invalid')
-                            //     $('.namabank').html('')
-                            // }
-                            // if (result.error.transfer) {
-                            //     $('#transfer').addClass('is-invalid')
-                            //     $('.transfermsg').html(result.error.transfer)
-                            // } else {
-                            //     $('#transfer').removeClass('is-invalid')
-                            //     $('.transfer').html('')
-                            // }
-                            // if (result.error.tunai) {
-                            //     $('#tunai').addClass('is-invalid')
-                            //     $('.tunaimsg').html(result.error.tunai)
-                            // } else {
-                            //     $('#tunai').removeClass('is-invalid')
-                            //     $('.tunai').html('')
-                            // }
-                            // if (result.error.pembayaran) {
-                            //     $('#pembayaran').addClass('is-invalid')
-                            //     $('.pembayaranmsg').html(result.error.pembayaran)
-                            // } else {
-                            //     $('#pembayaran').removeClass('is-invalid')
-                            //     $('.pembayaran').html('')
-                            // }
                         } else {
                             $('#qty').removeClass('is-invalid')
                             $('.qtymsg').html('')
@@ -765,14 +745,6 @@
                             $('.harga_belimsg').html('')
                             $('#ambilgbr').removeClass('is-invalid')
                             $('.ambilgbrmsg').html('')
-                            // $('#namabank').removeClass('is-invalid')
-                            // $('.namabank').html('')
-                            // $('#transfer').removeClass('is-invalid')
-                            // $('.transfer').html('')
-                            // $('#tunai').removeClass('is-invalid')
-                            // $('.tunai').html('')
-                            // $('#pembayaran').removeClass('is-invalid')
-                            // $('.pembayaran').html('')
 
                             Swal.fire({
                                 icon: 'success',
@@ -783,8 +755,101 @@
                             }).then((choose) => {
                                 if (choose.isConfirmed) {
                                     $('#modal-nonota').modal('toggle');
-                                    // $("#refrestbl").load("/buybackcust #refrestbl");
                                     tampildatabuyback()
+                                }
+                            })
+                        }
+                    },
+                    error: function(xhr, ajaxOptions, thrownError) {
+                        alert(xhr.status + "\n" + xhr.responseText + "\n" + thrownError);
+                    }
+                })
+            }
+        })
+    })
+
+    $('.pembayaranform').submit(function(e) {
+        e.preventDefault()
+        let form = $('.pembayaranform')[0];
+        let data = new FormData(form)
+        Swal.fire({
+            title: 'Tambah',
+            text: "Yakin ingin Buyback Barang ini ?",
+            icon: 'info',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Tambah',
+            allowOutsideClick: false
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    type: "POST",
+                    data: data,
+                    url: "<?php echo base_url('/pembayaranform'); ?>",
+                    contentType: false,
+                    processData: false,
+                    cache: false,
+                    dataType: "json",
+                    success: function(result) {
+                        if (result.error) {
+                            if (result.error.namabank) {
+                                $('#namabank').addClass('is-invalid')
+                                $('.namabankmsg').html(result.error.namabank)
+                            } else {
+                                $('#namabank').removeClass('is-invalid')
+                                $('.namabank').html('')
+                            }
+                            if (result.error.transfer) {
+                                $('#transfer').addClass('is-invalid')
+                                $('.transfermsg').html(result.error.transfer)
+                            } else {
+                                $('#transfer').removeClass('is-invalid')
+                                $('.transfermsg').html('')
+                            }
+                            if (result.error.tunai) {
+                                $('#tunai').addClass('is-invalid')
+                                $('.tunaimsg').html(result.error.tunai)
+                            } else {
+                                $('#tunai').removeClass('is-invalid')
+                                $('.tunaimsg').html('')
+                            }
+                            if (result.error.pembayaran) {
+                                $('#pembayaran').addClass('is-invalid')
+                                $('.pembayaranmsg').html(result.error.pembayaran)
+                            } else {
+                                $('#pembayaran').removeClass('is-invalid')
+                                $('.pembayaranmsg').html('')
+                            }
+                            if (result.error.bayar) {
+                                Swal.fire({
+                                    icon: 'warning',
+                                    title: result.error.bayar,
+                                })
+                            }
+                        } else {
+                            $('#namabank').removeClass('is-invalid')
+                            $('.namabankmsg').html('')
+                            $('#transfer').removeClass('is-invalid')
+                            $('.transfermsg').html('')
+                            $('#tunai').removeClass('is-invalid')
+                            $('.tunaimsg').html('')
+                            $('#pembayaran').removeClass('is-invalid')
+                            $('.pembayaranmsg').html('')
+
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Berhasil Bayar',
+                                confirmButtonColor: '#3085d6',
+                                confirmButtonText: 'OK',
+                                allowOutsideClick: false
+                            }).then((choose) => {
+                                if (choose.isConfirmed) {
+                                    location.reload();
+                                    // $('#modal-nonota').modal('toggle');
+                                    // $("#refrestbl").load("/buybackcust #refrestbl");
+                                    // tampildatabuyback()
+                                    // console.log(result)
                                 }
                             })
                         }
@@ -839,12 +904,12 @@
         if (carabyr == 'Transfer') {
             metod1[0].innerHTML = Transfer
             nmbank[0].innerHTML = NamaBank
-            document.getElementById('transfer').value = document.getElementById('harusbayar').innerHTML.replaceAll('.', '')
+            document.getElementById('transfer').value = document.getElementById('totalhargaview').innerHTML.replaceAll('.', '')
 
         }
         if (carabyr == 'Tunai') {
             metod1[0].innerHTML = Tunai
-            document.getElementById('tunai').value = document.getElementById('harusbayar').innerHTML.replaceAll('.', '')
+            document.getElementById('tunai').value = document.getElementById('totalhargaview').innerHTML.replaceAll('.', '')
 
         }
 
@@ -852,14 +917,14 @@
             metod1[0].innerHTML = Transfer
             nmbank[0].innerHTML = NamaBank
             metod2[0].innerHTML = Tunai
-            document.getElementById('transfer').value = document.getElementById('harusbayar').innerHTML.replaceAll('.', '')
+            document.getElementById('transfer').value = document.getElementById('totalhargaview').innerHTML.replaceAll('.', '')
         }
     }
 
     function transfer__() {
         var tunai = document.getElementById('tunai').value
         var trnsfr = document.getElementById('transfer').value
-        var harga = document.getElementById('harusbayar').innerHTML.replaceAll('.', '')
+        var harga = document.getElementById('totalhargaview').innerHTML.replaceAll('.', '')
         hasiltrnsfr = harga - trnsfr
         // Math.abs(hasiltrnsfr)
         // document.getElementById('tunai').value = hasiltunai
@@ -872,7 +937,7 @@
 
     function tunai__() {
         var tunai = document.getElementById('tunai').value
-        var harga = document.getElementById('harusbayar').innerHTML.replaceAll('.', '')
+        var harga = document.getElementById('totalhargaview').innerHTML.replaceAll('.', '')
         var trnsfr = document.getElementById('transfer').value
         hasiltrnsfr = harga - tunai
         // Math.abs(hasiltrnsfr)
@@ -891,33 +956,10 @@
         return rounded
     }
 
-    function tampildata() {
-        $.ajax({
-            type: "GET",
-            dataType: "json",
-            url: "<?php echo base_url('tampilbuyback'); ?>",
-            success: function(result) {
-                // var totalharga = parseFloat(result.totalbersih.total_harga) + parseFloat(result.totalongkos.ongkos)
-                // $('#datajual').html(result.data)
-                // $('#totalbersih01').html(totalharga.toString().replace(/\B(?=(\d{3})+(?!\d))/g, "."))
-                // $('#totalberatbersihhtml01').html(pembulatankoma(result.totalberatbersih.berat_murni))
-                // $('#totalberatkotorhtml01').html(pembulatankoma(result.totalberatkotor.berat))
-                // $('#totalongkoshtml01').html(pembulatankoma(result.totalongkos.ongkos).toString().replace(/\B(?=(\d{3})+(?!\d))/g, "."))
-
-
-            },
-            error: function(xhr, ajaxOptions, thrownError) {
-                alert(xhr.status + "\n" + xhr.responseText + "\n" + thrownError);
-            }
-        })
-    }
-
-
-
-    function Batal() {
+    function BatalBuyback() {
         Swal.fire({
-            title: 'Batal Penjualan ',
-            text: "Apakah Ingin Batal Penjualan ?",
+            title: 'Batal Buyback ',
+            text: "Apakah Ingin Batal Buyback ?",
             icon: 'info',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
@@ -925,7 +967,7 @@
             confirmButtonText: 'Batal',
         }).then((result) => {
             if (result.isConfirmed) {
-                window.location.href = "<?php echo base_url('batalpenjualan'); ?>"
+                window.location.href = "<?php echo base_url('batalbuyback') . '/' . $databuyback['id_date_buyback']; ?>"
             }
         })
 
@@ -980,6 +1022,9 @@
                 $('#databuyback').html(result.data)
                 $('#totalhargaview').html(result.totalharga.toString().replace(/\B(?=(\d{3})+(?!\d))/g, "."))
                 $('#totalberatview').html(result.totalberat.toString().replace(/\B(?=(\d{3})+(?!\d))/g, "."))
+                $('#harusbayar').html(result.totalharga.toString().replace(/\B(?=(\d{3})+(?!\d))/g, "."))
+                $('#brtmurni').html(result.totalberat.toString().replace(/\B(?=(\d{3})+(?!\d))/g, "."))
+
                 // var totalharga = parseFloat(result.totalbersih.total_harga) + parseFloat(result.totalongkos.ongkos)
                 // $('#datajual').html(result.data)
                 // $('#totalbersih01').html(totalharga.toString().replace(/\B(?=(\d{3})+(?!\d))/g, "."))
@@ -1019,6 +1064,7 @@
                     cache: false,
                     dataType: "json",
                     success: function(result) {
+                        console.log(result)
                         if (result.error) {
                             console.log(result)
                             if (result.error.kurang) {
@@ -1102,16 +1148,25 @@
                 id: id,
             },
             success: function(result) {
-                // console.log(result)
+                console.log(result.data.kode.substr(0, 1))
                 if (result.data.kode.substr(0, 1) != 3) {
                     $('#qty1').attr('readonly', 'readonly')
-                    console.log(result.data.kode)
+                    $('#qty1').val(result.data.saldo)
+                    $('#berat1').val(result.data.berat)
+                }
+                if (result.data.kode.substr(0, 1) == 4) {
+                    $('#qty1').attr('readonly', 'readonly')
+                    $('#qty1').val(result.data.qty)
+                    $('#berat1').val(result.data.saldo)
+                    console.log('asdddddddd')
+
                 } else {
                     $('#qty1').removeAttr('readonly')
+                    $('#qty1').val(result.data.saldo)
+                    $('#berat1').val(result.data.berat)
                 }
                 $('#modal-edit').modal('show');
-                $('#qty1').val(result.data.saldo)
-                $('#berat1').val(result.data.berat)
+                // $('#berat1').val(result.data.berat)
                 $('#nilai_tukar1').val(result.data.nilai_tukar)
                 $('#harga_beli1').val(result.data.harga_beli)
                 $('#id').val(result.data.id_detail_penjualan)
@@ -1128,39 +1183,6 @@
 
 
     }
-
-    $(document).ready(function() {
-        // $("#refreshtombol").load("/draftpenjualan/" + document.getElementById('dateid').value + " #refreshtombol");
-        tampildata()
-        tampildatabuyback()
-        $('.insertcust').submit(function(e) {
-            e.preventDefault()
-            let form = $('.insertcust')[0];
-            let data = new FormData(form)
-            $.ajax({
-                type: "POST",
-                data: data,
-                url: "<?php echo base_url('insertcustomer'); ?>",
-                dataType: "json",
-                contentType: false,
-                processData: false,
-                cache: false,
-                beforeSend: function() {
-                    $('.btntambah').html('<i class="fa fa-spin fa-spinner">')
-                },
-                complete: function() {
-                    $('.btntambah').html('Tambah')
-                },
-                success: function(result) {
-                    tampilcustomer()
-                    $('#modal-lg').modal('toggle');
-                },
-                error: function(xhr, ajaxOptions, thrownError) {
-                    alert(xhr.status + "\n" + xhr.responseText + "\n" + thrownError);
-                }
-            })
-        })
-    })
 
     function HarusBayar() {
         var kel = parseFloat(document.getElementById('kel').value)
@@ -1179,70 +1201,6 @@
         totalharga.innerHTML = harusbyr.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
         console.log(harusbyr)
 
-    }
-
-    function myPembayaran() {
-        console.log('masuk')
-        const carabyr = document.getElementById('pembayaran').value
-        const metod1 = $('.metodebayar')
-        const nmbank = $('.namabankhtml')
-        const metod2 = document.getElementsByClassName('metodebayar2')
-        metod1[0].innerHTML = ''
-        nmbank[0].innerHTML = ''
-        metod2[0].innerHTML = ''
-
-        var NamaBank = '<label>Nama Bank Debit/CC</label><input type="text" id="namabank" name="namabank" class="form-control" placeholder="Masukan Nama Bank"><div id="validationServerUsernameFeedback" class="invalid-feedback namabankmsg"></div>'
-        var Transfer = '<label>Transfer</label><input type="number" onkeyup="transfer__()" min="0" id="transfer" name="transfer" class="form-control" placeholder="Masukan transfer"><div id="validationServerUsernameFeedback" class="invalid-feedback transfermsg"></div>'
-        var Tunai = '<label>Tunai</label><input type="number" onkeyup="tunai__()" min="0" id="tunai" name="tunai" class="form-control" placeholder="Masukan tunai"><div id="validationServerUsernameFeedback" class="invalid-feedback tunaimsg"></div>'
-        console.log(carabyr)
-
-        if (carabyr == 'Transfer') {
-            metod1[0].innerHTML = Transfer
-            nmbank[0].innerHTML = NamaBank
-            document.getElementById('transfer').value = document.getElementById('harusbayar').innerHTML.replaceAll('.', '')
-
-        }
-        if (carabyr == 'Tunai') {
-            metod1[0].innerHTML = Tunai
-            document.getElementById('tunai').value = document.getElementById('harusbayar').innerHTML.replaceAll('.', '')
-
-        }
-
-        if (carabyr == 'Tunai&Transfer') {
-            metod1[0].innerHTML = Transfer
-            nmbank[0].innerHTML = NamaBank
-            metod2[0].innerHTML = Tunai
-            document.getElementById('transfer').value = document.getElementById('harusbayar').innerHTML.replaceAll('.', '')
-
-        }
-    }
-
-    function transfer__() {
-        var tunai = document.getElementById('tunai').value
-        var trnsfr = document.getElementById('transfer').value
-        var harga = document.getElementById('harusbayar').innerHTML.replaceAll('.', '')
-        hasiltrnsfr = harga - trnsfr
-        // Math.abs(hasiltrnsfr)
-        // document.getElementById('tunai').value = hasiltunai
-        if (hasiltrnsfr < 0) {
-            document.getElementById('tunai').value = 0
-        } else {
-            document.getElementById('tunai').value = Math.abs(hasiltrnsfr)
-        }
-    }
-
-    function tunai__() {
-        var tunai = document.getElementById('tunai').value
-        var harga = document.getElementById('harusbayar').innerHTML.replaceAll('.', '')
-        var trnsfr = document.getElementById('transfer').value
-        hasiltrnsfr = harga - tunai
-        // Math.abs(hasiltrnsfr)
-        // document.getElementById('tunai').value = hasiltunai
-        if (hasiltrnsfr < 0) {
-            document.getElementById('transfer').value = 0
-        } else {
-            document.getElementById('transfer').value = Math.abs(hasiltrnsfr)
-        }
     }
 
     Webcam.set({
@@ -1277,6 +1235,7 @@
         Webcam.attach('#my_camera');
     }
     $(document).ready(function() {
+        tampildatabuyback()
         $(".modal").on("hidden.bs.modal", function() {
             Webcam.reset('#my_camera')
         });

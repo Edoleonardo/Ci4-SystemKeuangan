@@ -69,7 +69,7 @@
                                                     <?php if ($row['status_dokumen'] == 'Draft') { ?>
                                                         <a type="button" href="draftbuyback/<?= $row['id_date_buyback'] ?>" class="btn btn-block btn-outline-danger btn-sm"><?= $row['status_dokumen'] ?></a>
                                                     <?php } else { ?>
-                                                        <a type="button" href="/detailbuyback/<?= $row['id_date_buyback'] ?>" class="btn btn-block btn-outline-info btn-sm">Detail</a>
+                                                        <a type="button" href="/draftbuyback/<?= $row['id_date_buyback'] ?>" class="btn btn-block btn-outline-info btn-sm">Detail</a>
                                                     <?php } ?>
                                                 </td>
                                             </tr>
