@@ -193,204 +193,9 @@
     </section>
     <!-- /.content -->
     <!-- /.content-wrapper -->
-    <div class="modal fade" id="modal-edit">
-        <div class="modal-dialog modal-xl">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title">Update Data</h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <form action="/tambahbuyback" id="tambahbuyback" class="tambahbuyback" name="tambahbuyback">
-                        <?= csrf_field(); ?>
-                        <div class="row">
-                            <div class="col-sm-3">
-                                <!-- text input -->
-                                <div class="form-group">
-                                    <label>Berat</label>
-                                    <input type="number" step="0.01" id="berat1" onkeyup="HarusBayar()" name="berat1" class="form-control" placeholder="Masukan Berat Bersih">
-                                    <div id="validationServerUsernameFeedback" class="invalid-feedback berat1msg">
-                                    </div>
-                                    <input type="hidden" name="id" id="id" value="">
-                                </div>
-                            </div>
-                            <div class="col-sm-3">
-                                <!-- text input -->
-                                <div class="form-group">
-                                    <label>Nilai Tukar</label>
-                                    <input type="number" id="nilai_tukar1" onkeyup="HarusBayar()" name="nilai_tukar1" class="form-control" placeholder="Masukan Nilai Tukar">
-                                    <div id="validationServerUsernameFeedback" class="invalid-feedback nilai_tukar1msg">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-sm-3">
-                                <!-- text input -->
-                                <div class="form-group">
-                                    <label>Harga Beli</label>
-                                    <input type="number" name="harga_beli1" onkeyup="HarusBayar()" id="harga_beli1" class="form-control harga_beli1" placeholder="Masukan Harga Beli">
-                                    <div id="validationServerUsernameFeedback" class="invalid-feedback harga_beli1msg">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-sm-3">
-                                <!-- text input -->
-                                <div class="form-group">
-                                    <label>Status Barang</label>
-                                    <select name="status_proses" class="form-control" id="status" name="status">
-                                        <option value="Cuci">Cuci</option>
-                                        <option value="Retur">Retur Sales</option>
-                                        <option value="Lebur">Lebur</option>
-                                        <option value="Jual">Jual</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-sm-12">
-                                <div class="card">
-                                    <!-- ./card-header -->
-                                    <div class="p-0">
-                                        <!-- text input -->
-                                        <div class="row">
-                                            <div class="col-sm-6">
-                                                <div class="form-group">
-                                                    <label>Cara Pembayaran</label>
-                                                    <select onchange="myPembayaran()" onclick="myPembayaran()" name="pembayaran" class="form-control pembayaran" id="pembayaran">
-                                                        <option value="Transfer">Transfer</option>
-                                                        <option value="Tunai">Tunai</option>
-                                                        <option value="Tunai&Transfer">Tunai & Transfer</option>
-                                                    </select>
-                                                    <div id="validationServerUsernameFeedback" class="invalid-feedback pembayaranmsg">
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-sm-6">
-                                                <div class="form-group metodebayar">
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-sm-6">
-                                                <div class="form-group namabankhtml">
-                                                </div>
-                                            </div>
-                                            <div class="col-sm-6">
-                                                <div class="form-group metodebayar2">
-                                                    <!-- <label>Debit/CC</label> -->
-                                                    <!-- <input type="number" min="0" id="debitcc" name="debitcc" class="form-control" placeholder="Masukan Debit"> -->
-                                                </div>
-                                            </div>
-                                            <div class="col-sm-6">
-                                                <div class="form-group chargehtml">
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <!-- /.card-body -->
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-sm-6">
-                                <!-- text input -->
-                                <table class="table table-striped">
-                                    <tbody>
-                                        <tr>
-                                            <td>Berat Murni</td>
-                                            <td id="brtmurni"></td>
-                                        </tr>
-                                        <tr>
-                                            <td>Harus Dibayar</td>
-                                            <td id="harusbayar"></td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                </div>
-                <div class="modal-footer justify-content-between">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary btnedit">Tambah</button>
-                </div>
-                </form>
-            </div>
-            <!-- /.modal-content -->
-        </div>
-        <!-- /.modal-dialog -->
-    </div>
-    <div class="modal fade" id="modal-nota">
-        <div class="modal-dialog modal-xl">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title">Data Buyback Nota</h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div class="row">
-                        <div class="col-6">
-                            <form action="/scantrans" name="scannotrans" id="scannotrans" class="scannotrans" method="post">
-                                <div class="form-group" style="margin: 1mm;">
-                                    <label>Masukan No Invoce (Nota)</label>
-                                    <div class="input-group input-group-sm">
-                                        <input type="text" class="form-control notrans" id="notrans" onkeyup="ScannoTrans()" name="notrans" placeholder="Masukan Nomor Nota">
-                                        <span class="input-group-append">
-                                            <button type="submit" id="scannotransbtn" class="btn btn-info btn-flat scannotransbtn">Ok</button>
-                                        </span>
-                                        <div id="validationServerUsernameFeedback" class="invalid-feedback notransmsg">
-                                        </div>
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                    <br>
-                    <div class="row">
-                        <div class="col-12">
-                            <div class="card">
-                                <!-- /.card-header -->
-                                <div class="card-body table-responsive p-0">
-                                    <table class="table table-hover text-nowrap">
-                                        <thead>
-                                            <tr>
-                                                <th>Gambar</th>
-                                                <th>Kode</th>
-                                                <th>Qty</th>
-                                                <th>Harga Beli</th>
-                                                <th>Keterangan</th>
-                                                <th>Berat</th>
-                                                <th>Kadar</th>
-                                                <th>Nilai Tukar</th>
-                                                <th>Merek</th>
-                                                <th>Total Harga</th>
-                                                <th>Delete</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody id="datamodalbuyback">
-                                        </tbody>
-                                    </table>
-                                </div>
-                                <!-- /.card-body -->
-                            </div>
-                            <!-- /.card -->
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer justify-content-between">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    <!-- <button type="submit" class="btn btn-primary btnedit">Tambah</button> -->
-                </div>
-                </form>
-            </div>
-            <!-- /.modal-content -->
-        </div>
-        <!-- /.modal-dialog -->
-    </div>
-    <!-- /.modal-dialog -->
 </div>
+
+
 <!-- Main Footer -->
 <!-- Control Sidebar -->
 <aside class="control-sidebar control-sidebar-dark">
@@ -400,6 +205,165 @@
 <footer class="main-footer">
 
 </footer>
+<div class="modal fade" id="modal-nota">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Data Buyback Nota</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-6">
+                        <form action="/scantrans" name="scannotrans" id="scannotrans" class="scannotrans" method="post">
+                            <div class="form-group" style="margin: 1mm;">
+                                <label>Masukan No Invoce (Nota)</label>
+                                <div class="input-group input-group-sm">
+                                    <input type="text" class="form-control notrans" id="notrans" onkeyup="ScannoTrans()" name="notrans" placeholder="Masukan Nomor Nota">
+                                    <span class="input-group-append">
+                                        <button type="submit" id="scannotransbtn" class="btn btn-info btn-flat scannotransbtn">Ok</button>
+                                    </span>
+                                    <div id="validationServerUsernameFeedback" class="invalid-feedback notransmsg">
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <br>
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            <!-- /.card-header -->
+                            <div class="card-body table-responsive p-0">
+                                <table class="table table-hover text-nowrap">
+                                    <thead>
+                                        <tr>
+                                            <th>Gambar</th>
+                                            <th>Kode</th>
+                                            <th>Qty</th>
+                                            <th>Harga Beli</th>
+                                            <th>Keterangan</th>
+                                            <th>Berat</th>
+                                            <th>Kadar</th>
+                                            <th>Nilai Tukar</th>
+                                            <th>Merek</th>
+                                            <th>Total Harga</th>
+                                            <th>Delete</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="datamodalbuyback">
+                                    </tbody>
+                                </table>
+                            </div>
+                            <!-- /.card-body -->
+                        </div>
+                        <!-- /.card -->
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <!-- <button type="submit" class="btn btn-primary btnedit">Tambah</button> -->
+            </div>
+            </form>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<div class="modal fade" id="modal-edit">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Update Data</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form action="/tambahbuyback" id="tambahbuyback" class="tambahbuyback" name="tambahbuyback">
+                    <?= csrf_field(); ?>
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <!-- text input -->
+                            <div class="form-group">
+                                <label>Qty</label>
+                                <input type="number" id="qty1" onkeyup="HarusBayar()" name="qty1" class="form-control" placeholder="Masukan QTY">
+                                <div id="validationServerUsernameFeedback" class="invalid-feedback qty1msg">
+                                </div>
+                                <input type="hidden" name="id" id="id" value="">
+                                <input type="hidden" name="kel" id="kel" value="">
+                                <input type="hidden" name="iddate" id="iddate" value="<?= $databuyback['id_date_buyback'] ?>">
+                            </div>
+                        </div>
+                        <div class="col-sm-3">
+                            <!-- text input -->
+                            <div class="form-group">
+                                <label>Berat</label>
+                                <input type="number" step="0.01" id="berat1" onkeyup="HarusBayar()" name="berat1" class="form-control" placeholder="Masukan Berat Bersih">
+                                <div id="validationServerUsernameFeedback" class="invalid-feedback berat1msg">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-3">
+                            <!-- text input -->
+                            <div class="form-group">
+                                <label>Nilai Tukar</label>
+                                <input type="number" id="nilai_tukar1" onkeyup="HarusBayar()" name="nilai_tukar1" class="form-control" placeholder="Masukan Nilai Tukar">
+                                <div id="validationServerUsernameFeedback" class="invalid-feedback nilai_tukar1msg">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-3">
+                            <!-- text input -->
+                            <div class="form-group">
+                                <label>Harga Beli</label>
+                                <input type="number" name="harga_beli1" onkeyup="HarusBayar()" id="harga_beli1" class="form-control harga_beli1" placeholder="Masukan Harga Beli">
+                                <div id="validationServerUsernameFeedback" class="invalid-feedback harga_beli1msg">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-3">
+                            <!-- text input -->
+                            <div class="form-group">
+                                <label>Status Barang</label>
+                                <select name="status_proses" class="form-control" id="status" name="status">
+                                    <option value="Cuci">Cuci</option>
+                                    <option value="Retur">Retur Sales</option>
+                                    <option value="Lebur">Lebur</option>
+                                    <option value="Jual">Jual</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <!-- text input -->
+                            <table class="table table-striped">
+                                <tbody>
+                                    <tr>
+                                        <td>Total Harga</td>
+                                        <td id="totalhargaedit"></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-primary btnedit">Tambah</button>
+            </div>
+            </form>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<!-- /.modal-dialog -->
 <div class="modal fade" id="modal-nonota">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
@@ -1065,52 +1029,31 @@
                             }
                             if (result.error.nilai_tukar1) {
                                 $('#nilai_tukar1').addClass('is-invalid')
-                                $('.nilai_tukar1msg').html(result.error.nilai_tukar)
+                                $('.nilai_tukar1msg').html(result.error.nilai_tukar1)
                             } else {
                                 $('#nilai_tukar1').removeClass('is-invalid')
                                 $('.nilai_tukar1msg').html('')
                             }
-                            if (result.error.berat) {
+                            if (result.error.berat1) {
                                 $('#berat1').addClass('is-invalid')
-                                $('.berat1msg').html(result.error.berat)
+                                $('.berat1msg').html(result.error.berat1)
                             } else {
                                 $('#berat1').removeClass('is-invalid')
                                 $('.berat1msg').html('')
                             }
-                            if (result.error.harga_beli) {
+                            if (result.error.harga_beli1) {
                                 $('#harga_beli1').addClass('is-invalid')
-                                $('.harga_beli1msg').html(result.error.harga_beli)
+                                $('.harga_beli1msg').html(result.error.harga_beli1)
                             } else {
                                 $('#harga_beli1').removeClass('is-invalid')
                                 $('.harga_beli1msg').html('')
                             }
-                            if (result.error.namabank) {
-                                $('#namabank').addClass('is-invalid')
-                                $('.namabankmsg').html(result.error.namabank)
+                            if (result.error.qty1) {
+                                $('#qty1').addClass('is-invalid')
+                                $('.qty1msg').html(result.error.qty1)
                             } else {
-                                $('#namabank').removeClass('is-invalid')
-                                $('.namabankmsg').html('')
-                            }
-                            if (result.error.transfer) {
-                                $('#transfer').addClass('is-invalid')
-                                $('.transfermsg').html(result.error.transfer)
-                            } else {
-                                $('#transfer').removeClass('is-invalid')
-                                $('.transfermsg').html('')
-                            }
-                            if (result.error.tunai) {
-                                $('#tunai').addClass('is-invalid')
-                                $('.tunaimsg').html(result.error.tunai)
-                            } else {
-                                $('#tunai').removeClass('is-invalid')
-                                $('.tunaimsg').html('')
-                            }
-                            if (result.error.pembayaran) {
-                                $('#pembayaran').addClass('is-invalid')
-                                $('.pembayaranmsg').html(result.error.pembayaran)
-                            } else {
-                                $('#pembayaran').removeClass('is-invalid')
-                                $('.pembayaranmsg').html('')
+                                $('#qty1').removeClass('is-invalid')
+                                $('.qty1msg').html('')
                             }
                         } else {
                             $('#nilai_tukar1').removeClass('is-invalid')
@@ -1121,15 +1064,10 @@
                             $('.berat1msg').html('')
                             $('#harga_beli1').removeClass('is-invalid')
                             $('.harga_beli1msg').html('')
-                            $('#namabank').removeClass('is-invalid')
-                            $('.namabankmsg').html('')
-                            $('#transfer').removeClass('is-invalid')
-                            $('.transfermsg').html('')
-                            $('#tunai').removeClass('is-invalid')
-                            $('.tunaimsg').html('')
-                            $('#pembayaran').removeClass('is-invalid')
-                            $('.pembayaranmsg').html('')
+                            $('#qty1').removeClass('is-invalid')
+                            $('.qty1msg').html('')
                             console.log(result)
+
                             Swal.fire({
                                 icon: 'success',
                                 title: 'Berhasil Tambah',
@@ -1138,8 +1076,9 @@
                                 allowOutsideClick: false
                             }).then((choose) => {
                                 if (choose.isConfirmed) {
-                                    // $('#modal-edit').modal('toggle');
-                                    // window.location.href = '/buybackcust'
+                                    $('#modal-edit').modal('toggle');
+                                    $('#modal-nota').modal('toggle');
+                                    tampildatabuyback()
                                 }
                             })
                         }
@@ -1164,11 +1103,19 @@
             },
             success: function(result) {
                 // console.log(result)
+                if (result.data.kode.substr(0, 1) != 3) {
+                    $('#qty1').attr('readonly', 'readonly')
+                    console.log(result.data.kode)
+                } else {
+                    $('#qty1').removeAttr('readonly')
+                }
                 $('#modal-edit').modal('show');
-                $('#berat').val(result.data.berat)
-                $('#nilai_tukar').val(result.data.nilai_tukar)
-                $('#harga_beli').val(result.data.harga_beli)
+                $('#qty1').val(result.data.qty_akhir)
+                $('#berat1').val(result.data.berat)
+                $('#nilai_tukar1').val(result.data.nilai_tukar)
+                $('#harga_beli1').val(result.data.harga_beli)
                 $('#id').val(result.data.id_detail_penjualan)
+                $('#kel').val(result.data.kode.substr(0, 1))
                 console.log($('#id').val())
                 HarusBayar()
 
@@ -1215,19 +1162,24 @@
         })
     })
 
-    // function HarusBayar() {
-    //     var hargabeli = parseFloat(document.getElementById('harga_beli').value)
-    //     var nilaitukar = parseFloat(document.getElementById('nilai_tukar').value)
-    //     var berat = parseFloat(document.getElementById('berat').value)
-    //     const hrsbyr = document.getElementById('harusbayar')
-    //     const brtmurni = document.getElementById('brtmurni')
-    //     beratmurni = berat * nilaitukar / 100
-    //     harusbyr = hargabeli * beratmurni
-    //     brtmurni.innerHTML = beratmurni.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
-    //     hrsbyr.innerHTML = harusbyr.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
-    //     console.log(harusbyr)
+    function HarusBayar() {
+        var kel = parseFloat(document.getElementById('kel').value)
+        var qty = parseFloat(document.getElementById('qty1').value)
+        var hargabeli = parseFloat(document.getElementById('harga_beli1').value)
+        var nilaitukar = parseFloat(document.getElementById('nilai_tukar1').value)
+        var berat = parseFloat(document.getElementById('berat1').value)
+        const totalharga = document.getElementById('totalhargaedit')
+        if (kel == 3) {
+            harusbyr = berat * qty * hargabeli
+        } else {
+            beratmurni = berat * nilaitukar / 100
+            harusbyr = hargabeli * beratmurni
+        }
+        // brtmurni.innerHTML = beratmurni.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
+        totalharga.innerHTML = harusbyr.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
+        console.log(harusbyr)
 
-    // }
+    }
 
     function myPembayaran() {
         console.log('masuk')

@@ -145,11 +145,11 @@
                                     <tbody>
                                         <tr>
                                             <td>Total Berat</td>
-                                            <td><?= $totalberat['berat'] ?></td>
+                                            <td><?= number_format($totalberat['berat'], 0, ',', '.') ?></td>
                                         </tr>
                                         <tr>
                                             <td>Total Harga</td>
-                                            <td><?= $datapenjualan['total_harga'] ?></td>
+                                            <td><?= number_format($datapenjualan['total_harga'], 0, ',', '.') ?></td>
                                         </tr>
                                     </tbody>
                                 </table>

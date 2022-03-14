@@ -42,6 +42,12 @@ class ModelDetailPenjualan extends Model
         $data = $db->query("SELECT * FROM `tbl_detail_penjualan` INNER JOIN tbl_penjualan on tbl_penjualan.id_date_penjualan = tbl_detail_penjualan.id_date_penjualan where status_dokumen = 'Draft' AND kode = " . $kode . ";");
         return $data->getResult('array');
     }
+    public function getDetailDeleteJual($notrans, $kode)
+    {
+        $db = db_connect();
+        $data = $db->query("SELECT * FROM `tbl_detail_penjualan` INNER JOIN tbl_penjualan on tbl_penjualan.id_date_penjualan = tbl_detail_penjualan.id_date_penjualan where status_dokumen = 'Draft' AND kode = " . $kode . ";");
+        return $data->getResult('array');
+    }
     public function SumBeratKotorDetailjual($id)
     {
         $this->selectSum('berat');
