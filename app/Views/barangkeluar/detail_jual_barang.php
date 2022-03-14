@@ -145,7 +145,7 @@
                                     <tbody>
                                         <tr>
                                             <td>Total Berat</td>
-                                            <td><?= number_format($totalberat['berat'], 0, ',', '.') ?></td>
+                                            <td><?= number_format($totalberat, 0, ',', '.') ?></td>
                                         </tr>
                                         <tr>
                                             <td>Total Harga</td>
@@ -223,44 +223,7 @@
     <!-- /.content -->
 </div>
 <!-- /.content-wrapper -->
-<div class="modal fade" id="modal-lg">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title">Tambah Data Customer</h4>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <form action="/insertcustomer" name="insertcust" id="insertcust" class="insertcust" method="post">
-                <div class="row" style="margin: 10px;">
-                    <div class="col-12">
-                        <div class="form-group">
-                            <label>Nama Customer</label>
-                            <input type="text" id="nama_cust" name="nama_cust" class="form-control" placeholder="Masukan Nomor Nota Supplier">
-                        </div>
-                        <div class="form-group">
-                            <label>Nomor Hp</label>
-                            <input type="number" id="nohp" name="nohp" class="form-control" placeholder="Masukan Nomor Nota Supplier">
-                        </div>
-                        <div class="form-group">
-                            <label>Alamat</label>
-                            <input type="text" id="alamat" name="alamat" class="form-control" placeholder="Masukan Nomor Nota Supplier">
-                        </div>
-                        <div class="form-group">
-                            <label>Kota</label>
-                            <input type="text" id="kota" name="kota" class="form-control" placeholder="Masukan Nomor Nota Supplier">
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer justify-content-between">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Tutup</button>
-                    <button type="submit" class="btn btn-primary btntambah">Tambah</button>
-            </form>
-        </div>
-    </div>
-    <!-- /.modal-content -->
-</div>
+
 <!-- /.modal-dialog -->
 </div>
 <!-- Control Sidebar -->

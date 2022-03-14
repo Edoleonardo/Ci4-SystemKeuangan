@@ -184,7 +184,7 @@ class Barangkeluar extends BaseController
                             'nama_img' => $databarang['gambar'],
                             'kode' =>  $databarang['barcode'],
                             'qty' => $databarang['qty'],
-                            'qty_akhir' => $databarang['qty'],
+                            'saldo' => $databarang['qty'],
                             'jenis' =>  $databarang['jenis'],
                             'model' =>  $databarang['model'],
                             'keterangan' =>  $databarang['keterangan'],
@@ -249,8 +249,13 @@ class Barangkeluar extends BaseController
             $data = $this->modeldetailpenjualan->getDetailoneJual($id);
             $databarang = $this->datastock->getBarangkode($data['kode']);
             $datakartu = $this->modelkartustock->getKartuStockkode($data['kode']);
-            if ($this->request->getVar('qty') > 0 && $this->request->getVar('hargabaru') > 0) {
-                if ($this->request->getVar('qty') <= $datakartu['saldo_akhir'] || substr($data['kode'], 0, 1) != 3) {
+            if (substr($data['kode'], 0, 1) == 3) {
+                $check = $this->request->getVar('qty');
+            } elseif (substr($data['kode'], 0, 1) == 4) {
+                $check = $this->request->getVar('berat');
+            }
+            if ($this->request->getVar('qty') > 0 && $this->request->getVar('hargabaru') > 0 && $this->request->getVar('berat') > 0) {
+                if ($check <= $datakartu['saldo_akhir'] || substr($data['kode'], 0, 1) != 3) {
                     if (substr($data['kode'], 0, 1) == 3) {
                         $selisihqty = $datakartu['saldo_akhir'] - $this->request->getVar('qty');
                         $totalharga = $this->request->getVar('hargabaru') * $data['berat'] * $this->request->getVar('qty');
@@ -258,14 +263,31 @@ class Barangkeluar extends BaseController
                             'id_stock' => $databarang['id_stock'],
                             'qty' => $selisihqty
                         ]);
+                        $saldo = $this->request->getVar('qty');
+                    } elseif (substr($data['kode'], 0, 1) == 4) {
+                        $selisihberat = $datakartu['saldo_akhir'] - $this->request->getVar('berat');
+                        $totalharga = $this->request->getVar('hargabaru') * $this->request->getVar('berat');
+                        if ($selisihberat == 0) {
+                            $qty = 0;
+                        } else {
+                            $qty = 1;
+                        }
+                        $this->datastock->save([
+                            'id_stock' => $databarang['id_stock'],
+                            'berat' => $selisihberat,
+                            'qty' => $qty
+                        ]);
+                        $saldo = $this->request->getVar('berat');
                     } else {
                         $totalharga = $this->request->getVar('hargabaru') * $data['berat'];
+                        $saldo = $this->request->getVar('qty');
                     }
                     $this->modeldetailpenjualan->save([
                         'id_detail_penjualan' =>  $data['id_detail_penjualan'],
                         'harga_beli' => $this->request->getVar('hargabaru'),
+                        'berat' => $this->request->getVar('berat'),
                         'qty' => $this->request->getVar('qty'),
-                        'qty_akhir' => $this->request->getVar('qty'),
+                        'saldo' => $saldo,
                         'total_harga' => $totalharga
                     ]);
                     $this->penjualan->save([
@@ -273,7 +295,7 @@ class Barangkeluar extends BaseController
                         'total_harga' => $this->modeldetailpenjualan->SumDataOngkosJual($this->request->getVar('iddate'))['ongkos'] + $this->modeldetailpenjualan->SumDataDetailJual($this->request->getVar('iddate'))['total_harga'],
                     ]);
 
-                    $msg = 'Sukses';
+                    $msg = 'sukses';
                 } else {
                     $msg = 'habis';
                 }
@@ -303,10 +325,18 @@ class Barangkeluar extends BaseController
                 'id_penjualan' =>  $datapenjualan['id_penjualan'],
                 'total_harga' =>  $totalharga,
             ]);
-            $this->datastock->save([
-                'id_stock' => $databarang['id_stock'],
-                'qty' => $datakartu['saldo_akhir']
-            ]);
+            if (substr($data['kode'], 0, 1) == 4) {
+                $this->datastock->save([
+                    'id_stock' => $databarang['id_stock'],
+                    'berat' => $datakartu['saldo_akhir'],
+                    'qty' => '1'
+                ]);
+            } else {
+                $this->datastock->save([
+                    'id_stock' => $databarang['id_stock'],
+                    'qty' => $datakartu['saldo_akhir']
+                ]);
+            }
             $this->modeldetailpenjualan->delete($id);
 
             $msg = [
@@ -333,12 +363,20 @@ class Barangkeluar extends BaseController
     }
     public function DetailDataPenjualan($id)
     {
-        $session = session();
-        $session->set('date_id_penjualan', $id);
+
         $data = $this->penjualan->getDataPenjualan($id);
+        $databerat = $this->modeldetailpenjualan->getDetailAllJual($id);
+        $totalberat = 0;
+        foreach ($databerat as $row) {
+            if (substr($row['kode'], 0, 1) == 3) {
+                $totalberat = $totalberat + ($row['qty'] * $row['berat']);
+            } else {
+                $totalberat = $totalberat + $row['berat'];
+            }
+        }
         $datapenjualan = [
             'datapenjualan' => $data,
-            'totalberat' => $this->modeldetailpenjualan->SumBeratDetailJual($data['id_date_penjualan']),
+            'totalberat' => $totalberat,
             'datacust' => $this->datacust->getDataCustomerone($data['nohp_cust']),
             'tampildata' => $this->modeldetailpenjualan->getDetailAllJual($id),
         ];
@@ -751,7 +789,7 @@ class Barangkeluar extends BaseController
                             'status' => 'Keluar',
                             'no_faktur' => $datapenjualan['no_transaksi_jual'],
                             'tgl_faktur' => $datapenjualan['created_at'],
-                            'nama_customer' => $datapenjualan['nohp_cust'],
+                            'nama_customer' => $this->request->getVar('inputcustomer'),
                             'saldo' => $saldoakhir,
                             'masuk' => 0,
                             'keluar' => (substr($row['kode'], 0, 1) == 4) ? $row['berat'] : $row['qty'],

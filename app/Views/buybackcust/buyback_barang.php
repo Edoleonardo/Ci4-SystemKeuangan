@@ -1110,7 +1110,7 @@
                     $('#qty1').removeAttr('readonly')
                 }
                 $('#modal-edit').modal('show');
-                $('#qty1').val(result.data.qty_akhir)
+                $('#qty1').val(result.data.saldo)
                 $('#berat1').val(result.data.berat)
                 $('#nilai_tukar1').val(result.data.nilai_tukar)
                 $('#harga_beli1').val(result.data.harga_beli)

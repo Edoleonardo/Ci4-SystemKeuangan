@@ -35,14 +35,14 @@
       <div class="row">
         <div class="col-12">
           <div class="card">
-            <div class="card-header ">
+            <!-- <div class="card-header ">
               <button class="btn btn-app" data-toggle="modal" data-target="#modal-xl">
                 <i class="fas fa-plus"></i> Barang Baru
               </button>
               <a class="btn btn-app">
                 <i class="fas fa-print"></i> Print Barcode
               </a>
-            </div>
+            </div> -->
             <!-- /.card-header -->
             <div class="card-body table">
               <table id="example1" class="table table-bordered table-striped tableasd">

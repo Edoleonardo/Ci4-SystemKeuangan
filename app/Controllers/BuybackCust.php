@@ -794,7 +794,7 @@ class BuybackCust extends BaseController
                 $datadetailpenjualan = $this->modeldetailpenjualan->getDetailoneJual($data['id_detail_penjualan']);
                 $this->modeldetailpenjualan->save([
                     'id_detail_penjualan' => $data['id_detail_penjualan'],
-                    'qty_akhir' => $data['qty'] + $datadetailpenjualan['qty_akhir']
+                    'saldo' => $data['qty'] + $datadetailpenjualan['saldo']
                 ]);
             }
 
@@ -879,7 +879,7 @@ class BuybackCust extends BaseController
                 $qty = $this->request->getVar('qty1');
                 $harga = $this->request->getVar('harga_beli1');
                 $berat = $this->request->getVar('berat1');
-                if ($databarang['qty_akhir'] >= $this->request->getVar('qty1') && $this->request->getVar('qty1') >= 0 && $this->request->getVar('qty1') != 0) {
+                if ($databarang['saldo'] >= $this->request->getVar('qty1') && $this->request->getVar('qty1') >= 0 && $this->request->getVar('qty1') != 0) {
                     $beratmurni = $berat * ($this->request->getVar('nilai_tukar1') / 100);
                     if ($kode == 1 || 4 || 5) {
                         $totalharga =  $beratmurni * $harga;
@@ -914,7 +914,7 @@ class BuybackCust extends BaseController
                     ]);
                     $this->modeldetailpenjualan->save([
                         'id_detail_penjualan' => $databarang['id_detail_penjualan'],
-                        'qty_akhir' =>  $databarang['qty_akhir'] - $this->request->getVar('qty1'),
+                        'saldo' =>  $databarang['saldo'] - $this->request->getVar('qty1'),
                     ]);
 
                     $msg = 'sukses';

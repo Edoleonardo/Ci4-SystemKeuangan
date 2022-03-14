@@ -667,9 +667,11 @@
             cache: false,
             beforeSend: function() {
                 $('.btnbayar').html('<i class="fa fa-spin fa-spinner">')
+                $('.btnbayar').attr('type', 'button')
             },
             complete: function() {
                 $('.btnbayar').html('Bayar')
+                $('.btnbayar').attr('type', 'submit')
             },
             success: function(result) {
                 if (result != 'error') {

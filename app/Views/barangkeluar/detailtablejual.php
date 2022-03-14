@@ -3,14 +3,18 @@
         <td><img src='/img/<?= $row['nama_img'] ?>' class='imgg'></td>
         <td><?= $row['kode'] ?></td>
         <?php if (substr($row['kode'], 0, 1) == 3) : ?>
-            <td><input style="width: 100px;" id="qty <?= $row['id_detail_penjualan'] ?>" onchange="UbahHarga(<?= $row['id_detail_penjualan'] ?>,<?= $row['id_date_penjualan'] ?>,<?= substr($row['kode'], 0, 1) ?>,<?= $row['qty'] ?>)" type="number" class="form-control" value="<?= $row['qty'] ?>"></td>
+            <td><input style="width: 100px;" id="qty <?= $row['id_detail_penjualan'] ?>" onchange="UbahHarga(<?= $row['id_detail_penjualan'] ?>,<?= $row['id_date_penjualan'] ?>,<?= substr($row['kode'], 0, 1) ?>,<?= $row['qty'] ?>,<?= $row['berat'] ?>)" type="number" class="form-control" value="<?= $row['qty'] ?>"></td>
         <?php else : ?>
             <td><?= $row['qty'] ?></td>
         <?php endif; ?>
-        <td><input style="width: 100px;" id="harganow <?= $row['id_detail_penjualan'] ?>" class="harganow" onchange="UbahHarga(<?= $row['id_detail_penjualan'] ?>,<?= $row['id_date_penjualan'] ?>,<?= substr($row['kode'], 0, 1) ?>,<?= $row['qty'] ?>)" type="number" class="form-control" value="<?= $row['harga_beli'] ?>"></td>
+        <td><input style="width: 100px;" id="harganow <?= $row['id_detail_penjualan'] ?>" class="harganow" onchange="UbahHarga(<?= $row['id_detail_penjualan'] ?>,<?= $row['id_date_penjualan'] ?>,<?= substr($row['kode'], 0, 1) ?>,<?= $row['qty'] ?>,<?= $row['berat'] ?>)" type="number" class="form-control" value="<?= $row['harga_beli'] ?>"></td>
         <td><?= number_format($row['ongkos'], 2, ',', '.') ?></td>
         <td><?= $row['jenis'] ?> <?= $row['model'] ?> <?= $row['keterangan'] ?></td>
-        <td><?= $row['berat'] ?></td>
+        <?php if (substr($row['kode'], 0, 1) == 4) : ?>
+            <td><input style="width: 100px;" id="berat <?= $row['id_detail_penjualan'] ?>" onchange="UbahHarga(<?= $row['id_detail_penjualan'] ?>,<?= $row['id_date_penjualan'] ?>,<?= substr($row['kode'], 0, 1) ?>,<?= $row['qty'] ?>,<?= $row['berat'] ?>)" type="number" class="form-control" value="<?= $row['berat'] ?>"></td>
+        <?php else : ?>
+            <td><?= $row['berat'] ?></td>
+        <?php endif; ?>
         <td><?= $row['berat_murni'] ?></td>
         <td><?= $row['kadar'] ?></td>
         <td><?= $row['nilai_tukar'] ?></td>
@@ -58,13 +62,20 @@
 
     }
 
-    function UbahHarga(id, iddate, kode, qty) {
+    function UbahHarga(id, iddate, kode, qty, berat) {
         if (kode == 3) {
             var qty = document.getElementById('qty ' + id).value
             var hargabaru = document.getElementById('harganow ' + id).value
         } else {
             var hargabaru = document.getElementById('harganow ' + id).value
             var qty = qty
+        }
+        if (kode == 4) {
+            var berat = document.getElementById('berat ' + id).value
+            var hargabaru = document.getElementById('harganow ' + id).value
+        } else {
+            var hargabaru = document.getElementById('harganow ' + id).value
+            var berat = berat
         }
         $.ajax({
             type: "post",
@@ -74,6 +85,7 @@
                 id: id,
                 iddate: iddate,
                 qty: qty,
+                berat: berat,
                 hargabaru: hargabaru
 
             },
