@@ -973,7 +973,7 @@
         metod2[0].innerHTML = ''
         bank[0].innerHTML = ''
 
-        var NamaBank = '<label>Nama Bank Debit/CC</label><input  type="text" id="namabank" name="namabank" class="form-control" placeholder="Masukan Nama Bank"><div id="validationServerUsernameFeedback" class="invalid-feedback namabankmsg"></div>'
+        var NamaBank = '<label>Nama Bank Debit/CC</label><select  type="text" id="namabank" name="namabank" class="form-control" placeholder="Masukan Nama Bank"><?php foreach ($bank as $m) : ?><option value="<?= $m['nama_bank'] ?>"><?= $m['nama_bank'] ?> </option><?php endforeach; ?></select><div id="validationServerUsernameFeedback" class="invalid-feedback namabankmsg"></div>'
         var retur = '<label>retur %</label><input type="number"  min="0" id="retur" name="retur" class="form-control" placeholder="Masukan retur"><div id="validationServerUsernameFeedback" class="invalid-feedback returmsg"></div>'
         var Transfer = '<label>Transfer</label><input type="number"  min="0" id="transfer" name="transfer" class="form-control" placeholder="Masukan transfer"><div id="validationServerUsernameFeedback" class="invalid-feedback transfermsg"></div>'
         var Tunai = '<label>Tunai</label><input type="number" min="0" id="tunai" name="tunai" class="form-control" placeholder="Masukan tunai"><div id="validationServerUsernameFeedback" class="invalid-feedback tunaimsg"></div>'

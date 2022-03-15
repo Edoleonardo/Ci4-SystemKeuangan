@@ -529,7 +529,7 @@
                     <div class="modal-content">
                         <div class="modal-header">
                             <h4 class="modal-title">Ambil Foto</h4>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <button type="button" class="close" onclick="$('#modal-foto').modal('toggle')" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
@@ -561,8 +561,8 @@
                             </div>
 
                             <div class="modal-footer justify-content-between">
-                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                                <button type="button" class="btn btn-primary" onclick="Webcam.reset()" data-dismiss="modal">Done</button>
+                                <button type="button" class="btn btn-default" onclick="$('#modal-foto').modal('toggle')">Close</button>
+                                <button type="button" class="btn btn-primary" onclick="$('#modal-foto').modal('toggle')">Done</button>
                             </div>
                         </div>
                     </div>
@@ -896,7 +896,7 @@
         nmbank[0].innerHTML = ''
         metod2[0].innerHTML = ''
 
-        var NamaBank = '<label>Nama Bank Debit/CC</label><input type="text" id="namabank" name="namabank" class="form-control" placeholder="Masukan Nama Bank"><div id="validationServerUsernameFeedback" class="invalid-feedback namabankmsg"></div>'
+        var NamaBank = '<label>Nama Bank Debit/CC</label><select type="text" id="namabank" name="namabank" class="form-control" placeholder="Masukan Nama Bank"><?php foreach ($bank as $m) : ?><option value="<?= $m['nama_bank'] ?>"><?= $m['nama_bank'] ?> </option><?php endforeach; ?></select><div id="validationServerUsernameFeedback" class="invalid-feedback namabankmsg"></div>'
         var Transfer = '<label>Transfer</label><input type="number" onkeyup="transfer__()" min="0" id="transfer" name="transfer" class="form-control" placeholder="Masukan transfer"><div id="validationServerUsernameFeedback" class="invalid-feedback transfermsg"></div>'
         var Tunai = '<label>Tunai</label><input type="number"  onkeyup="tunai__()" min="0" id="tunai" name="tunai" class="form-control" placeholder="Masukan tunai"><div id="validationServerUsernameFeedback" class="invalid-feedback tunaimsg"></div>'
         console.log(carabyr)
@@ -1236,8 +1236,8 @@
     }
     $(document).ready(function() {
         tampildatabuyback()
-        $(".modal").on("hidden.bs.modal", function() {
-            Webcam.reset('#my_camera')
+        $("#modal-foto").on("hidden.bs.modal", function() {
+            Webcam.reset()
         });
     })
 </script>

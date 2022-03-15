@@ -15,6 +15,7 @@ use App\Models\ModelReturSales;
 use App\Models\ModelDetailBuyback;
 use App\Models\ModelKartuStock;
 use App\Models\ModelDetailKartuStock;
+use App\Models\ModelBank;
 
 use CodeIgniter\CLI\Console;
 use CodeIgniter\Validation\Rules;
@@ -48,6 +49,7 @@ class Barangmasuk extends BaseController
         $this->modelbuyback =  new ModelDetailBuyback();
         $this->modelkartustock = new ModelKartuStock();
         $this->modeldetailkartustock = new ModelDetailKartuStock();
+        $this->modelbank = new ModelBank();
     }
     public function supplier()
     {
@@ -914,6 +916,7 @@ class Barangmasuk extends BaseController
             'totalberatmurni' => $this->detailbeli->SumBeratMurniDetail($id),
             'merek' => $this->datamerek->getMerek(),
             'kadar' => $this->datakadar->getKadar(),
+            'bank' => $this->modelbank->getBank(),
             'supplier' => $this->datasupplier->getSupplier(),
             'databayar' => $this->modelpembayaran->getPembayaran($id),
 

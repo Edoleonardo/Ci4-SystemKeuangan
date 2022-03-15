@@ -13,6 +13,8 @@ use App\Models\ModelHome;
 use App\Models\ModelBuyback;
 use App\Models\ModelKartuStock;
 use App\Models\ModelDetailKartuStock;
+use App\Models\ModelBank;
+
 
 use CodeIgniter\Model;
 use CodeIgniter\Validation\Rules;
@@ -37,6 +39,7 @@ class BuybackCust extends BaseController
         $this->modelbuyback = new ModelBuyback();
         $this->modelkartustock = new ModelKartuStock();
         $this->modeldetailkartustock = new ModelDetailKartuStock();
+        $this->modelbank = new ModelBank();
     }
 
     public function BuyBack()
@@ -109,6 +112,7 @@ class BuybackCust extends BaseController
 
         $data = [
             'merek' => $this->datamerek->getMerek(),
+            'bank' => $this->modelbank->getBank(),
             'kadar' => $this->datakadar->getKadar(),
             'supplier' => $this->datasupplier->getSupplier(),
             'databuyback' => $databuyback
@@ -259,6 +263,7 @@ class BuybackCust extends BaseController
                         'pembayaran' => $this->request->getVar('pembayaran'),
                         'tunai' => $this->request->getVar('tunai'),
                         'transfer' => $this->request->getVar('transfer'),
+                        'nama_bank' => $this->request->getVar('namabank'),
                         'tgl_selesai' => date("Y-m-d h:i:s"),
                         'status_dokumen' => 'Selesai'
                     ]);

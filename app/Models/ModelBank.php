@@ -18,6 +18,6 @@ class ModelBank extends Model
             $data = $this->findAll();
             return $data;
         }
-        return $this->where(['id_merek' => $id])->first();
+        return $this->where(['id_bank' => $id])->first();
     }
 }

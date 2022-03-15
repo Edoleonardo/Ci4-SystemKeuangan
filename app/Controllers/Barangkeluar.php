@@ -10,7 +10,7 @@ use App\Models\ModelCustomer;
 use App\Models\ModelDetailPenjualan;
 use App\Models\ModelKartuStock;
 use App\Models\ModelDetailKartuStock;
-
+use App\Models\ModelBank;
 
 use CodeIgniter\Model;
 use CodeIgniter\Validation\Rules;
@@ -41,6 +41,7 @@ class Barangkeluar extends BaseController
         $this->penjualan =  new ModelPenjualan();
         $this->modelkartustock = new ModelKartuStock();
         $this->modeldetailkartustock = new ModelDetailKartuStock();
+        $this->modelbank = new ModelBank();
     }
 
     public function DataPenjualan()
@@ -249,10 +250,10 @@ class Barangkeluar extends BaseController
             $data = $this->modeldetailpenjualan->getDetailoneJual($id);
             $databarang = $this->datastock->getBarangkode($data['kode']);
             $datakartu = $this->modelkartustock->getKartuStockkode($data['kode']);
-            if (substr($data['kode'], 0, 1) == 3) {
-                $check = $this->request->getVar('qty');
-            } elseif (substr($data['kode'], 0, 1) == 4) {
+            if (substr($data['kode'], 0, 1) == 4) {
                 $check = $this->request->getVar('berat');
+            } else {
+                $check = $this->request->getVar('qty');
             }
             if ($this->request->getVar('qty') > 0 && $this->request->getVar('hargabaru') > 0 && $this->request->getVar('berat') > 0) {
                 if ($check <= $datakartu['saldo_akhir'] || substr($data['kode'], 0, 1) != 3) {
@@ -355,6 +356,7 @@ class Barangkeluar extends BaseController
             $datapenjualan = [
                 'datapenjualan' => $data,
                 'datacust' => $this->datacust->getDataCustomer(),
+                'bank' => $this->modelbank->getBank(),
             ];
             return view('barangkeluar/jual_barang', $datapenjualan);
         } else {
