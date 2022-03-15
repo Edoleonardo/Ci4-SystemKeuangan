@@ -108,14 +108,19 @@ $routes->get('/datacuci', 'Prosesbarang::HomeCuci');
 $routes->get('/tampilcuci', 'Prosesbarang::TampilCuci');
 $routes->post('/updatecuci', 'Prosesbarang::UpdateCuci');
 
-//------------------------------
-$routes->get('/datalebur', 'Prosesbarang::HomeLebur');
-$routes->get('/leburbarang', 'Prosesbarang::LeburBarang');
-$routes->get('/hapuslebur', 'Prosesbarang::DeleteLebur');
-$routes->get('/leburbarang/(:any)', 'Prosesbarang::TampilLeburBarang/$1');
-$routes->get('/batallebur/(:any)', 'Prosesbarang::BatalLebur/$1');
-$routes->get('/tambahlebur', 'Prosesbarang::TambahLebur');
-$routes->post('/selesailebur', 'Prosesbarang::SelesaiLebur');
+//-----------------Lebur--------------------------------------------
+$routes->get('/datalebur', 'BarangLebur::HomeLebur');
+$routes->get('/leburbarang', 'BarangLebur::LeburBarang');
+$routes->get('/draftlebur/(:any)', 'BarangLebur::DraftLeburBarang/$1');
+$routes->get('/tambahlebur', 'BarangLebur::TambahLebur');
+$routes->get('/batallebur/(:any)', 'BarangLebur::BatalLebur/$1');
+$routes->get('/hapuslebur', 'BarangLebur::DeleteLebur');
+$routes->get('/leburbarang/(:any)', 'BarangLebur::TampilLeburBarang/$1');
+$routes->get('/detailbarang', 'BarangLebur::DataDetailBarang');
+
+
+
+// $routes->post('/selesailebur', 'Prosesbarang::SelesaiLebur');
 
 
 
