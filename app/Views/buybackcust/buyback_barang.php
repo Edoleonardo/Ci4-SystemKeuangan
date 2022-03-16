@@ -11,6 +11,59 @@
     .imgg {
         width: 100px;
     }
+
+    .autocomplete {
+        position: relative;
+        display: inline-block;
+    }
+
+    input {
+        border: 1px solid transparent;
+        background-color: #f1f1f1;
+        padding: 10px;
+        font-size: 16px;
+    }
+
+    input[type=text] {
+        background-color: #f1f1f1;
+        width: 100%;
+    }
+
+    input[type=submit] {
+        background-color: DodgerBlue;
+        color: #fff;
+        cursor: pointer;
+    }
+
+    .autocomplete-items {
+        position: absolute;
+        border: 1px solid #d4d4d4;
+        border-bottom: none;
+        border-top: none;
+        z-index: 99;
+        /*position the autocomplete items to be the same width as the container:*/
+        top: 100%;
+        left: 0;
+        right: 0;
+    }
+
+    .autocomplete-items div {
+        padding: 10px;
+        cursor: pointer;
+        background-color: #fff;
+        border-bottom: 1px solid #d4d4d4;
+    }
+
+    /*when hovering an item:*/
+    .autocomplete-items div:hover {
+        background-color: #e9e9e9;
+    }
+
+    /*when navigating through the items using the arrow keys:*/
+    .autocomplete-active {
+        background-color: DodgerBlue !important;
+        color: #ffffff;
+    }
 </style>
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
@@ -73,9 +126,15 @@
                 <!-- Application buttons -->
                 <div class="card">
                     <div class="card-body" id="refreshtombol">
+                        <a type="button" onclick="BatalBuyback()" class="btn btn-app">
+                            <i class="fas fa-window-close"></i> Batal Buyback
+                        </a>
                         <?php if ($databuyback['status_dokumen'] == 'Draft') : ?>
-                            <a type="button" onclick="BatalBuyback()" class="btn btn-app">
+                            <!-- <a type="button" onclick="BatalBuyback()" class="btn btn-app">
                                 <i class="fas fa-window-close"></i> Batal Buyback
+                            </a> -->
+                            <a class="btn btn-app tambahcustomer" id="tambahcustomer" data-toggle="modal" data-target="#modal-cust">
+                                <i class="fas fa-users"></i> Tambah Customer
                             </a>
                         <?php endif; ?>
                         <?php if (isset($databuyback)) : ?>
@@ -341,7 +400,6 @@
                                     <option value="Cuci">Cuci</option>
                                     <option value="Retur">Retur Sales</option>
                                     <option value="Lebur">Lebur</option>
-                                    <option value="Jual">Jual</option>
                                 </select>
                             </div>
                         </div>
@@ -383,11 +441,11 @@
             <div class="modal-body">
                 <form action="/tambahbuybacknonota" id="tambahbuybacknonota" class="tambahbuybacknonota" name="tambahbuybacknonota">
                     <div class="row">
-                        <div class="col-sm-2">
+                        <div class="col-sm-3">
                             <!-- text input -->
                             <div class="form-group">
                                 <label>Kelompok</label>
-                                <select name="kelompok" onchange="totalharga()" class="form-control" id="kelompok">
+                                <select name="kelompok" onchange="ModalBarcode()" class="form-control" id="kelompok">
                                     <option value="1">Perhiasan Mas</option>
                                     <option value="2">Perhiasan Berlian</option>
                                     <option value="3">Logam Mulia (Antam, UBS, HWT)</option>
@@ -398,7 +456,13 @@
                                 <input type="hidden" name="iddate" id="iddate" value="<?= $databuyback['id_date_buyback'] ?>">
                             </div>
                         </div>
-                        <div class="col-sm-2">
+                        <div class="col-sm-3">
+                            <div class="form-group">
+                                <a href="#" id="tampilmodal" data-toggle="modal" data-target="#modal-xl"><label>Barcode</label></a>
+                                <input type="text" onkeyup="PilihBarcode($('#barcode').val())" id="barcode" name="barcode" class="form-control" placeholder="Masukan barcode">
+                            </div>
+                        </div>
+                        <div class="col-sm-3">
                             <!-- text input -->
                             <div class="form-group">
                                 <label>Merek</label>
@@ -410,7 +474,7 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="col-sm-2">
+                        <div class="col-sm-3">
                             <!-- text input -->
                             <div class="form-group">
                                 <label>Kadar</label>
@@ -421,7 +485,9 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="col-sm-2">
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-3">
                             <!-- text input -->
                             <div class="form-group">
                                 <label>Jenis</label>
@@ -430,7 +496,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-sm-2">
+                        <div class="col-sm-3">
                             <!-- text input -->
                             <div class="form-group">
                                 <label>Berat</label>
@@ -440,15 +506,13 @@
                             </div>
                         </div>
 
-                        <div class="col-sm-2">
+                        <div class="col-sm-3">
                             <!-- text input -->
                             <div class="form-group">
                                 <label>Model</label>
                                 <input type="text" name="model" id="model" class="form-control" placeholder="Masukan Model Barang">
                             </div>
                         </div>
-                    </div>
-                    <div class="row">
                         <div class="col-sm-3">
                             <!-- text input -->
                             <div class="form-group">
@@ -456,7 +520,9 @@
                                 <input type="text" name="keterangan" id="keterangan" class="form-control" placeholder="Masukan Keterangan">
                             </div>
                         </div>
-                        <div class="col-sm-2">
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-3">
                             <!-- text input -->
                             <div class="form-group">
                                 <label>Qty</label>
@@ -465,7 +531,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-sm-2">
+                        <div class="col-sm-3">
                             <!-- text input -->
                             <div class="form-group">
                                 <label>Nilai Tukar</label>
@@ -474,7 +540,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-sm-2">
+                        <div class="col-sm-3">
                             <!-- text input -->
                             <div class="form-group">
                                 <label>Harga Beli</label>
@@ -491,7 +557,6 @@
                                     <option value="Cuci">Cuci</option>
                                     <option value="Retur">Retur Sales</option>
                                     <option value="Lebur">Lebur</option>
-                                    <option value="Jual">Jual</option>
                                 </select>
                             </div>
                         </div>
@@ -590,6 +655,14 @@
                     <div class="row">
                         <div class="col-sm-12">
                             <div class="card">
+                                <div class="form-group" style="margin: 1mm;">
+                                    <label>Nomor Tlp Customer</label>
+                                    <input autocomplete="off" type="tel" class="form-control inputcustomer" id="inputcustomer" name="inputcustomer" value="<?= (isset($databuyback['nohp_cust'])) ? $databuyback['nohp_cust'] : '' ?>" placeholder="Masukan data customer">
+                                    <div id="validationServerUsernameFeedback" class="invalid-feedback inputcustomermsg">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card">
                                 <!-- ./card-header -->
                                 <div class="p-0">
                                     <!-- text input -->
@@ -661,7 +734,262 @@
     </div>
     <!-- /.modal-dialog -->
 </div>
+<div id="barcodeview">
+
+</div>
+<div class="modal fade" id="modal-cust">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Tambah Data Customer</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form action="/insertcustomer" name="insertcust" id="insertcust" class="insertcust" method="post">
+                <div class="row" style="margin: 10px;">
+                    <div class="col-12">
+                        <div class="form-group">
+                            <label>Nama Customer</label>
+                            <input type="text" id="nama_cust" name="nama_cust" class="form-control nama_cust" placeholder="Masukan Nomor Nota Supplier">
+                            <div id="validationServerUsernameFeedback" class="invalid-feedback nama_custmsg">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Nomor Hp</label>
+                            <input type="number" id="nohp" name="nohp" class="form-control nohp" placeholder="Masukan Nomor Nota Supplier">
+                            <div id="validationServerUsernameFeedback" class="invalid-feedback nohpmsg">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Alamat</label>
+                            <input type="text" id="alamat" name="alamat" class="form-control" placeholder="Masukan Nomor Nota Supplier">
+                        </div>
+                        <div class="form-group">
+                            <label>Kota</label>
+                            <input type="text" id="kota" name="kota" class="form-control" placeholder="Masukan Nomor Nota Supplier">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Tutup</button>
+                    <button type="submit" class="btn btn-primary btntambah">Tambah</button>
+            </form>
+        </div>
+    </div>
+    <!-- /.modal-content -->
+</div>
 <script type="text/javascript">
+    function autocomplete(inp, arr) {
+        /*the autocomplete function takes two arguments,
+        the text field element and an array of possible autocompleted values:*/
+        var currentFocus;
+        /*execute a function when someone writes in the text field:*/
+        inp.addEventListener("input", function(e) {
+            var a, b, i, val = this.value;
+            /*close any already open lists of autocompleted values*/
+            closeAllLists();
+            if (!val) {
+                return false;
+            }
+            currentFocus = -1;
+            /*create a DIV element that will contain the items (values):*/
+            a = document.createElement("DIV");
+            a.setAttribute("id", this.id + "autocomplete-list");
+            a.setAttribute("class", "autocomplete-items");
+            /*append the DIV element as a child of the autocomplete container:*/
+            this.parentNode.appendChild(a);
+            /*for each item in the array...*/
+            for (i = 0; i < arr.length; i++) {
+                /*check if the item starts with the same letters as the text field value:*/
+                if (arr[i].substr(0, val.length).toUpperCase() == val.toUpperCase()) {
+                    /*create a DIV element for each matching element:*/
+                    b = document.createElement("DIV");
+                    /*make the matching letters bold:*/
+                    b.innerHTML = "<strong>" + arr[i].substr(0, val.length) + "</strong>";
+                    b.innerHTML += arr[i].substr(val.length);
+                    /*insert a input field that will hold the current array item's value:*/
+                    b.innerHTML += "<input type='hidden' value='" + arr[i] + "'>";
+                    /*execute a function when someone clicks on the item value (DIV element):*/
+                    b.addEventListener("click", function(e) {
+                        /*insert the value for the autocomplete text field:*/
+                        inp.value = this.getElementsByTagName("input")[0].value;
+                        inp.focus()
+                        // inp.select()
+                        /*close the list of autocompleted values,
+                        (or any other open lists of autocompleted values:*/
+                        closeAllLists();
+                    });
+                    a.appendChild(b);
+                }
+            }
+        });
+        /*execute a function presses a key on the keyboard:*/
+        inp.addEventListener("keydown", function(e) {
+            var x = document.getElementById(this.id + "autocomplete-list");
+            if (x) x = x.getElementsByTagName("div");
+            if (e.keyCode == 40) {
+                /*If the arrow DOWN key is pressed,
+                increase the currentFocus variable:*/
+                currentFocus++;
+                /*and and make the current item more visible:*/
+                addActive(x);
+            } else if (e.keyCode == 38) { //up
+                /*If the arrow UP key is pressed,
+                decrease the currentFocus variable:*/
+                currentFocus--;
+                /*and and make the current item more visible:*/
+                addActive(x);
+            } else if (e.keyCode == 13) {
+                /*If the ENTER key is pressed, prevent the form from being submitted,*/
+                e.preventDefault();
+                if (currentFocus > -1) {
+                    /*and simulate a click on the "active" item:*/
+                    if (x) x[currentFocus].click();
+                }
+            }
+        });
+
+        function addActive(x) {
+            /*a function to classify an item as "active":*/
+            if (!x) return false;
+            /*start by removing the "active" class on all items:*/
+            removeActive(x);
+            if (currentFocus >= x.length) currentFocus = 0;
+            if (currentFocus < 0) currentFocus = (x.length - 1);
+            /*add class "autocomplete-active":*/
+            x[currentFocus].classList.add("autocomplete-active");
+        }
+
+        function removeActive(x) {
+            /*a function to remove the "active" class from all autocomplete items:*/
+            for (var i = 0; i < x.length; i++) {
+                x[i].classList.remove("autocomplete-active");
+            }
+        }
+
+        function closeAllLists(elmnt) {
+            /*close all autocomplete lists in the document,
+            except the one passed as an argument:*/
+            var x = document.getElementsByClassName("autocomplete-items");
+            for (var i = 0; i < x.length; i++) {
+                if (elmnt != x[i] && elmnt != inp) {
+                    x[i].parentNode.removeChild(x[i]);
+                }
+            }
+        }
+        /*execute a function when someone clicks in the document:*/
+        document.addEventListener("click", function(e) {
+            closeAllLists(e.target);
+        });
+    }
+
+
+    function tampilcustomer() {
+        $.ajax({
+            type: "GET",
+            dataType: "json",
+            url: "<?php echo base_url('tampilcustbb'); ?>",
+            success: function(result) {
+                var arr = []
+                for (var i = 0; i < result.length; i++) {
+                    var obj = result[i];
+                    arr.push(obj.nohp_cust)
+
+                }
+                autocomplete(document.getElementById("inputcustomer"), arr);
+            },
+            error: function(xhr, ajaxOptions, thrownError) {
+                alert(xhr.status + "\n" + xhr.responseText + "\n" + thrownError);
+            }
+        })
+    }
+
+    function checkcust() {
+        $.ajax({
+            type: "GET",
+            dataType: "json",
+            data: {
+                nohp_cust: document.getElementById('inputcustomer').value
+            },
+            url: "<?php echo base_url('checkcust'); ?>",
+            success: function(result) {
+                if (result == 'gagal') {
+                    isicust = document.getElementById('inputcustomer').value
+                    document.getElementById("nohp").value = isicust
+                    $('#tambahcustomer').trigger('click');
+                } else {
+                    return result;
+                }
+            },
+            error: function(xhr, ajaxOptions, thrownError) {
+                alert(xhr.status + "\n" + xhr.responseText + "\n" + thrownError);
+            }
+        })
+    }
+
+    function PilihBarcode(kode) {
+        document.getElementById('barcode').value = kode
+        $.ajax({
+            type: "GET",
+            dataType: "json",
+            data: {
+                kode: kode
+            },
+            url: "<?php echo base_url('detailbarcode') ?>",
+            success: function(result) {
+                $('#merek').val(result.datadetail.merek)
+                $('#kadar').val(result.datadetail.kadar)
+                $('#jenis').val(result.datadetail.jenis)
+                $('#model').val(result.datadetail.model)
+                $('#berat').val(result.datadetail.berat)
+                $('#keterangan').val(result.datadetail.keterangan)
+                $('#qty').val(result.datadetail.qty)
+                $('#nilai_tukar').val(result.datadetail.nilai_tukar)
+                $('#harga_beli').val(result.datadetail.harga_beli)
+                $('#ongkos').val(result.datadetail.ongkos)
+                $('#kelompok').val(($('#barcode').val()) ? $('#barcode').val().substr(0, 1) : $('#kelompok').val())
+                totalharga()
+            },
+            error: function(xhr, ajaxOptions, thrownError) {
+                alert(xhr.status + "\n" + xhr.responseText + "\n" + thrownError);
+
+            }
+        })
+        $('#modal-xl').modal('hide');
+    }
+
+    function ModalBarcode() {
+        totalharga()
+        document.getElementById('barcode').value = ''
+        var kel = document.getElementById('kelompok').value
+        if (kel == '1' || kel == '2') {
+            $('#barcode').attr('readonly', 'readonly')
+            $('#tampilmodal').removeAttr('data-target')
+            $('#tampilmodal').removeAttr('data-toggle')
+        } else {
+            $('#barcode').removeAttr('readonly')
+            $('#tampilmodal').attr('data-target', '#modal-xl')
+            $('#tampilmodal').attr('data-toggle', 'modal')
+        }
+        $.ajax({
+            type: "GET",
+            dataType: "json",
+            data: {
+                kel: kel
+            },
+            url: "<?php echo base_url('modalbarcodebb') ?>",
+            success: function(result) {
+                $('#barcodeview').html(result.modalbarcode)
+                // $('#modal-xl').modal('toggle');
+                // console.log(result)
+            },
+            error: function(xhr, ajaxOptions, thrownError) {
+                alert(xhr.status + "\n" + xhr.responseText + "\n" + thrownError);
+
+            }
+        })
+    }
     $('.tambahbuybacknonota').submit(function(e) {
         e.preventDefault()
         let form = $('.tambahbuybacknonota')[0];
@@ -686,7 +1014,6 @@
                     cache: false,
                     dataType: "json",
                     success: function(result) {
-                        console.log(result)
                         if (result.error) {
                             if (result.error.qty) {
                                 $('#qty').addClass('is-invalid')
@@ -745,19 +1072,33 @@
                             $('.harga_belimsg').html('')
                             $('#ambilgbr').removeClass('is-invalid')
                             $('.ambilgbrmsg').html('')
-
-                            Swal.fire({
-                                icon: 'success',
-                                title: 'Berhasil Tambah',
-                                confirmButtonColor: '#3085d6',
-                                confirmButtonText: 'OK',
-                                allowOutsideClick: false
-                            }).then((choose) => {
-                                if (choose.isConfirmed) {
-                                    $('#modal-nonota').modal('toggle');
-                                    tampildatabuyback()
-                                }
-                            })
+                            if (result.barcodebaru) {
+                                Swal.fire({
+                                    icon: 'info',
+                                    title: result.barcodebaru.barcode,
+                                    confirmButtonColor: '#3085d6',
+                                    confirmButtonText: 'OK',
+                                    allowOutsideClick: false
+                                }).then((choose) => {
+                                    if (choose.isConfirmed) {
+                                        $('#modal-nonota').modal('toggle');
+                                        tampildatabuyback()
+                                    }
+                                })
+                            } else {
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Berhasil Tambah',
+                                    confirmButtonColor: '#3085d6',
+                                    confirmButtonText: 'OK',
+                                    allowOutsideClick: false
+                                }).then((choose) => {
+                                    if (choose.isConfirmed) {
+                                        $('#modal-nonota').modal('toggle');
+                                        tampildatabuyback()
+                                    }
+                                })
+                            }
                         }
                     },
                     error: function(xhr, ajaxOptions, thrownError) {
@@ -770,96 +1111,125 @@
 
     $('.pembayaranform').submit(function(e) {
         e.preventDefault()
-        let form = $('.pembayaranform')[0];
-        let data = new FormData(form)
-        Swal.fire({
-            title: 'Tambah',
-            text: "Yakin ingin Buyback Barang ini ?",
-            icon: 'info',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Tambah',
-            allowOutsideClick: false
-        }).then((result) => {
-            if (result.isConfirmed) {
-                $.ajax({
-                    type: "POST",
-                    data: data,
-                    url: "<?php echo base_url('/pembayaranform'); ?>",
-                    contentType: false,
-                    processData: false,
-                    cache: false,
-                    dataType: "json",
-                    success: function(result) {
-                        if (result.error) {
-                            if (result.error.namabank) {
-                                $('#namabank').addClass('is-invalid')
-                                $('.namabankmsg').html(result.error.namabank)
-                            } else {
-                                $('#namabank').removeClass('is-invalid')
-                                $('.namabank').html('')
-                            }
-                            if (result.error.transfer) {
-                                $('#transfer').addClass('is-invalid')
-                                $('.transfermsg').html(result.error.transfer)
-                            } else {
-                                $('#transfer').removeClass('is-invalid')
-                                $('.transfermsg').html('')
-                            }
-                            if (result.error.tunai) {
-                                $('#tunai').addClass('is-invalid')
-                                $('.tunaimsg').html(result.error.tunai)
-                            } else {
-                                $('#tunai').removeClass('is-invalid')
-                                $('.tunaimsg').html('')
-                            }
-                            if (result.error.pembayaran) {
-                                $('#pembayaran').addClass('is-invalid')
-                                $('.pembayaranmsg').html(result.error.pembayaran)
-                            } else {
-                                $('#pembayaran').removeClass('is-invalid')
-                                $('.pembayaranmsg').html('')
-                            }
-                            if (result.error.bayar) {
-                                Swal.fire({
-                                    icon: 'warning',
-                                    title: result.error.bayar,
-                                })
-                            }
-                        } else {
-                            $('#namabank').removeClass('is-invalid')
-                            $('.namabankmsg').html('')
-                            $('#transfer').removeClass('is-invalid')
-                            $('.transfermsg').html('')
-                            $('#tunai').removeClass('is-invalid')
-                            $('.tunaimsg').html('')
-                            $('#pembayaran').removeClass('is-invalid')
-                            $('.pembayaranmsg').html('')
+        $.ajax({
+            type: "GET",
+            dataType: "json",
+            data: {
+                nohp_cust: document.getElementById('inputcustomer').value
+            },
+            url: "<?php echo base_url('checkcust'); ?>",
+            success: function(result) {
+                if (result == 'gagal') {
+                    isicust = document.getElementById('inputcustomer').value
+                    document.getElementById("nohp").value = isicust
+                    $('#tambahcustomer').trigger('click');
+                } else {
+                    let form = $('.pembayaranform')[0];
+                    let data = new FormData(form)
+                    Swal.fire({
+                        title: 'Bayar',
+                        text: "Pembayaran Sudah Selesai ?",
+                        icon: 'info',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Tambah',
+                        allowOutsideClick: false
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            $.ajax({
+                                type: "POST",
+                                data: data,
+                                url: "<?php echo base_url('/pembayaranform'); ?>",
+                                contentType: false,
+                                processData: false,
+                                cache: false,
+                                dataType: "json",
+                                success: function(result) {
+                                    if (result.error) {
+                                        if (result.error.namabank) {
+                                            $('#namabank').addClass('is-invalid')
+                                            $('.namabankmsg').html(result.error.namabank)
+                                        } else {
+                                            $('#namabank').removeClass('is-invalid')
+                                            $('.namabank').html('')
+                                        }
+                                        if (result.error.inputcustomer) {
+                                            $('#inputcustomer').addClass('is-invalid')
+                                            $('.inputcustomermsg').html(result.error.inputcustomer)
+                                        } else {
+                                            $('#inputcustomer').removeClass('is-invalid')
+                                            $('.inputcustomer').html('')
+                                        }
+                                        if (result.error.transfer) {
+                                            $('#transfer').addClass('is-invalid')
+                                            $('.transfermsg').html(result.error.transfer)
+                                        } else {
+                                            $('#transfer').removeClass('is-invalid')
+                                            $('.transfermsg').html('')
+                                        }
+                                        if (result.error.tunai) {
+                                            $('#tunai').addClass('is-invalid')
+                                            $('.tunaimsg').html(result.error.tunai)
+                                        } else {
+                                            $('#tunai').removeClass('is-invalid')
+                                            $('.tunaimsg').html('')
+                                        }
+                                        if (result.error.pembayaran) {
+                                            $('#pembayaran').addClass('is-invalid')
+                                            $('.pembayaranmsg').html(result.error.pembayaran)
+                                        } else {
+                                            $('#pembayaran').removeClass('is-invalid')
+                                            $('.pembayaranmsg').html('')
+                                        }
+                                        if (result.error.bayar) {
+                                            Swal.fire({
+                                                icon: 'warning',
+                                                title: result.error.bayar,
+                                            })
+                                        }
+                                    } else {
+                                        $('#namabank').removeClass('is-invalid')
+                                        $('.namabankmsg').html('')
+                                        $('#inputcustomer').removeClass('is-invalid')
+                                        $('.inputcustomermsg').html('')
+                                        $('#transfer').removeClass('is-invalid')
+                                        $('.transfermsg').html('')
+                                        $('#tunai').removeClass('is-invalid')
+                                        $('.tunaimsg').html('')
+                                        $('#pembayaran').removeClass('is-invalid')
+                                        $('.pembayaranmsg').html('')
 
-                            Swal.fire({
-                                icon: 'success',
-                                title: 'Berhasil Bayar',
-                                confirmButtonColor: '#3085d6',
-                                confirmButtonText: 'OK',
-                                allowOutsideClick: false
-                            }).then((choose) => {
-                                if (choose.isConfirmed) {
-                                    location.reload();
-                                    // $('#modal-nonota').modal('toggle');
-                                    // $("#refrestbl").load("/buybackcust #refrestbl");
-                                    // tampildatabuyback()
-                                    // console.log(result)
+                                        Swal.fire({
+                                            icon: 'success',
+                                            title: 'Berhasil Bayar',
+                                            confirmButtonColor: '#3085d6',
+                                            confirmButtonText: 'OK',
+                                            allowOutsideClick: false
+                                        }).then((choose) => {
+                                            if (choose.isConfirmed) {
+                                                location.reload();
+                                                // $('#modal-nonota').modal('toggle');
+                                                // $("#refrestbl").load("/buybackcust #refrestbl");
+                                                // tampildatabuyback()
+                                                console.log(result)
+                                            }
+                                        })
+                                    }
+                                },
+                                error: function(xhr, ajaxOptions, thrownError) {
+                                    alert(xhr.status + "\n" + xhr.responseText + "\n" + thrownError);
                                 }
                             })
                         }
-                    },
-                    error: function(xhr, ajaxOptions, thrownError) {
-                        alert(xhr.status + "\n" + xhr.responseText + "\n" + thrownError);
-                    }
-                })
+                    })
+                }
+            },
+            error: function(xhr, ajaxOptions, thrownError) {
+                alert(xhr.status + "\n" + xhr.responseText + "\n" + thrownError);
             }
         })
+
     })
 
     function totalharga() {
@@ -887,7 +1257,6 @@
     }
 
     function myPembayaran() {
-        console.log('masuk')
         const carabyr = document.getElementById('pembayaran').value
         const metod1 = $('.metodebayar')
         const nmbank = $('.namabankhtml')
@@ -899,7 +1268,6 @@
         var NamaBank = '<label>Nama Bank Debit/CC</label><select type="text" id="namabank" name="namabank" class="form-control" placeholder="Masukan Nama Bank"><?php foreach ($bank as $m) : ?><option value="<?= $m['nama_bank'] ?>"><?= $m['nama_bank'] ?> </option><?php endforeach; ?></select><div id="validationServerUsernameFeedback" class="invalid-feedback namabankmsg"></div>'
         var Transfer = '<label>Transfer</label><input type="number" onkeyup="transfer__()" min="0" id="transfer" name="transfer" class="form-control" placeholder="Masukan transfer"><div id="validationServerUsernameFeedback" class="invalid-feedback transfermsg"></div>'
         var Tunai = '<label>Tunai</label><input type="number"  onkeyup="tunai__()" min="0" id="tunai" name="tunai" class="form-control" placeholder="Masukan tunai"><div id="validationServerUsernameFeedback" class="invalid-feedback tunaimsg"></div>'
-        console.log(carabyr)
 
         if (carabyr == 'Transfer') {
             metod1[0].innerHTML = Transfer
@@ -1064,9 +1432,7 @@
                     cache: false,
                     dataType: "json",
                     success: function(result) {
-                        console.log(result)
                         if (result.error) {
-                            console.log(result)
                             if (result.error.kurang) {
                                 Swal.fire({
                                     icon: 'warning',
@@ -1139,7 +1505,6 @@
 
 
     function tambah(id) {
-        console.log('tambah')
         $.ajax({
             type: "get",
             dataType: "json",
@@ -1148,7 +1513,6 @@
                 id: id,
             },
             success: function(result) {
-                console.log(result.data.kode.substr(0, 1))
                 if (result.data.kode.substr(0, 1) != 3) {
                     $('#qty1').attr('readonly', 'readonly')
                     $('#qty1').val(result.data.saldo)
@@ -1158,10 +1522,11 @@
                     $('#qty1').attr('readonly', 'readonly')
                     $('#qty1').val(result.data.qty)
                     $('#berat1').val(result.data.saldo)
-                    console.log('asdddddddd')
+                    // console.log('asdddddddd')
 
                 } else {
                     $('#qty1').removeAttr('readonly')
+                    $('#berat1').attr('readonly', 'readonly')
                     $('#qty1').val(result.data.saldo)
                     $('#berat1').val(result.data.berat)
                 }
@@ -1171,7 +1536,7 @@
                 $('#harga_beli1').val(result.data.harga_beli)
                 $('#id').val(result.data.id_detail_penjualan)
                 $('#kel').val(result.data.kode.substr(0, 1))
-                console.log($('#id').val())
+                // console.log($('#id').val())
                 HarusBayar()
 
             },
@@ -1199,7 +1564,6 @@
         }
         // brtmurni.innerHTML = beratmurni.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
         totalharga.innerHTML = harusbyr.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
-        console.log(harusbyr)
 
     }
 
@@ -1235,10 +1599,61 @@
         Webcam.attach('#my_camera');
     }
     $(document).ready(function() {
+        tampilcustomer()
+        ModalBarcode()
         tampildatabuyback()
         $("#modal-foto").on("hidden.bs.modal", function() {
             Webcam.reset()
         });
+        $('.insertcust').submit(function(e) {
+            e.preventDefault()
+            let form = $('.insertcust')[0];
+            let data = new FormData(form)
+            $.ajax({
+                type: "POST",
+                data: data,
+                url: "<?php echo base_url('insertcustomer'); ?>",
+                dataType: "json",
+                contentType: false,
+                processData: false,
+                cache: false,
+                beforeSend: function() {
+                    $('.btntambah').html('<i class="fa fa-spin fa-spinner">')
+                },
+                complete: function() {
+                    $('.btntambah').html('Tambah')
+                },
+                success: function(result) {
+                    if (result.error) {
+                        if (result.error.nohp_cust) {
+                            $('#nohp').addClass('is-invalid')
+                            $('.nohpmsg').html(result.error.nohp_cust)
+                        } else {
+                            $('#nohp').removeClass('is-invalid')
+                            $('.nohpmsg').html('')
+                        }
+                        if (result.error.nama_cust) {
+                            $('#nama_cust').addClass('is-invalid')
+                            $('.nama_custmsg').html(result.error.nama_cust)
+                        } else {
+                            $('#nama_cust').removeClass('is-invalid')
+                            $('.nama_custmsg').html('')
+                        }
+                    } else {
+                        $('#nohp').removeClass('is-invalid')
+                        $('.nohpmsg').html('')
+                        $('#nama_cust').removeClass('is-invalid')
+                        $('.nama_custmsg').html('')
+                        tampilcustomer()
+                        $('#modal-cust').modal('toggle');
+                    }
+
+                },
+                error: function(xhr, ajaxOptions, thrownError) {
+                    alert(xhr.status + "\n" + xhr.responseText + "\n" + thrownError);
+                }
+            })
+        })
     })
 </script>
 <?= $this->endSection(); ?>

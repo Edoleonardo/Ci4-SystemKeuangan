@@ -133,9 +133,9 @@
                           </h4>
                         </div>
                       </td>
-                      <td>Kode Beli :</td>
+                      <td>Nama Supplier :</td>
                       <td>
-                        <?= $barang['kode_beli'] ?>
+                        <?= $barang['nama_supplier'] ?>
                       </td>
                     </tr>
                   </tbody>

@@ -99,6 +99,9 @@ $routes->get('/draftbuyback/(:any)', 'BuybackCust::DraftBuyback/$1');
 $routes->get('/deletedetailbuyback', 'BuybackCust::DeleteDetailBuyback');
 $routes->post('/pembayaranform', 'BuybackCust::PembayaranBuyback');
 $routes->get('/batalbuyback/(:any)', 'BuybackCust::BatalBuyback/$1');
+$routes->get('/modalbarcodebb', 'BuybackCust::ModalBarcode');
+$routes->get('/tampilcustbb', 'BuybackCust::TampilCustomer');
+
 
 
 //-------------------------------------------------------

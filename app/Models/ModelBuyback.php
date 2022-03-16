@@ -10,7 +10,7 @@ class ModelBuyback extends Model
     protected $table = 'tbl_buyback';
     protected $primaryKey = 'id_buyback';
     protected $useTimestamps = true;
-    protected $allowedFields = ['id_date_buyback', 'no_transaksi_buyback', 'id_karyawan', 'total_berat', 'jumlah', 'nama_bank', 'total_harga', 'total_harga', 'pembayaran', 'tunai', 'transfer', 'status_dokumen'];
+    protected $allowedFields = ['id_date_buyback', 'no_transaksi_buyback', 'id_karyawan', 'nohp_cust', 'total_berat', 'jumlah', 'nama_bank', 'total_harga', 'total_harga', 'pembayaran', 'tunai', 'transfer', 'status_dokumen', 'tgl_selesai'];
 
     public function getDataBuyback($id = false)
     {

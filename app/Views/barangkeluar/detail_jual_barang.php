@@ -43,6 +43,11 @@
                             <tbody>
                                 <tr>
                                     <td>
+                                        Nomor Jual : <?= $datapenjualan['no_transaksi_jual'] ?>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
                                         Nama Customer : <?= $datacust['nama'] ?>
                                     </td>
                                 </tr>
