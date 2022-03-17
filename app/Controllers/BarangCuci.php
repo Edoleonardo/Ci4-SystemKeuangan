@@ -53,44 +53,60 @@ class BarangCuci extends BaseController
         ];
         return view('cucibarang/data_cuci', $data);
     }
-    // public function UbahStatuscc()
-    // {
-    //     if ($this->request->isAJAX()) {
-    //         $databuyback = $this->modeldetailbuyback->getDataDetailKode($this->request->getVar('id'));
-    //         $this->modeldetailbuyback->save([
-    //             'id_detail_buyback' => $databuyback['id_detail_buyback'],
-    //             'status_proses' => $this->request->getVar('status')
-    //         ]);
-    //         $msg = 'sukses ubahstatus';
-    //         echo json_encode($this->request->getVar($msg));
-    //     }
-    // }
+    public function BarcodeGenerate($id)
+    {
+        $data1 = [
+            'databarcode' => $this->modeldetailcuci->getDetailAllCuci($id),
+            'datacuci' => $this->modelcuci->getDataCuciAll($id),
+            // 'img' => $this->barangmodel->getImg($id)
+        ];
+
+        return view('cucibarang/print_barcode', $data1);
+    }
     public function CuciBarang()
     {
-
         $dateid = date('ymdhis');
         $this->modelcuci->save([
             // 'created_at' => date("y-m-d"),
             'id_date_cuci' => $dateid,
             'no_cuci' => $this->NoTransaksiGenerateCuci(),
             'id_karyawan' => '1',
-            'kode' => '-',
-            'jenis' => '-',
-            'model' => '-',
+            'supplier_cuci' => '-',
             'keterangan' => '-',
-            'kadar' => '24K',
-            'berat' => '0',
-            'qty' => '0',
-            'tanggal_cuci' => date('y-m-d'),
-            'total_harga_bahan' => '0',
+            'total_berat' => '-',
+            'keterangan' => '-',
+            'jumlah_barang' => '0',
+            'tanggal_cuci' => date('y-m-d H:i:s'),
+            'harga_cuci' => '0',
             'status_dokumen' => 'Draft'
         ]);
         //---------------------------------------------------
         return redirect()->to('/draftcuci/' . $dateid);
     }
+    public function ModalCuci()
+    {
+        if ($this->request->isAJAX()) {
+            $id = $this->request->getVar('id');
+            if ($id == 1) {
+                $data = [
+                    'datacuci' => $this->modeldetailbuyback->getDataCuciAll(),
+                    'pesan' => 'Data Cuci Sebelum Pilih'
+                ];
+            } else {
+                $data = [
+                    'datacuci' => $this->modeldetailcuci->getDetailCuci($this->request->getVar('dateid')),
+                    'pesan' => 'Data Cuci Sesudah Pilih'
+                ];
+            }
+            $msg = [
+                'tampilmodal' => view('cucibarang/modalcuci', $data)
+            ];
+            // $msg = 'sukses';
+            echo json_encode($msg);
+        }
+    }
     public function DraftCuciBarang($id)
     {
-        // dd($this->modeldetailbuyback->getDataCuciAll());
         $data = [
             'datamastercuci' => $this->modelcuci->getDataCuciAll($id),
             'datacuci' => $this->modeldetailbuyback->getDataCuciAll(),
@@ -99,16 +115,17 @@ class BarangCuci extends BaseController
         return view('cucibarang/cuci_barang', $data);
     }
 
-    public function TambahLebur()
+    public function TambahCuci()
     {
         if ($this->request->isAJAX()) {
             $kode = $this->request->getVar('kode');
             $iddate =  $this->request->getVar('iddate');
             $databuyback = $this->modeldetailbuyback->getDataDetailKode($kode);
-            $datadetaillebur = $this->modeldetaillebur->CheckDataLebur($databuyback['kode']);
-            if (!$datadetaillebur) {
-                $this->modeldetaillebur->save([
-                    'id_date_lebur' => $iddate,
+            $datadetailcuci = $this->modeldetailcuci->CheckDatacuci($databuyback['kode']);
+            $datacuci = $this->modelcuci->getDataCuciAll($iddate);
+            if (!$datadetailcuci) {
+                $this->modeldetailcuci->save([
+                    'id_date_cuci' => $iddate,
                     'id_detail_buyback' => $databuyback['id_detail_buyback'],
                     'nama_img' => $databuyback['nama_img'],
                     'kode' =>  $databuyback['kode'],
@@ -124,11 +141,17 @@ class BarangCuci extends BaseController
                     'nilai_tukar' =>   $databuyback['nilai_tukar'],
                     'merek' =>  $databuyback['merek'],
                     'total_harga' => $databuyback['total_harga'],
+                    'status_proses' => $databuyback['status_proses'],
                 ]);
 
                 $this->modeldetailbuyback->save([
                     'id_detail_buyback' => $databuyback['id_detail_buyback'],
-                    'status_proses' => 'SudahLebur' . date('y-m-d')
+                    'status_proses' => 'SudahCuci' . date('y-m-d')
+                ]);
+                $this->modelcuci->save([
+                    'id_cuci' => $datacuci['id_cuci'],
+                    'jumlah_barang' => $this->modeldetailcuci->CountJumlahCuci($iddate)['berat'],
+                    'total_berat' => $this->modeldetailcuci->SumBeratDetailCuci($iddate)['berat'],
                 ]);
                 $msg = 'sukses';
             } else {
@@ -137,59 +160,162 @@ class BarangCuci extends BaseController
             echo json_encode($msg);
         }
     }
-    public function DataDetailBarang()
-    {
-        if ($this->request->isAJAX()) {
-            $tampil = [
-                'datadetail' => $this->modeldetailbuyback->getDataDetailKode($this->request->getVar('id'))
-            ];
-            $data = [
-                'data' => view('leburbarang/detailmodelbarang', $tampil)
-            ];
-            echo json_encode($data);
-        }
-    }
-    public function BatalLebur($id)
-    {
 
-        $datadetaillebur =  $this->modeldetaillebur->getDetailAllLebur($id);
-        foreach ($datadetaillebur as $row) {
+    public function BatalCuci($id)
+    {
+        $datadetailcuci =  $this->modeldetailcuci->getDetailAllCuci($id);
+        foreach ($datadetailcuci as $row) {
             $databuyback = $this->modeldetailbuyback->getDataDetailRetur($row['kode']);
             $this->modeldetailbuyback->save([
                 'id_detail_buyback' => $databuyback['id_detail_buyback'],
-                'status_proses' => 'Lebur'
+                'status_proses' => 'Cuci'
             ]);
         }
-        $this->modeldetaillebur->query('DELETE FROM tbl_detail_lebur WHERE id_date_lebur =' . $id . ';');
-        $this->modellebur->query('DELETE FROM tbl_lebur WHERE id_date_lebur =' . $id . ';');
-        return redirect()->to('/datalebur');
+        $this->modeldetailcuci->query('DELETE FROM tbl_detail_cuci WHERE id_date_cuci =' . $id . ';');
+        $this->modelcuci->query('DELETE FROM tbl_cuci WHERE id_date_cuci =' . $id . ';');
+        return redirect()->to('/datacuci');
     }
-    public function DeleteLebur()
+    public function DeleteCuci()
     {
         if ($this->request->isAJAX()) {
-            $kode =  $this->modeldetaillebur->getDataDetailLebur($this->request->getVar('id'));
+            $kode =  $this->modeldetailcuci->getDataDetailCuci($this->request->getVar('id'));
             $databuyback = $this->modeldetailbuyback->getDataDetailRetur($kode['kode']);
+            $datacuci = $this->modelcuci->getDataCuciAll($kode['id_date_cuci']);
 
             $this->modeldetailbuyback->save([
                 'id_detail_buyback' => $databuyback['id_detail_buyback'],
-                'status_proses' => 'Lebur'
+                'status_proses' => 'Cuci'
             ]);
-            $this->modeldetaillebur->delete($this->request->getVar('id'));
-
+            $this->modeldetailcuci->delete($this->request->getVar('id'));
+            $this->modelcuci->save([
+                'id_cuci' => $datacuci['id_cuci'],
+                'jumlah_barang' => $this->modeldetailcuci->CountJumlahCuci($kode['id_date_cuci'])['berat'],
+                'total_berat' => $this->modeldetailcuci->SumBeratDetailCuci($kode['id_date_cuci'])['berat'],
+            ]);
             $msg = 'sukses';
             echo json_encode($msg);
         }
     }
-    public function TampilLeburBarang($id)
+    public function UpdateCuci()
     {
-        // dd($this->modelbuyback->getDataDetailKode(220307024148));
-        $data = [
-            'datamastercuci' => $this->modelcuci->getDataCuciAll()($id),
-            'datacuci' => $this->modeldetailbuyback->getDataCuciAll(),
-            'dataakancuci' => $this->modeldetailcuci->getDetailLebur($id)
-        ];
-        return view('leburbarang/lebur_barang', $data);
+        if ($this->request->isAJAX()) {
+            $validation = \Config\Services::validation();
+            $valid = $this->validate([
+                // 'nilai_tukar' => [
+                //     'rules' => 'required',
+                //     'errors' => [
+                //         'required' => 'Nilai Tukar Harus di isi',
+                //     ]
+                // ],
+
+                'berat' => [
+                    'rules' => 'required',
+                    'errors' => [
+                        'required' => 'Berat Harus di isi',
+                    ]
+                ],
+            ]);
+        }
+        if (!$valid) {
+            $msg = [
+                'error' => [
+                    // 'nilai_tukar' => $validation->getError('nilai_tukar'),
+                    'berat' => $validation->getError('berat'),
+                ]
+            ];
+            echo json_encode($msg);
+        } else {
+            $id = $this->request->getVar('id');
+            $datadetailcuci = $this->modeldetailcuci->getDataDetailCuci($id);
+            $datastock = $this->datastock->CheckData($datadetailcuci['kode']);
+            $harga_beli = round($datadetailcuci['total_harga'] / $this->request->getVar('berat'));
+            $this->datastock->save([
+                'id_stock' => $datastock['id_stock'],
+                'qty' => $datadetailcuci['qty'],
+                'berat' => $this->request->getVar('berat'),
+                'harga_beli' => $harga_beli,
+                'total_harga' => $datadetailcuci['total_harga'],
+                'status' => 'C'
+            ]);
+            $this->modeldetailcuci->save([
+                'id_detail_cuci' => $datadetailcuci['id_detail_cuci'],
+                'berat' => $this->request->getVar('berat'),
+                'harga_beli' => $harga_beli,
+                'status_proses' => 'SelesaiCuci'
+            ]);
+            // $this->modelbuyback->save([
+            //     'id_detail_buyback' => $databuyback['id_detail_buyback'],
+            //     'status_proses' => 'SelesaiCuci ' . date('d-m-y')
+            // ]);
+
+            $msg = $harga_beli;
+            echo json_encode($msg);
+        }
     }
+    public function TampilCuci()
+    {
+        if ($this->request->isAJAX()) {
+
+            $id = $this->request->getVar('id');
+            $data = $this->modeldetailcuci->getDataDetailCuci($id);
+            $msg = [
+                'data' => $data
+            ];
+            echo json_encode($msg);
+        }
+    }
+    public function SelesaiCuci()
+    {
+        if ($this->request->isAJAX()) {
+            $validation = \Config\Services::validation();
+            $valid = $this->validate([
+                'tanggalcuci' => [
+                    'rules' => 'required',
+                    'errors' => [
+                        'required' => 'Jenis Harus di isi',
+                    ]
+                ],
+
+            ]);
+            if (!$valid) {
+                $msg = [
+                    'error' => [
+                        'tanggalcuci' => $validation->getError('tanggalcuci'),
+                        // 'berat' => $validation->getError('berat'),
+                        // 'harga_beli' => $validation->getError('harga_beli'),
+                        // 'gambar' => $validation->getError('gambar'),
+
+                    ]
+                ];
+                echo json_encode($msg);
+            } else {
+
+                $datadetailcuci =  $this->modeldetailcuci->getDetailCuci($this->request->getVar('dateidcuci'));
+                $datacuci = $this->modelcuci->getDataCuciAll($this->request->getVar('dateidcuci'));
+
+                if ($datadetailcuci) {
+                    $this->modelcuci->save([
+                        'id_cuci' => $datacuci['id_cuci'],
+                        'id_karyawan' => '1',
+                        'harga_cuci' => $this->request->getVar('harga_cuci'),
+                        'keterangan' =>  $this->request->getVar('keterangan'),
+                        'tanggal_cuci' => $this->request->getVar('tanggalcuci'),
+                        'status_dokumen' => 'Selesai'
+                    ]);
+
+                    $msg = 'sukses';
+                } else {
+                    $msg = [
+                        'error' => [
+                            'data' => 'Tidak ada Data',
+                        ]
+                    ];
+                }
+                echo json_encode($msg);
+            }
+        }
+    }
+
     public function NoTransaksiGenerateCuci()
     {
         $data = $this->modelcuci->getNoTransCuci();

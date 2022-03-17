@@ -87,16 +87,16 @@ class BarangRetur extends BaseController
         return view('returbarang/retur_barang', $data);
     }
 
-    public function TambahLebur()
+    public function TambahRetur()
     {
         if ($this->request->isAJAX()) {
             $kode = $this->request->getVar('kode');
             $iddate =  $this->request->getVar('iddate');
             $databuyback = $this->modeldetailbuyback->getDataDetailKode($kode);
-            $datadetaillebur = $this->modeldetaillebur->CheckDataLebur($databuyback['kode']);
-            if (!$datadetaillebur) {
-                $this->modeldetaillebur->save([
-                    'id_date_lebur' => $iddate,
+            $datadetailretur = $this->modeldetailretur->CheckDataretur($databuyback['kode']);
+            if (!$datadetailretur) {
+                $this->modeldetailretur->save([
+                    'id_date_retur' => $iddate,
                     'id_detail_buyback' => $databuyback['id_detail_buyback'],
                     'nama_img' => $databuyback['nama_img'],
                     'kode' =>  $databuyback['kode'],
@@ -112,11 +112,12 @@ class BarangRetur extends BaseController
                     'nilai_tukar' =>   $databuyback['nilai_tukar'],
                     'merek' =>  $databuyback['merek'],
                     'total_harga' => $databuyback['total_harga'],
+                    'status_proses' => 'Retur'
                 ]);
 
                 $this->modeldetailbuyback->save([
                     'id_detail_buyback' => $databuyback['id_detail_buyback'],
-                    'status_proses' => 'SudahLebur' . date('y-m-d')
+                    'status_proses' => 'SudahRetur' . date('y-m-d')
                 ]);
                 $msg = 'sukses';
             } else {
@@ -137,34 +138,56 @@ class BarangRetur extends BaseController
             echo json_encode($data);
         }
     }
-    public function BatalLebur($id)
+    public function BatalRetur($id)
     {
-
-        $datadetaillebur =  $this->modeldetaillebur->getDetailAllLebur($id);
-        foreach ($datadetaillebur as $row) {
+        $datadetailretur =  $this->modeldetailretur->getDetailAllretur($id);
+        foreach ($datadetailretur as $row) {
             $databuyback = $this->modeldetailbuyback->getDataDetailRetur($row['kode']);
             $this->modeldetailbuyback->save([
                 'id_detail_buyback' => $databuyback['id_detail_buyback'],
-                'status_proses' => 'Lebur'
+                'status_proses' => 'Retur'
             ]);
         }
-        $this->modeldetaillebur->query('DELETE FROM tbl_detail_lebur WHERE id_date_lebur =' . $id . ';');
-        $this->modellebur->query('DELETE FROM tbl_lebur WHERE id_date_lebur =' . $id . ';');
-        return redirect()->to('/datalebur');
+        $this->modeldetailretur->query('DELETE FROM tbl_detail_retur WHERE id_date_retur =' . $id . ';');
+        $this->modelretur->query('DELETE FROM tbl_retur WHERE id_date_retur =' . $id . ';');
+        return redirect()->to('/dataretur');
     }
-    public function DeleteLebur()
+    public function DeleteRetur()
     {
         if ($this->request->isAJAX()) {
-            $kode =  $this->modeldetaillebur->getDataDetailLebur($this->request->getVar('id'));
+            $kode =  $this->modeldetailretur->getDataDetailRetur($this->request->getVar('id'));
             $databuyback = $this->modeldetailbuyback->getDataDetailRetur($kode['kode']);
 
             $this->modeldetailbuyback->save([
                 'id_detail_buyback' => $databuyback['id_detail_buyback'],
-                'status_proses' => 'Lebur'
+                'status_proses' => 'Retur'
             ]);
-            $this->modeldetaillebur->delete($this->request->getVar('id'));
+            $this->modeldetailretur->delete($this->request->getVar('id'));
 
             $msg = 'sukses';
+            echo json_encode($msg);
+        }
+    }
+
+    public function ModalRetur()
+    {
+        if ($this->request->isAJAX()) {
+            $id = $this->request->getVar('id');
+            if ($id == 1) {
+                $data = [
+                    'dataretur' => $this->modeldetailbuyback->getDataReturAll(),
+                    'pesan' => 'Data Retur Sebelum Pilih'
+                ];
+            } else {
+                $data = [
+                    'dataretur' => $this->modeldetailretur->getDetailRetur($this->request->getVar('dateid')),
+                    'pesan' => 'Data Retur Sesudah Pilih'
+                ];
+            }
+            $msg = [
+                'tampilmodal' => view('returbarang/modalretur', $data)
+            ];
+            // $msg = 'sukses';
             echo json_encode($msg);
         }
     }

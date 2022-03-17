@@ -31,6 +31,11 @@ class Home extends BaseController
 
         return view('home/index');
     }
+    public function DetailBarangKode($id)
+    {
+        $getid = $this->barangmodel->getBarangkode($id);
+        return redirect()->to('/detail/' . $getid['id_stock']);
+    }
     public function databarang()
     {
         session();

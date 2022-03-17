@@ -144,6 +144,10 @@
                                 <a class="btn btn-app bg-primary" type="button">
                                     <i class="fas fa-check"></i> Selesai Lebur
                                 </a>
+                                <a type="button" class="btn btn-app bg-default" onclick="ModalPrintLebur(2,<?= $datamasterlebur['id_date_lebur'] ?>)">
+                                    <i class="fas fa-print"></i>Print
+                                </a>
+
                             <?php else : ?>
                                 <a type="button" onclick="Batal()" class="btn btn-app">
                                     <i class="fas fa-window-close"></i> Batal Lebur

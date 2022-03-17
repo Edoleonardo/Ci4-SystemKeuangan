@@ -47,7 +47,7 @@
                                     <tr>
                                         <th>Nomor Cuci</th>
                                         <th>model</th>
-                                        <th>Berat Murni</th>
+                                        <th>Total Berat</th>
                                         <th>Detail</th>
                                     </tr>
                                 </thead>
@@ -55,8 +55,8 @@
                                     <?php foreach ($datacuci as $row) : ?>
                                         <tr>
                                             <td><?= $row['no_cuci'] ?></td>
-                                            <td><?= $row['model'] ?></td>
-                                            <td><?= $row['berat'] ?></td>
+                                            <td><?= $row['keterangan'] ?></td>
+                                            <td><?= $row['total_berat'] ?></td>
                                             <td>
                                                 <?php if ($row['status_dokumen'] == 'Draft') : ?>
                                                     <a type="button" href="draftcuci/<?= $row['id_date_cuci'] ?>" class="btn btn-block btn-outline-danger btn-sm">Draft</a>

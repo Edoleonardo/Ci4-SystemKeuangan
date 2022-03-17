@@ -36,7 +36,6 @@ class ModelDetailCuci extends Model
     }
     public function getDetailCuci($id)
     {
-        // dd($id);
         $this->Where(['id_date_cuci' => $id]);
         $this->orderBy('created_at', 'DESC');
         $data = $this->get();
@@ -102,17 +101,17 @@ class ModelDetailCuci extends Model
         $query = $this->get();
         return $query->getResult('array')[0];
     }
-    public function SumDataOngkosBuyback($id)
+    public function CountJumlahCuci($id)
     {
-        $this->selectSum('ongkos');
-        $this->where('id_date_buyback', $id);
+        $this->selectCount('berat');
+        $this->where('id_date_cuci', $id);
         $query = $this->get();
         return $query->getResult('array')[0];
     }
-    public function SumBeratDetailBuyback($id)
+    public function SumBeratDetailCuci($id)
     {
         $this->selectSum('berat');
-        $this->where('id_date_buyback', $id);
+        $this->where('id_date_cuci', $id);
         $query = $this->get();
         return $query->getResult('array')[0];
     }

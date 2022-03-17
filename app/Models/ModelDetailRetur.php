@@ -10,7 +10,7 @@ class ModelDetailRetur extends Model
     protected $table = 'tbl_detail_retur';
     protected $primaryKey = 'id_detail_retur';
     protected $useTimestamps = true;
-    protected $allowedFields = ['id_date_retur', 'id_detail_buyback', 'nama_img', 'kode', 'jenis', 'qty', 'model', 'keterangan', 'berat_murni', 'berat', 'harga_beli', 'ongkos', 'kadar', 'status', 'nilai_tukar', 'merek', 'total_harga', 'no_nota', 'status_proses', 'nama_bank', 'tunai', 'transfer', 'cara_pembayaran', 'no_nota_jual'];
+    protected $allowedFields = ['id_date_retur', 'id_detail_buyback', 'nama_img', 'kode', 'jenis', 'qty', 'model', 'keterangan', 'berat_murni', 'berat', 'harga_beli', 'ongkos', 'kadar', 'status', 'nilai_tukar', 'merek', 'total_harga', 'no_nota', 'status_proses', 'nama_bank', 'tunai', 'transfer', 'cara_pembayaran', 'status_proses', 'no_nota_jual'];
 
     public function getDetailAllretur($id = false)
     {

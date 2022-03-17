@@ -91,48 +91,28 @@
     <section class="content">
         <div class="row">
             <div class="col-6">
-                <div class="card">
+                <div class="card" id="tblcard">
                     <!-- /.card-header -->
-                    <?php if (isset($datamastercuci)) : ?>
-                        <?php if ($datamastercuci['status_dokumen'] == 'Selesai') : ?>
-                            <table class="table text-nowrap">
-                                <tr>
-                                    <td>Tanggal Cuci :</td>
-                                    <td>
-                                        <?= $datamastercuci['tanggal_cuci'] ?>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td> Total Berat Murni :</td>
-                                    <td>
-                                        <?= $datamastercuci['berat_murni'] ?> g
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>Qty :</td>
-                                    <td>
-                                        <?= $datamastercuci['qty'] ?>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>Gambar :</td>
-                                    <td>
-                                        <img class="imgg" src="/img/<?= $datamastercuci['nama_img'] ?>">
-                                    </td>
-                                </tr>
-                            </table>
-                        <?php else : ?>
-                            <form action="/leburbarang" name="formleburbarang" id="formleburbarang" class="formleburbarang" method="post">
-                                <div class="form-group" style="margin: 1mm;">
-                                    <label>Tanggal Lebur</label>
-                                    <input type="date" class="form-control tanggallebur" id="tanggallebur" name="tanggallebur" value="<?= (isset($datamastercuci['tanggal_lebur'])) ? date_format(date_create($datamastercuci['tanggal_lebur']), "Y-m-d") : '' ?>" placeholder="Masukan Tanggal Lebur">
-                                    <div id="validationServerUsernameFeedback" class="invalid-feedback inputcustomermsg">
-                                    </div>
-                                </div>
-                            </form>
-                        <?php endif ?>
-                    <?php endif ?>
-
+                    <table class="table text-nowrap" id="tblheader">
+                        <tr>
+                            <td>Tanggal Cuci :</td>
+                            <td>
+                                <?= $datamastercuci['tanggal_cuci'] ?>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td> Total Berat cuci :</td>
+                            <td>
+                                <?= $datamastercuci['total_berat'] ?> g
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Jumlah Barang :</td>
+                            <td>
+                                <?= $datamastercuci['jumlah_barang'] ?>
+                            </td>
+                        </tr>
+                    </table>
                 </div>
                 <!-- /.card -->
             </div>
@@ -140,17 +120,25 @@
                 <!-- Application buttons -->
                 <div class="card">
                     <div class="card-body" id="refreshtombol">
-                        <a type="button" onclick="Batal()" class="btn btn-app">
-                            <i class="fas fa-window-close"></i> Batal Lebur
-                        </a>
+
                         <?php if (isset($datamastercuci)) : ?>
                             <?php if ($datamastercuci['status_dokumen'] == 'Selesai') : ?>
                                 <a class="btn btn-app bg-primary" type="button">
-                                    <i class="fas fa-check"></i> Selesai Lebur
+                                    <i class="fas fa-check"></i> Selesai Cuci
                                 </a>
+                                <a class="btn btn-app" href="/printbarcodecuci/<?= $datamastercuci['id_date_cuci'] ?>" target="_blank">
+                                    <i class="fas fa-barcode"></i> Print Barcode
+                                </a>
+                                <a type="button" class="btn btn-app" onclick="ModalPrintCuci(2,<?= $datamastercuci['id_date_cuci'] ?>)">
+                                    <i class="fas fa-print"></i> Print
+                                </a>
+
                             <?php else : ?>
+                                <a type="button" onclick="Batal()" class="btn btn-app">
+                                    <i class="fas fa-window-close"></i> Batal Cuci
+                                </a>
                                 <a class="btn btn-app bg-danger" type="button" data-toggle="modal" data-target="#modal-lg">
-                                    <i class="fas fa-money-bill"></i> Selesai Lebur
+                                    <i class="fas fa-money-bill"></i> Selesai Cuci
                                 </a>
                             <?php endif ?>
                         <?php endif ?>
@@ -168,9 +156,10 @@
                     <?php if (isset($datamastercuci)) : ?>
                         <?php if ($datamastercuci['status_dokumen'] != 'Selesai') : ?>
                             <div class="col-6">
-                                <label>Pilih Barang Lebur</label>
+                                <label>Pilih Barang Cuci</label>
                                 <div class="card">
                                     <!-- /.card-header -->
+                                    <button type="button" class="btn btn-block btn-outline-info btn-sm" onclick="ModalPrintCuci(1,<?= $datamastercuci['id_date_cuci'] ?>)"> <i class="fas fa-print"></i></button>
                                     <div class="card-body table-responsive p-0" style="max-height: 500px;">
                                         <table class="table table-head-fixed text-nowrap">
                                             <thead>
@@ -196,7 +185,7 @@
                                                             </select></td>
                                                         <td><?= $row['berat'] ?></td>
                                                         <td>
-                                                            <a type="button" onclick="tambahbaranglebur(<?= $row['id_detail_buyback'] ?>)" class="btn btn-block btn-outline-info btn-sm">Lebur</a>
+                                                            <a type="button" onclick="tambahbarangcuci(<?= $row['id_detail_buyback'] ?>)" class="btn btn-block btn-outline-info btn-sm">Cuci</a>
                                                         </td>
                                                     </tr>
                                                 <?php endforeach; ?>
@@ -208,8 +197,9 @@
                                 <!-- /.card -->
                             </div>
                             <div class="col-6">
-                                <label>Barang Lebur</label>
+                                <label>Barang Cuci</label>
                                 <div class="card">
+                                    <button type="button" class="btn btn-block btn-outline-info btn-sm" onclick="ModalPrintCuci(2,<?= $datamastercuci['id_date_cuci'] ?>)"> <i class="fas fa-print"></i></button>
                                     <!-- /.card-header -->
                                     <div class="card-body table-responsive p-0" style="max-height: 500px;">
                                         <table class="table table-head-fixed text-nowrap">
@@ -230,7 +220,7 @@
                                                         <td><?= $row['jenis'] ?> <?= $row['model'] ?></td>
                                                         <td><?= $row['berat'] ?></td>
                                                         <td>
-                                                            <button type='button' class='btn btn-block bg-gradient-danger' onclick="hapus(<?= $row['id_detail_lebur'] ?>)"><i class='fas fa-trash'></i></button>
+                                                            <button type='button' class='btn btn-block bg-gradient-danger' onclick="hapus(<?= $row['id_detail_cuci'] ?>)"><i class='fas fa-trash'></i></button>
                                                         </td>
                                                     </tr>
                                                 <?php endforeach; ?>
@@ -243,7 +233,7 @@
                             </div>
                         <?php else : ?>
                             <div class="col-12">
-                                <label>Barang Lebur</label>
+                                <label>Barang Cuci</label>
                                 <div class="card">
                                     <!-- /.card-header -->
                                     <div class="card-body table-responsive p-0" style="max-height: 500px;">
@@ -255,17 +245,23 @@
                                                     <th style="text-align: center;">Jenis</th>
                                                     <th style="text-align: center;">Model</th>
                                                     <th style="text-align: center;">Berat Murni</th>
+                                                    <th style="text-align: center;">Cuci</th>
                                                 </tr>
                                             </thead>
-                                            <tbody id="refreshtbl">
+                                            <tbody id="selesaicuci">
                                                 <?php foreach ($dataakancuci as $row) : ?>
-                                                    <tr id="akancuci">
+                                                    <tr id="sudahcuci">
                                                         <td class="imgg"><img class="imgg" src="/img/<?= $row['nama_img'] ?>"></td>
                                                         <td><?= $row['kode'] ?></td>
                                                         <td><?= $row['jenis'] ?></td>
                                                         <td><?= $row['model'] ?></td>
                                                         <td><?= $row['berat_murni'] ?></td>
-
+                                                        <td>
+                                                            <a type="button" href="/detailbarang/<?= $row['kode'] ?>" class="btn btn-block btn-outline-info btn-sm">Detail</a>
+                                                            <?php if ($row['status_proses'] != 'SelesaiCuci') : ?>
+                                                                <a type="button" onclick="editcuci(<?= $row['id_detail_cuci'] ?>)" class="btn btn-block btn-outline-danger btn-sm">Selesai Cuci</a>
+                                                            <?php endif; ?>
+                                                        </td>
                                                     </tr>
                                                 <?php endforeach; ?>
                                             </tbody>
@@ -292,104 +288,39 @@
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title">Tambah Data Lebur</h4>
+                <h4 class="modal-title">Tambah Data Cuci</h4>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
-                <form action="/selesailebur" name="selesailebur" id="selesailebur" class="selesailebur" method="post">
+                <form action="/selesaicuci" name="selesaicuci" id="selesaicuci" class="selesaicuci" method="post">
                     <div class="row">
                         <div class="col-4">
+                            <input type="hidden" name="dateidcuci" id="dateidcuci" value="<?= $datamastercuci['id_date_cuci'] ?>">
                             <div class="form-group" style="margin: 1mm;">
-                                <label>Tanggal Lebur</label>
-                                <input type="date" class="form-control tanggallebur" id="tanggallebur" name="tanggallebur" value="<?= (isset($datamastercuci['tanggal_lebur'])) ? date_format(date_create($datamastercuci['tanggal_lebur']), "Y-m-d") : '' ?>" placeholder="Masukan Tanggal Lebur">
-                                <div id="validationServerUsernameFeedback" class="invalid-feedback tanggalleburmsg">
+                                <label>Tanggal Cuci</label>
+                                <input type="date" class="form-control tanggalcuci" id="tanggalcuci" name="tanggalcuci" value="<?= (isset($datamastercuci['tanggal_cuci'])) ? date_format(date_create($datamastercuci['tanggal_cuci']), "Y-m-d") : '' ?>" placeholder="Masukan Tanggal Cuci">
+                                <div id="validationServerUsernameFeedback" class="invalid-feedback tanggalcucimsg">
                                 </div>
                             </div>
                         </div>
                         <div class="col-4">
                             <div class="form-group" style="margin: 1mm;">
-                                <label>Model Lebur</label>
-                                <input type="text" class="form-control modellebur" id="modellebur" name="modellebur" value="<?= (isset($datamastercuci['model'])) ? $datamastercuci['model'] : '' ?>" placeholder="Masukan Model">
-                                <div id="validationServerUsernameFeedback" class="invalid-feedback modelleburmsg">
+                                <label>Keterangan</label>
+                                <input type="text" class="form-control keterangan" id="keterangan" name="keterangan" placeholder="Masukan Keterangan">
+                                <div id="validationServerUsernameFeedback" class="invalid-feedback keteranganmsg">
                                 </div>
                             </div>
                         </div>
                         <div class="col-4">
                             <div class="form-group">
-                                <label>Berat Murni</label>
-                                <input type="number" id="berat_murni" name="berat_murni" class="form-control" placeholder="Masukan Nomor Nota Supplier">
-                                <div id="validationServerUsernameFeedback" class="invalid-feedback berat_murnimsg">
+                                <label>Harga Cuci</label>
+                                <input type="number" id="harga_cuci" name="harga_cuci" class="form-control" placeholder="Masukan Nomor Harga Cuci">
+                                <div id="validationServerUsernameFeedback" class="invalid-feedback harga_cucimsg">
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-2">
-                            <div class="form-group">
-                                <label>Qty</label>
-                                <input type="number" id="qty" name="qty" value="1" class="form-control" placeholder="Masukan Nomor Nota Supplier">
-                                <input type="hidden" name="dateidlebur" value="<?= $datamastercuci['id_date_cuci'] ?>">
-                                <div id="validationServerUsernameFeedback" class="invalid-feedback qtymsg">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-1">
-                            <!-- text input -->
-                            <div class="form-group">
-                                <label>Foto</label><br>
-                                <button type="button" id="ambilgbr" class="btn btn-primary" data-toggle="modal" data-target="#modal-foto" onclick="cameranyala()">
-                                    <i class="fa fa-camera"></i>
-                                </button>
-                                <div id="validationServerUsernameFeedback" class="invalid-feedback ambilgbrmsg"></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal fade" id="modal-foto">
-                        <div class="modal-dialog modal-default">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h4 class="modal-title">Ambil Foto</h4>
-                                    <button type="button" class="close" onclick="$('#modal-foto').modal('toggle');" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                </div>
-                                <div class="modal-body">
-                                    <div class="row">
-                                        <div class="col-sm-12">
-                                            <div class="form-group">
-                                                <div class="form-group"><label>Gambar</label>
-                                                    <div class="custom-file">
-                                                        <input type="file" name="gambar" class="custom-file-input" id="gambar" accept="image/*">
-                                                        <label style="text-align: left" class="custom-file-label" for="gambar">Pilih Gambar</label>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="form-group">
-                                            <div class="col-sm-12">
-                                                <div id='my_camera'>
-                                                </div>
-                                                <button style="text-align: center;" type='button' id='ambilfoto' class='btn btn-info ambilfoto' onclick='Foto_ulang()'>
-                                                    <i class='fa fa-trash'></i></button>
-                                                <button type='button' id='ambilfoto' class='btn btn-info ambilfoto' onclick='Ambil_foto()'>Foto <i class='fa fa-camera'></i>
-                                                </button>
-                                                <input type='hidden' name='gambar' id='gambar' class='image-tag'>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="modal-footer justify-content-between">
-                                        <button type="button" class="btn btn-default" onclick="$('#modal-foto').modal('toggle');">Close</button>
-                                        <button type="button" class="btn btn-primary" onclick="Webcam.reset()" data-dismiss="modal">Done</button>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- /.modal-content -->
-                        </div>
-                        <!-- /.modal-dialog -->
                     </div>
             </div>
             <div class="modal-footer justify-content-between">
@@ -444,6 +375,51 @@
     </div>
     <!-- /.modal-dialog -->
 </div>
+<div class="modal fade" id="modal-edit">
+    <div class="modal-dialog modal-m">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Update Data</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form action="/updatecuci" id="updatecuci" class="updatecuci" name="updatecuci">
+                    <?= csrf_field(); ?>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <label>Berat</label>
+                                <input type="number" step="0.01" id="berat" name="berat" class="form-control" placeholder="Masukan Berat Bersih">
+                                <div id="validationServerUsernameFeedback" class="invalid-feedback beratmsg">
+                                </div>
+                                <input type="hidden" name="id" id="id" value="">
+                                <input type="hidden" name="kode" id="kode" value="">
+                            </div>
+                        </div>
+                        <!-- <div class="col-sm-5">
+                            <div class="form-group">
+                                <label>Nilai Tukar</label>
+                                <input type="number" id="nilai_tukar" name="nilai_tukar" class="form-control" placeholder="Masukan Nilai Tukar">
+                                <div id="validationServerUsernameFeedback" class="invalid-feedback nilai_tukarmsg">
+                                </div>
+                            </div>
+                        </div> -->
+                    </div>
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-primary btnedit">Update</button>
+            </div>
+            </form>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<div id="modalcuci">
+</div>
 <!-- Control Sidebar -->
 <aside class="control-sidebar control-sidebar-dark">
     <!-- Control sidebar content goes here -->
@@ -454,8 +430,122 @@
 
 </footer>
 <script type="text/javascript">
+    $('.updatecuci').submit(function(e) {
+        e.preventDefault()
+        Swal.fire({
+            title: 'Selesai Cuci ',
+            text: "Data akan di masukan ke master stock ?",
+            icon: 'info',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Selesai',
+            cancelButtonText: 'Batal'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                let form = $('.updatecuci')[0];
+                let data = new FormData(form)
+                $.ajax({
+                    type: "POST",
+                    data: data,
+                    url: "<?php echo base_url('updatecuci'); ?>",
+                    contentType: false,
+                    processData: false,
+                    cache: false,
+                    dataType: "json",
+                    success: function(result) {
+                        if (result.error) {
+                            if (result.error.nilai_tukar) {
+                                $('#nilai_tukar').addClass('is-invalid')
+                                $('.nilai_tukarmsg').html(result.error.nilai_tukar)
+                            } else {
+                                $('#nilai_tukar').removeClass('is-invalid')
+                                $('.nilai_tukarmsg').html('')
+                            }
+                            if (result.error.berat) {
+                                $('#berat').addClass('is-invalid')
+                                $('.beratmsg').html(result.error.berat)
+                            } else {
+                                $('#berat').removeClass('is-invalid')
+                                $('.beratmsg').html('')
+                            }
+                        } else {
+                            $('#nilai_tukar').removeClass('is-invalid')
+                            $('.nilai_tukarmsg').html('')
+                            $('#berat').removeClass('is-invalid')
+                            $('.beratmsg').html('')
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Berhasil Di Cuci',
+                                confirmButtonColor: '#3085d6',
+                                confirmButtonText: 'OK',
+                                allowOutsideClick: false
+                            }).then((choose) => {
+                                if (choose.isConfirmed) {
+                                    console.log(result)
+                                    $('#modal-edit').modal('toggle');
+                                    $("#selesaicuci").load("/draftcuci/" + <?= $datamastercuci['id_date_cuci'] ?> + " #sudahcuci");
+
+                                    // window.location.href = '/datacuci'
+                                    // document.getElementById('refreshtbl').innerHTML = ''
+                                    // $("#refresconten").load("/datacuci #refreshtbl");
+                                    // $('#example1').data.reload();
+                                }
+                            })
+                        }
+                    },
+                    error: function(xhr, ajaxOptions, thrownError) {
+                        alert(xhr.status + "\n" + xhr.responseText + "\n" + thrownError);
+                    }
+                })
+            }
+        })
+
+    })
+
+    function editcuci(id) {
+        $.ajax({
+            type: "get",
+            dataType: "json",
+            url: "<?php echo base_url('tampilcuci'); ?>",
+            data: {
+                id: id,
+            },
+            success: function(result) {
+                $('#modal-edit').modal('show');
+                $('#berat').val(result.data.berat)
+                $('#nilai_tukar').val(result.data.nilai_tukar)
+                $('#harga_beli').val(result.data.harga_beli)
+                $('#id').val(result.data.id_detail_cuci)
+                $('#kode').val(result.data.kode)
+            },
+            error: function(xhr, ajaxOptions, thrownError) {
+                alert(xhr.status + "\n" + xhr.responseText + "\n" + thrownError);
+            }
+        })
+    }
+
+    function ModalPrintCuci(id, dateid) {
+        $.ajax({
+            type: "GET",
+            dataType: "json",
+            data: {
+                id: id,
+                dateid: dateid
+            },
+            url: "<?php echo base_url('modalprintcuci') ?>",
+            success: function(result) {
+                $('#modalcuci').html(result.tampilmodal)
+                $('#modal-cuci').modal('toggle')
+            },
+            error: function(xhr, ajaxOptions, thrownError) {
+                alert(xhr.status + "\n" + xhr.responseText + "\n" + thrownError);
+
+            }
+        })
+    }
+
     function EditDataCuci(id, val) {
-        // console.log(val.value)
         $.ajax({
             type: "get",
             dataType: "json",
@@ -465,7 +555,6 @@
                 status: val.value,
             },
             success: function(hasil) {
-                // console.log(hasil)
                 refreshtbl()
             },
             error: function(xhr, ajaxOptions, thrownError) {
@@ -479,18 +568,15 @@
     }
 
     function hapus(id) {
-        console.log(id)
         $.ajax({
             type: "get",
             dataType: "json",
-            url: "<?php echo base_url('hapuslebur'); ?>",
+            url: "<?php echo base_url('hapuscuci'); ?>",
             data: {
                 id: id,
             },
             success: function(hasil) {
                 refreshtbl()
-
-
             },
             error: function(xhr, ajaxOptions, thrownError) {
                 // alert(xhr.status + "\n" + xhr.responseText + "\n" + thrownError);
@@ -506,7 +592,6 @@
     function openmodaldetail(id) {
         $('#modal-detail').modal('toggle');
         detailbarang(id)
-        console.log(id)
     }
 
     function detailbarang(id) {
@@ -519,7 +604,6 @@
             },
             success: function(hasil) {
                 $('#detailmodelbarang').html(hasil.data)
-                console.log(hasil)
             },
             error: function(xhr, ajaxOptions, thrownError) {
                 alert(xhr.status + "\n" + xhr.responseText + "\n" + thrownError);
@@ -534,8 +618,8 @@
 
     function Batal() {
         Swal.fire({
-            title: 'Batal Lebur ',
-            text: "Apakah Ingin Batal Lebur ?",
+            title: 'Batal Cuci ',
+            text: "Apakah Ingin Batal Cuci ?",
             icon: 'info',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
@@ -543,7 +627,7 @@
             confirmButtonText: 'Batal',
         }).then((result) => {
             if (result.isConfirmed) {
-                window.location.href = "<?php echo base_url('batallebur/' . $datamastercuci['id_date_cuci']); ?>"
+                window.location.href = "<?php echo base_url('batalcuci/' . $datamastercuci['id_date_cuci']); ?>"
             }
         })
 
@@ -551,12 +635,11 @@
 
 
 
-    function tambahbaranglebur(kode) {
-        console.log(kode)
+    function tambahbarangcuci(kode) {
         $.ajax({
             type: "GET",
             dataType: "json",
-            url: "<?php echo base_url('tambahlebur'); ?>",
+            url: "<?php echo base_url('tambahcuci'); ?>",
             data: {
                 kode: kode,
                 iddate: <?= $datamastercuci['id_date_cuci'] ?>
@@ -580,15 +663,16 @@
     function refreshtbl() {
         $("#refreshtbl").load("/draftcuci/" + <?= $datamastercuci['id_date_cuci'] ?> + " #akancuci");
         $("#refreshtbl1").load("/draftcuci/" + <?= $datamastercuci['id_date_cuci'] ?> + " #datacuci");
+        $("#tblcard").load("/draftcuci/" + <?= $datamastercuci['id_date_cuci'] ?> + " #tblheader");
 
     }
 
     $(document).ready(function() {
-        $('.selesailebur').submit(function(e) {
+        $('.selesaicuci').submit(function(e) {
             e.preventDefault()
             Swal.fire({
-                title: 'Selesai Lebur ',
-                text: "Apakah Yakin Selesai Lebur ?",
+                title: 'Selesai Cuci ',
+                text: "Apakah Yakin Selesai Cuci ?",
                 icon: 'info',
                 showCancelButton: true,
                 cancelButtonColor: '#d33',
@@ -596,12 +680,12 @@
                 confirmButtonText: 'Selesai',
             }).then((result) => {
                 if (result.isConfirmed) {
-                    let form = $('.selesailebur')[0];
+                    let form = $('.selesaicuci')[0];
                     let data = new FormData(form)
                     $.ajax({
                         type: "POST",
                         data: data,
-                        url: "<?php echo base_url('selesailebur'); ?>",
+                        url: "<?php echo base_url('selesaicuci'); ?>",
                         dataType: "json",
                         contentType: false,
                         processData: false,
@@ -622,13 +706,6 @@
                                     $('#berat_murni').removeClass('is-invalid')
                                     $('.berat_murnimsg').html('')
                                 }
-                                if (hasil.error.modellebur) {
-                                    $('#modellebur').addClass('is-invalid')
-                                    $('.modelleburmsg').html(hasil.error.modellebur)
-                                } else {
-                                    $('#modellebur').removeClass('is-invalid')
-                                    $('.modelleburmsg').html('')
-                                }
                                 if (hasil.error.gambar) {
                                     $('#ambilgbr').addClass('is-invalid')
                                     $('.ambilgbrmsg').html(hasil.error.gambar)
@@ -643,16 +720,16 @@
                                     })
                                 }
                             } else {
-                                console.log(hasil)
                                 $('#qty').removeClass('is-invalid')
                                 $('.qtymsg').html('')
                                 $('#berat_murni').removeClass('is-invalid')
                                 $('.berat_murnimsg').html('')
-                                $('#modellebur').removeClass('is-invalid')
-                                $('.modelleburmsg').html('')
                                 $('#ambilgbr').removeClass('is-invalid')
                                 $('.ambilgbrmsg').html('')
-                                window.location.href = "<?php echo base_url('leburbarang/' . $datamastercuci['id_date_cuci']); ?>"
+
+
+
+                                window.location.href = "<?php echo base_url('draftcuci/' . $datamastercuci['id_date_cuci']); ?>"
                             }
                         },
                         error: function(xhr, ajaxOptions, thrownError) {
@@ -663,41 +740,6 @@
             })
 
         })
-        $(".modal").on("hidden.bs.modal", function() {
-            Webcam.reset('#my_camera')
-        });
     })
-
-    Webcam.set({
-        width: 320,
-        height: 240,
-        image_format: 'jpeg',
-        jpeg_quality: 100,
-        flip_horiz: true,
-    });
-
-    function cameranyala() {
-        if ($(".image-tag").val()) {
-            document.getElementById('my_camera').innerHTML = '<img src="' + data_uri + '">'
-        } else {
-            Webcam.attach('#my_camera');
-        }
-    }
-
-    function Ambil_foto() {
-        Webcam.snap(function(data_uri) {
-            $(".image-tag").val(data_uri);
-            Webcam.reset()
-            // Webcam.attach('#my_camera');
-            // console.log($(".image-tag").val())
-            document.getElementById('my_camera').innerHTML = '<img src="' + data_uri + '">'
-        })
-    }
-
-    function Foto_ulang() {
-        document.getElementById('my_camera').innerHTML = ''
-        $(".image-tag").val('');
-        Webcam.attach('#my_camera');
-    }
 </script>
 <?= $this->endSection(); ?>
