@@ -74,14 +74,14 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1 class="m-0">Form Lebur Barang</h1>
+                    <h1 class="m-0">Form Retur Barang</h1>
                 </div><!-- /.col -->
                 <!-- /.content-header -->
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
-                        <li class="breadcrumb-item"><a href="/datalebur">Home</a></li>
-                        <li class="breadcrumb-item"><a href="/datalebur">Lebur Barang</a></li>
-                        <li class="breadcrumb-item active">Form Lebur</li>
+                        <li class="breadcrumb-item"><a href="/dataretur">Home</a></li>
+                        <li class="breadcrumb-item"><a href="/dataretur">Retur Barang</a></li>
+                        <li class="breadcrumb-item active">Form Retur</li>
                     </ol>
                 </div><!-- /.col -->
             </div><!-- /.row -->
@@ -93,44 +93,46 @@
             <div class="col-6">
                 <div class="card">
                     <!-- /.card-header -->
-
-                    <div id="refreshtitle">
-                        <table class="table text-nowrap" id="titletr">
-
-                            <?php if ($datamasterlebur['status_dokumen'] == 'Selesai') : ?>
+                    <?php if (isset($datamasterretur)) : ?>
+                        <?php if ($datamasterretur['status_dokumen'] == 'Selesai') : ?>
+                            <table class="table text-nowrap">
                                 <tr>
-                                    <td> Barcode :</td>
+                                    <td>Tanggal Cuci :</td>
                                     <td>
-                                        <?= $datamasterlebur['kode'] ?>
+                                        <?= $datamasterretur['tanggal_cuci'] ?>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td> Total Berat Murni :</td>
+                                    <td>
+                                        <?= $datamasterretur['berat_murni'] ?> g
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Qty :</td>
+                                    <td>
+                                        <?= $datamasterretur['qty'] ?>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td>Gambar :</td>
                                     <td>
-                                        <img class="imgg" src="/img/<?= $datamasterlebur['nama_img'] ?>">
+                                        <img class="imgg" src="/img/<?= $datamasterretur['nama_img'] ?>">
                                     </td>
                                 </tr>
-                            <?php endif ?>
-                            <tr>
-                                <td> Total Berat Murni :</td>
-                                <td>
-                                    <?= $datamasterlebur['berat_murni'] ?> g
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Total Barang :</td>
-                                <td>
-                                    <?= $datamasterlebur['jumlah_barang'] ?>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Total Harga :</td>
-                                <td>
-                                    <?= number_format($datamasterlebur['total_harga_bahan'], 0, ',', '.') ?>
-                                </td>
-                            </tr>
-                        </table>
-                    </div>
+                            </table>
+                        <?php else : ?>
+                            <form action="/leburbarang" name="formleburbarang" id="formleburbarang" class="formleburbarang" method="post">
+                                <div class="form-group" style="margin: 1mm;">
+                                    <label>Tanggal Lebur</label>
+                                    <input type="date" class="form-control tanggallebur" id="tanggallebur" name="tanggallebur" value="<?= (isset($datamasterretur['tanggal_lebur'])) ? date_format(date_create($datamasterretur['tanggal_lebur']), "Y-m-d") : '' ?>" placeholder="Masukan Tanggal Lebur">
+                                    <div id="validationServerUsernameFeedback" class="invalid-feedback inputcustomermsg">
+                                    </div>
+                                </div>
+                            </form>
+                        <?php endif ?>
+                    <?php endif ?>
+
                 </div>
                 <!-- /.card -->
             </div>
@@ -138,16 +140,15 @@
                 <!-- Application buttons -->
                 <div class="card">
                     <div class="card-body" id="refreshtombol">
-
-                        <?php if (isset($datamasterlebur)) : ?>
-                            <?php if ($datamasterlebur['status_dokumen'] == 'Selesai') : ?>
+                        <a type="button" onclick="Batal()" class="btn btn-app">
+                            <i class="fas fa-window-close"></i> Batal Lebur
+                        </a>
+                        <?php if (isset($datamasterretur)) : ?>
+                            <?php if ($datamasterretur['status_dokumen'] == 'Selesai') : ?>
                                 <a class="btn btn-app bg-primary" type="button">
                                     <i class="fas fa-check"></i> Selesai Lebur
                                 </a>
                             <?php else : ?>
-                                <a type="button" onclick="Batal()" class="btn btn-app">
-                                    <i class="fas fa-window-close"></i> Batal Lebur
-                                </a>
                                 <a class="btn btn-app bg-danger" type="button" data-toggle="modal" data-target="#modal-lg">
                                     <i class="fas fa-money-bill"></i> Selesai Lebur
                                 </a>
@@ -164,13 +165,12 @@
             <div class="card-body">
                 <br>
                 <div class="row">
-                    <?php if (isset($datamasterlebur)) : ?>
-                        <?php if ($datamasterlebur['status_dokumen'] != 'Selesai') : ?>
+                    <?php if (isset($datamasterretur)) : ?>
+                        <?php if ($datamasterretur['status_dokumen'] != 'Selesai') : ?>
                             <div class="col-6">
                                 <label>Pilih Barang Lebur</label>
                                 <div class="card">
                                     <!-- /.card-header -->
-                                    <button type="button" class="btn btn-block btn-outline-info btn-sm" onclick="ModalPrintLebur(1,<?= $datamasterlebur['id_date_lebur'] ?>)"> <i class="fas fa-print"></i></button>
                                     <div class="card-body table-responsive p-0" style="max-height: 500px;">
                                         <table class="table table-head-fixed text-nowrap">
                                             <thead>
@@ -184,15 +184,15 @@
                                                 </tr>
                                             </thead>
                                             <tbody id="refreshtbl1">
-                                                <?php foreach ($datalebur as $row) : ?>
-                                                    <tr id="datalebur">
+                                                <?php foreach ($dataretur as $row) : ?>
+                                                    <tr id="dataretur">
                                                         <!-- <td class="imgg"><img class="imgg" src="/img/<?= $row['nama_img'] ?>"></td> -->
                                                         <td><a href="#" onclick="openmodaldetail(<?= $row['id_detail_buyback'] ?>)"><?= $row['kode'] ?></a></td>
                                                         <td><?= $row['jenis'] ?> <?= $row['model'] ?></td>
                                                         <td> <select name="status_proses" onchange="EditData(<?= $row['id_detail_buyback'] ?>,this)" class="form-control" id="status" name="status">
                                                                 <option value="Cuci">Cuci</option>
-                                                                <option value="Retur">Retur</option>
-                                                                <option selected value="Lebur">Lebur</option>
+                                                                <option selected value="Retur">Retur</option>
+                                                                <option value="Lebur">Lebur</option>
                                                             </select></td>
                                                         <td><?= $row['berat'] ?></td>
                                                         <td>
@@ -209,7 +209,6 @@
                             </div>
                             <div class="col-6">
                                 <label>Barang Lebur</label>
-                                <button type="button" class="btn btn-block btn-outline-info btn-sm" onclick="ModalPrintLebur(2,<?= $datamasterlebur['id_date_lebur'] ?>)"> <i class="fas fa-print"></i></button>
                                 <div class="card">
                                     <!-- /.card-header -->
                                     <div class="card-body table-responsive p-0" style="max-height: 500px;">
@@ -224,8 +223,8 @@
                                                 </tr>
                                             </thead>
                                             <tbody id="refreshtbl">
-                                                <?php foreach ($dataakanlebur as $row) : ?>
-                                                    <tr id="akanlebur">
+                                                <?php foreach ($dataakanretur as $row) : ?>
+                                                    <tr id="akanretur">
                                                         <!-- <td class="imgg"><img class="imgg" src="/img/<?= $row['nama_img'] ?>"></td> -->
                                                         <td><?= $row['kode'] ?></td>
                                                         <td><?= $row['jenis'] ?> <?= $row['model'] ?></td>
@@ -259,8 +258,8 @@
                                                 </tr>
                                             </thead>
                                             <tbody id="refreshtbl">
-                                                <?php foreach ($dataakanlebur as $row) : ?>
-                                                    <tr id="akanlebur">
+                                                <?php foreach ($dataakanretur as $row) : ?>
+                                                    <tr id="akanretur">
                                                         <td class="imgg"><img class="imgg" src="/img/<?= $row['nama_img'] ?>"></td>
                                                         <td><?= $row['kode'] ?></td>
                                                         <td><?= $row['jenis'] ?></td>
@@ -288,7 +287,7 @@
     <!-- /.content -->
 </div>
 <!-- /.content-wrapper -->
-
+</div>
 <div class="modal fade" id="modal-lg">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
@@ -300,62 +299,39 @@
             </div>
             <div class="modal-body">
                 <form action="/selesailebur" name="selesailebur" id="selesailebur" class="selesailebur" method="post">
-                    <?= csrf_field(); ?>
-                    <input type="hidden" name="dateidlebur" id="dateidlebur" value="<?= $datamasterlebur['id_date_lebur'] ?>">
                     <div class="row">
-                        <div class="col-sm-3">
-                            <div class="form-group">
+                        <div class="col-4">
+                            <div class="form-group" style="margin: 1mm;">
                                 <label>Tanggal Lebur</label>
-                                <input type="date" id="tanggallebur" name="tanggallebur" class="form-control" placeholder="Masukan tanggallebur" value="<?= date_format(date_create($datamasterlebur['tanggal_lebur']), "Y-m-d") ?>">
-
-                            </div>
-                        </div>
-                        <div class="col-sm-3">
-                            <div class="form-group">
-                                <a href="#" id="tampilmodal" data-toggle="modal" data-target="#modal-barcode"><label>Barcode</label></a>
-                                <input type="text" onkeyup="PilihBarcode($('#barcode').val())" id="barcode" name="barcode" class="form-control" placeholder="Masukan barcode">
-                            </div>
-                        </div>
-                        <div class="col-sm-3">
-                            <!-- text input -->
-                            <div class="form-group">
-                                <label>Jenis</label>
-                                <input type="text" name="jenis" id="jenis" class="form-control" placeholder="Masukan Jenis">
-                                <div id="validationServerUsernameFeedback" class="invalid-feedback jenismsg">
+                                <input type="date" class="form-control tanggallebur" id="tanggallebur" name="tanggallebur" value="<?= (isset($datamasterretur['tanggal_lebur'])) ? date_format(date_create($datamasterretur['tanggal_lebur']), "Y-m-d") : '' ?>" placeholder="Masukan Tanggal Lebur">
+                                <div id="validationServerUsernameFeedback" class="invalid-feedback tanggalleburmsg">
                                 </div>
                             </div>
                         </div>
-                        <div class="col-sm-3">
-                            <!-- text input -->
+                        <div class="col-4">
+                            <div class="form-group" style="margin: 1mm;">
+                                <label>Model Lebur</label>
+                                <input type="text" class="form-control modellebur" id="modellebur" name="modellebur" value="<?= (isset($datamasterretur['model'])) ? $datamasterretur['model'] : '' ?>" placeholder="Masukan Model">
+                                <div id="validationServerUsernameFeedback" class="invalid-feedback modelleburmsg">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-4">
                             <div class="form-group">
-                                <label>Berat</label>
-                                <input type="number" step="0.01" id="berat" name="berat" class="form-control" placeholder="Masukan Berat Bersih" value="<?= $datamasterlebur['berat_murni'] ?>">
-                                <div id="validationServerUsernameFeedback" class="invalid-feedback beratmsg">
+                                <label>Berat Murni</label>
+                                <input type="number" id="berat_murni" name="berat_murni" class="form-control" placeholder="Masukan Nomor Nota Supplier">
+                                <div id="validationServerUsernameFeedback" class="invalid-feedback berat_murnimsg">
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-sm-3">
-                            <!-- text input -->
+                        <div class="col-2">
                             <div class="form-group">
-                                <label>Model</label>
-                                <input type="text" name="model" id="model" class="form-control" placeholder="Masukan Model Barang">
-                            </div>
-                        </div>
-                        <div class="col-sm-3">
-                            <!-- text input -->
-                            <div class="form-group">
-                                <label>Keterangan</label>
-                                <input type="text" name="keterangan" id="keterangan" class="form-control" placeholder="Masukan Keterangan">
-                            </div>
-                        </div>
-                        <div class="col-sm-3">
-                            <!-- text input -->
-                            <div class="form-group">
-                                <label>Harga /g</label>
-                                <input type="number" name="harga_beli" id="harga_beli" class="form-control harga_beli" placeholder="Masukan Harga Beli">
-                                <div id="validationServerUsernameFeedback" class="invalid-feedback harga_belimsg">
+                                <label>Qty</label>
+                                <input type="number" id="qty" name="qty" value="1" class="form-control" placeholder="Masukan Nomor Nota Supplier">
+                                <input type="hidden" name="dateidlebur" value="<?= $datamasterretur['id_date_retur'] ?>">
+                                <div id="validationServerUsernameFeedback" class="invalid-feedback qtymsg">
                                 </div>
                             </div>
                         </div>
@@ -468,57 +444,6 @@
     </div>
     <!-- /.modal-dialog -->
 </div>
-<div class="modal fade" id="modal-barcode">
-    <div class="modal-dialog modal-xl">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title">Pilih Barcode</h4>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="card-body table-responsive p-0">
-                    <table class="table table-bordered table-hover">
-                        <thead>
-                            <tr>
-                                <th style="text-align: center;">Barcode</th>
-                                <th style="text-align: center;">Keterangan</th>
-                                <th style="text-align: center;">Kadar</th>
-                                <th style="text-align: center;">Berat</th>
-                                <th style="text-align: center;">No Faktur</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php foreach ($databarcode as $row) : ?>
-                                <tr onclick="PilihBarcode(<?= $row['barcode'] ?>)">
-                                    <td><?= $row['barcode'] ?></td>
-                                    <td><?= $row['jenis'] ?> <?= $row['model'] ?> <?= $row['keterangan'] ?></td>
-                                    <td><?= $row['kadar'] ?></td>
-                                    <td><?= $row['berat'] ?></td>
-                                    <td><?= $row['no_faktur'] ?></td>
-                                </tr>
-                            <?php endforeach; ?>
-                        </tbody>
-                        <tfoot>
-                            <tr>
-                                <th style="text-align: center;">Barcode</th>
-                                <th style="text-align: center;">Keterangan</th>
-                                <th style="text-align: center;">Kadar</th>
-                                <th style="text-align: center;">Berat</th>
-                                <th style="text-align: center;">No Faktur</th>
-                            </tr>
-                        </tfoot>
-                    </table>
-                </div>
-            </div>
-            <div class="modal-footer justify-content-between">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" data-dismiss="modal">Done</button>
-            </div>
-        </div>
-    </div>
-</div>
 <!-- Control Sidebar -->
 <aside class="control-sidebar control-sidebar-dark">
     <!-- Control sidebar content goes here -->
@@ -528,62 +453,7 @@
 <footer class="main-footer">
 
 </footer>
-
-
-<div id="modallebur">
-
-</div>
 <script type="text/javascript">
-    function PilihBarcode(kode) {
-        document.getElementById('barcode').value = kode
-        $.ajax({
-            type: "GET",
-            dataType: "json",
-            data: {
-                kode: kode
-            },
-            url: "<?php echo base_url('detailbarcode') ?>",
-            success: function(result) {
-                $('#merek').val(result.datadetail.merek)
-                $('#kadar').val(result.datadetail.kadar)
-                $('#jenis').val(result.datadetail.jenis)
-                $('#model').val(result.datadetail.model)
-                $('#berat').val(result.datadetail.berat)
-                $('#keterangan').val(result.datadetail.keterangan)
-                $('#qty').val(result.datadetail.qty)
-                $('#nilai_tukar').val(result.datadetail.nilai_tukar)
-                $('#harga_beli').val(result.datadetail.harga_beli)
-                $('#ongkos').val(result.datadetail.ongkos)
-                $('#kelompok').val(($('#barcode').val()) ? $('#barcode').val().substr(0, 1) : $('#kelompok').val())
-            },
-            error: function(xhr, ajaxOptions, thrownError) {
-                alert(xhr.status + "\n" + xhr.responseText + "\n" + thrownError);
-
-            }
-        })
-        $('#modal-barcode').modal('hide');
-    }
-
-    function ModalPrintLebur(id, dateid) {
-        $.ajax({
-            type: "GET",
-            dataType: "json",
-            data: {
-                id: id,
-                dateid: dateid
-            },
-            url: "<?php echo base_url('modalprintlebur') ?>",
-            success: function(result) {
-                $('#modallebur').html(result.tampilmodal)
-                $('#modal-lebur').modal('toggle')
-            },
-            error: function(xhr, ajaxOptions, thrownError) {
-                alert(xhr.status + "\n" + xhr.responseText + "\n" + thrownError);
-
-            }
-        })
-    }
-
     function EditData(id, val) {
         $.ajax({
             type: "get",
@@ -594,6 +464,7 @@
                 status: val.value,
             },
             success: function(hasil) {
+                console.log(hasil)
                 refreshtbl()
             },
             error: function(xhr, ajaxOptions, thrownError) {
@@ -617,6 +488,8 @@
             },
             success: function(hasil) {
                 refreshtbl()
+
+
             },
             error: function(xhr, ajaxOptions, thrownError) {
                 // alert(xhr.status + "\n" + xhr.responseText + "\n" + thrownError);
@@ -669,11 +542,13 @@
             confirmButtonText: 'Batal',
         }).then((result) => {
             if (result.isConfirmed) {
-                window.location.href = "<?php echo base_url('batallebur/' . $datamasterlebur['id_date_lebur']); ?>"
+                window.location.href = "<?php echo base_url('batallebur/' . $datamasterretur['id_date_retur']); ?>"
             }
         })
 
     };
+
+
 
     function tambahbaranglebur(kode) {
         console.log(kode)
@@ -683,11 +558,10 @@
             url: "<?php echo base_url('tambahlebur'); ?>",
             data: {
                 kode: kode,
-                iddate: <?= $datamasterlebur['id_date_lebur'] ?>
+                iddate: <?= $datamasterretur['id_date_retur'] ?>
             },
             success: function(result) {
                 refreshtbl()
-                console.log(result)
                 if (result == 'gagal') {
                     Swal.fire({
                         icon: 'warning',
@@ -703,13 +577,12 @@
     }
 
     function refreshtbl() {
-        $("#refreshtbl").load("/draftlebur/" + <?= $datamasterlebur['id_date_lebur'] ?> + " #akanlebur");
-        $("#refreshtbl1").load("/draftlebur/" + <?= $datamasterlebur['id_date_lebur'] ?> + " #datalebur");
-        $("#refreshtitle").load("/draftlebur/" + <?= $datamasterlebur['id_date_lebur'] ?> + " #titletr");
+        $("#refreshtbl").load("/draftretur/" + <?= $datamasterretur['id_date_retur'] ?> + " #akanretur");
+        $("#refreshtbl1").load("/draftretur/" + <?= $datamasterretur['id_date_retur'] ?> + " #dataretur");
+
     }
 
     $(document).ready(function() {
-        // ModalPrintLebur()
         $('.selesailebur').submit(function(e) {
             e.preventDefault()
             Swal.fire({
@@ -734,33 +607,26 @@
                         cache: false,
                         success: function(hasil) {
                             if (hasil.error) {
-                                if (hasil.error.nilai_tukar) {
-                                    $('#nilai_tukar').addClass('is-invalid')
-                                    $('.nilai_tukarmsg').html(hasil.error.nilai_tukar)
+                                if (hasil.error.qty) {
+                                    $('#qty').addClass('is-invalid')
+                                    $('.qtymsg').html(hasil.error.qty)
                                 } else {
-                                    $('#nilai_tukar').removeClass('is-invalid')
-                                    $('.nilai_tukarmsg').html('')
+                                    $('#qty').removeClass('is-invalid')
+                                    $('.qtymsg').html('')
                                 }
-                                if (hasil.error.jenis) {
-                                    $('#jenis').addClass('is-invalid')
-                                    $('.jenismsg').html(hasil.error.jenis)
+                                if (hasil.error.berat_murni) {
+                                    $('#berat_murni').addClass('is-invalid')
+                                    $('.berat_murnimsg').html(hasil.error.berat_murni)
                                 } else {
-                                    $('#jenis').removeClass('is-invalid')
-                                    $('.jenismsg').html('')
+                                    $('#berat_murni').removeClass('is-invalid')
+                                    $('.berat_murnimsg').html('')
                                 }
-                                if (hasil.error.berat) {
-                                    $('#berat').addClass('is-invalid')
-                                    $('.beratmsg').html(hasil.error.berat)
+                                if (hasil.error.modellebur) {
+                                    $('#modellebur').addClass('is-invalid')
+                                    $('.modelleburmsg').html(hasil.error.modellebur)
                                 } else {
-                                    $('#berat').removeClass('is-invalid')
-                                    $('.beratmsg').html('')
-                                }
-                                if (hasil.error.harga_beli) {
-                                    $('#harga_beli').addClass('is-invalid')
-                                    $('.harga_belimsg').html(hasil.error.harga_beli)
-                                } else {
-                                    $('#harga_beli').removeClass('is-invalid')
-                                    $('.harga_belimsg').html('')
+                                    $('#modellebur').removeClass('is-invalid')
+                                    $('.modelleburmsg').html('')
                                 }
                                 if (hasil.error.gambar) {
                                     $('#ambilgbr').addClass('is-invalid')
@@ -777,19 +643,15 @@
                                 }
                             } else {
                                 console.log(hasil)
-                                $('#total_berat').removeClass('is-invalid')
-                                $('.total_beratmsg').html('')
-                                $('#nilai_tukar').removeClass('is-invalid')
-                                $('.nilai_tukarmsg').html('')
-                                $('#jenis').removeClass('is-invalid')
-                                $('.jenismsg').html('')
-                                $('#berat').removeClass('is-invalid')
-                                $('.beratmsg').html('')
-                                $('#harga_beli').removeClass('is-invalid')
-                                $('.harga_belimsg').html('')
+                                $('#qty').removeClass('is-invalid')
+                                $('.qtymsg').html('')
+                                $('#berat_murni').removeClass('is-invalid')
+                                $('.berat_murnimsg').html('')
+                                $('#modellebur').removeClass('is-invalid')
+                                $('.modelleburmsg').html('')
                                 $('#ambilgbr').removeClass('is-invalid')
                                 $('.ambilgbrmsg').html('')
-                                window.location.href = "<?php echo base_url('draftlebur/' . $datamasterlebur['id_date_lebur']); ?>"
+                                window.location.href = "<?php echo base_url('leburbarang/' . $datamasterretur['id_date_retur']); ?>"
                             }
                         },
                         error: function(xhr, ajaxOptions, thrownError) {

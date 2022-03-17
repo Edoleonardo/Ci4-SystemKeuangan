@@ -238,6 +238,18 @@
                             </a>
                         </li>
                         <li class="nav-item">
+                            <a href="/dataretur" class="nav-link ">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Barang Retur Ril</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/datacuci" class="nav-link ">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Barang Cuci Ril</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
                             <a href="/datalebur" class="nav-link ">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>Barang Lebur</p>

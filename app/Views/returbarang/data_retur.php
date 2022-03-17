@@ -17,13 +17,13 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1 class="m-0">Data Barang Lebur</h1>
+                    <h1 class="m-0">Data Barang Retur</h1>
                 </div><!-- /.col -->
                 <!-- /.content-header -->
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
                         <li class="breadcrumb-item"><a href="/">Home</a></li>
-                        <li class="breadcrumb-item active">Barang Lebur</li>
+                        <li class="breadcrumb-item active">Barang Retur</li>
                     </ol>
                 </div><!-- /.col -->
             </div><!-- /.row -->
@@ -36,8 +36,8 @@
                 <div class="col-12">
                     <div class="card">
                         <div class="card-header ">
-                            <a class="btn btn-app" href="/leburbarang">
-                                <i class="fas fa-plus"></i> Lebur Barang
+                            <a class="btn btn-app" href="/returbarang">
+                                <i class="fas fa-plus"></i> Retur Barang
                             </a>
                         </div>
                         <!-- /.card-header -->
@@ -45,25 +45,23 @@
                             <table id="example1" class="table table-bordered table-striped tableasd">
                                 <thead>
                                     <tr>
-                                        <th>Gambar</th>
-                                        <th>Nomor Lebur</th>
+                                        <th>Nomor Retur</th>
                                         <th>model</th>
                                         <th>Berat Murni</th>
                                         <th>Detail</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <?php foreach ($datalebur as $row) : ?>
+                                    <?php foreach ($dataretur as $row) : ?>
                                         <tr>
-                                            <td class="imgg"><img class="imgg" src="/img/<?= ($row['nama_img']) ? $row['nama_img'] : 'default.jpg' ?>"></td>
-                                            <td><?= $row['no_lebur'] ?></td>
+                                            <td><?= $row['no_retur'] ?></td>
                                             <td><?= $row['model'] ?></td>
-                                            <td><?= $row['berat_murni'] ?></td>
+                                            <td><?= $row['berat'] ?></td>
                                             <td>
                                                 <?php if ($row['status_dokumen'] == 'Draft') : ?>
-                                                    <a type="button" href="draftlebur/<?= $row['id_date_lebur'] ?>" class="btn btn-block btn-outline-danger btn-sm">Draft</a>
+                                                    <a type="button" href="draftretur/<?= $row['id_date_retur'] ?>" class="btn btn-block btn-outline-danger btn-sm">Draft</a>
                                                 <?php else : ?>
-                                                    <a type="button" href="draftlebur/<?= $row['id_date_lebur'] ?>" class="btn btn-block btn-outline-info btn-sm">Detail</a>
+                                                    <a type="button" href="draftretur/<?= $row['id_date_retur'] ?>" class="btn btn-block btn-outline-info btn-sm">Detail</a>
                                                 <?php endif ?>
                                             </td>
                                         </tr>
@@ -71,7 +69,6 @@
                                 </tbody>
                                 <tfoot>
                                     <tr>
-                                        <th>Gambar</th>
                                         <th>Kode</th>
                                         <th>model</th>
                                         <th>Berat Murni</th>
