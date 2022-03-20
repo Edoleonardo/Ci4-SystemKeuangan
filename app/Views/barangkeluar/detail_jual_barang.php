@@ -40,6 +40,7 @@
                     <!-- /.card-header -->
                     <table class="table table-striped">
                         <form action="/kodebarcode" name="formkodebarcode" id="formkodebarcode" class="formkodebarcode" method="post">
+                            <?= csrf_field(); ?>
                             <tbody>
                                 <tr>
                                     <td>

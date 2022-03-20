@@ -284,6 +284,7 @@
                 <div class="row">
                     <div class="col-6">
                         <form action="/scantrans" name="scannotrans" id="scannotrans" class="scannotrans" method="post">
+                            <?= csrf_field(); ?>
                             <div class="form-group" style="margin: 1mm;">
                                 <label>Masukan No Invoce (Nota)</label>
                                 <div class="input-group input-group-sm">
@@ -440,6 +441,7 @@
             </div>
             <div class="modal-body">
                 <form action="/tambahbuybacknonota" id="tambahbuybacknonota" class="tambahbuybacknonota" name="tambahbuybacknonota">
+                    <?= csrf_field(); ?>
                     <div class="row">
                         <div class="col-sm-3">
                             <!-- text input -->
@@ -652,6 +654,7 @@
             </div>
             <div class="modal-body">
                 <form action="/pembayaranform" id="pembayaranform" class="pembayaranform" name="pembayaranform">
+                    <?= csrf_field(); ?>
                     <div class="row">
                         <div class="col-sm-12">
                             <div class="card">
@@ -747,6 +750,7 @@
                 </button>
             </div>
             <form action="/insertcustomer" name="insertcust" id="insertcust" class="insertcust" method="post">
+                <?= csrf_field(); ?>
                 <div class="row" style="margin: 10px;">
                     <div class="col-12">
                         <div class="form-group">

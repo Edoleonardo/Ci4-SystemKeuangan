@@ -123,6 +123,7 @@
                             </table>
                         <?php else : ?>
                             <form action="/leburbarang" name="formleburbarang" id="formleburbarang" class="formleburbarang" method="post">
+                                <?= csrf_field(); ?>
                                 <div class="form-group" style="margin: 1mm;">
                                     <label>Tanggal Lebur</label>
                                     <input type="date" class="form-control tanggallebur" id="tanggallebur" name="tanggallebur" value="<?= (isset($datamasterlebur['tanggal_lebur'])) ? date_format(date_create($datamasterlebur['tanggal_lebur']), "Y-m-d") : '' ?>" placeholder="Masukan Tanggal Lebur">
@@ -296,6 +297,7 @@
                 </button>
             </div>
             <form action="/selesailebur" name="selesailebur" id="selesailebur" class="selesailebur" method="post">
+                <?= csrf_field(); ?>
                 <div class="row">
                     <div class="col-3">
                         <div class="form-group" style="margin: 1mm;">

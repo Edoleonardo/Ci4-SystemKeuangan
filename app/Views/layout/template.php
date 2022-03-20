@@ -76,15 +76,15 @@
                 "aaSorting": []
                 //"buttons": ["copy", "csv", "excel", "pdf", "print", "colvis", ]
             }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
-            $('#example2').DataTable({
-                "paging": true,
-                "lengthChange": false,
-                "searching": false,
-                "ordering": true,
-                "info": true,
-                "autoWidth": false,
-                "responsive": true,
-            });
+            // $('#example2').DataTable({
+            //     "paging": true,
+            //     "lengthChange": false,
+            //     "searching": false,
+            //     "ordering": true,
+            //     "info": true,
+            //     "autoWidth": false,
+            //     "responsive": true,
+            // });
 
             $("#bahan24k").DataTable({
                 "responsive": true,
@@ -93,15 +93,15 @@
                 "aaSorting": []
                 //"buttons": ["copy", "csv", "excel", "pdf", "print", "colvis", ]
             }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
-            $('#example2').DataTable({
-                "paging": true,
-                "lengthChange": false,
-                "searching": false,
-                "ordering": true,
-                "info": true,
-                "autoWidth": false,
-                "responsive": true,
-            });
+            // $('#example2').DataTable({
+            //     "paging": true,
+            //     "lengthChange": false,
+            //     "searching": false,
+            //     "ordering": true,
+            //     "info": true,
+            //     "autoWidth": false,
+            //     "responsive": true,
+            // });
 
             $("#retursales").DataTable({
                 "responsive": true,
@@ -110,15 +110,29 @@
                 "aaSorting": []
                 //"buttons": ["copy", "csv", "excel", "pdf", "print", "colvis", ]
             }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
-            $('#example2').DataTable({
-                "paging": true,
-                "lengthChange": false,
-                "searching": false,
-                "ordering": true,
-                "info": true,
-                "autoWidth": false,
+
+            $("#merek").DataTable({
                 "responsive": true,
-            });
+                "lengthChange": false,
+                "autoWidth": false,
+                "aaSorting": []
+                //"buttons": ["copy", "csv", "excel", "pdf", "print", "colvis", ]
+            }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
+            $("#bank").DataTable({
+                "responsive": true,
+                "lengthChange": false,
+                "autoWidth": false,
+                "aaSorting": []
+                //"buttons": ["copy", "csv", "excel", "pdf", "print", "colvis", ]
+            }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
+            $("#kadar").DataTable({
+                "responsive": true,
+                "lengthChange": false,
+                "autoWidth": false,
+                "aaSorting": []
+                //"buttons": ["copy", "csv", "excel", "pdf", "print", "colvis", ]
+            }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
+
         });
     </script>
 </body>

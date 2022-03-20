@@ -297,6 +297,7 @@
                     </div>
                     <div class="modal-body">
                         <form action="/pembayaranform" id="pembayaranform" class="pembayaranform" name="pembayaranform">
+                            <?= csrf_field(); ?>
                             <div class="row">
                                 <div class="col-sm-5">
                                     <div class="col-sm-12">

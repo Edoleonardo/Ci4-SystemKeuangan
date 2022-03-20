@@ -155,7 +155,21 @@ $routes->get('/detailbarang', 'BarangRetur::DataDetailBarang');
 
 // $routes->post('/selesailebur', 'Prosesbarang::SelesaiLebur');
 
+//----------------------------------masterinput-------------------------
+$routes->get('/masterinput', 'MasterInput::HomeInput');
+$routes->POST('/insertsupp', 'MasterInput::InsertSupp');
+$routes->POST('/insertkadar', 'MasterInput::InsertKadar');
+$routes->POST('/insertmerek', 'MasterInput::InsertMerek');
+$routes->POST('/insertbank', 'MasterInput::InsertBank');
+$routes->POST('/updatesupp', 'MasterInput::UpdateSupp');
+$routes->POST('/updatekadar', 'MasterInput::UpdateKadar');
+$routes->POST('/updatemerek', 'MasterInput::UpdateMerek');
+$routes->POST('/updatebank', 'MasterInput::UpdateBank');
+$routes->POST('/updatecust', 'MasterInput::UpdateCust');
 
+
+// $routes->POST('/hapusdata', 'MasterInput::HapusData');
+$routes->get('/isidata', 'MasterInput::DataMaster');
 
 
 // $routes->get('/leburbarang/(:any)', 'Prosesbarang::LeburBarang/$1');

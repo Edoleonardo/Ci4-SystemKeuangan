@@ -295,6 +295,7 @@
             </div>
             <div class="modal-body">
                 <form action="/selesaicuci" name="selesaicuci" id="selesaicuci" class="selesaicuci" method="post">
+                    <?= csrf_field(); ?>
                     <div class="row">
                         <div class="col-4">
                             <input type="hidden" name="dateidcuci" id="dateidcuci" value="<?= $datamastercuci['id_date_cuci'] ?>">

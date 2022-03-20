@@ -10,7 +10,7 @@ class ModelMerek extends Model
     protected $table = 'tbl_merek';
     protected $primaryKey = 'id_merek';
     protected $useTimestamps = true;
-    protected $allowedFields = ['kode', 'qty', 'jenis', 'model', 'keterangan', 'berat', 'harga_beli', 'kadar', 'nilai_tukar', 'merek', 'total_harga'];
+    protected $allowedFields = ['nama_merek'];
 
     public function getMerek($id = false)
     {

@@ -92,6 +92,7 @@
             <div class="col-6">
                 <!-- /.card-header -->
                 <form action="/kodebarcode" name="formkodebarcode" id="formkodebarcode" class="formkodebarcode" method="post">
+                    <?= csrf_field(); ?>
                     <input type="hidden" name="iddate" id="iddate" value="<?= $datapenjualan['id_date_penjualan'] ?>">
                     <div class="card">
                         <div class="form-group" style="margin: 1mm;">
@@ -271,6 +272,7 @@
             </div>
             <div class="modal-body">
                 <form action="/pembayaranform" id="pembayaranform" class="pembayaranform" name="pembayaranform">
+                    <?= csrf_field(); ?>
                     <div class="row">
                         <div class="col-sm-6">
                             <div class="col-sm-12">
@@ -401,6 +403,7 @@
                 </button>
             </div>
             <form action="/insertcustomer" name="insertcust" id="insertcust" class="insertcust" method="post">
+                <?= csrf_field(); ?>
                 <div class="row" style="margin: 10px;">
                     <div class="col-12">
                         <div class="form-group">

@@ -123,6 +123,7 @@
                             </table>
                         <?php else : ?>
                             <form action="/leburbarang" name="formleburbarang" id="formleburbarang" class="formleburbarang" method="post">
+                                <?= csrf_field(); ?>
                                 <div class="form-group" style="margin: 1mm;">
                                     <label>Tanggal Lebur</label>
                                     <input type="date" class="form-control tanggallebur" id="tanggallebur" name="tanggallebur" value="<?= (isset($datamasterretur['tanggal_lebur'])) ? date_format(date_create($datamasterretur['tanggal_lebur']), "Y-m-d") : '' ?>" placeholder="Masukan Tanggal Lebur">
@@ -302,6 +303,7 @@
             </div>
             <div class="modal-body">
                 <form action="/selesailebur" name="selesailebur" id="selesailebur" class="selesailebur" method="post">
+                    <?= csrf_field(); ?>
                     <div class="row">
                         <div class="col-4">
                             <div class="form-group" style="margin: 1mm;">
