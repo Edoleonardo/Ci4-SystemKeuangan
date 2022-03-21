@@ -144,19 +144,19 @@
 <footer class="main-footer">
 
 </footer>
-<!-- <script src="https://harga-emas.org/widget/widget.js"></script> -->
+<script src="https://harga-emas.org/widget/widget.js"></script>
 <script src="/plugins/chart.js/Chart.min.js"></script>
 <script src="/dist/js/pages/dashboard3.js"></script>
 <script>
-  // v_widget_type = 'current_gold_price';
-  // v_width = 400;
-  // v_height = 215;
-  // he_org_show(v_widget_type, v_width, v_height, 'div_widget');
+  v_widget_type = 'current_gold_price';
+  v_width = 400;
+  v_height = 215;
+  he_org_show(v_widget_type, v_width, v_height, 'div_widget');
 
-  // v_widget_type = "chart_gold_antam";
-  // v_period = 90; //hari
-  // v_width = 400;
-  // v_height = 300;
-  // he_org_show_chart(v_widget_type, v_period, v_width, v_height, 'div_chart_antam');
+  v_widget_type = "chart_gold_antam";
+  v_period = 90; //hari
+  v_width = 400;
+  v_height = 300;
+  he_org_show_chart(v_widget_type, v_period, v_width, v_height, 'div_chart_antam');
 </script>
 <?= $this->endSection(); ?>

@@ -8,8 +8,8 @@
                 </button>
             </div>
             <div class="modal-body">
-                <div class="card-body table-responsive p-0">
-                    <table class="table table-bordered table-hover">
+                <div class="card-body table-responsive p-0" style="max-height: 500px;">
+                    <table class="table table-head-fixed text-nowrap">
                         <thead>
                             <tr>
                                 <th style="text-align: center;">Keterangan</th>
@@ -38,19 +38,6 @@
                                 </tr>
                             <?php endforeach; ?>
                         </tbody>
-                        <tfoot>
-                            <tr>
-                                <th>Keterangan</th>
-                                <th>Kadar</th>
-                                <th>Berat</th>
-                                <th>Tanggal</th>
-                                <th>No Faktur</th>
-                                <th>Nama Customer</th>
-                                <th>Keluar</th>
-                                <th>Masuk</th>
-                                <th>Saldo</th>
-                            </tr>
-                        </tfoot>
                     </table>
                 </div>
             </div>

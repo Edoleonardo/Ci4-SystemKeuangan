@@ -90,7 +90,7 @@
                             <i class="fas fa-plus"></i> Tambah Supplier
                         </a>
                         <div class="card-body">
-                            <table id="bahan24k" class="table table-bordered table-striped">
+                            <table id="supplier" class="table table-bordered table-striped">
                                 <thead>
                                     <tr>
                                         <th>Nama Supplier</th>
@@ -950,45 +950,43 @@
             })
         })
     })
+    $(function() {
+        $("#example1").DataTable({
+            "responsive": true,
+            "lengthChange": false,
+            "autoWidth": false,
+            "aaSorting": []
+            //"buttons": ["copy", "csv", "excel", "pdf", "print", "colvis", ]
+        }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
+    });
 
-
-
-
-    // function deletedata(id, jenis) {
-    //     console.log(id + jenis)
-    //     Swal.fire({
-    //         title: 'Berhasil',
-    //         icon: 'warning',
-    //         confirmButtonText: 'Hapus',
-    //         showCancelButton: true,
-    //         confirmButtonColor: '#3085d6',
-    //         cancelButtonColor: '#d33',
-    //     }).then((result) => {
-    //         if (result.isConfirmed) {
-    //             $.ajax({
-    //                 type: "get",
-    //                 data: {
-    //                     id: id,
-    //                     jenis: jenis,
-    //                 },
-    //                 url: "<?php echo base_url('hapusdata'); ?>",
-    //                 dataType: "json",
-    //                 success: function(result) {
-    //                     Swal.fire({
-    //                         title: 'Berhasil Hapus',
-    //                         icon: 'success',
-    //                         confirmButtonColor: '#3085d6',
-    //                         confirmButtonText: 'Ok',
-    //                     }).then((result) => {
-    //                         location.reload();
-    //                     })
-    //                 },
-    //                 error: function(xhr, ajaxOptions, thrownError) {
-    //                     alert(xhr.status + "\n" + xhr.responseText + "\n" + thrownError);
-    //                 }
-    //             })
-    //         }
-    //     })
-    // }
+    $("#merek").DataTable({
+        "responsive": true,
+        "lengthChange": false,
+        "autoWidth": false,
+        "aaSorting": []
+        //"buttons": ["copy", "csv", "excel", "pdf", "print", "colvis", ]
+    }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
+    $("#bank").DataTable({
+        "responsive": true,
+        "lengthChange": false,
+        "autoWidth": false,
+        "aaSorting": []
+        //"buttons": ["copy", "csv", "excel", "pdf", "print", "colvis", ]
+    }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
+    $("#kadar").DataTable({
+        "responsive": true,
+        "lengthChange": false,
+        "autoWidth": false,
+        "aaSorting": []
+        //"buttons": ["copy", "csv", "excel", "pdf", "print", "colvis", ]
+    }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
+    $("#supplier").DataTable({
+        "responsive": true,
+        "lengthChange": false,
+        "autoWidth": false,
+        "aaSorting": []
+        //"buttons": ["copy", "csv", "excel", "pdf", "print", "colvis", ]
+    }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
 </script>
 <?= $this->endSection(); ?>

@@ -6,11 +6,11 @@
         text-align: center;
     }
 
-    table,
+    /* table,
     th,
     td {
         border: 1px solid;
-    }
+    } */
 
     .imgg {
         width: 100px;
@@ -129,5 +129,14 @@
         })
 
     }
+    $(function() {
+        $("#example1").DataTable({
+            "responsive": true,
+            "lengthChange": false,
+            "autoWidth": false,
+            "aaSorting": []
+            //"buttons": ["copy", "csv", "excel", "pdf", "print", "colvis", ]
+        }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
+    });
 </script>
 <?= $this->endSection(); ?>

@@ -4,7 +4,7 @@ namespace Config;
 
 // Create a new instance of our RouteCollection class.
 $routes = Services::routes();
-
+$session = session();
 // Load the system's routing file first, so that the app and ENVIRONMENT
 // can override as needed.
 if (file_exists(SYSTEMPATH . 'Config/Routes.php')) {
@@ -31,77 +31,87 @@ $routes->setAutoRoute(true);
 
 // We get a performance increase by specifying the default
 // route since we don't have to scan directories.
+
+
+
+//-----------------------------------------
+$routes->get('/login', 'Login::Login');
+$routes->get('/logout', 'Login::LogOut');
+$routes->POST('/masuklogin', 'Login::MasukLogin');
+
+
+// if ($session->get('role')) {
 // ---------------Home-------------------
 
-$routes->get('/', 'Home::index');
-$routes->get('/databarang', 'Home::databarang');
-$routes->get('/detail/(:any)', 'Home::detail/$1');
-$routes->get('/print/(:any)', 'Home::print/$1');
-$routes->get('/kartustock', 'Home::KatruStock');
-$routes->get('/modaldetailkartustock', 'Home::DetailKartuStock');
-$routes->get('/detailbarang/(:any)', 'Home::DetailBarangKode/$1');
+$routes->get('/', ($session->get('role')) ? 'Home::index' : 'Login::Login');
+$routes->get('/databarang', ($session->get('role')) ? 'Home::databarang' : 'Login::Login');
+$routes->get('/detail/(:any)', ($session->get('role')) ? 'Home::detail/$1' : 'Login::Login');
+$routes->get('/print/(:any)', ($session->get('role')) ? 'Home::print/$1' : 'Login::Login');
+$routes->get('/kartustock', ($session->get('role')) ? 'Home::KatruStock' : 'Login::Login');
+$routes->get('/modaldetailkartustock', ($session->get('role')) ? 'Home::DetailKartuStock' : 'Login::Login');
+$routes->get('/detailbarang/(:any)', ($session->get('role')) ? 'Home::DetailBarangKode/$1' : 'Login::Login');
 
 
 // --------------------BarangMasuk-----------
 
-$routes->get('/barangmasuk', 'Barangmasuk::supplier');
-$routes->get('/pembelian', 'Barangmasuk::detail_pembelian');
-$routes->get('/ajaxpembelian', 'Barangmasuk::pembelian_read');
-$routes->get('/detailtlable', 'Barangmasuk::Detail_table');
-$routes->post('/ajaxinsert', 'Barangmasuk::pembelian_insert');
-$routes->get('/deletedetail', 'Barangmasuk::DeleteDetail');
-$routes->get('/deletedetailsemua', 'Barangmasuk::DeleteDetailsemua');
-$routes->get('/stockdata', 'Barangmasuk::StockDataMasuk');
-$routes->get('/draft/(:any)', 'Barangmasuk::MasukDraft/$1');
-$routes->get('/detailpembelian/(:any)', 'Barangmasuk::DetailPembelianSupp/$1');
-$routes->get('/batalpembelian', 'Barangmasuk::BatalPembelian');
-$routes->get('/printbarcode/(:any)', 'Barangmasuk::BarcodeGenerate/$1');
-$routes->delete('/returbarang/(:num)', 'Barangmasuk::ReturBarang/$1');
-$routes->delete('/cancelbarang/(:num)', 'Barangmasuk::CancelBarang/$1');
-$routes->get('/ajaxdetailpembelian', 'Barangmasuk::pembelian_detail_read');
-$routes->post('/ajaxpembayaran', 'Barangmasuk::Pembayaran_beli');
-$routes->get('/editdetail', 'Barangmasuk::GetDataDetail');
-$routes->post('/editdataform', 'Barangmasuk::EditDataPost');
-$routes->get('/deletepembayaran', 'Barangmasuk::DeletePembayaran');
-$routes->get('/modalbarcode', 'Barangmasuk::ModalBarcode');
-$routes->get('/detailbarcode', 'Barangmasuk::DetailBarcode');
+$routes->get('/barangmasuk', ($session->get('role')) ? 'Barangmasuk::supplier' : 'Login::Login');
+$routes->get('/pembelian', ($session->get('role')) ? 'Barangmasuk::detail_pembelian' : 'Login::Login');
+$routes->get('/ajaxpembelian', ($session->get('role')) ? 'Barangmasuk::pembelian_read' : 'Login::Login');
+$routes->get('/detailtlable', ($session->get('role')) ? 'Barangmasuk::Detail_table' : 'Login::Login');
+$routes->post('/ajaxinsert', ($session->get('role')) ? 'Barangmasuk::pembelian_insert' : 'Login::Login');
+$routes->get('/deletedetail', ($session->get('role')) ? 'Barangmasuk::DeleteDetail' : 'Login::Login');
+$routes->get('/deletedetailsemua', ($session->get('role')) ? 'Barangmasuk::DeleteDetailsemua' : 'Login::Login');
+$routes->get('/stockdata', ($session->get('role')) ? 'Barangmasuk::StockDataMasuk' : 'Login::Login');
+$routes->get('/draft/(:any)', ($session->get('role')) ? 'Barangmasuk::MasukDraft/$1' : 'Login::Login');
+$routes->get('/detailpembelian/(:any)', ($session->get('role')) ? 'Barangmasuk::DetailPembelianSupp/$1' : 'Login::Login');
+$routes->get('/batalpembelian', ($session->get('role')) ? 'Barangmasuk::BatalPembelian' : 'Login::Login');
+$routes->get('/printbarcode/(:any)', ($session->get('role')) ? 'Barangmasuk::BarcodeGenerate/$1' : 'Login::Login');
+$routes->delete('/returbarang/(:num)', ($session->get('role')) ? 'Barangmasuk::ReturBarang/$1' : 'Login::Login');
+$routes->delete('/cancelbarang/(:num)', ($session->get('role')) ? 'Barangmasuk::CancelBarang/$1' : 'Login::Login');
+$routes->get('/ajaxdetailpembelian', ($session->get('role')) ? 'Barangmasuk::pembelian_detail_read' : 'Login::Login');
+$routes->post('/ajaxpembayaran', ($session->get('role')) ? 'Barangmasuk::Pembayaran_beli' : 'Login::Login');
+$routes->get('/editdetail', ($session->get('role')) ? 'Barangmasuk::GetDataDetail' : 'Login::Login');
+$routes->post('/editdataform', ($session->get('role')) ? 'Barangmasuk::EditDataPost' : 'Login::Login');
+$routes->get('/deletepembayaran', ($session->get('role')) ? 'Barangmasuk::DeletePembayaran' : 'Login::Login');
+$routes->get('/modalbarcode', ($session->get('role')) ? 'Barangmasuk::ModalBarcode' : 'Login::Login');
+$routes->get('/detailbarcode', ($session->get('role')) ? 'Barangmasuk::DetailBarcode' : 'Login::Login');
 
 
 
 
 //--------------------------BarangKeluar---------------------------
 
-$routes->get('/barangkeluar', 'Barangkeluar::DataPenjualan');
-$routes->get('/jualbarang', 'Barangkeluar::PenjualanBarang');
-$routes->post('/insertcustomer', 'Barangkeluar::InsertCust');
-$routes->post('/kodebarang', 'Barangkeluar::InsertJual');
-$routes->get('/tampilpenjualan', 'Barangkeluar::penjualan_read');
-$routes->get('/deletedetailjual', 'Barangkeluar::DeleteDetailjual');
-$routes->get('/draftpenjualan/(:any)', 'Barangkeluar::DraftPenjualan/$1');
-$routes->get('/batalpenjualan', 'Barangkeluar::BatalPenjualan');
-$routes->post('/ubahharga', 'Barangkeluar::UbahHarga');
-$routes->get('/ajaxdetailpenjualan', 'Barangkeluar::penjualan_detail_read');
-$routes->post('/ajaxpembayaranjual', 'Barangkeluar::Pembayaran_jual');
-$routes->get('/printinvoice/(:any)', 'Barangkeluar::PrintInvoice/$1');
-$routes->get('/detailpenjualan/(:any)', 'Barangkeluar::DetailDataPenjualan/$1');
-$routes->get('/tampilcust', 'Barangkeluar::TampilCustomer');
-$routes->get('/checkcust', 'Barangkeluar::CheckCustomer');
+$routes->get('/barangkeluar', ($session->get('role')) ? 'Barangkeluar::DataPenjualan' : 'Login::Login');
+$routes->get('/jualbarang', ($session->get('role')) ? 'Barangkeluar::PenjualanBarang' : 'Login::Login');
+$routes->post('/insertcustomer', ($session->get('role')) ? 'Barangkeluar::InsertCust' : 'Login::Login');
+$routes->post('/kodebarang', ($session->get('role')) ? 'Barangkeluar::InsertJual' : 'Login::Login');
+$routes->get('/tampilpenjualan', ($session->get('role')) ? 'Barangkeluar::penjualan_read' : 'Login::Login');
+$routes->get('/deletedetailjual', ($session->get('role')) ? 'Barangkeluar::DeleteDetailjual' : 'Login::Login');
+$routes->get('/draftpenjualan/(:any)', ($session->get('role')) ? 'Barangkeluar::DraftPenjualan/$1' : 'Login::Login');
+$routes->get('/batalpenjualan', ($session->get('role')) ? 'Barangkeluar::BatalPenjualan' : 'Login::Login');
+$routes->post('/ubahharga', ($session->get('role')) ? 'Barangkeluar::UbahHarga' : 'Login::Login');
+$routes->get('/ajaxdetailpenjualan', ($session->get('role')) ? 'Barangkeluar::penjualan_detail_read' : 'Login::Login');
+$routes->post('/ajaxpembayaranjual', ($session->get('role')) ? 'Barangkeluar::Pembayaran_jual' : 'Login::Login');
+$routes->get('/printinvoice/(:any)', ($session->get('role')) ? 'Barangkeluar::PrintInvoice/$1' : 'Login::Login');
+$routes->get('/detailpenjualan/(:any)', ($session->get('role')) ? 'Barangkeluar::DetailDataPenjualan/$1' : 'Login::Login');
+$routes->get('/tampilcust', ($session->get('role')) ? 'Barangkeluar::TampilCustomer' : 'Login::Login');
+$routes->get('/checkcust', ($session->get('role')) ? 'Barangkeluar::CheckCustomer' : 'Login::Login');
 
 //------------------buyback----------------
-$routes->get('/buybackcust', 'BuybackCust::BuyBack');
-$routes->get('/halamanbuyback', 'BuybackCust::HalamanTambah');
-$routes->post('/scantrans', 'BuybackCust::Cari_notrans');
-$routes->get('/tampilbuyback', 'BuybackCust::TampilBuyback');
-$routes->get('/tampildatabuyback', 'BuybackCust::TampilDataBuyback');
-$routes->post('/tambahbuyback', 'BuybackCust::TambahBuyback');
-$routes->post('/tambahbuybacknonota', 'BuybackCust::TambahBuybackNonota');
-$routes->get('/draftbuyback/(:any)', 'BuybackCust::DraftBuyback/$1');
-$routes->get('/deletedetailbuyback', 'BuybackCust::DeleteDetailBuyback');
-$routes->post('/pembayaranform', 'BuybackCust::PembayaranBuyback');
-$routes->get('/batalbuyback/(:any)', 'BuybackCust::BatalBuyback/$1');
-$routes->get('/modalbarcodebb', 'BuybackCust::ModalBarcode');
-$routes->get('/tampilcustbb', 'BuybackCust::TampilCustomer');
-$routes->get('/detailbuyback/(:any)', 'BuybackCust::DetailBuyback/$1');
+$routes->get('/buybackcust', ($session->get('role')) ? 'BuybackCust::BuyBack' : 'Login::Login');
+$routes->get('/halamanbuyback', ($session->get('role')) ? 'BuybackCust::HalamanTambah' : 'Login::Login');
+$routes->post('/scantrans', ($session->get('role')) ? 'BuybackCust::Cari_notrans' : 'Login::Login');
+$routes->get('/tampilbuyback', ($session->get('role')) ? 'BuybackCust::TampilBuyback' : 'Login::Login');
+$routes->get('/tampildatabuyback', ($session->get('role')) ? 'BuybackCust::TampilDataBuyback' : 'Login::Login');
+$routes->post('/tambahbuyback', ($session->get('role')) ? 'BuybackCust::TambahBuyback' : 'Login::Login');
+$routes->post('/tambahbuybacknonota', ($session->get('role')) ? 'BuybackCust::TambahBuybackNonota' : 'Login::Login');
+$routes->get('/draftbuyback/(:any)', ($session->get('role')) ? 'BuybackCust::DraftBuyback/$1' : 'Login::Login');
+$routes->get('/deletedetailbuyback', ($session->get('role')) ? 'BuybackCust::DeleteDetailBuyback' : 'Login::Login');
+$routes->post('/pembayaranform', ($session->get('role')) ? 'BuybackCust::PembayaranBuyback' : 'Login::Login');
+$routes->get('/batalbuyback/(:any)', ($session->get('role')) ? 'BuybackCust::BatalBuyback/$1' : 'Login::Login');
+$routes->get('/modalbarcodebb', ($session->get('role')) ? 'BuybackCust::ModalBarcode' : 'Login::Login');
+$routes->get('/tampilcustbb', ($session->get('role')) ? 'BuybackCust::TampilCustomer' : 'Login::Login');
+$routes->get('/detailbuyback/(:any)', ($session->get('role')) ? 'BuybackCust::DetailBuyback/$1' : 'Login::Login');
 
 
 
@@ -113,64 +123,64 @@ $routes->get('/detailbuyback/(:any)', 'BuybackCust::DetailBuyback/$1');
 // $routes->post('/updatecuci', 'Prosesbarang::UpdateCuci');
 
 //-----------------Lebur--------------------------------------------
-$routes->get('/datalebur', 'BarangLebur::HomeLebur');
-$routes->get('/leburbarang', 'BarangLebur::LeburBarang');
-$routes->get('/draftlebur/(:any)', 'BarangLebur::DraftLeburBarang/$1');
-$routes->get('/tambahlebur', 'BarangLebur::TambahLebur');
-$routes->get('/batallebur/(:any)', 'BarangLebur::BatalLebur/$1');
-$routes->get('/hapuslebur', 'BarangLebur::DeleteLebur');
-$routes->get('/detailbarang', 'BarangLebur::DataDetailBarang');
-$routes->get('/ubahstatus', 'BarangLebur::UbahStatus');
-$routes->get('/modalprintlebur', 'BarangLebur::ModalLebur');
-$routes->post('/selesailebur', 'BarangLebur::SelesaiLebur');
+$routes->get('/datalebur', ($session->get('role')) ? 'BarangLebur::HomeLebur' : 'Login::Login');
+$routes->get('/leburbarang', ($session->get('role')) ? 'BarangLebur::LeburBarang' : 'Login::Login');
+$routes->get('/draftlebur/(:any)', ($session->get('role')) ? 'BarangLebur::DraftLeburBarang/$1' : 'Login::Login');
+$routes->get('/tambahlebur', ($session->get('role')) ? 'BarangLebur::TambahLebur' : 'Login::Login');
+$routes->get('/batallebur/(:any)', ($session->get('role')) ? 'BarangLebur::BatalLebur/$1' : 'Login::Login');
+$routes->get('/hapuslebur', ($session->get('role')) ? 'BarangLebur::DeleteLebur' : 'Login::Login');
+$routes->get('/detailbarang', ($session->get('role')) ? 'BarangLebur::DataDetailBarang' : 'Login::Login');
+$routes->get('/ubahstatus', ($session->get('role')) ? 'BarangLebur::UbahStatus' : 'Login::Login');
+$routes->get('/modalprintlebur', ($session->get('role')) ? 'BarangLebur::ModalLebur' : 'Login::Login');
+$routes->post('/selesailebur', ($session->get('role')) ? 'BarangLebur::SelesaiLebur' : 'Login::Login');
 
 
 //---------------------------------cuci-----------------------------------------
-$routes->get('/datacuci', 'BarangCuci::HomeCuci');
-$routes->get('/cucibarang', 'BarangCuci::CuciBarang');
-$routes->get('/draftcuci/(:any)', 'BarangCuci::DraftCuciBarang/$1');
-$routes->get('/batalcuci/(:any)', 'BarangCuci::BatalCuci/$1');
-$routes->get('/modalprintcuci', 'BarangCuci::ModalCuci');
-$routes->get('/tambahcuci', 'BarangCuci::TambahCuci');
-$routes->get('/hapuscuci', 'BarangCuci::DeleteCuci');
-$routes->post('/selesaicuci', 'BarangCuci::SelesaiCuci');
-$routes->get('/tampilcuci', 'BarangCuci::TampilCuci');
-$routes->post('/updatecuci', 'BarangCuci::UpdateCuci');
-$routes->post('/updatecuci', 'BarangCuci::UpdateCuci');
-$routes->get('/printbarcodecuci/(:any)', 'BarangCuci::BarcodeGenerate/$1');
+$routes->get('/datacuci', ($session->get('role')) ? 'BarangCuci::HomeCuci' : 'Login::Login');
+$routes->get('/cucibarang', ($session->get('role')) ? 'BarangCuci::CuciBarang' : 'Login::Login');
+$routes->get('/draftcuci/(:any)', ($session->get('role')) ? 'BarangCuci::DraftCuciBarang/$1' : 'Login::Login');
+$routes->get('/batalcuci/(:any)', ($session->get('role')) ? 'BarangCuci::BatalCuci/$1' : 'Login::Login');
+$routes->get('/modalprintcuci', ($session->get('role')) ? 'BarangCuci::ModalCuci' : 'Login::Login');
+$routes->get('/tambahcuci', ($session->get('role')) ? 'BarangCuci::TambahCuci' : 'Login::Login');
+$routes->get('/hapuscuci', ($session->get('role')) ? 'BarangCuci::DeleteCuci' : 'Login::Login');
+$routes->post('/selesaicuci', ($session->get('role')) ? 'BarangCuci::SelesaiCuci' : 'Login::Login');
+$routes->get('/tampilcuci', ($session->get('role')) ? 'BarangCuci::TampilCuci' : 'Login::Login');
+$routes->post('/updatecuci', ($session->get('role')) ? 'BarangCuci::UpdateCuci' : 'Login::Login');
+$routes->post('/updatecuci', ($session->get('role')) ? 'BarangCuci::UpdateCuci' : 'Login::Login');
+$routes->get('/printbarcodecuci/(:any)', ($session->get('role')) ? 'BarangCuci::BarcodeGenerate/$1' : 'Login::Login');
 
 
 
 //---------------------------------Retur-----------------------------------------
-$routes->get('/dataretur', 'BarangRetur::HomeRetur');
-$routes->get('/returbarang', 'BarangRetur::ReturBarang');
-$routes->get('/draftretur/(:any)', 'BarangRetur::DraftReturBarang/$1');
-$routes->get('/batalretur/(:any)', 'BarangRetur::BatalRetur/$1');
-$routes->get('/tambahretur', 'BarangRetur::TambahRetur');
-$routes->get('/hapusretur', 'BarangRetur::DeleteRetur');
-$routes->get('/modalprintretur', 'BarangRetur::ModalRetur');
+$routes->get('/dataretur', ($session->get('role')) ? 'BarangRetur::HomeRetur' : 'Login::Login');
+$routes->get('/returbarang', ($session->get('role')) ? 'BarangRetur::ReturBarang' : 'Login::Login');
+$routes->get('/draftretur/(:any)', ($session->get('role')) ? 'BarangRetur::DraftReturBarang/$1' : 'Login::Login');
+$routes->get('/batalretur/(:any)', ($session->get('role')) ? 'BarangRetur::BatalRetur/$1' : 'Login::Login');
+$routes->get('/tambahretur', ($session->get('role')) ? 'BarangRetur::TambahRetur' : 'Login::Login');
+$routes->get('/hapusretur', ($session->get('role')) ? 'BarangRetur::DeleteRetur' : 'Login::Login');
+$routes->get('/modalprintretur', ($session->get('role')) ? 'BarangRetur::ModalRetur' : 'Login::Login');
 
-// $routes->get('/leburbarang/(:any)', 'BarangRetur::TampilLeburBarang/$1');
-$routes->get('/detailbarang', 'BarangRetur::DataDetailBarang');
+// $routes->get('/leburbarang/(:any)', ($session->get('role')) ?'BarangRetur::TampilLeburBarang/$1': 'Login::Login');
+$routes->get('/detailbarang', ($session->get('role')) ? 'BarangRetur::DataDetailBarang' : 'Login::Login');
 
 // $routes->post('/selesailebur', 'Prosesbarang::SelesaiLebur');
 
 //----------------------------------masterinput-------------------------
-$routes->get('/masterinput', 'MasterInput::HomeInput');
-$routes->POST('/insertsupp', 'MasterInput::InsertSupp');
-$routes->POST('/insertkadar', 'MasterInput::InsertKadar');
-$routes->POST('/insertmerek', 'MasterInput::InsertMerek');
-$routes->POST('/insertbank', 'MasterInput::InsertBank');
-$routes->POST('/updatesupp', 'MasterInput::UpdateSupp');
-$routes->POST('/updatekadar', 'MasterInput::UpdateKadar');
-$routes->POST('/updatemerek', 'MasterInput::UpdateMerek');
-$routes->POST('/updatebank', 'MasterInput::UpdateBank');
-$routes->POST('/updatecust', 'MasterInput::UpdateCust');
+$routes->get('/masterinput', ($session->get('role')) ? 'MasterInput::HomeInput' : 'Login::Login');
+$routes->POST('/insertsupp', ($session->get('role')) ? 'MasterInput::InsertSupp' : 'Login::Login');
+$routes->POST('/insertkadar', ($session->get('role')) ? 'MasterInput::InsertKadar' : 'Login::Login');
+$routes->POST('/insertmerek', ($session->get('role')) ? 'MasterInput::InsertMerek' : 'Login::Login');
+$routes->POST('/insertbank', ($session->get('role')) ? 'MasterInput::InsertBank' : 'Login::Login');
+$routes->POST('/updatesupp', ($session->get('role')) ? 'MasterInput::UpdateSupp' : 'Login::Login');
+$routes->POST('/updatekadar', ($session->get('role')) ? 'MasterInput::UpdateKadar' : 'Login::Login');
+$routes->POST('/updatemerek', ($session->get('role')) ? 'MasterInput::UpdateMerek' : 'Login::Login');
+$routes->POST('/updatebank', ($session->get('role')) ? 'MasterInput::UpdateBank' : 'Login::Login');
+$routes->POST('/updatecust', ($session->get('role')) ? 'MasterInput::UpdateCust' : 'Login::Login');
 
 
 // $routes->POST('/hapusdata', 'MasterInput::HapusData');
-$routes->get('/isidata', 'MasterInput::DataMaster');
-
+$routes->get('/isidata', ($session->get('role')) ? 'MasterInput::DataMaster' : 'Login::Login');
+// }
 
 // $routes->get('/leburbarang/(:any)', 'Prosesbarang::LeburBarang/$1');
 
