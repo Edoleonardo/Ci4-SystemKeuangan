@@ -45,6 +45,7 @@ $routes->POST('/masuklogin', 'Login::MasukLogin');
 
 $routes->get('/', ($session->get('role')) ? 'Home::index' : 'Login::Login');
 $routes->get('/databarang', ($session->get('role')) ? 'Home::databarang' : 'Login::Login');
+$routes->get('/databarangjual', ($session->get('role')) ? 'Home::databarangjual' : 'Login::Login');
 $routes->get('/detail/(:any)', ($session->get('role')) ? 'Home::detail/$1' : 'Login::Login');
 $routes->get('/print/(:any)', ($session->get('role')) ? 'Home::print/$1' : 'Login::Login');
 $routes->get('/kartustock', ($session->get('role')) ? 'Home::KatruStock' : 'Login::Login');

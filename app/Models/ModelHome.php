@@ -15,18 +15,24 @@ class ModelHome extends Model
     public function getBarang($id = false)
     {
         if ($id == false) {
-            // $query =  $this->db->table('tbl_img')
-            //     ->select('*')
-            //     ->get();
-            // $data[0] = $query;
-            $this->findAll();
-            $this->orderBy('created_at', 'DESC');
-            // $this->limit(10);
-            $data = $this->get();
+
+            // $this->findAll();
+            // $this->orderBy('created_at', 'DESC');
+            // // $this->limit(10);
+            // $data = $this->get();
+            // return $data->getResult('array');
+
+            $db = db_connect();
+            $data = $db->query('select * from tbl_stock where qty > 0');
             return $data->getResult('array');
-            //return $this->findAll();
         }
         return $this->where(['id_stock' => $id])->first();
+    }
+    public function getBarangSold()
+    {
+        $db = db_connect();
+        $data = $db->query('select * from tbl_stock where qty = 0');
+        return $data->getResult('array');
     }
     public function getBarangkode($id)
     {

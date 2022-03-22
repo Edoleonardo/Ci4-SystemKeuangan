@@ -50,6 +50,14 @@ class Home extends BaseController
         $this->cachePage(1);
         return view('home/data_barang', $data);
     }
+    public function databarangjual()
+    {
+        $data = [
+            'barang' => $this->barangmodel->getBarangSold(),
+        ];
+        $this->cachePage(1);
+        return view('home/data_barang_jual', $data);
+    }
     public function KatruStock()
     {
         $data = [

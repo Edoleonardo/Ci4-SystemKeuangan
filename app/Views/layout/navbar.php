@@ -169,6 +169,12 @@
                             </a>
                         </li>
                         <li class="nav-item">
+                            <a href="/databarangjual" class="nav-link ">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Data Stock Terjual</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
                             <a href="/kartustock" class="nav-link ">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>Kartu Stock</p>
