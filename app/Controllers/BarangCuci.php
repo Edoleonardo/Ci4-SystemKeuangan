@@ -80,7 +80,6 @@ class BarangCuci extends BaseController
             'harga_cuci' => '0',
             'status_dokumen' => 'Draft'
         ]);
-        //---------------------------------------------------
         return redirect()->to('/draftcuci/' . $dateid);
     }
     public function ModalCuci()
