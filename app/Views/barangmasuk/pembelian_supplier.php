@@ -179,7 +179,13 @@
                                                     <!-- text input -->
                                                     <div class="form-group">
                                                         <label>Jenis</label>
-                                                        <input type="text" name="jenis" id="jenis" class="form-control" placeholder="Masukan Jenis">
+                                                        <select name="jenis" class="form-control" id="jenis">
+                                                            <?php foreach ($jenis as $m) : ?>
+                                                                <option value="<?= $m['nama'] ?>"><?= $m['nama'] ?> </option>
+                                                            <?php endforeach; ?>
+                                                            <option value="-">-</option>
+                                                        </select>
+                                                        <!-- <input type="text" name="jenis" id="jenis" class="form-control" placeholder="Masukan Jenis"> -->
                                                         <div id="validationServerUsernameFeedback" class="invalid-feedback jenismsg">
                                                         </div>
                                                     </div>

@@ -11,17 +11,14 @@ use App\Models\ModelSupplier;
 use App\Models\ModelKadar;
 use App\Models\ModelMerek;
 use App\Models\ModelBank;
-
-
+use App\Models\ModelJenis;
+use App\Models\ModelUsers;
 use CodeIgniter\Validation\Rules;
 use app\Config\Cache;
 use Config\Cache as ConfigCache;
 
 class MasterInput extends BaseController
 {
-    protected $barangmodel;
-    protected $barcodeG;
-
     public function __construct()
     {
 
@@ -33,6 +30,8 @@ class MasterInput extends BaseController
         $this->datakadar = new ModelKadar();
         $this->datamerek = new ModelMerek();
         $this->modelbank = new ModelBank();
+        $this->datajenis = new ModelJenis();
+        $this->modelusers = new ModelUsers();
         $this->chace = new ConfigCache();
     }
     public function HomeInput()
@@ -42,7 +41,9 @@ class MasterInput extends BaseController
             'datasup' => $this->modelsup->getSupplier(),
             'datakadar' => $this->datakadar->getKadar(),
             'datamerek' => $this->datamerek->getMerek(),
+            'datajenis' => $this->datajenis->getjenis(),
             'databank' => $this->modelbank->getBank(),
+            'datausers' => $this->modelusers->getUsers(),
         ];
 
         return view('masterinput/masterinput_home', $data);
@@ -246,6 +247,42 @@ class MasterInput extends BaseController
             }
         }
     }
+    public function InsertJenis()
+    {
+        if ($this->request->isAJAX()) {
+            $validation = \Config\Services::validation();
+            $valid = $this->validate([
+                'nama_jenis' => [
+                    'rules' => 'required',
+                    'errors' => [
+                        'required' => 'Nama Jenis Harus di isi',
+                    ]
+                ]
+
+            ]);
+            if (!$valid) {
+                $msg = [
+                    'error' => [
+                        'nama_jenis' => $validation->getError('nama_jenis'),
+                    ]
+                ];
+                echo json_encode($msg);
+            } else {
+                if ($this->request->getVar('id_jenis')) {
+                    $this->datajenis->save([
+                        'id_jenis' => $this->request->getVar('id_jenis'),
+                        'nama' => $this->request->getVar('nama_jenis'),
+                    ]);
+                } else {
+                    $this->datajenis->save([
+                        'nama' => $this->request->getVar('nama_jenis'),
+                    ]);
+                }
+                $msg = 'sukses';
+                echo json_encode($msg);
+            }
+        }
+    }
     public function UpdateCust()
     {
         if ($this->request->isAJAX()) {
@@ -286,6 +323,88 @@ class MasterInput extends BaseController
             echo json_encode($msg);
         }
     }
+    public function InsertUser()
+    {
+        if ($this->request->isAJAX()) {
+            $validation = \Config\Services::validation();
+            $valid = $this->validate([
+                'nama_user' => [
+                    'rules' => 'required',
+                    'errors' => [
+                        'required' => 'Nama User Harus di isi',
+                    ]
+                ],
+                'nohp_user' => [
+                    'rules' => 'required',
+                    'errors' => [
+                        'required' => 'Nomor Hp Harus di isi',
+                    ]
+                ],
+                'alamatusr' => [
+                    'rules' => 'required',
+                    'errors' => [
+                        'required' => 'Alamat Harus di isi',
+                    ]
+                ],
+                'username' => [
+                    'rules' => 'required|is_unique[tbl_pegawai.username]',
+                    'errors' => [
+                        'required' => 'Username Harus di isi',
+                        'is_unique' => 'Username Sudah Ada'
+                    ]
+                ],
+                'password' => [
+                    'rules' => 'required',
+                    'errors' => [
+                        'required' => 'Password Harus di isi',
+                    ]
+                ],
+                'role' => [
+                    'rules' => 'required',
+                    'errors' => [
+                        'required' => 'Role Harus di isi',
+                    ]
+                ],
+            ]);
+            if (!$valid) {
+                $msg = [
+                    'error' => [
+                        'nama_user' => $validation->getError('nama_user'),
+                        'nohp_user' => $validation->getError('nohp_user'),
+                        'alamatusr' => $validation->getError('alamatusr'),
+                        'username' => $validation->getError('username'),
+                        'password' => $validation->getError('password'),
+                        'role' => $validation->getError('role'),
+                    ]
+                ];
+                echo json_encode($msg);
+            } else {
+                if ($this->request->getVar('id_pegawai')) {
+                    $this->modelusers->save([
+                        'id_pegawai' => $this->request->getVar('id_pegawai'),
+                        'nama_pegawai' => $this->request->getVar('nama_user'),
+                        'nohp' => $this->request->getVar('nohp_user'),
+                        'alamat' => $this->request->getVar('alamatusr'),
+                        'username' => $this->request->getVar('username'),
+                        'password' => $this->request->getVar('password'),
+                        'role' => $this->request->getVar('role'),
+                    ]);
+                } else {
+                    $this->modelusers->save([
+                        'nama_pegawai' => $this->request->getVar('nama_user'),
+                        'nohp' => $this->request->getVar('nohp_user'),
+                        'alamat' => $this->request->getVar('alamatusr'),
+                        'username' => $this->request->getVar('username'),
+                        'password' => $this->request->getVar('password'),
+                        'role' => $this->request->getVar('role'),
+                    ]);
+                }
+                $msg = 'sukses';
+                echo json_encode($msg);
+            }
+        }
+    }
+
     public function DataMaster()
     {
         if ($this->request->isAJAX()) {
@@ -305,6 +424,12 @@ class MasterInput extends BaseController
             }
             if ($jenis == 'bank') {
                 $data = $this->modelbank->getBank($id);
+            }
+            if ($jenis == 'jenis') {
+                $data = $this->datajenis->getJenis($id);
+            }
+            if ($jenis == 'user') {
+                $data = $this->modelusers->getUsers($id);
             }
             echo json_encode($data);
         }

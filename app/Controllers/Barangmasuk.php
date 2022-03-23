@@ -16,6 +16,7 @@ use App\Models\ModelDetailBuyback;
 use App\Models\ModelKartuStock;
 use App\Models\ModelDetailKartuStock;
 use App\Models\ModelBank;
+use App\Models\ModelJenis;
 
 use CodeIgniter\CLI\Console;
 use CodeIgniter\Validation\Rules;
@@ -41,6 +42,7 @@ class Barangmasuk extends BaseController
         $this->datasupplier = new ModelSupplier();
         $this->datakadar = new ModelKadar();
         $this->datamerek = new ModelMerek();
+        $this->datajenis = new ModelJenis();
         $this->datapembelian = new ModelPembelian();
         $this->datastock = new ModelHome();
         $this->barcodeG =  new BarcodeGenerator();
@@ -894,6 +896,7 @@ class Barangmasuk extends BaseController
         $datapembelian = [
             'datapembelian' => $data,
             'merek' => $this->datamerek->getMerek(),
+            'jenis' => $this->datajenis->getJenis(),
             'kadar' => $this->datakadar->getKadar(),
             'supplier' => $this->datasupplier->getSupplier(),
             // 'databarcode' => $this->datastock->getBarcode()

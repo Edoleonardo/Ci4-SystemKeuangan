@@ -15,6 +15,7 @@ use App\Models\ModelDetailKartuStock;
 use App\Models\ModelLebur;
 use App\Models\ModelDetailLebur;
 use App\Models\ModelDetailMasuk;
+use App\Models\ModelJenis;
 
 
 use CodeIgniter\Model;
@@ -42,6 +43,7 @@ class BarangLebur extends BaseController
         $this->modellebur = new ModelLebur();
         $this->modeldetaillebur = new ModelDetailLebur();
         $this->detailbeli = new ModelDetailMasuk();
+        $this->datajenis = new Modeljenis();
     }
 
     public function HomeLebur()
@@ -94,6 +96,7 @@ class BarangLebur extends BaseController
         $data = [
             'datamasterlebur' => $this->modellebur->getDataLeburAll($id),
             'datalebur' => $this->modeldetailbuyback->getDataLeburAll(),
+            'jenis' => $this->datajenis->getJenis(),
             'databarcode' => $this->datastock->getBarcode(4),
             'dataakanlebur' => $this->modeldetaillebur->getDetailLebur($id),
 

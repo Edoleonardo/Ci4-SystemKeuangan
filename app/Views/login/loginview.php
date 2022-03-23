@@ -82,8 +82,6 @@
                 processData: false,
                 cache: false,
                 success: function(hasil) {
-                    console.log(hasil)
-
                     if (hasil.error) {
                         if (hasil.error.username) {
                             $('#username').addClass('is-invalid')
@@ -99,21 +97,24 @@
                             $('#password').removeClass('is-invalid')
                             $('.passwordmsg').html('')
                         }
+
                     } else {
                         $('#password').removeClass('is-invalid')
                         $('.passwordmsg').html('')
                         $('#username').removeClass('is-invalid')
                         $('.usernamemsg').html('')
-                        window.location.href = '/'
-
+                        if (hasil == 'gagal') {
+                            Swal.fire({
+                                icon: 'warning',
+                                title: 'Username / Password Salah',
+                            })
+                        } else {
+                            window.location.href = '/'
+                        }
                     }
                 },
                 error: function(xhr, ajaxOptions, thrownError) {
-                    Swal.fire({
-                        icon: 'warning',
-                        title: 'Username / Password Salah',
-                    })
-                    // alert(xhr.status + "\n" + xhr.responseText + "\n" + thrownError);
+                    alert(xhr.status + "\n" + xhr.responseText + "\n" + thrownError);
                 }
             })
         })

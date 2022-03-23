@@ -15,7 +15,7 @@ use App\Models\ModelKartuStock;
 use App\Models\ModelDetailKartuStock;
 use App\Models\ModelBank;
 use App\Models\ModelCustomer;
-
+use App\Models\ModelJenis;
 
 
 use CodeIgniter\Model;
@@ -43,6 +43,7 @@ class BuybackCust extends BaseController
         $this->modeldetailkartustock = new ModelDetailKartuStock();
         $this->modelbank = new ModelBank();
         $this->datacust = new ModelCustomer();
+        $this->datajenis = new ModelJenis();
     }
 
     public function BuyBack()
@@ -117,6 +118,7 @@ class BuybackCust extends BaseController
             'merek' => $this->datamerek->getMerek(),
             'bank' => $this->modelbank->getBank(),
             'kadar' => $this->datakadar->getKadar(),
+            'jenis' => $this->datajenis->getJenis(),
             'supplier' => $this->datasupplier->getSupplier(),
             'databuyback' => $databuyback
         ];

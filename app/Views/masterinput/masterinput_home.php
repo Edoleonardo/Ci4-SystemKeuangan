@@ -199,7 +199,7 @@
                     </div>
                     <!-- /.card -->
                 </div>
-                <div class="col-md-4">
+                <div class="col-4">
                     <div class="card">
                         <div class="card-header">
                             <h3 class="card-title">Pembayaran Bank</h3>
@@ -225,6 +225,91 @@
                                 <tfoot>
                                     <tr>
                                         <th>Pembayaran Bank</th>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                        <!-- /.card-body -->
+                    </div>
+                    <!-- /.card -->
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-4">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">jenis</h3>
+                        </div>
+                        <!-- /.card-header -->
+                        <a class="btn btn-app tambahjenis" id="tambahjenis" onclick="OpenModalData('jenis')">
+                            <i class="fas fa-plus"></i> Tambah Jenis
+                        </a>
+                        <div class="card-body">
+                            <table id="jenis" class="table table-bordered table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Nama Jenis</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php foreach ($datajenis as $row) : ?>
+                                        <tr onclick="Updatedata(<?= $row['id_jenis'] ?>, 'jenis')">
+                                            <td><?= $row['nama'] ?></td>
+                                        </tr>
+                                    <?php endforeach; ?>
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <th>Nama Jenis</th>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                        <!-- /.card-body -->
+                    </div>
+                    <!-- /.card -->
+                </div>
+                <div class="col-8">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Data User</h3>
+                        </div>
+                        <!-- /.card-header -->
+                        <a class="btn btn-app tambahuser" id="tambahuser" onclick="OpenModalData('user')">
+                            <i class="fas fa-plus"></i> Tambah user
+                        </a>
+                        <div class="card-body">
+                            <table id="user" class="table table-bordered table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Nama user</th>
+                                        <th>No Hp</th>
+                                        <th>Alamat</th>
+                                        <th>username</th>
+                                        <th>password</th>
+                                        <th>jabatan</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php foreach ($datausers as $row) : ?>
+                                        <tr onclick="Updatedata(<?= $row['id_pegawai'] ?>, 'user')">
+                                            <td><?= $row['nama_pegawai'] ?></td>
+                                            <td><?= $row['nohp'] ?></td>
+                                            <td><?= $row['alamat'] ?></td>
+                                            <td><?= $row['username'] ?></td>
+                                            <td><?= $row['password'] ?></td>
+                                            <td><?= $row['role'] ?></td>
+                                        </tr>
+                                    <?php endforeach; ?>
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <th>Nama user</th>
+                                        <th>No Hp</th>
+                                        <th>Alamat</th>
+                                        <th>username</th>
+                                        <th>password</th>
+                                        <th>jabatan</th>
                                     </tr>
                                 </tfoot>
                             </table>
@@ -443,6 +528,100 @@
     </div>
 </div>
 </div>
+<div class="modal fade" id="modal-user">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="titleuser">Tambah Data user</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form action="/insertuser" name="insertuser" id="insertuser" class="insertuser" method="post">
+                <?= csrf_field(); ?>
+                <input type="hidden" name="id_user" id="id_user" value="">
+                <div class="row" style="margin: 10px;">
+                    <div class="col-12">
+                        <div class="form-group">
+                            <label>Nama user</label>
+                            <input type="text" id="nama_user" name="nama_user" class="form-control nama_user" placeholder="Masukan Nomor Nama user">
+                            <div id="validationServerusernameFeedback" class="invalid-feedback nama_usermsg">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Nomor Hp</label>
+                            <input type="number" id="nohp_user" name="nohp_user" class="form-control nohp_user" placeholder="Masukan Nomor Hp">
+                            <div id="validationServerusernameFeedback" class="invalid-feedback nohp_usermsg">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Alamat</label>
+                            <input type="text" id="alamatusr" name="alamatusr" class="form-control alamatusr" placeholder="Masukan Nomor Alamat user">
+                            <div id="validationServerusernameFeedback" class="invalid-feedback alamatusrmsg">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>username</label>
+                            <input type="text" id="username" name="username" class="form-control username" placeholder="Masukan Nomor Kota user">
+                            <div id="validationServerusernameFeedback" class="invalid-feedback usernamemsg">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>password</label>
+                            <input type="text" id="password" name="password" class="form-control password" placeholder="Masukan Nomor Kota user">
+                            <div id="validationServerusernameFeedback" class="invalid-feedback passwordmsg">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>role</label>
+                            <select id="role" name="role" class="form-control role" placeholder="Masukan Nomor Kota user">
+                                <option value="admin">Admin</option>
+                                <option value="owner">Owner</option>
+                            </select>
+                            <div id="validationServerusernameFeedback" class="invalid-feedback rolemsg">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Tutup</button>
+                    <button type="submit" class="btn btn-primary btntambah" id="buttonuser">Tambah</button>
+            </form>
+        </div>
+    </div>
+</div>
+</div>
+<div class="modal fade" id="modal-jenis">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="titlejenis"></h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form action="/insertjenis" name="insertjenis" id="insertjenis" class="insertjenis" method="post">
+                <?= csrf_field(); ?>
+                <input type="hidden" name="id_jenis" id="id_jenis" value="">
+                <div class="row" style="margin: 10px;">
+                    <div class="col-12">
+                        <div class="form-group">
+                            <label>Nama jenis</label>
+                            <input type="text" id="nama_jenis" name="nama_jenis" class="form-control nama_jenis" placeholder="Masukan Nama Merek">
+                            <div id="validationServerUsernameFeedback" class="invalid-feedback nama_jenismsg">
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Tutup</button>
+                    <button type="submit" class="btn btn-primary btntambah" id="buttonjenis">Tambah</button>
+            </form>
+        </div>
+    </div>
+</div>
+</div>
 
 <div class="modal fade" id="modal-updatelg">
     <div class="modal-dialog modal-lg">
@@ -520,7 +699,6 @@
                 $('.btntambah').html('Tambah')
             },
             success: function(result) {
-                console.log(result)
                 if (result.error) {
                     if (result.error.nama_supp) {
                         $('#nama_supp').addClass('is-invalid')
@@ -614,7 +792,6 @@
                 $('.btntambah').html('Tambah')
             },
             success: function(result) {
-                console.log(result)
                 if (result.error) {
                     if (result.error.nilai_kadar) {
                         $('#nilai_kadar').addClass('is-invalid')
@@ -672,7 +849,6 @@
                 $('.btntambah').html('Tambah')
             },
             success: function(result) {
-                console.log(result)
                 if (result.error) {
                     if (result.error.nama_merek) {
                         $('#nama_merek').addClass('is-invalid')
@@ -722,7 +898,6 @@
                 $('.btntambah').html('Tambah')
             },
             success: function(result) {
-                console.log(result)
                 if (result.error) {
                     if (result.error.nama_bank) {
                         $('#nama_bank').addClass('is-invalid')
@@ -735,6 +910,145 @@
                 } else {
                     $('#nama_bank').removeClass('is-invalid')
                     $('.nama_bankmsg').html('')
+                    Swal.fire({
+                        title: 'Berhasil',
+                        icon: 'success',
+                        confirmButtonColor: '#3085d6',
+                        confirmButtonText: 'Ok',
+                    }).then((result) => {
+                        location.reload();
+                    })
+                }
+
+            },
+            error: function(xhr, ajaxOptions, thrownError) {
+                alert(xhr.status + "\n" + xhr.responseText + "\n" + thrownError);
+            }
+        })
+    })
+    $('.insertjenis').submit(function(e) {
+        e.preventDefault()
+        let form = $('.insertjenis')[0];
+        let data = new FormData(form)
+        $.ajax({
+            type: "POST",
+            data: data,
+            url: "<?php echo base_url('insertjenis'); ?>",
+            dataType: "json",
+            contentType: false,
+            processData: false,
+            cache: false,
+            beforeSend: function() {
+                $('.btntambah').html('<i class="fa fa-spin fa-spinner">')
+            },
+            complete: function() {
+                $('.btntambah').html('Tambah')
+            },
+            success: function(result) {
+                if (result.error) {
+                    if (result.error.nama_jenis) {
+                        $('#nama_jenis').addClass('is-invalid')
+                        $('.nama_jenismsg').html(result.error.nama_jenis)
+                    } else {
+                        $('#nama_jenis').removeClass('is-invalid')
+                        $('.nama_jenismsg').html('')
+                    }
+
+                } else {
+                    $('#nama_jenis').removeClass('is-invalid')
+                    $('.nama_jenismsg').html('')
+                    Swal.fire({
+                        title: 'Berhasil',
+                        icon: 'success',
+                        confirmButtonColor: '#3085d6',
+                        confirmButtonText: 'Ok',
+                    }).then((result) => {
+                        location.reload();
+                    })
+                }
+
+            },
+            error: function(xhr, ajaxOptions, thrownError) {
+                alert(xhr.status + "\n" + xhr.responseText + "\n" + thrownError);
+            }
+        })
+    })
+    $('.insertuser').submit(function(e) {
+        e.preventDefault()
+        let form = $('.insertuser')[0];
+        let data = new FormData(form)
+        $.ajax({
+            type: "POST",
+            data: data,
+            url: "<?php echo base_url('insertuser'); ?>",
+            dataType: "json",
+            contentType: false,
+            processData: false,
+            cache: false,
+            beforeSend: function() {
+                $('.btntambah').html('<i class="fa fa-spin fa-spinner">')
+            },
+            complete: function() {
+                $('.btntambah').html('Tambah')
+            },
+            success: function(result) {
+                if (result.error) {
+                    if (result.error.nama_user) {
+                        $('#nama_user').addClass('is-invalid')
+                        $('.nama_usermsg').html(result.error.nama_user)
+                    } else {
+                        $('#nama_user').removeClass('is-invalid')
+                        $('.nama_usermsg').html('')
+                    }
+                    if (result.error.nohp_user) {
+                        $('#nohp_user').addClass('is-invalid')
+                        $('.nohp_usermsg').html(result.error.nohp_user)
+                    } else {
+                        $('#nohp_user').removeClass('is-invalid')
+                        $('.nohp_usermsg').html('')
+                    }
+                    if (result.error.alamatusr) {
+                        $('#alamatusr').addClass('is-invalid')
+                        $('.alamatusrmsg').html(result.error.alamatusr)
+                    } else {
+                        $('#alamatusr').removeClass('is-invalid')
+                        $('.alamatusrmsg').html('')
+                    }
+                    if (result.error.username) {
+                        $('#username').addClass('is-invalid')
+                        $('.usernamemsg').html(result.error.username)
+                    } else {
+                        $('#username').removeClass('is-invalid')
+                        $('.usernamemsg').html('')
+                    }
+                    if (result.error.password) {
+                        $('#password').addClass('is-invalid')
+                        $('.passwordmsg').html(result.error.password)
+                    } else {
+                        $('#password').removeClass('is-invalid')
+                        $('.passwordmsg').html('')
+                    }
+                    if (result.error.role) {
+                        $('#role').addClass('is-invalid')
+                        $('.rolemsg').html(result.error.role)
+                    } else {
+                        $('#role').removeClass('is-invalid')
+                        $('.rolemsg').html('')
+                    }
+
+                } else {
+                    $('#nama_user').removeClass('is-invalid')
+                    $('.nama_usermsg').html('')
+                    $('#nohp_user').removeClass('is-invalid')
+                    $('.nohp_usermsg').html('')
+                    $('#alamatusr').removeClass('is-invalid')
+                    $('.alamatusrmsg').html('')
+                    $('#username').removeClass('is-invalid')
+                    $('.usernamemsg').html('')
+                    $('#password').removeClass('is-invalid')
+                    $('.passwordmsg').html('')
+                    $('#role').removeClass('is-invalid')
+                    $('.rolemsg').html('')
                     Swal.fire({
                         title: 'Berhasil',
                         icon: 'success',
@@ -770,7 +1084,6 @@
                 $('.btntambah').html('Tambah')
             },
             success: function(result) {
-                console.log(result)
                 if (result.error) {
                     if (result.error.nohp) {
                         $('#nohpu').addClass('is-invalid')
@@ -808,6 +1121,8 @@
         })
     })
 
+
+
     function OpenModalData(jenis) {
         if (jenis == 'supplier') {
             $('#titlesupp').html('Tambah Data Supplier')
@@ -829,10 +1144,19 @@
             $('#buttonbank').html('Tambah')
             $('#modal-bank').modal('toggle')
         }
+        if (jenis == 'jenis') {
+            $('#titlejenis').html('Tambah Jenis Barang')
+            $('#buttonjenis').html('Tambah')
+            $('#modal-jenis').modal('toggle')
+        }
+        if (jenis == 'user') {
+            $('#titleuser').html('Tambah user Barang')
+            $('#buttonuser').html('Tambah')
+            $('#modal-user').modal('toggle')
+        }
     }
 
     function Updatedata(id, jenis) {
-        console.log(jenis)
         $.ajax({
             type: "get",
             data: {
@@ -842,7 +1166,6 @@
             url: "<?php echo base_url('isidata'); ?>",
             dataType: "json",
             success: function(result) {
-                console.log(result)
                 if (jenis == 'customer') {
                     $('#nama_custu').val(result.nama);
                     $('#alamatu').val(result.alamat_cust);
@@ -884,6 +1207,25 @@
                     $('#titlebank').html('Update Data Bank')
                     $('#buttonbank').html('Update')
                     $('#modal-bank').modal('toggle')
+                }
+                if (jenis == 'jenis') {
+                    $('#nama_jenis').val(result.nama);
+                    $('#id_jenis').val(id);
+                    $('#titlejenis').html('Update Data jenis')
+                    $('#buttonjenis').html('Update')
+                    $('#modal-jenis').modal('toggle')
+                }
+                if (jenis == 'user') {
+                    $('#nama_user').val(result.nama_pegawai)
+                    $('#nohp_user').val(result.nohp)
+                    $('#alamatusr').val(result.alamat)
+                    $('#username').val(result.username)
+                    $('#password').val(result.password)
+                    $('#role').val(result.role)
+                    $('#id_user').val(id);
+                    $('#titleuser').html('Update Data user')
+                    $('#buttonuser').html('Update')
+                    $('#modal-user').modal('toggle')
                 }
             },
             error: function(xhr, ajaxOptions, thrownError) {
@@ -982,6 +1324,20 @@
         //"buttons": ["copy", "csv", "excel", "pdf", "print", "colvis", ]
     }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
     $("#supplier").DataTable({
+        "responsive": true,
+        "lengthChange": false,
+        "autoWidth": false,
+        "aaSorting": []
+        //"buttons": ["copy", "csv", "excel", "pdf", "print", "colvis", ]
+    }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
+    $("#jenis").DataTable({
+        "responsive": true,
+        "lengthChange": false,
+        "autoWidth": false,
+        "aaSorting": []
+        //"buttons": ["copy", "csv", "excel", "pdf", "print", "colvis", ]
+    }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
+    $("#user").DataTable({
         "responsive": true,
         "lengthChange": false,
         "autoWidth": false,

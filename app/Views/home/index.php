@@ -114,15 +114,6 @@
             </div>
           </div>
           <!-- /.card -->
-
-          <div class="card">
-            <div class="card-header border-0">
-              <h3 style="text-align: center; font-size: 20px; ">Chart Emas</h3>
-            </div>
-            <div class="card-body">
-              <div id="div_chart_antam" align="center"></div>
-            </div>
-          </div>
         </div>
         <!-- /.col-md-6 -->
       </div>
@@ -153,10 +144,10 @@
   v_height = 215;
   he_org_show(v_widget_type, v_width, v_height, 'div_widget');
 
-  v_widget_type = "chart_gold_antam";
-  v_period = 90; //hari
-  v_width = 400;
-  v_height = 300;
-  he_org_show_chart(v_widget_type, v_period, v_width, v_height, 'div_chart_antam');
+  // v_widget_type = "chart_gold_antam";
+  // v_period = 90; //hari
+  // v_width = 400;
+  // v_height = 300;
+  // he_org_show_chart(v_widget_type, v_period, v_width, v_height, 'div_chart_antam');
 </script>
 <?= $this->endSection(); ?>

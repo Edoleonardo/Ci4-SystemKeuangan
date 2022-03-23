@@ -77,14 +77,45 @@ class Login extends BaseController
                         setcookie('password', '');
                     }
                 }
-                $check = $this->modellogin->getLoginData($username, $password);
-                $session = session();
-                $session->set('role', $check['role']);
-                $session->set('id_user', $check['id_pegawai']);
-                $session->set('nama_user', $check['nama_pegawai']);
-
-                echo json_encode($session->get('role'));
+                $check = $this->modellogin->getDatauserAll();
+                $data = $this->multi_array_search($check, array('username' => $username, 'password' =>  $password));
+                if ($data) {
+                    $session = session();
+                    $session->set('role', $check[$data[0]]['role']);
+                    $session->set('id_user', $check[$data[0]]['id_pegawai']);
+                    $session->set('nama_user', $check[$data[0]]['nama_pegawai']);
+                    $msg = 'berhasil';
+                } else {
+                    $msg = 'gagal';
+                }
+                echo json_encode($msg);
             }
         }
+    }
+
+    public  function multi_array_search($array, $search)
+    {
+
+        // Create the result array
+        $result = array();
+
+        // Iterate over each array element
+        foreach ($array as $key => $value) {
+
+            // Iterate over each search condition
+            foreach ($search as $k => $v) {
+
+                // If the array element does not meet the search condition then continue to the next element
+                if (!isset($value[$k]) || $value[$k] != $v) {
+                    continue 2;
+                }
+            }
+
+            // Add the array element's key to the result array
+            $result[] = $key;
+        }
+
+        // Return the result array
+        return $result;
     }
 }

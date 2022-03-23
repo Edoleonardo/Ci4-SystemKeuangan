@@ -177,7 +177,8 @@ $routes->POST('/updatekadar', ($session->get('role')) ? 'MasterInput::UpdateKada
 $routes->POST('/updatemerek', ($session->get('role')) ? 'MasterInput::UpdateMerek' : 'Login::Login');
 $routes->POST('/updatebank', ($session->get('role')) ? 'MasterInput::UpdateBank' : 'Login::Login');
 $routes->POST('/updatecust', ($session->get('role')) ? 'MasterInput::UpdateCust' : 'Login::Login');
-
+$routes->POST('/insertjenis', ($session->get('role')) ? 'MasterInput::InsertJenis' : 'Login::Login');
+$routes->POST('/insertuser', ($session->get('role')) ? 'MasterInput::InsertUser' : 'Login::Login');
 
 // $routes->POST('/hapusdata', 'MasterInput::HapusData');
 $routes->get('/isidata', ($session->get('role')) ? 'MasterInput::DataMaster' : 'Login::Login');
