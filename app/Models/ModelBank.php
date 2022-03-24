@@ -10,7 +10,7 @@ class ModelBank extends Model
     protected $table = 'tbl_bank';
     protected $primaryKey = 'id_bank';
     protected $useTimestamps = true;
-    protected $allowedFields = ['nama_bank'];
+    protected $allowedFields = ['nama_bank', 'id_karyawan'];
 
     public function getBank($id = false)
     {

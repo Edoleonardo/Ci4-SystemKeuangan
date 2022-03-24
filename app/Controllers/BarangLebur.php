@@ -58,9 +58,11 @@ class BarangLebur extends BaseController
     public function UbahStatus()
     {
         if ($this->request->isAJAX()) {
+            $session = session();
             $databuyback = $this->modeldetailbuyback->getDataDetailKode($this->request->getVar('id'));
             $this->modeldetailbuyback->save([
                 'id_detail_buyback' => $databuyback['id_detail_buyback'],
+                'id_karyawan' => $session->get('id_user'),
                 'status_proses' => $this->request->getVar('status')
             ]);
             $msg = 'sukses ubahstatus';
@@ -69,12 +71,13 @@ class BarangLebur extends BaseController
     }
     public function LeburBarang()
     {
+        $session = session();
         $dateid = date('ymdhis');
         $this->modellebur->save([
             // 'created_at' => date("y-m-d"),
             'id_date_lebur' => $dateid,
             'no_lebur' => $this->NoTransaksiGenerateLebur(),
-            'id_karyawan' => '1',
+            'id_karyawan' => $session->get('id_user'),
             'nama_img' => 'default.jpg',
             'kode' => '-',
             'jenis' => '-',
@@ -173,6 +176,7 @@ class BarangLebur extends BaseController
                 ];
                 echo json_encode($msg);
             } else {
+                $session = session();
                 if ($this->request->getPost('gambar')) {
                     $image = $this->request->getPost('gambar');
                     $image = str_replace('data:image/jpeg;base64,', '', $image);
@@ -203,7 +207,7 @@ class BarangLebur extends BaseController
 
                         $this->modellebur->save([
                             'id_lebur' => $datalebur['id_lebur'],
-                            'id_karyawan' => '1',
+                            'id_karyawan' => $session->get('id_user'),
                             'nama_img'  =>  $namafile,
                             'kode' => $checkkode['barcode'],
                             'jenis' => $this->request->getVar('jenis'),
@@ -217,6 +221,7 @@ class BarangLebur extends BaseController
 
                         $this->datastock->save([
                             'id_stock' => $checkkode['id_stock'],
+                            'id_karyawan' => $session->get('id_user'),
                             'status' => '24K',
                             'no_faktur' => $datalebur['no_lebur'],
                             'tgl_faktur' => $this->request->getVar('tanggallebur'),
@@ -237,6 +242,7 @@ class BarangLebur extends BaseController
                             'barcode' => $checkkode['barcode'],
                             'status' => 'Masuk',
                             'no_faktur' => $datalebur['no_lebur'],
+                            'id_karyawan' => $session->get('id_user'),
                             'tgl_faktur' => $this->request->getVar('tanggallebur'),
                             'nama_customer' => 'Lebur Barang',
                             'saldo' => $saldoakhir,
@@ -256,6 +262,7 @@ class BarangLebur extends BaseController
 
                         $this->modelkartustock->save([
                             'id_kartustock' => $datakartu['id_kartustock'],
+                            'id_karyawan' => $session->get('id_user'),
                             'total_masuk' => $this->modeldetailkartustock->SumMasukKartu($checkkode['barcode']),
                             'total_keluar' => $this->modeldetailkartustock->SumKeluarKartu($checkkode['barcode']),
                             'saldo_akhir' => $saldoakhir,
@@ -265,7 +272,7 @@ class BarangLebur extends BaseController
                         $barcode = $this->KodeDatailGenerate(4);
                         $this->modellebur->save([
                             'id_lebur' => $datalebur['id_lebur'],
-                            'id_karyawan' => '1',
+                            'id_karyawan' => $session->get('id_user'),
                             'nama_img'  =>  $namafile,
                             'kode' => $barcode,
                             'jenis' => $this->request->getVar('jenis'),
@@ -279,6 +286,7 @@ class BarangLebur extends BaseController
 
                         $this->datastock->save([
                             'barcode' => $barcode,
+                            'id_karyawan' => $session->get('id_user'),
                             'status' => '24K',
                             'no_faktur' => $datalebur['no_lebur'],
                             'tgl_faktur' => $this->request->getVar('tanggallebur'),
@@ -300,6 +308,7 @@ class BarangLebur extends BaseController
                         ]);
                         $this->modelkartustock->save([
                             'kode' => $barcode,
+                            'id_karyawan' => $session->get('id_user'),
                             'total_masuk' => $this->request->getVar('berat'),
                             'total_keluar' => 0,
                             'saldo_akhir' => $this->request->getVar('berat'),
@@ -307,6 +316,7 @@ class BarangLebur extends BaseController
                         $this->modeldetailkartustock->save([
                             // 'id_detail_kartustock' => $datadetailkartu['id_detail_kartustock'],
                             'barcode' => $barcode,
+                            'id_karyawan' => $session->get('id_user'),
                             'status' => 'Masuk',
                             'no_faktur' => $datalebur['no_lebur'],
                             'tgl_faktur' => $this->request->getVar('tanggallebur'),
@@ -343,6 +353,7 @@ class BarangLebur extends BaseController
     public function TambahLebur()
     {
         if ($this->request->isAJAX()) {
+            $session = session();
             $kode = $this->request->getVar('kode');
             $iddate =  $this->request->getVar('iddate');
             $datalebur = $this->modellebur->getDataLeburAll($iddate);
@@ -351,6 +362,7 @@ class BarangLebur extends BaseController
             if (!$datadetaillebur) {
                 $this->modeldetaillebur->save([
                     'id_date_lebur' => $iddate,
+                    'id_karyawan' => $session->get('id_user'),
                     'id_detail_buyback' => $databuyback['id_detail_buyback'],
                     'nama_img' => $databuyback['nama_img'],
                     'kode' =>  $databuyback['kode'],
@@ -370,6 +382,7 @@ class BarangLebur extends BaseController
                 ]);
                 $this->modellebur->save([
                     'id_lebur' => $datalebur['id_lebur'],
+                    'id_karyawan' => $session->get('id_user'),
                     'qty' => 1,
                     'jumlah_barang' => $this->modeldetaillebur->JumlahBarang($datalebur['id_date_lebur'])['berat'],
                     'berat_murni' => $this->modeldetaillebur->GetSumBeratMurni($datalebur['id_date_lebur'])['hasil'],
@@ -377,6 +390,7 @@ class BarangLebur extends BaseController
                 ]);
                 $this->modeldetailbuyback->save([
                     'id_detail_buyback' => $databuyback['id_detail_buyback'],
+                    'id_karyawan' => $session->get('id_user'),
                     'status_proses' => 'SudahLebur' . date('y-m-d'),
                 ]);
                 $msg = 'sukses';
@@ -423,12 +437,13 @@ class BarangLebur extends BaseController
     }
     public function BatalLebur($id)
     {
-
+        $session = session();
         $datadetaillebur =  $this->modeldetaillebur->getDetailAllLebur($id);
         foreach ($datadetaillebur as $row) {
             $databuyback = $this->modeldetailbuyback->getDataDetailRetur($row['kode']);
             $this->modeldetailbuyback->save([
                 'id_detail_buyback' => $databuyback['id_detail_buyback'],
+                'id_karyawan' => $session->get('id_user'),
                 'status_proses' => 'Lebur'
             ]);
         }
@@ -439,17 +454,20 @@ class BarangLebur extends BaseController
     public function DeleteLebur()
     {
         if ($this->request->isAJAX()) {
+            $session = session();
             $kode =  $this->modeldetaillebur->getDataDetailLebur($this->request->getVar('id'));
             $databuyback = $this->modeldetailbuyback->getDataDetailRetur($kode['kode']);
             $datalebur = $this->modellebur->getDataLeburAll($kode['id_date_lebur']);
 
             $this->modeldetailbuyback->save([
                 'id_detail_buyback' => $databuyback['id_detail_buyback'],
+                'id_karyawan' => $session->get('id_user'),
                 'status_proses' => 'Lebur'
             ]);
             $this->modeldetaillebur->delete($this->request->getVar('id'));
             $this->modellebur->save([
                 'id_lebur' => $datalebur['id_lebur'],
+                'id_karyawan' => $session->get('id_user'),
                 'qty' => 1,
                 'jumlah_barang' => $this->modeldetaillebur->JumlahBarang($datalebur['id_date_lebur'])['berat'],
                 'berat_murni' => $this->modeldetaillebur->GetSumBeratMurni($datalebur['id_date_lebur'])['hasil'],

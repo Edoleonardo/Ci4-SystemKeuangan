@@ -66,7 +66,7 @@ class BuybackCust extends BaseController
         $this->datapembelian->save([
             'id_date_pembelian' => $session->get('date_id'),
             'nama_supplier' => '-',
-            'id_karyawan' => '2',
+            'id_karyawan' => $session->get('id_user'),
             // 'no_faktur_supp' => '-',
             'no_transaksi' => $notransaksi,
             'tgl_faktur' => date('Y-m-d h:i:s'),
@@ -81,24 +81,13 @@ class BuybackCust extends BaseController
     }
     public function HalamanTambah()
     {
-        // $data = [
-        //     'merek' => $this->datamerek->getMerek(),
-        //     'kadar' => $this->datakadar->getKadar(),
-        //     'supplier' => $this->datasupplier->getSupplier()
-
-        // ];
-
-        // return view('buybackcust/buyback_barang', $data);
-        // $session = session();
-        // $session->remove('date_id_penjualan');
-        //-------------------------------------------------------------
+        $session = session();
         $dateidbuyback = date('ymdhis');
-        // $session->set('date_id_penjualan', $dateidjual);
         $this->modelbuyback->save([
             // 'created_at' => date("y-m-d"),
             'id_date_buyback' => $dateidbuyback,
             'no_transaksi_buyback' => $this->NoTransaksiGenerateBuyback(),
-            'id_karyawan' => '1',
+            'id_karyawan' => $session->get('id_user'),
             'total_berat' => 0,
             'jumlah' => '0',
             'total_harga' => '0',
@@ -160,6 +149,7 @@ class BuybackCust extends BaseController
     public function TampilDataBuyback()
     {
         if ($this->request->isAJAX()) {
+            $session = session();
             $databuyback = $this->modelbuyback->getDataBuyback($this->request->getVar('iddate'));
             $totalharga = $this->modeldetailbuyback->SumTotalHargaBuyback($this->request->getVar('iddate'));
             // $totalberat = $this->modeldetailbuyback->SumBeratDetailBuyback($this->request->getVar('iddate'));
@@ -175,6 +165,7 @@ class BuybackCust extends BaseController
             }
             $this->modelbuyback->save([
                 'id_buyback' =>  $databuyback['id_buyback'],
+                'id_karyawan' => $session->get('id_user'),
                 'total_berat' =>  $totalberat,
                 'jumlah' => ($totaljumlah['total'] == null) ? 0 : $totaljumlah['total'],
                 'total_harga' => ($totalharga['total_harga'] == null) ? 0 : $totalharga['total_harga'],
@@ -290,13 +281,14 @@ class BuybackCust extends BaseController
                 ];
                 echo json_encode($msg);
             } else {
-
+                $session = session();
                 $databuyback = $this->modelbuyback->getDataBuyback($this->request->getVar('iddate'));
                 $hasilbayar = $databuyback['total_harga'] - ($this->request->getVar('tunai') + $this->request->getVar('transfer'));
                 if ($hasilbayar == 0 && $databuyback['total_harga'] != 0) {
                     $datadetail = $this->modeldetailbuyback->getDetailAllBuyback($this->request->getVar('iddate'));
                     $this->modelbuyback->save([
                         'id_buyback' => $databuyback['id_buyback'],
+                        'id_karyawan' => $session->get('id_user'),
                         'pembayaran' => $this->request->getVar('pembayaran'),
                         'nohp_cust' => $this->request->getVar('inputcustomer'),
                         'tunai' => $this->request->getVar('tunai'),
@@ -319,6 +311,7 @@ class BuybackCust extends BaseController
                             if (substr($row['kode'], 0, 1) == 4) {
                                 $this->datastock->save([
                                     'id_stock' => $datamasterstock['id_stock'],
+                                    'id_karyawan' => $session->get('id_user'),
                                     'status' => 'B',
                                     'no_faktur' => $databuyback['no_transaksi_buyback'],
                                     'tgl_faktur' => date("Y-m-d H:i:s"),
@@ -341,6 +334,7 @@ class BuybackCust extends BaseController
                             if (substr($row['kode'], 0, 1) == 3) {
                                 $this->datastock->save([
                                     'id_stock' => $datamasterstock['id_stock'],
+                                    'id_karyawan' => $session->get('id_user'),
                                     'status' => 'B',
                                     'no_faktur' => $databuyback['no_transaksi_buyback'],
                                     'tgl_faktur' => date("Y-m-d h:i:s"),
@@ -363,6 +357,7 @@ class BuybackCust extends BaseController
                             $this->modeldetailkartustock->save([
                                 // 'id_detail_kartustock' => $datadetailkartu['id_detail_kartustock'],
                                 'barcode' => $row['kode'],
+                                'id_karyawan' => $session->get('id_user'),
                                 'status' => 'Keluar',
                                 'no_faktur' => $databuyback['no_transaksi_buyback'],
                                 'tgl_faktur' => $databuyback['created_at'],
@@ -384,6 +379,7 @@ class BuybackCust extends BaseController
                             if ($datakartu) {
                                 $this->modelkartustock->save([
                                     'id_kartustock' => $datakartu['id_kartustock'],
+                                    'id_karyawan' => $session->get('id_user'),
                                     'total_masuk' => $this->modeldetailkartustock->SumMasukKartu($row['kode']),
                                     'total_keluar' => $this->modeldetailkartustock->SumKeluarKartu($row['kode']),
                                     'saldo_akhir' => $saldoakhir,
@@ -391,6 +387,7 @@ class BuybackCust extends BaseController
                             } else {
                                 $this->modelkartustock->save([
                                     'kode' => $row['kode'],
+                                    'id_karyawan' => $session->get('id_user'),
                                     'total_masuk' => $this->modeldetailkartustock->SumMasukKartu($row['kode']),
                                     'total_keluar' => $this->modeldetailkartustock->SumKeluarKartu($row['kode']),
                                     'saldo_akhir' => $saldoakhir,
@@ -403,6 +400,7 @@ class BuybackCust extends BaseController
                                 $datamasterstock = $this->datastock->getBarangkode($row['kode']);
                                 $this->datastock->save([
                                     'id_stock' => $datamasterstock['id_stock'],
+                                    'id_karyawan' => $session->get('id_user'),
                                     // 'barcode' => $row['kode'],
                                     'status' => 'B',
                                     'no_faktur' => $databuyback['no_transaksi_buyback'],
@@ -427,6 +425,7 @@ class BuybackCust extends BaseController
                                 $datamasterstock = $this->datastock->getBarangkode($row['kode']);
                                 $this->datastock->save([
                                     'id_stock' => $datamasterstock['id_stock'],
+                                    'id_karyawan' => $session->get('id_user'),
                                     'status' => 'B',
                                     'no_faktur' => $databuyback['no_transaksi_buyback'],
                                     'tgl_faktur' => date("Y-m-d h:i:s"),
@@ -449,6 +448,7 @@ class BuybackCust extends BaseController
                             $this->modeldetailkartustock->save([
                                 // 'id_detail_kartustock' => $datadetailkartu['id_detail_kartustock'],
                                 'barcode' => $row['kode'],
+                                'id_karyawan' => $session->get('id_user'),
                                 'status' => 'Keluar',
                                 'no_faktur' => $databuyback['no_transaksi_buyback'],
                                 'tgl_faktur' => $databuyback['created_at'],
@@ -469,6 +469,7 @@ class BuybackCust extends BaseController
                             ]);
                             $this->modelkartustock->save([
                                 'id_kartustock' => $datakartu['id_kartustock'],
+                                'id_karyawan' => $session->get('id_user'),
                                 'total_masuk' => $this->modeldetailkartustock->SumMasukKartu($row['kode']),
                                 'total_keluar' => $this->modeldetailkartustock->SumKeluarKartu($row['kode']),
                                 'saldo_akhir' => $saldoakhir,
@@ -582,6 +583,7 @@ class BuybackCust extends BaseController
                 ];
                 echo json_encode($msg);
             } else {
+                $session = session();
                 if ($this->request->getPost('gambar')) {
                     $image = $this->request->getPost('gambar');
                     $image = str_replace('data:image/jpeg;base64,', '', $image);
@@ -620,6 +622,7 @@ class BuybackCust extends BaseController
                     if ($barcode) {
                         $this->modeldetailbuyback->save([
                             'nama_img' => $namafile,
+                            'id_karyawan' => $session->get('id_user'),
                             'id_date_buyback' => $this->request->getVar('iddate'),
                             'kode' =>  $barcode,
                             'qty' => $this->request->getVar('qty'),
@@ -647,6 +650,7 @@ class BuybackCust extends BaseController
                         $barcode = $this->KodeDatailGenerate($this->request->getVar('kelompok'));
                         $this->modeldetailbuyback->save([
                             'nama_img' => $namafile,
+                            'id_karyawan' => $session->get('id_user'),
                             'id_date_buyback' => $this->request->getVar('iddate'),
                             'kode' =>  $barcode,
                             'qty' => $this->request->getVar('qty'),
@@ -671,6 +675,7 @@ class BuybackCust extends BaseController
                         ]);
                         $this->datastock->save([
                             'barcode' => $barcode,
+                            'id_karyawan' => $session->get('id_user'),
                             'status' => $this->request->getVar('status_proses'),
                             'no_faktur' => 'NoFaktur',
                             'tgl_faktur' => 'NoFaktur',
@@ -700,6 +705,7 @@ class BuybackCust extends BaseController
                     $barcode = $this->KodeDatailGenerate($this->request->getVar('kelompok'));
                     $this->modeldetailbuyback->save([
                         'nama_img' => $namafile,
+                        'id_karyawan' => $session->get('id_user'),
                         'id_date_buyback' => $this->request->getVar('iddate'),
                         'kode' =>  $barcode,
                         'qty' => $this->request->getVar('qty'),
@@ -724,6 +730,7 @@ class BuybackCust extends BaseController
                     ]);
                     $this->datastock->save([
                         'barcode' => $barcode,
+                        'id_karyawan' => $session->get('id_user'),
                         'status' => $this->request->getVar('status_proses'),
                         'no_faktur' => 'NoFaktur',
                         'tgl_faktur' => 'NoFaktur',
@@ -777,9 +784,11 @@ class BuybackCust extends BaseController
                     $this->modeldetailbuyback->delete($id);
                 }
             } else {
+                $session = session();
                 $datadetailpenjualan = $this->modeldetailpenjualan->getDetailoneJual($data['id_detail_penjualan']);
                 $this->modeldetailpenjualan->save([
                     'id_detail_penjualan' => $data['id_detail_penjualan'],
+                    'id_karyawan' => $session->get('id_user'),
                     'saldo' => (substr($data['kode'], 0, 1) == 4) ? $data['berat'] + $datadetailpenjualan['saldo'] : $data['qty'] + $datadetailpenjualan['saldo']
                 ]);
                 $this->modeldetailbuyback->delete($id);
@@ -793,6 +802,7 @@ class BuybackCust extends BaseController
     }
     public function BatalBuyback($id)
     {
+        $session = session();
         $databuyback = $this->modelbuyback->getDataBuyback($id);
         $datadetailbb = $this->modeldetailbuyback->getDetailAllBuyback($id);
         foreach ($datadetailbb as $row) {
@@ -807,6 +817,7 @@ class BuybackCust extends BaseController
                 $datadetailpenjualan = $this->modeldetailpenjualan->getDetailoneJual($row['id_detail_penjualan']);
                 $this->modeldetailpenjualan->save([
                     'id_detail_penjualan' => $row['id_detail_penjualan'],
+                    'id_karyawan' => $session->get('id_user'),
                     'saldo' => (substr($row['kode'], 0, 1) == 4) ? $row['berat'] + $datadetailpenjualan['saldo'] : $row['qty'] + $datadetailpenjualan['saldo']
                 ]);
             }
@@ -882,6 +893,7 @@ class BuybackCust extends BaseController
                 ];
                 echo json_encode($msg);
             } else {
+                $session = session();
                 $id = $this->request->getVar('id');
                 $databarang = $this->modeldetailpenjualan->getDetailoneJual($id);
                 // $datamaster = $this->datastock->getBarangkode($databarang['kode']);
@@ -908,6 +920,7 @@ class BuybackCust extends BaseController
                     $datapenjualan = $this->penjualan->getDataPenjualan($databarang['id_date_penjualan']);
                     $this->modeldetailbuyback->save([
                         'nama_img' => $databarang['nama_img'],
+                        'id_karyawan' => $session->get('id_user'),
                         'id_date_buyback' => $this->request->getVar('iddate'),
                         'id_detail_penjualan' => $databarang['id_detail_penjualan'],
                         'kode' =>  $databarang['kode'],
@@ -929,6 +942,7 @@ class BuybackCust extends BaseController
                     ]);
                     $this->modeldetailpenjualan->save([
                         'id_detail_penjualan' => $databarang['id_detail_penjualan'],
+                        'id_karyawan' => $session->get('id_user'),
                         'saldo' => ($kode == 4) ? $databarang['saldo'] - $this->request->getVar('berat1') : $databarang['saldo'] - $this->request->getVar('qty1'),
                     ]);
 

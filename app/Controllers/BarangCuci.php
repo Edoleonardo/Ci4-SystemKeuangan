@@ -65,12 +65,13 @@ class BarangCuci extends BaseController
     }
     public function CuciBarang()
     {
+        $session = session();
         $dateid = date('ymdhis');
         $this->modelcuci->save([
             // 'created_at' => date("y-m-d"),
             'id_date_cuci' => $dateid,
             'no_cuci' => $this->NoTransaksiGenerateCuci(),
-            'id_karyawan' => '1',
+            'id_karyawan' => $session->get('id_user'),
             'supplier_cuci' => '-',
             'keterangan' => '-',
             'total_berat' => '-',
@@ -117,6 +118,7 @@ class BarangCuci extends BaseController
     public function TambahCuci()
     {
         if ($this->request->isAJAX()) {
+            $session = session();
             $kode = $this->request->getVar('kode');
             $iddate =  $this->request->getVar('iddate');
             $databuyback = $this->modeldetailbuyback->getDataDetailKode($kode);
@@ -126,6 +128,7 @@ class BarangCuci extends BaseController
                 $this->modeldetailcuci->save([
                     'id_date_cuci' => $iddate,
                     'id_detail_buyback' => $databuyback['id_detail_buyback'],
+                    'id_karyawan' => $session->get('id_user'),
                     'nama_img' => $databuyback['nama_img'],
                     'kode' =>  $databuyback['kode'],
                     'qty' => $databuyback['qty'],
@@ -145,10 +148,12 @@ class BarangCuci extends BaseController
 
                 $this->modeldetailbuyback->save([
                     'id_detail_buyback' => $databuyback['id_detail_buyback'],
+                    'id_karyawan' => $session->get('id_user'),
                     'status_proses' => 'SudahCuci' . date('y-m-d')
                 ]);
                 $this->modelcuci->save([
                     'id_cuci' => $datacuci['id_cuci'],
+                    'id_karyawan' => $session->get('id_user'),
                     'jumlah_barang' => $this->modeldetailcuci->CountJumlahCuci($iddate)['berat'],
                     'total_berat' => $this->modeldetailcuci->SumBeratDetailCuci($iddate)['berat'],
                 ]);
@@ -162,11 +167,13 @@ class BarangCuci extends BaseController
 
     public function BatalCuci($id)
     {
+        $session = session();
         $datadetailcuci =  $this->modeldetailcuci->getDetailAllCuci($id);
         foreach ($datadetailcuci as $row) {
             $databuyback = $this->modeldetailbuyback->getDataDetailRetur($row['kode']);
             $this->modeldetailbuyback->save([
                 'id_detail_buyback' => $databuyback['id_detail_buyback'],
+                'id_karyawan' => $session->get('id_user'),
                 'status_proses' => 'Cuci'
             ]);
         }
@@ -177,17 +184,20 @@ class BarangCuci extends BaseController
     public function DeleteCuci()
     {
         if ($this->request->isAJAX()) {
+            $session = session();
             $kode =  $this->modeldetailcuci->getDataDetailCuci($this->request->getVar('id'));
             $databuyback = $this->modeldetailbuyback->getDataDetailRetur($kode['kode']);
             $datacuci = $this->modelcuci->getDataCuciAll($kode['id_date_cuci']);
 
             $this->modeldetailbuyback->save([
                 'id_detail_buyback' => $databuyback['id_detail_buyback'],
+                'id_karyawan' => $session->get('id_user'),
                 'status_proses' => 'Cuci'
             ]);
             $this->modeldetailcuci->delete($this->request->getVar('id'));
             $this->modelcuci->save([
                 'id_cuci' => $datacuci['id_cuci'],
+                'id_karyawan' => $session->get('id_user'),
                 'jumlah_barang' => $this->modeldetailcuci->CountJumlahCuci($kode['id_date_cuci'])['berat'],
                 'total_berat' => $this->modeldetailcuci->SumBeratDetailCuci($kode['id_date_cuci'])['berat'],
             ]);
@@ -224,11 +234,13 @@ class BarangCuci extends BaseController
             ];
             echo json_encode($msg);
         } else {
+            $session = session();
             $id = $this->request->getVar('id');
             $datadetailcuci = $this->modeldetailcuci->getDataDetailCuci($id);
             $datastock = $this->datastock->CheckData($datadetailcuci['kode']);
             $harga_beli = round($datadetailcuci['total_harga'] / $this->request->getVar('berat'));
             $this->datastock->save([
+                'id_karyawan' => $session->get('id_user'),
                 'id_stock' => $datastock['id_stock'],
                 'qty' => $datadetailcuci['qty'],
                 'berat' => $this->request->getVar('berat'),
@@ -238,6 +250,7 @@ class BarangCuci extends BaseController
             ]);
             $this->modeldetailcuci->save([
                 'id_detail_cuci' => $datadetailcuci['id_detail_cuci'],
+                'id_karyawan' => $session->get('id_user'),
                 'berat' => $this->request->getVar('berat'),
                 'harga_beli' => $harga_beli,
                 'status_proses' => 'SelesaiCuci'
@@ -288,14 +301,14 @@ class BarangCuci extends BaseController
                 ];
                 echo json_encode($msg);
             } else {
-
+                $session = session();
                 $datadetailcuci =  $this->modeldetailcuci->getDetailCuci($this->request->getVar('dateidcuci'));
                 $datacuci = $this->modelcuci->getDataCuciAll($this->request->getVar('dateidcuci'));
 
                 if ($datadetailcuci) {
                     $this->modelcuci->save([
                         'id_cuci' => $datacuci['id_cuci'],
-                        'id_karyawan' => '1',
+                        'id_karyawan' => $session->get('id_user'),
                         'harga_cuci' => $this->request->getVar('harga_cuci'),
                         'keterangan' =>  $this->request->getVar('keterangan'),
                         'tanggal_cuci' => $this->request->getVar('tanggalcuci'),

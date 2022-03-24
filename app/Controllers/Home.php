@@ -180,8 +180,10 @@ class Home extends BaseController
             // $namafile = $filesampul->getName(); // ini pake nama asli di foto
             $filesampul->move('img', $namafile);
         }
+        $session = session();
         $this->barangmodel->save([
             'id_img' => $this->request->getVar('idbarcode'),
+            'id_karyawan' => $session->get('id_user'),
             'barcode' => $this->request->getVar('idbarcode'),
             'nama_barang' => $this->request->getVar('namabarang'),
             'jenis_barang' => $this->request->getVar('jenisbarang'),

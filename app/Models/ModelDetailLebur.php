@@ -10,7 +10,7 @@ class ModelDetailLebur extends Model
     protected $table = 'tbl_detail_lebur';
     protected $primaryKey = 'id_detail_lebur';
     protected $useTimestamps = true;
-    protected $allowedFields = ['id_date_lebur', 'id_detail_buyback', 'nama_img', 'kode', 'jenis', 'qty', 'model', 'keterangan', 'berat_murni', 'berat', 'harga_beli', 'ongkos', 'kadar', 'status', 'nilai_tukar', 'merek', 'total_harga', 'no_nota', 'status_proses', 'nama_bank', 'tunai', 'transfer', 'cara_pembayaran', 'no_nota_jual', 'status_proses'];
+    protected $allowedFields = ['id_date_lebur', 'id_karyawan', 'id_detail_buyback', 'nama_img', 'kode', 'jenis', 'qty', 'model', 'keterangan', 'berat_murni', 'berat', 'harga_beli', 'ongkos', 'kadar', 'status', 'nilai_tukar', 'merek', 'total_harga', 'no_nota', 'status_proses', 'nama_bank', 'tunai', 'transfer', 'cara_pembayaran', 'no_nota_jual', 'status_proses'];
 
     public function getDetailAllLebur($id = false)
     {

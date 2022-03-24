@@ -115,14 +115,6 @@ $routes->get('/tampilcustbb', ($session->get('role')) ? 'BuybackCust::TampilCust
 $routes->get('/detailbuyback/(:any)', ($session->get('role')) ? 'BuybackCust::DetailBuyback/$1' : 'Login::Login');
 
 
-
-//-------------------------------------------------------
-
-// $routes->get('/dataretur', 'Prosesbarang::HomeRetur');
-// $routes->get('/datacuci', 'Prosesbarang::HomeCuci');
-// $routes->get('/tampilcuci', 'Prosesbarang::TampilCuci');
-// $routes->post('/updatecuci', 'Prosesbarang::UpdateCuci');
-
 //-----------------Lebur--------------------------------------------
 $routes->get('/datalebur', ($session->get('role')) ? 'BarangLebur::HomeLebur' : 'Login::Login');
 $routes->get('/leburbarang', ($session->get('role')) ? 'BarangLebur::LeburBarang' : 'Login::Login');
@@ -164,7 +156,6 @@ $routes->get('/modalprintretur', ($session->get('role')) ? 'BarangRetur::ModalRe
 // $routes->get('/leburbarang/(:any)', ($session->get('role')) ?'BarangRetur::TampilLeburBarang/$1': 'Login::Login');
 $routes->get('/detailbarang', ($session->get('role')) ? 'BarangRetur::DataDetailBarang' : 'Login::Login');
 
-// $routes->post('/selesailebur', 'Prosesbarang::SelesaiLebur');
 
 //----------------------------------masterinput-------------------------
 $routes->get('/masterinput', ($session->get('role')) ? 'MasterInput::HomeInput' : 'Login::Login');
@@ -183,8 +174,6 @@ $routes->POST('/insertuser', ($session->get('role')) ? 'MasterInput::InsertUser'
 // $routes->POST('/hapusdata', 'MasterInput::HapusData');
 $routes->get('/isidata', ($session->get('role')) ? 'MasterInput::DataMaster' : 'Login::Login');
 // }
-
-// $routes->get('/leburbarang/(:any)', 'Prosesbarang::LeburBarang/$1');
 
 
 

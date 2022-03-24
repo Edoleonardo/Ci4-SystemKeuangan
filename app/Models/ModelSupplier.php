@@ -10,7 +10,7 @@ class ModelSupplier extends Model
     protected $table = 'tbl_supplier';
     protected $primaryKey = 'id_supplier';
     protected $useTimestamps = true;
-    protected $allowedFields = ['nama_supp', 'alamat_supp', 'kota_supp', 'sales_supp', 'no_hp', 'no_ktr'];
+    protected $allowedFields = ['nama_supp', 'id_karyawan', 'alamat_supp', 'kota_supp', 'sales_supp', 'no_hp', 'no_ktr'];
 
     public function getSupplier($id = false)
     {

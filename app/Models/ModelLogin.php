@@ -10,7 +10,7 @@ class ModelLogin extends Model
     protected $table = 'tbl_pegawai';
     protected $primaryKey = 'id_pegawai';
     protected $useTimestamps = true;
-    protected $allowedFields = ['nama_pegawai', 'nohp', 'alamat', 'username', 'password', 'total_berat', 'role'];
+    protected $allowedFields = ['nama_pegawai', 'id_karyawan', 'nohp', 'alamat', 'username', 'password', 'total_berat', 'role'];
 
     public function getDatauserAll($id = false)
     {

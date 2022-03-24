@@ -10,7 +10,7 @@ class ModelKartuStock extends Model
     protected $table = 'tbl_kartustock';
     protected $primaryKey = 'id_kartustock';
     protected $useTimestamps = true;
-    protected $allowedFields = ['kode', 'total_masuk', 'total_keluar', 'saldo_akhir'];
+    protected $allowedFields = ['kode', 'id_karyawan', 'total_masuk', 'total_keluar', 'saldo_akhir'];
 
     public function getKartuStock($id = false)
     {

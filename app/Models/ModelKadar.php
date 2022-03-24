@@ -10,7 +10,7 @@ class ModelKadar extends Model
     protected $table = 'tbl_kadar';
     protected $primaryKey = 'id_kadar';
     protected $useTimestamps = true;
-    protected $allowedFields = ['nama_kadar', 'nilai_kadar'];
+    protected $allowedFields = ['nama_kadar', 'nilai_kadar', 'id_karyawan'];
 
     public function getKadar($id = false)
     {

@@ -10,7 +10,7 @@ class ModelReturSales extends Model
     protected $table = 'tbl_retur_sales';
     protected $primaryKey = 'id_retur';
     protected $useTimestamps = true;
-    protected $allowedFields = ['id_date_pembelian', 'nama_img', 'kode', 'jenis', 'qty', 'model', 'keterangan', 'berat', 'berat_murni', 'harga_beli', 'kadar', 'ongkos', 'nilai_tukar', 'merek', 'total_harga', 'status_proses'];
+    protected $allowedFields = ['id_date_pembelian', 'id_karyawan', 'nama_img', 'kode', 'jenis', 'qty', 'model', 'keterangan', 'berat', 'berat_murni', 'harga_beli', 'kadar', 'ongkos', 'nilai_tukar', 'merek', 'total_harga', 'status_proses'];
 
     public function getPembayaran($id = false)
     {

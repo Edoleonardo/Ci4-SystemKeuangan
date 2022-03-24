@@ -167,6 +167,7 @@ class Barangmasuk extends BaseController
                     ];
                     echo json_encode($msg);
                 } else {
+                    $session = session();
                     date_default_timezone_set('Asia/Jakarta');
                     $datapembelian = $this->datapembelian->getPembelianSupplier($this->request->getVar('dateid'));
                     if ($datapembelian['byr_berat_murni'] > 0) {
@@ -177,6 +178,7 @@ class Barangmasuk extends BaseController
                                 $jmlbyr = $this->request->getVar('harga_murni') * $datarongsok['berat_murni'];
                                 $this->datapembelian->save([
                                     'id_pembelian' =>  $datapembelian['id_pembelian'],
+                                    'id_karyawan' => $session->get('id_user'),
                                     'cara_pembayaran' => 'Belum Selesai',
                                     'tanggal_bayar' => date("y-m-d h:m:s"),
                                     'byr_berat_murni' =>  $byrberatmurni,
@@ -184,6 +186,7 @@ class Barangmasuk extends BaseController
                                 ]);
                                 $this->modelpembayaran->save([
                                     'id_date_pembelian' =>  $datapembelian['id_date_pembelian'],
+                                    'id_karyawan' => $session->get('id_user'),
                                     'nama_bank' => $this->request->getVar('namabank'),
                                     'cara_pembayaran' => $this->request->getVar('pembayaran'),
                                     'jumlah_pembayaran' => $jmlbyr,
@@ -196,6 +199,7 @@ class Barangmasuk extends BaseController
                                 ]);
                                 $this->modelbuyback->save([
                                     'id_detail_buyback' => $datarongsok['id_detail_buyback'],
+                                    'id_karyawan' => $session->get('id_user'),
                                     'status_proses' => 'BayarRongsok'
                                 ]);
                                 $msg = [
@@ -218,6 +222,7 @@ class Barangmasuk extends BaseController
                                 $jmlbyr = $this->request->getVar('harga_murni') * $databahan24k['berat_murni'];
                                 $this->datapembelian->save([
                                     'id_pembelian' =>  $datapembelian['id_pembelian'],
+                                    'id_karyawan' => $session->get('id_user'),
                                     'cara_pembayaran' => 'Belum Selesai',
                                     'tanggal_bayar' => date("y-m-d h:m:s"),
                                     'byr_berat_murni' =>  $byrberatmurni,
@@ -225,6 +230,7 @@ class Barangmasuk extends BaseController
                                 ]);
                                 $this->modelpembayaran->save([
                                     'id_date_pembelian' =>  $datapembelian['id_date_pembelian'],
+                                    'id_karyawan' => $session->get('id_user'),
                                     'nama_bank' => $this->request->getVar('namabank'),
                                     'cara_pembayaran' => $this->request->getVar('pembayaran'),
                                     'jumlah_pembayaran' => $jmlbyr,
@@ -237,6 +243,7 @@ class Barangmasuk extends BaseController
                                 ]);
                                 $this->datastock->save([
                                     'id_stock' => $databahan24k['id_stock'],
+                                    'id_karyawan' => $session->get('id_user'),
                                     'qty' => 0
                                 ]);
                                 $msg = [
@@ -259,6 +266,7 @@ class Barangmasuk extends BaseController
                                 $jmlbyr = $this->request->getVar('harga_murni') * $dataretur['berat_murni'];
                                 $this->datapembelian->save([
                                     'id_pembelian' =>  $datapembelian['id_pembelian'],
+                                    'id_karyawan' => $session->get('id_user'),
                                     'cara_pembayaran' => 'Belum Selesai',
                                     'tanggal_bayar' => date("y-m-d h:m:s"),
                                     'byr_berat_murni' =>  $byrberatmurni,
@@ -266,6 +274,7 @@ class Barangmasuk extends BaseController
                                 ]);
                                 $this->modelpembayaran->save([
                                     'id_date_pembelian' =>  $datapembelian['id_date_pembelian'],
+                                    'id_karyawan' => $session->get('id_user'),
                                     'nama_bank' => $this->request->getVar('namabank'),
                                     'cara_pembayaran' => $this->request->getVar('pembayaran'),
                                     'jumlah_pembayaran' => $jmlbyr,
@@ -278,6 +287,7 @@ class Barangmasuk extends BaseController
                                 ]);
                                 $this->modelbuyback->save([
                                     'id_detail_buyback' => $dataretur['id_detail_buyback'],
+                                    'id_karyawan' => $session->get('id_user'),
                                     'status_proses' => 'BayarRetur',
                                     'no_nota_jual' => $datapembelian['no_transaksi']
                                 ]);
@@ -305,6 +315,7 @@ class Barangmasuk extends BaseController
                             $byrberatmurni = round($datapembelian['byr_berat_murni'] - $beratmurni, 2);
                             $this->datapembelian->save([
                                 'id_pembelian' =>  $datapembelian['id_pembelian'],
+                                'id_karyawan' => $session->get('id_user'),
                                 'cara_pembayaran' => 'Belum Selesai',
                                 'tanggal_bayar' => date("y-m-d h:m:s"),
                                 'byr_berat_murni' =>  $byrberatmurni,
@@ -312,6 +323,7 @@ class Barangmasuk extends BaseController
                             ]);
                             $this->modelpembayaran->save([
                                 'id_date_pembelian' =>  $datapembelian['id_date_pembelian'],
+                                'id_karyawan' => $session->get('id_user'),
                                 'nama_bank' => $this->request->getVar('namabank'),
                                 'cara_pembayaran' => $this->request->getVar('pembayaran'),
                                 'jumlah_pembayaran' => $jumlah_pembayaran,
@@ -331,6 +343,7 @@ class Barangmasuk extends BaseController
                     } else {
                         $this->datapembelian->save([
                             'id_pembelian' =>  $datapembelian['id_pembelian'],
+                            'id_karyawan' => $session->get('id_user'),
                             'cara_pembayaran' => 'Lunas',
                         ]);
                         $msg = [
@@ -404,7 +417,7 @@ class Barangmasuk extends BaseController
                 ];
                 echo json_encode($msg);
             } else {
-
+                $session = session();
                 $databeli = $this->detailbeli->getDetailKode($this->request->getVar('kode'));
                 $kode = substr($this->request->getVar('kode'), 0, 1);
                 $qty = $this->request->getVar('qty');
@@ -423,6 +436,7 @@ class Barangmasuk extends BaseController
 
                 $this->detailbeli->save([
                     'id_detail_pembelian' => $databeli['id_detail_pembelian'],
+                    'id_karyawan' => $session->get('id_user'),
                     'qty' => $this->request->getVar('qty'),
                     'jenis' => $this->request->getVar('jenis'),
                     'model' => $this->request->getVar('model'),
@@ -440,6 +454,7 @@ class Barangmasuk extends BaseController
                 $databeli = $this->datapembelian->getPembelianSupplier($this->request->getVar('dateid'));
                 $this->datapembelian->save([
                     'id_pembelian' =>  $databeli['id_pembelian'],
+                    'id_karyawan' => $session->get('id_user'),
                     'total_bayar' => $this->detailbeli->SumDataDetail($this->request->getVar('dateid')),
 
                 ]);
@@ -458,7 +473,7 @@ class Barangmasuk extends BaseController
         $this->datapembelian->save([
             'id_date_pembelian' => $session->get('date_id'),
             'nama_supplier' => '-',
-            'id_karyawan' => '2',
+            'id_karyawan' => $session->get('id_user'),
             // 'no_faktur_supp' => '-',
             'no_transaksi' => $notransaksi,
             'tgl_faktur' => date('Y-m-d h:i:s'),
@@ -687,6 +702,7 @@ class Barangmasuk extends BaseController
 
                 $this->detailbeli->save([
                     'created_at' => $this->request->getVar('tanggal_input'),
+                    'id_karyawan' => $session->get('id_user'),
                     'id_date_pembelian' => $session->get('date_id'),
                     'nama_img' => $namafile,
                     'kode' =>   $barcode,
@@ -706,10 +722,10 @@ class Barangmasuk extends BaseController
 
                 $this->datapembelian->save([
                     'id_pembelian' =>  $datapembelian1['id_pembelian'],
+                    'id_karyawan' => $session->get('id_user'),
                     'created_at' => $this->request->getVar('tanggal_input'),
                     'id_date_pembelian' => $session->get('date_id'),
                     'nama_supplier' => $this->request->getVar('supplier'),
-                    'id_karyawan' => '2',
                     'no_faktur_supp' => $this->request->getVar('no_nota_supp'),
                     'no_transaksi' => $datapembelian1['no_transaksi'],
                     'tgl_faktur' => $this->request->getVar('tanggal_nota_sup') . ' ' . date('h:i:s'),
@@ -795,6 +811,7 @@ class Barangmasuk extends BaseController
             $data = $this->detailbeli->getDetailone($id);
             $this->datapembelian->save([
                 'id_pembelian' =>  $datapembelian['id_pembelian'],
+                'id_karyawan' => $session->get('id_user'),
                 'total_bayar' =>  $datapembelian['total_bayar'] - $data['total_harga'],
             ]);
 
@@ -812,7 +829,7 @@ class Barangmasuk extends BaseController
     public function DeletePembayaran()
     {
         if ($this->request->isAJAX()) {
-
+            $session = session();
             $id = $this->request->getVar('id');
             $databayar = $this->modelpembayaran->getDetailPembayaran($id);
             $datapembelian = $this->datapembelian->getPembelianSupplier($databayar['id_date_pembelian']);
@@ -820,6 +837,7 @@ class Barangmasuk extends BaseController
                 $datarongsok = $this->modelbuyback->getDataDetailRongsok($databayar['kode_rongsok']);
                 $this->modelbuyback->save([
                     'id_detail_buyback' => $datarongsok['id_detail_buyback'],
+                    'id_karyawan' => $session->get('id_user'),
                     'status_proses' => 'Pending'
                 ]);
             }
@@ -827,6 +845,7 @@ class Barangmasuk extends BaseController
                 $databahan24k = $this->datastock->CheckData($databayar['kode_24k']);
                 $this->datastock->save([
                     'id_stock' => $databahan24k['id_stock'],
+                    'id_karyawan' => $session->get('id_user'),
                     'qty' => $databayar['qty']
                 ]);
             }
@@ -834,6 +853,7 @@ class Barangmasuk extends BaseController
                 $dataretur = $this->modelretur->getDetailRetur($databayar['kode_retur']);
                 $this->modelretur->save([
                     'id_retur' => $dataretur['id_retur'],
+                    'id_karyawan' => $session->get('id_user'),
                     'status_proses' => 'Pending'
                 ]);
             }
@@ -841,6 +861,7 @@ class Barangmasuk extends BaseController
             $byrberatmurni = $datapembelian['byr_berat_murni'] + $databayar['berat_murni'];
             $this->datapembelian->save([
                 'id_pembelian' =>  $datapembelian['id_pembelian'],
+                'id_karyawan' => $session->get('id_user'),
                 'byr_berat_murni' =>  $byrberatmurni,
             ]);
             $this->modelpembayaran->delete($id);
@@ -871,6 +892,7 @@ class Barangmasuk extends BaseController
             $datapembelian = $this->datapembelian->getPembelianSupplier($session->get('date_id'));
             $this->datapembelian->save([
                 'id_pembelian' =>  $datapembelian['id_pembelian'],
+                'id_karyawan' => $session->get('id_user'),
                 'total_bayar' =>  0,
             ]);
             foreach ($data as $row) {
@@ -968,6 +990,7 @@ class Barangmasuk extends BaseController
                 ];
                 echo json_encode($msg);
             } else {
+                $session = session();
                 $datadetailbeli = $this->detailbeli->getDetailAll($this->request->getVar('dateid'));
                 if ($datadetailbeli) {
                     $totalbersih = $this->detailbeli->SumDataDetail($this->request->getVar('dateid'));
@@ -978,7 +1001,7 @@ class Barangmasuk extends BaseController
                         'id_pembelian' =>  $datapembelian['id_pembelian'],
                         'created_at' => $this->request->getVar('tanggal_input'),
                         'nama_supplier' => $this->request->getVar('supplier'),
-                        'id_karyawan' => '2',
+                        'id_karyawan' => $session->get('id_user'),
                         'no_faktur_supp' => $this->request->getVar('no_nota_supp'),
                         'no_transaksi' => $datapembelian['no_transaksi'],
                         'tgl_faktur' => $this->request->getVar('tanggal_nota_sup'),
@@ -998,6 +1021,7 @@ class Barangmasuk extends BaseController
                             $datakartu = $this->modelkartustock->getKartuStockkode($row['kode']);
                             $this->datastock->save([
                                 'id_stock' => $datacheck['id_stock'],
+                                'id_karyawan' => $session->get('id_user'),
                                 'status' => $this->StatusBarang(substr($row['kode'], 0, 1)),
                                 'no_faktur' => $datapembelian['no_faktur_supp'],
                                 'tgl_faktur' => $datapembelian['tgl_faktur'],
@@ -1021,6 +1045,7 @@ class Barangmasuk extends BaseController
                                 // 'id_detail_kartustock' => $datadetailkartu['id_detail_kartustock'],
                                 'barcode' => $row['kode'],
                                 'status' => 'Masuk',
+                                'id_karyawan' => $session->get('id_user'),
                                 'no_faktur' => $datapembelian['no_faktur_supp'],
                                 'tgl_faktur' => $datapembelian['tgl_faktur'],
                                 'nama_customer' => $datapembelian['nama_supplier'],
@@ -1041,6 +1066,7 @@ class Barangmasuk extends BaseController
 
                             $this->modelkartustock->save([
                                 'id_kartustock' => $datakartu['id_kartustock'],
+                                'id_karyawan' => $session->get('id_user'),
                                 'total_masuk' => $this->modeldetailkartustock->SumMasukKartu($row['kode']),
                                 'total_keluar' => $this->modeldetailkartustock->SumKeluarKartu($row['kode']),
                                 'saldo_akhir' => $saldoakhir,
@@ -1048,6 +1074,7 @@ class Barangmasuk extends BaseController
                         } else {
                             $this->datastock->save([
                                 'barcode' => $row['kode'],
+                                'id_karyawan' => $session->get('id_user'),
                                 'status' => $this->StatusBarang(substr($row['kode'], 0, 1)),
                                 'no_faktur' => $datapembelian['no_faktur_supp'],
                                 'tgl_faktur' => $datapembelian['tgl_faktur'],
@@ -1069,12 +1096,14 @@ class Barangmasuk extends BaseController
                             ]);
                             $this->modelkartustock->save([
                                 'total_masuk' => 0,
+                                'id_karyawan' => $session->get('id_user'),
                                 'total_keluar' => 0,
                                 'saldo_akhir' => (substr($row['kode'], 0, 1) == 4) ? $row['berat'] : $row['qty'],
                                 'kode' => $row['kode']
                             ]);
                             $this->modeldetailkartustock->save([
                                 'barcode' => $row['kode'],
+                                'id_karyawan' => $session->get('id_user'),
                                 'status' => 'Masuk',
                                 'no_faktur' => $datapembelian['no_faktur_supp'],
                                 'tgl_faktur' => $datapembelian['tgl_faktur'],
@@ -1161,11 +1190,13 @@ class Barangmasuk extends BaseController
     }
     public function ReturBarang($id)
     {
+        $session = session();
         $datapembelian = $this->datapembelian->getPembelianSupplier($this->request->getVar('dateid'));
         //$datastock = $this->datastock->CheckData(1);
         $data = $this->detailbeli->getDetailone($id);
         $this->datapembelian->save([
             'id_pembelian' =>  $datapembelian['id_pembelian'],
+            'id_karyawan' => $session->get('id_user'),
             'total_berat_rill' => $this->detailbeli->SumBeratDetail($this->request->getVar('dateid'))['berat'],
             'berat_murni_rill' => $this->detailbeli->SumBeratMurniDetail($this->request->getVar('dateid'))['berat_murni'],
             'total_qty' => $this->detailbeli->SumQty($this->request->getVar('dateid'))['qty'],
@@ -1177,6 +1208,7 @@ class Barangmasuk extends BaseController
         // }
         $this->modelretur->save([
             'kode' => $data['kode'],
+            'id_karyawan' => $session->get('id_user'),
             'id_date_pembelian' => $this->request->getVar('dateid'),
             'qty' => $data['qty'],
             'jenis' => $data['jenis'],

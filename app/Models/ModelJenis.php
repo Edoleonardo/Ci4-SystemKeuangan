@@ -10,7 +10,7 @@ class ModelJenis extends Model
     protected $table = 'tbl_jenis';
     protected $primaryKey = 'id_jenis';
     protected $useTimestamps = true;
-    protected $allowedFields = ['nama'];
+    protected $allowedFields = ['nama', 'id_karyawan'];
 
     public function getJenis($id = false)
     {

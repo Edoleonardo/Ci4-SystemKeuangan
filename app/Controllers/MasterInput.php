@@ -103,9 +103,11 @@ class MasterInput extends BaseController
                 ];
                 echo json_encode($msg);
             } else {
+                $session = session();
                 if ($this->request->getVar('id_supp')) {
                     $this->modelsup->save([
                         'id_supplier' => $this->request->getVar('id_supp'),
+                        'id_karyawan' => $session->get('id_user'),
                         'nama_supp' => $this->request->getVar('nama_supp'),
                         'alamat_supp' => $this->request->getVar('alamat1'),
                         'kota_supp' => $this->request->getVar('kota1'),
@@ -116,6 +118,7 @@ class MasterInput extends BaseController
                 } else {
                     $this->modelsup->save([
                         'nama_supp' => $this->request->getVar('nama_supp'),
+                        'id_karyawan' => $session->get('id_user'),
                         'alamat_supp' => $this->request->getVar('alamat1'),
                         'kota_supp' => $this->request->getVar('kota1'),
                         'sales_supp' => $this->request->getVar('nama_sales'),
@@ -157,15 +160,18 @@ class MasterInput extends BaseController
                 ];
                 echo json_encode($msg);
             } else {
+                $session = session();
                 if ($this->request->getVar('id_kadar')) {
                     $this->datakadar->save([
                         'id_kadar' => $this->request->getVar('id_kadar'),
+                        'id_karyawan' => $session->get('id_user'),
                         'nilai_kadar' => $this->request->getVar('nilai_kadar'),
                         'nama_kadar' => $this->request->getVar('nama_kadar'),
                     ]);
                 } else {
                     $this->datakadar->save([
                         'nilai_kadar' => $this->request->getVar('nilai_kadar'),
+                        'id_karyawan' => $session->get('id_user'),
                         'nama_kadar' => $this->request->getVar('nama_kadar'),
                     ]);
                 }
@@ -196,14 +202,17 @@ class MasterInput extends BaseController
                 ];
                 echo json_encode($msg);
             } else {
+                $session = session();
                 if ($this->request->getVar('id_merek')) {
                     $this->datamerek->save([
                         'id_merek' => $this->request->getVar('id_merek'),
+                        'id_karyawan' => $session->get('id_user'),
                         'nama_merek' => $this->request->getVar('nama_merek'),
                     ]);
                 } else {
                     $this->datamerek->save([
                         'nama_merek' => $this->request->getVar('nama_merek'),
+                        'id_karyawan' => $session->get('id_user'),
                     ]);
                 }
                 $msg = 'sukses';
@@ -232,14 +241,17 @@ class MasterInput extends BaseController
                 ];
                 echo json_encode($msg);
             } else {
+                $session = session();
                 if ($this->request->getVar('id_bank')) {
                     $this->modelbank->save([
                         'id_bank' => $this->request->getVar('id_bank'),
+                        'id_karyawan' => $session->get('id_user'),
                         'nama_bank' => $this->request->getVar('nama_bank'),
                     ]);
                 } else {
                     $this->modelbank->save([
                         'nama_bank' => $this->request->getVar('nama_bank'),
+                        'id_karyawan' => $session->get('id_user'),
                     ]);
                 }
                 $msg = 'sukses';
@@ -268,14 +280,17 @@ class MasterInput extends BaseController
                 ];
                 echo json_encode($msg);
             } else {
+                $session = session();
                 if ($this->request->getVar('id_jenis')) {
                     $this->datajenis->save([
                         'id_jenis' => $this->request->getVar('id_jenis'),
+                        'id_karyawan' => $session->get('id_user'),
                         'nama' => $this->request->getVar('nama_jenis'),
                     ]);
                 } else {
                     $this->datajenis->save([
                         'nama' => $this->request->getVar('nama_jenis'),
+                        'id_karyawan' => $session->get('id_user'),
                     ]);
                 }
                 $msg = 'sukses';
@@ -310,8 +325,10 @@ class MasterInput extends BaseController
                     ]
                 ];
             } else {
+                $session = session();
                 $this->modelcust->save([
                     'id_customer' => $this->request->getVar('id_cust'),
+                    'id_karyawan' => $session->get('id_user'),
                     'nama' => $this->request->getVar('nama_custu'),
                     'alamat_cust' => $this->request->getVar('alamatu'),
                     'kota_cust' => $this->request->getVar('kotau'),
@@ -379,9 +396,11 @@ class MasterInput extends BaseController
                 ];
                 echo json_encode($msg);
             } else {
+                $session = session();
                 if ($this->request->getVar('id_pegawai')) {
                     $this->modelusers->save([
                         'id_pegawai' => $this->request->getVar('id_pegawai'),
+                        'id_karyawan' => $session->get('id_user'),
                         'nama_pegawai' => $this->request->getVar('nama_user'),
                         'nohp' => $this->request->getVar('nohp_user'),
                         'alamat' => $this->request->getVar('alamatusr'),
@@ -392,6 +411,7 @@ class MasterInput extends BaseController
                 } else {
                     $this->modelusers->save([
                         'nama_pegawai' => $this->request->getVar('nama_user'),
+                        'id_karyawan' => $session->get('id_user'),
                         'nohp' => $this->request->getVar('nohp_user'),
                         'alamat' => $this->request->getVar('alamatusr'),
                         'username' => $this->request->getVar('username'),

@@ -65,7 +65,7 @@ class Barangkeluar extends BaseController
             'id_date_penjualan' => $dateidjual,
             'no_transaksi_jual' => $this->NoTransaksiGenerateJual(),
             'id_customer' => '',
-            'id_karyawan' => '1',
+            'id_karyawan' => $session->get('id_user'),
             'nohp_cust' => '',
             'jumlah' => '0',
             'pembulatan' => '0',
@@ -106,8 +106,10 @@ class Barangkeluar extends BaseController
                     ]
                 ];
             } else {
+                $session = session();
                 $this->datacust->save([
                     'nama' => $this->request->getVar('nama_cust'),
+                    'id_karyawan' => $session->get('id_user'),
                     'nohp_cust' => $this->request->getVar('nohp'),
                     'alamat_cust' => $this->request->getVar('alamat'),
                     'kota_cust' => $this->request->getVar('kota'),
@@ -171,6 +173,7 @@ class Barangkeluar extends BaseController
                     ]
                 ];
             } else {
+                $session = session();
                 if ($databarang && $databarang['qty'] > 0) {
                     $data = $this->penjualan->getDataPenjualan($this->request->getVar('iddate'));
                     if (substr($databarang['barcode'], 0, 1) == 3) {
@@ -182,6 +185,7 @@ class Barangkeluar extends BaseController
                     if (!$checkdata) {
                         $this->modeldetailpenjualan->save([
                             'id_date_penjualan' => $this->request->getVar('iddate'),
+                            'id_karyawan' => $session->get('id_user'),
                             'nama_img' => $databarang['gambar'],
                             'kode' =>  $databarang['barcode'],
                             'qty' => $databarang['qty'],
@@ -202,7 +206,7 @@ class Barangkeluar extends BaseController
 
                         $this->penjualan->save([
                             'id_penjualan' =>  $data['id_penjualan'],
-                            'id_karyawan' => '1',
+                            'id_karyawan' => $session->get('id_user'),
                             // 'nohp_cust' => $this->request->getVar('inputcustomer'),
                             'jumlah' => $this->modeldetailpenjualan->JumlahData($this->request->getVar('iddate'))['jumlah'],
                             'pembulatan' => '0',
@@ -215,6 +219,7 @@ class Barangkeluar extends BaseController
                         ]);
                         $this->datastock->save([
                             'id_stock' => $databarang['id_stock'],
+                            'id_karyawan' => $session->get('id_user'),
                             'qty' => '0'
                         ]);
 
@@ -244,7 +249,7 @@ class Barangkeluar extends BaseController
     public function UbahHarga()
     {
         if ($this->request->isAJAX()) {
-
+            $session = session();
             $id = $this->request->getVar('id');
             $jualan = $this->penjualan->getDataPenjualan($this->request->getVar('iddate'));
             $data = $this->modeldetailpenjualan->getDetailoneJual($id);
@@ -262,6 +267,7 @@ class Barangkeluar extends BaseController
                         $totalharga = $this->request->getVar('hargabaru') * $data['berat'] * $this->request->getVar('qty');
                         $this->datastock->save([
                             'id_stock' => $databarang['id_stock'],
+                            'id_karyawan' => $session->get('id_user'),
                             'qty' => $selisihqty
                         ]);
                         $saldo = $this->request->getVar('qty');
@@ -275,6 +281,7 @@ class Barangkeluar extends BaseController
                         }
                         $this->datastock->save([
                             'id_stock' => $databarang['id_stock'],
+                            'id_karyawan' => $session->get('id_user'),
                             'berat' => $selisihberat,
                             'qty' => $qty
                         ]);
@@ -285,6 +292,7 @@ class Barangkeluar extends BaseController
                     }
                     $this->modeldetailpenjualan->save([
                         'id_detail_penjualan' =>  $data['id_detail_penjualan'],
+                        'id_karyawan' => $session->get('id_user'),
                         'harga_beli' => $this->request->getVar('hargabaru'),
                         'berat' => $this->request->getVar('berat'),
                         'qty' => $this->request->getVar('qty'),
@@ -293,6 +301,7 @@ class Barangkeluar extends BaseController
                     ]);
                     $this->penjualan->save([
                         'id_penjualan' =>  $jualan['id_penjualan'],
+                        'id_karyawan' => $session->get('id_user'),
                         'total_harga' => $this->modeldetailpenjualan->SumDataOngkosJual($this->request->getVar('iddate'))['ongkos'] + $this->modeldetailpenjualan->SumDataDetailJual($this->request->getVar('iddate'))['total_harga'],
                     ]);
 
@@ -310,7 +319,7 @@ class Barangkeluar extends BaseController
     public function DeleteDetailjual()
     {
         if ($this->request->isAJAX()) {
-            // $session = session();
+            $session = session();
             $datapenjualan = $this->penjualan->getDataPenjualan($this->request->getVar('iddate'));
             $totalharga = $this->modeldetailpenjualan->SumDataOngkosJual($this->request->getVar('iddate'))['ongkos'] + $this->modeldetailpenjualan->SumDataDetailBeliJual($this->request->getVar('iddate'))['harga_beli'];
             if ($totalharga == null) {
@@ -324,17 +333,20 @@ class Barangkeluar extends BaseController
 
             $this->penjualan->save([
                 'id_penjualan' =>  $datapenjualan['id_penjualan'],
+                'id_karyawan' => $session->get('id_user'),
                 'total_harga' =>  $totalharga,
             ]);
             if (substr($data['kode'], 0, 1) == 4) {
                 $this->datastock->save([
                     'id_stock' => $databarang['id_stock'],
+                    'id_karyawan' => $session->get('id_user'),
                     'berat' => $datakartu['saldo_akhir'],
                     'qty' => '1'
                 ]);
             } else {
                 $this->datastock->save([
                     'id_stock' => $databarang['id_stock'],
+                    'id_karyawan' => $session->get('id_user'),
                     'qty' => $datakartu['saldo_akhir']
                 ]);
             }
@@ -433,6 +445,7 @@ class Barangkeluar extends BaseController
                             ]
                         ];
                     } else {
+                        $session = session();
                         $cas = ($this->request->getVar('charge') != null) ? $this->request->getVar('charge') : 0;
                         $blt = ($this->request->getVar('pembulatan') != null) ? $this->request->getVar('pembulatan') : 0;
                         $totalbayar = $datapenjualan['total_harga'] + ($cas * ($datapenjualan['total_harga'] / 100));
@@ -440,6 +453,7 @@ class Barangkeluar extends BaseController
                         if ($hasil == 0) {
                             $this->penjualan->save([
                                 'id_penjualan' =>  $datapenjualan['id_penjualan'],
+                                'id_karyawan' => $session->get('id_user'),
                                 'nohp_cust' => $this->request->getVar('inputcustomer'),
                                 'pembayaran' => $this->request->getVar('pembayaran'),
                                 'nama_bank' => $this->request->getVar('namabank'),
@@ -508,6 +522,7 @@ class Barangkeluar extends BaseController
                         if ($hasil == 0) {
                             $this->penjualan->save([
                                 'id_penjualan' =>  $datapenjualan['id_penjualan'],
+                                'id_karyawan' => $session->get('id_user'),
                                 'nohp_cust' => $this->request->getVar('inputcustomer'),
                                 'pembayaran' => $this->request->getVar('pembayaran'),
                                 'nama_bank' => $this->request->getVar('namabank'),
@@ -568,6 +583,7 @@ class Barangkeluar extends BaseController
                         if ($hasil == 0) {
                             $this->penjualan->save([
                                 'id_penjualan' =>  $datapenjualan['id_penjualan'],
+                                'id_karyawan' => $session->get('id_user'),
                                 'nohp_cust' => $this->request->getVar('inputcustomer'),
                                 'pembayaran' => $this->request->getVar('pembayaran'),
                                 'nama_bank' => $this->request->getVar('namabank'),
@@ -620,6 +636,7 @@ class Barangkeluar extends BaseController
                         if ($hasil == 0) {
                             $this->penjualan->save([
                                 'id_penjualan' =>  $datapenjualan['id_penjualan'],
+                                'id_karyawan' => $session->get('id_user'),
                                 'nohp_cust' => $this->request->getVar('inputcustomer'),
                                 'pembayaran' => $this->request->getVar('pembayaran'),
                                 'nama_bank' => $this->request->getVar('namabank'),
@@ -689,6 +706,7 @@ class Barangkeluar extends BaseController
                         if ($hasil == 0) {
                             $this->penjualan->save([
                                 'id_penjualan' =>  $datapenjualan['id_penjualan'],
+                                'id_karyawan' => $session->get('id_user'),
                                 'nohp_cust' => $this->request->getVar('inputcustomer'),
                                 'pembayaran' => $this->request->getVar('pembayaran'),
                                 'nama_bank' => $this->request->getVar('namabank'),
@@ -755,6 +773,7 @@ class Barangkeluar extends BaseController
                         if ($hasil == 0) {
                             $this->penjualan->save([
                                 'id_penjualan' =>  $datapenjualan['id_penjualan'],
+                                'id_karyawan' => $session->get('id_user'),
                                 'nohp_cust' => $this->request->getVar('inputcustomer'),
                                 'pembayaran' => $this->request->getVar('pembayaran'),
                                 'nama_bank' => $this->request->getVar('namabank'),
@@ -789,6 +808,7 @@ class Barangkeluar extends BaseController
                             // 'id_detail_kartustock' => $datadetailkartu['id_detail_kartustock'],
                             'barcode' => $row['kode'],
                             'status' => 'Keluar',
+                            'id_karyawan' => $session->get('id_user'),
                             'no_faktur' => $datapenjualan['no_transaksi_jual'],
                             'tgl_faktur' => $datapenjualan['created_at'],
                             'nama_customer' => $this->request->getVar('inputcustomer'),
@@ -809,6 +829,7 @@ class Barangkeluar extends BaseController
 
                         $this->modelkartustock->save([
                             'id_kartustock' => $datakartu['id_kartustock'],
+                            'id_karyawan' => $session->get('id_user'),
                             'total_masuk' => $this->modeldetailkartustock->SumMasukKartu($row['kode']),
                             'total_keluar' => $this->modeldetailkartustock->SumKeluarKartu($row['kode']),
                             'saldo_akhir' => $saldoakhir,
@@ -863,6 +884,7 @@ class Barangkeluar extends BaseController
                 $datakartu = $this->modelkartustock->getKartuStockkode($row['kode']);
                 $this->datastock->save([
                     'id_stock' => $databarang['id_stock'],
+                    'id_karyawan' => $session->get('id_user'),
                     'qty' => $datakartu['saldo_akhir']
                 ]);
             }

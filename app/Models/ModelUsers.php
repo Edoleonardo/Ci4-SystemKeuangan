@@ -10,7 +10,7 @@ class ModelUsers extends Model
     protected $table = 'tbl_pegawai';
     protected $primaryKey = 'id_pegawai';
     protected $useTimestamps = true;
-    protected $allowedFields = ['nama_pegawai', 'nohp', 'alamat', 'username', 'password', 'role'];
+    protected $allowedFields = ['nama_pegawai', 'id_karyawan', 'nohp', 'alamat', 'username', 'password', 'role'];
 
     public function getUsers($id = false)
     {

@@ -10,7 +10,7 @@ class ModelDetailMasuk extends Model
     protected $table = 'tbl_detail_pembelian';
     protected $primaryKey = 'id_detail_pembelian';
     protected $useTimestamps = true;
-    protected $allowedFields = ['id_date_pembelian', 'nama_img', 'kode', 'jenis', 'qty', 'model', 'keterangan', 'berat', 'berat_murni', 'harga_beli', 'kadar', 'ongkos', 'nilai_tukar', 'merek', 'total_harga'];
+    protected $allowedFields = ['id_date_pembelian', 'id_karyawan', 'nama_img', 'kode', 'jenis', 'qty', 'model', 'keterangan', 'berat', 'berat_murni', 'harga_beli', 'kadar', 'ongkos', 'nilai_tukar', 'merek', 'total_harga'];
 
     public function getDetailAll($id)
     {

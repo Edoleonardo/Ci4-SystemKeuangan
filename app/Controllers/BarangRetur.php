@@ -55,13 +55,13 @@ class BarangRetur extends BaseController
     }
     public function ReturBarang()
     {
-
+        $session = session();
         $dateid = date('ymdhis');
         $this->modelretur->save([
             // 'created_at' => date("y-m-d"),
             'id_date_retur' => $dateid,
+            'id_karyawan' => $session->get('id_user'),
             'no_retur' => $this->NoTransaksiGenerateRetur(),
-            'id_karyawan' => '1',
             'nama_img' => 'default.jpg',
             'kode' => '-',
             'jenis' => '-',
@@ -90,6 +90,7 @@ class BarangRetur extends BaseController
     public function TambahRetur()
     {
         if ($this->request->isAJAX()) {
+            $session = session();
             $kode = $this->request->getVar('kode');
             $iddate =  $this->request->getVar('iddate');
             $databuyback = $this->modeldetailbuyback->getDataDetailKode($kode);
@@ -97,6 +98,7 @@ class BarangRetur extends BaseController
             if (!$datadetailretur) {
                 $this->modeldetailretur->save([
                     'id_date_retur' => $iddate,
+                    'id_karyawan' => $session->get('id_user'),
                     'id_detail_buyback' => $databuyback['id_detail_buyback'],
                     'nama_img' => $databuyback['nama_img'],
                     'kode' =>  $databuyback['kode'],
@@ -117,6 +119,7 @@ class BarangRetur extends BaseController
 
                 $this->modeldetailbuyback->save([
                     'id_detail_buyback' => $databuyback['id_detail_buyback'],
+                    'id_karyawan' => $session->get('id_user'),
                     'status_proses' => 'SudahRetur' . date('y-m-d')
                 ]);
                 $msg = 'sukses';
@@ -140,11 +143,13 @@ class BarangRetur extends BaseController
     }
     public function BatalRetur($id)
     {
+        $session = session();
         $datadetailretur =  $this->modeldetailretur->getDetailAllretur($id);
         foreach ($datadetailretur as $row) {
             $databuyback = $this->modeldetailbuyback->getDataDetailRetur($row['kode']);
             $this->modeldetailbuyback->save([
                 'id_detail_buyback' => $databuyback['id_detail_buyback'],
+                'id_karyawan' => $session->get('id_user'),
                 'status_proses' => 'Retur'
             ]);
         }
@@ -155,11 +160,13 @@ class BarangRetur extends BaseController
     public function DeleteRetur()
     {
         if ($this->request->isAJAX()) {
+            $session = session();
             $kode =  $this->modeldetailretur->getDataDetailRetur($this->request->getVar('id'));
             $databuyback = $this->modeldetailbuyback->getDataDetailRetur($kode['kode']);
 
             $this->modeldetailbuyback->save([
                 'id_detail_buyback' => $databuyback['id_detail_buyback'],
+                'id_karyawan' => $session->get('id_user'),
                 'status_proses' => 'Retur'
             ]);
             $this->modeldetailretur->delete($this->request->getVar('id'));

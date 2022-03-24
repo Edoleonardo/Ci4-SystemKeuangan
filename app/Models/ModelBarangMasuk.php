@@ -10,7 +10,7 @@ class ModelBarangMasuk extends Model
     protected $table = 'tbl_pembelian';
     protected $primaryKey = 'id_barang';
     //protected $useTimestamps = true;
-    protected $allowedFields = ['id_img', 'barcode', 'nama_barang', 'nama_gbr', 'jenis_barang', 'berat_barang', 'stock_barang', 'harga_barang'];
+    protected $allowedFields = ['id_img', 'id_karyawan', 'barcode', 'nama_barang', 'nama_gbr', 'jenis_barang', 'berat_barang', 'stock_barang', 'harga_barang'];
 
     public function getBarang($id = false)
     {
