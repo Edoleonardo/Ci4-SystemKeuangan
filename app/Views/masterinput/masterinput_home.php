@@ -272,6 +272,48 @@
                 <div class="col-8">
                     <div class="card">
                         <div class="card-header">
+                            <h3 class="card-title">Data Tukang</h3>
+                        </div>
+                        <!-- /.card-header -->
+                        <a class="btn btn-app tambahtukang" id="tambahtukang" onclick="OpenModalData('tukang')">
+                            <i class="fas fa-plus"></i> Tambah tukang
+                        </a>
+                        <div class="card-body">
+                            <table id="tukang" class="table table-bordered table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Nama Tukang</th>
+                                        <th>No Hp</th>
+                                        <th>Alamat</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php foreach ($datatukang as $row) : ?>
+                                        <tr onclick="Updatedata(<?= $row['id_tukang'] ?>, 'tukang')">
+                                            <td><?= $row['nama_tukang'] ?></td>
+                                            <td><?= $row['nohp'] ?></td>
+                                            <td><?= $row['alamat'] ?></td>
+                                        </tr>
+                                    <?php endforeach; ?>
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <th>Nama Tukang</th>
+                                        <th>No Hp</th>
+                                        <th>Alamat</th>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                        <!-- /.card-body -->
+                    </div>
+                    <!-- /.card -->
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
                             <h3 class="card-title">Data User</h3>
                         </div>
                         <!-- /.card-header -->
@@ -622,7 +664,48 @@
     </div>
 </div>
 </div>
-
+<div class="modal fade" id="modal-tukang">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="titleuser">Tambah Data user</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form action="/insertukang" name="insertukang" id="insertukang" class="insertukang" method="post">
+                <?= csrf_field(); ?>
+                <input type="hidden" name="id_tukang" id="id_tukang" value="">
+                <div class="row" style="margin: 10px;">
+                    <div class="col-12">
+                        <div class="form-group">
+                            <label>Nama Tukang</label>
+                            <input type="text" id="nama_tukang" name="nama_tukang" class="form-control nama_tukang" placeholder="Masukan Nomor Nama tukang">
+                            <div id="validationServertukangnameFeedback" class="invalid-feedback nama_tukangmsg">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Nomor Hp</label>
+                            <input type="number" id="nohp_tukang" name="nohp_tukang" class="form-control nohp_tukang" placeholder="Masukan Nomor Hp">
+                            <div id="validationServertukangnameFeedback" class="invalid-feedback nohp_tukangmsg">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Alamat</label>
+                            <input type="text" id="alamattukng" name="alamattukng" class="form-control alamattukng" placeholder="Masukan Nomor Alamat user">
+                            <div id="validationServerusernameFeedback" class="invalid-feedback alamattukngmsg">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Tutup</button>
+                    <button type="submit" class="btn btn-primary btntambah" id="buttonuser">Tambah</button>
+            </form>
+        </div>
+    </div>
+</div>
+</div>
 <div class="modal fade" id="modal-updatelg">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
@@ -1120,7 +1203,71 @@
             }
         })
     })
+    $('.insertukang').submit(function(e) {
+        e.preventDefault()
+        let form = $('.insertukang')[0];
+        let data = new FormData(form)
+        $.ajax({
+            type: "POST",
+            data: data,
+            url: "<?php echo base_url('insertukang'); ?>",
+            dataType: "json",
+            contentType: false,
+            processData: false,
+            cache: false,
+            beforeSend: function() {
+                $('.btntambah').html('<i class="fa fa-spin fa-spinner">')
+            },
+            complete: function() {
+                $('.btntambah').html('Tambah')
+            },
+            success: function(result) {
+                if (result.error) {
+                    if (result.error.nama_tukang) {
+                        $('#nama_tukang').addClass('is-invalid')
+                        $('.nama_tukangmsg').html(result.error.nama_tukang)
+                    } else {
+                        $('#nama_tukang').removeClass('is-invalid')
+                        $('.nama_tukangmsg').html('')
+                    }
+                    if (result.error.nohp_tukang) {
+                        $('#nohp_tukang').addClass('is-invalid')
+                        $('.nohp_tukangmsg').html(result.error.nohp_tukang)
+                    } else {
+                        $('#nohp_tukang').removeClass('is-invalid')
+                        $('.nohp_tukangmsg').html('')
+                    }
+                    if (result.error.alamattukng) {
+                        $('#alamattukng').addClass('is-invalid')
+                        $('.alamattukngmsg').html(result.error.alamattukng)
+                    } else {
+                        $('#alamattukng').removeClass('is-invalid')
+                        $('.alamattukngmsg').html('')
+                    }
 
+                } else {
+                    $('#nama_tukang').removeClass('is-invalid')
+                    $('.nama_tukangmsg').html('')
+                    $('#nohp_tukang').removeClass('is-invalid')
+                    $('.nohp_tukangmsg').html('')
+                    $('#alamattukng').removeClass('is-invalid')
+                    $('.alamattukngmsg').html('')
+                    Swal.fire({
+                        title: 'Berhasil',
+                        icon: 'success',
+                        confirmButtonColor: '#3085d6',
+                        confirmButtonText: 'Ok',
+                    }).then((result) => {
+                        location.reload();
+                    })
+                }
+
+            },
+            error: function(xhr, ajaxOptions, thrownError) {
+                alert(xhr.status + "\n" + xhr.responseText + "\n" + thrownError);
+            }
+        })
+    })
 
 
     function OpenModalData(jenis) {
@@ -1154,6 +1301,12 @@
             $('#buttonuser').html('Tambah')
             $('#modal-user').modal('toggle')
         }
+        if (jenis == 'tukang') {
+            $('#titletukang').html('Tambah tukang Barang')
+            $('#buttontukang').html('Tambah')
+            $('#modal-tukang').modal('toggle')
+        }
+
     }
 
     function Updatedata(id, jenis) {
@@ -1226,6 +1379,15 @@
                     $('#titleuser').html('Update Data user')
                     $('#buttonuser').html('Update')
                     $('#modal-user').modal('toggle')
+                }
+                if (jenis == 'tukang') {
+                    $('#nama_tukang').val(result.nama_tukang)
+                    $('#nohp_tukang').val(result.nohp)
+                    $('#alamattukng').val(result.alamat)
+                    $('#id_tukang').val(id);
+                    $('#titletukang').html('Update Data tukang')
+                    $('#buttontukang').html('Update')
+                    $('#modal-tukang').modal('toggle')
                 }
             },
             error: function(xhr, ajaxOptions, thrownError) {
@@ -1338,6 +1500,13 @@
         //"buttons": ["copy", "csv", "excel", "pdf", "print", "colvis", ]
     }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
     $("#user").DataTable({
+        "responsive": true,
+        "lengthChange": false,
+        "autoWidth": false,
+        "aaSorting": []
+        //"buttons": ["copy", "csv", "excel", "pdf", "print", "colvis", ]
+    }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
+    $("#tukang").DataTable({
         "responsive": true,
         "lengthChange": false,
         "autoWidth": false,

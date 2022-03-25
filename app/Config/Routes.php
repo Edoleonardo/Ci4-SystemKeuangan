@@ -141,7 +141,8 @@ $routes->get('/tampilcuci', ($session->get('role')) ? 'BarangCuci::TampilCuci' :
 $routes->post('/updatecuci', ($session->get('role')) ? 'BarangCuci::UpdateCuci' : 'Login::Login');
 $routes->post('/updatecuci', ($session->get('role')) ? 'BarangCuci::UpdateCuci' : 'Login::Login');
 $routes->get('/printbarcodecuci/(:any)', ($session->get('role')) ? 'BarangCuci::BarcodeGenerate/$1' : 'Login::Login');
-
+$routes->get('/ubahstatuslanjut', ($session->get('role')) ? 'BarangCuci::UbahStatusLanjut' : 'Login::Login');
+$routes->get('/printnotacuci/(:any)', ($session->get('role')) ? 'BarangCuci::PrintNotaCuci/$1' : 'Login::Login');
 
 
 //---------------------------------Retur-----------------------------------------
@@ -170,6 +171,7 @@ $routes->POST('/updatebank', ($session->get('role')) ? 'MasterInput::UpdateBank'
 $routes->POST('/updatecust', ($session->get('role')) ? 'MasterInput::UpdateCust' : 'Login::Login');
 $routes->POST('/insertjenis', ($session->get('role')) ? 'MasterInput::InsertJenis' : 'Login::Login');
 $routes->POST('/insertuser', ($session->get('role')) ? 'MasterInput::InsertUser' : 'Login::Login');
+$routes->POST('/insertukang', ($session->get('role')) ? 'MasterInput::InsertTukang' : 'Login::Login');
 
 // $routes->POST('/hapusdata', 'MasterInput::HapusData');
 $routes->get('/isidata', ($session->get('role')) ? 'MasterInput::DataMaster' : 'Login::Login');

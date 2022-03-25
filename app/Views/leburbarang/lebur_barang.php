@@ -99,6 +99,12 @@
 
                             <?php if ($datamasterlebur['status_dokumen'] == 'Selesai') : ?>
                                 <tr>
+                                    <td> No Lebur :</td>
+                                    <td>
+                                        <?= $datamasterlebur['no_lebur'] ?>
+                                    </td>
+                                </tr>
+                                <tr>
                                     <td> Barcode :</td>
                                     <td>
                                         <?= $datamasterlebur['kode'] ?>
@@ -115,6 +121,12 @@
                                 <td> Total Berat Murni :</td>
                                 <td>
                                     <?= $datamasterlebur['berat_murni'] ?> g
+                                </td>
+                            </tr>
+                            <tr>
+                                <td> Total Berat Kotor :</td>
+                                <td>
+                                    <?= $datamasterlebur['total_berat'] ?> g
                                 </td>
                             </tr>
                             <tr>
@@ -181,8 +193,9 @@
                                                 <tr>
                                                     <!-- <th>Gambar</th> -->
                                                     <th>Kode</th>
-                                                    <th>Keterangan</th>
+                                                    <th>Jenis</th>
                                                     <th>Status</th>
+                                                    <th>Kadar</th>
                                                     <th>Berat</th>
                                                     <th>Pilih</th>
                                                 </tr>
@@ -192,12 +205,13 @@
                                                     <tr id="datalebur">
                                                         <!-- <td class="imgg"><img class="imgg" src="/img/<?= $row['nama_img'] ?>"></td> -->
                                                         <td><a href="#" onclick="openmodaldetail(<?= $row['id_detail_buyback'] ?>)"><?= $row['kode'] ?></a></td>
-                                                        <td><?= $row['jenis'] ?> <?= $row['model'] ?></td>
+                                                        <td><?= $row['jenis'] ?></td>
                                                         <td> <select name="status_proses" onchange="EditData(<?= $row['id_detail_buyback'] ?>,this)" class="form-control" id="status" name="status">
                                                                 <option value="Cuci">Cuci</option>
                                                                 <option value="Retur">Retur</option>
                                                                 <option selected value="Lebur">Lebur</option>
                                                             </select></td>
+                                                        <td><?= $row['kadar'] ?></td>
                                                         <td><?= $row['berat'] ?></td>
                                                         <td>
                                                             <a type="button" onclick="tambahbaranglebur(<?= $row['id_detail_buyback'] ?>)" class="btn btn-block btn-outline-info btn-sm">Lebur</a>
@@ -363,9 +377,13 @@
                         <div class="col-sm-3">
                             <!-- text input -->
                             <div class="form-group">
-                                <label>Harga /g</label>
-                                <input type="number" name="harga_beli" id="harga_beli" class="form-control harga_beli" placeholder="Masukan Harga Beli">
-                                <div id="validationServerUsernameFeedback" class="invalid-feedback harga_belimsg">
+                                <label>Nama Tukang</label>
+                                <select name="nama_tukang" id="nama_tukang" class="form-control nama_tukang" placeholder="Masukan Harga Beli">
+                                    <?php foreach ($datatukang as $row) : ?>
+                                        <option value="<?= $row['nama_tukang'] ?>"><?= $row['nama_tukang'] ?></option>
+                                    <?php endforeach; ?>
+                                </select>
+                                <div id="validationServerUsernameFeedback" class="invalid-feedback nama_tukangmsg">
                                 </div>
                             </div>
                         </div>

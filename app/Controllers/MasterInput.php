@@ -13,6 +13,7 @@ use App\Models\ModelMerek;
 use App\Models\ModelBank;
 use App\Models\ModelJenis;
 use App\Models\ModelUsers;
+use App\Models\ModelTukang;
 use CodeIgniter\Validation\Rules;
 use app\Config\Cache;
 use Config\Cache as ConfigCache;
@@ -32,6 +33,7 @@ class MasterInput extends BaseController
         $this->modelbank = new ModelBank();
         $this->datajenis = new ModelJenis();
         $this->modelusers = new ModelUsers();
+        $this->modeltukang = new ModelTukang();
         $this->chace = new ConfigCache();
     }
     public function HomeInput()
@@ -44,6 +46,7 @@ class MasterInput extends BaseController
             'datajenis' => $this->datajenis->getjenis(),
             'databank' => $this->modelbank->getBank(),
             'datausers' => $this->modelusers->getUsers(),
+            'datatukang' => $this->modeltukang->getTukang(),
         ];
 
         return view('masterinput/masterinput_home', $data);
@@ -298,6 +301,63 @@ class MasterInput extends BaseController
             }
         }
     }
+    public function InsertTukang()
+    {
+        if ($this->request->isAJAX()) {
+            $validation = \Config\Services::validation();
+            $valid = $this->validate([
+                'nama_tukang' => [
+                    'rules' => 'required',
+                    'errors' => [
+                        'required' => 'Nama Tukang Harus di isi',
+                    ]
+                ],
+                'nohp_tukang' => [
+                    'rules' => 'required',
+                    'errors' => [
+                        'required' => 'No Hp Harus di isi',
+                    ]
+                ],
+                'alamattukng' => [
+                    'rules' => 'required',
+                    'errors' => [
+                        'required' => 'Alamat Harus di isi',
+                    ]
+                ]
+
+            ]);
+            if (!$valid) {
+                $msg = [
+                    'error' => [
+                        'nama_tukang' => $validation->getError('nama_tukang'),
+                        'nohp_tukang' => $validation->getError('nohp_tukang'),
+                        'alamattukng' => $validation->getError('alamattukng'),
+                    ]
+                ];
+                echo json_encode($msg);
+            } else {
+                $session = session();
+                if ($this->request->getVar('id_tukang')) {
+                    $this->modeltukang->save([
+                        'id_tukang' => $this->request->getVar('id_tukang'),
+                        'nama_tukang' => $this->request->getVar('nama_tukang'),
+                        'id_karyawan' => $session->get('id_user'),
+                        'nohp' => $this->request->getVar('nohp_tukang'),
+                        'alamat' => $this->request->getVar('alamattukng'),
+                    ]);
+                } else {
+                    $this->modeltukang->save([
+                        'id_karyawan' => $session->get('id_user'),
+                        'nama_tukang' => $this->request->getVar('nama_tukang'),
+                        'nohp' => $this->request->getVar('nohp_tukang'),
+                        'alamat' => $this->request->getVar('alamattukng'),
+                    ]);
+                }
+                $msg = 'sukses';
+                echo json_encode($msg);
+            }
+        }
+    }
     public function UpdateCust()
     {
         if ($this->request->isAJAX()) {
@@ -450,6 +510,9 @@ class MasterInput extends BaseController
             }
             if ($jenis == 'user') {
                 $data = $this->modelusers->getUsers($id);
+            }
+            if ($jenis == 'tukang') {
+                $data = $this->modeltukang->getTukang($id);
             }
             echo json_encode($data);
         }

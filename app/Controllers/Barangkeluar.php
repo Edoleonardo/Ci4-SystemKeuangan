@@ -414,6 +414,7 @@ class Barangkeluar extends BaseController
     {
         $validation = \Config\Services::validation();
         if ($this->request->isAJAX()) {
+            $session = session();
             if ($this->request->getVar('pembayaran') != 'Bayar Nanti') {
                 $datapenjualan = $this->penjualan->getDataPenjualan($this->request->getVar('dateid'));
                 if ($this->request->getVar('pembayaran') == 'Debit/CC') {
@@ -445,7 +446,6 @@ class Barangkeluar extends BaseController
                             ]
                         ];
                     } else {
-                        $session = session();
                         $cas = ($this->request->getVar('charge') != null) ? $this->request->getVar('charge') : 0;
                         $blt = ($this->request->getVar('pembulatan') != null) ? $this->request->getVar('pembulatan') : 0;
                         $totalbayar = $datapenjualan['total_harga'] + ($cas * ($datapenjualan['total_harga'] / 100));

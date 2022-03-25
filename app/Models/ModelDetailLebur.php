@@ -123,6 +123,13 @@ class ModelDetailLebur extends Model
         $query = $this->get();
         return $query->getResult('array')[0];
     }
+    public function SumBeratKotorLebur($id)
+    {
+        $this->selectSum('berat');
+        $this->where('id_date_lebur', $id);
+        $query = $this->get();
+        return $query->getResult('array')[0];
+    }
     public function SumBeratHargaLebur($id)
     {
         $this->selectSum('total_harga');

@@ -16,7 +16,7 @@ use App\Models\ModelLebur;
 use App\Models\ModelDetailLebur;
 use App\Models\ModelDetailMasuk;
 use App\Models\ModelJenis;
-
+use App\Models\ModelTukang;
 
 use CodeIgniter\Model;
 use CodeIgniter\Validation\Rules;
@@ -44,6 +44,7 @@ class BarangLebur extends BaseController
         $this->modeldetaillebur = new ModelDetailLebur();
         $this->detailbeli = new ModelDetailMasuk();
         $this->datajenis = new Modeljenis();
+        $this->modeltukang = new ModelTukang();
     }
 
     public function HomeLebur()
@@ -84,7 +85,8 @@ class BarangLebur extends BaseController
             'model' => '-',
             'keterangan' => '-',
             'kadar' => '24K',
-            'berat' => '0',
+            'berat_murni' => '0',
+            'total_berat' => '0',
             'qty' => '0',
             'tanggal_lebur' => date('y-m-d H:i:s'),
             'total_harga_bahan' => '0',
@@ -100,6 +102,7 @@ class BarangLebur extends BaseController
             'datamasterlebur' => $this->modellebur->getDataLeburAll($id),
             'datalebur' => $this->modeldetailbuyback->getDataLeburAll(),
             'jenis' => $this->datajenis->getJenis(),
+            'datatukang' => $this->modeltukang->getTukang(),
             'databarcode' => $this->datastock->getBarcode(4),
             'dataakanlebur' => $this->modeldetaillebur->getDetailLebur($id),
 
@@ -120,15 +123,10 @@ class BarangLebur extends BaseController
                         ]
                     ],
                     'berat' => [
-                        'rules' => 'required',
+                        'rules' => 'required|greater_than[0]',
                         'errors' => [
                             'required' => 'Berat Harus di isi',
-                        ]
-                    ],
-                    'harga_beli' => [
-                        'rules' => 'required',
-                        'errors' => [
-                            'required' => 'Berat Bersih Harus di isi',
+                            'greater_than' => 'Harus lebih dari 0',
                         ]
                     ],
                 ]);
@@ -141,15 +139,10 @@ class BarangLebur extends BaseController
                         ]
                     ],
                     'berat' => [
-                        'rules' => 'required',
+                        'rules' => 'required|greater_than[0]',
                         'errors' => [
                             'required' => 'Berat Harus di isi',
-                        ]
-                    ],
-                    'harga_beli' => [
-                        'rules' => 'required',
-                        'errors' => [
-                            'required' => 'Harga Harus di isi',
+                            'greater_than' => 'Harus lebih dari 0',
                         ]
                     ],
                     'gambar' => [
@@ -200,7 +193,7 @@ class BarangLebur extends BaseController
                 $datalebur = $this->modellebur->getDataLeburAll($this->request->getVar('dateidlebur'));
                 $checkkode = $this->datastock->getBarangkode($this->request->getVar('barcode'));
 
-                if ($datadetaillebur) {
+                if ($datadetaillebur) { // jikda ada barcode
                     if ($this->request->getVar('barcode') && $checkkode) {
                         $datakartu = $this->modelkartustock->getKartuStockkode($checkkode['barcode']);
                         $saldoakhir = $this->request->getVar('berat') + $datakartu['saldo_akhir'];
@@ -212,6 +205,7 @@ class BarangLebur extends BaseController
                             'kode' => $checkkode['barcode'],
                             'jenis' => $this->request->getVar('jenis'),
                             'model' => $this->request->getVar('model'),
+                            'nama_tukang' => $this->request->getVar('nama_tukang'),
                             'keterangan' =>  $this->request->getVar('keterangan'),
                             'kadar' => '24K',
                             'berat_murni' => $this->request->getVar('berat'),
@@ -232,8 +226,8 @@ class BarangLebur extends BaseController
                             'kadar' => '24K',
                             'berat' => $saldoakhir,
                             'nilai_tukar' =>  100,
-                            'harga_beli' => $this->request->getVar('harga_beli'),
-                            'total_harga' => $saldoakhir * $this->request->getVar('harga_beli'),
+                            'harga_beli' => round($datalebur['total_harga_bahan'] / $this->request->getVar('berat'), 2),
+                            'total_harga' => $saldoakhir * round($datalebur['total_harga_bahan'] / $this->request->getVar('berat'), 2),
                             'gambar' =>  $namafile,
                         ]);
 
@@ -255,7 +249,7 @@ class BarangLebur extends BaseController
                             'kadar' => '24K',
                             'berat' => $this->request->getVar('berat'),
                             'nilai_tukar' =>  '100',
-                            'harga_beli' => $this->request->getVar('harga_beli'),
+                            'harga_beli' => round($datalebur['total_harga_bahan'] / $this->request->getVar('berat'), 2),
                             'total_harga' => $datalebur['total_harga_bahan'],
                             'gambar' =>  $namafile,
                         ]);
@@ -268,7 +262,7 @@ class BarangLebur extends BaseController
                             'saldo_akhir' => $saldoakhir,
                         ]);
                         $msg = $saldoakhir;
-                    } else {
+                    } else { // jika tanpa barcode, create baru
                         $barcode = $this->KodeDatailGenerate(4);
                         $this->modellebur->save([
                             'id_lebur' => $datalebur['id_lebur'],
@@ -277,6 +271,7 @@ class BarangLebur extends BaseController
                             'kode' => $barcode,
                             'jenis' => $this->request->getVar('jenis'),
                             'model' => $this->request->getVar('model'),
+                            'nama_tukang' => $this->request->getVar('nama_tukang'),
                             'keterangan' =>  $this->request->getVar('keterangan'),
                             'kadar' => '24K',
                             'berat_murni' => $this->request->getVar('berat'),
@@ -301,8 +296,8 @@ class BarangLebur extends BaseController
                             'berat' => $this->request->getVar('berat'),
                             'nilai_tukar' =>  100,
                             'ongkos' => 0,
-                            'harga_beli' => $this->request->getVar('harga_beli'),
-                            'total_harga' => $this->request->getVar('harga_beli') * $this->request->getVar('berat'),
+                            'harga_beli' => round($datalebur['total_harga_bahan'] / $this->request->getVar('berat'), 2),
+                            'total_harga' => round($datalebur['total_harga_bahan'] / $this->request->getVar('berat'), 2) * $this->request->getVar('berat'),
                             'kode_beli' =>  'JN',
                             'gambar' =>  $namafile,
                         ]);
@@ -331,7 +326,7 @@ class BarangLebur extends BaseController
                             'kadar' => '24K',
                             'berat' => $this->request->getVar('berat'),
                             'nilai_tukar' =>  '100',
-                            'harga_beli' => $this->request->getVar('harga_beli'),
+                            'harga_beli' => round($datalebur['total_harga_bahan'] / $this->request->getVar('berat'), 2),
                             'total_harga' => $datalebur['total_harga_bahan'],
                             'gambar' =>  $namafile,
                         ]);
@@ -384,9 +379,10 @@ class BarangLebur extends BaseController
                     'id_lebur' => $datalebur['id_lebur'],
                     'id_karyawan' => $session->get('id_user'),
                     'qty' => 1,
+                    'total_berat' => round($this->modeldetaillebur->SumBeratKotorLebur($datalebur['id_date_lebur'])['berat'], 2),
                     'jumlah_barang' => $this->modeldetaillebur->JumlahBarang($datalebur['id_date_lebur'])['berat'],
-                    'berat_murni' => $this->modeldetaillebur->GetSumBeratMurni($datalebur['id_date_lebur'])['hasil'],
-                    'total_harga_bahan' => $this->modeldetaillebur->SumBeratHargaLebur($datalebur['id_date_lebur'])['total_harga']
+                    'berat_murni' => round($this->modeldetaillebur->GetSumBeratMurni($datalebur['id_date_lebur'])['hasil'], 2),
+                    'total_harga_bahan' => round($this->modeldetaillebur->SumBeratHargaLebur($datalebur['id_date_lebur'])['total_harga'], 2)
                 ]);
                 $this->modeldetailbuyback->save([
                     'id_detail_buyback' => $databuyback['id_detail_buyback'],
@@ -469,9 +465,10 @@ class BarangLebur extends BaseController
                 'id_lebur' => $datalebur['id_lebur'],
                 'id_karyawan' => $session->get('id_user'),
                 'qty' => 1,
+                'total_berat' => round($this->modeldetaillebur->SumBeratKotorLebur($datalebur['id_date_lebur'])['berat'], 2),
                 'jumlah_barang' => $this->modeldetaillebur->JumlahBarang($datalebur['id_date_lebur'])['berat'],
-                'berat_murni' => $this->modeldetaillebur->GetSumBeratMurni($datalebur['id_date_lebur'])['hasil'],
-                'total_harga_bahan' => $this->modeldetaillebur->SumBeratHargaLebur($datalebur['id_date_lebur'])
+                'berat_murni' => round($this->modeldetaillebur->GetSumBeratMurni($datalebur['id_date_lebur'])['hasil'], 2),
+                'total_harga_bahan' => round($this->modeldetaillebur->SumBeratHargaLebur($datalebur['id_date_lebur'])['total_harga'], 2)
             ]);
             $msg = 'sukses';
             echo json_encode($msg);

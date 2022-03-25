@@ -15,6 +15,7 @@ use App\Models\ModelKartuStock;
 use App\Models\ModelDetailKartuStock;
 use App\Models\ModelCuci;
 use App\Models\ModelDetailCuci;
+use App\Models\ModelTukang;
 
 
 use CodeIgniter\Model;
@@ -42,6 +43,7 @@ class BarangCuci extends BaseController
         $this->modeldetailkartustock = new ModelDetailKartuStock();
         $this->modelcuci = new ModelCuci();
         $this->modeldetailcuci = new ModelDetailCuci();
+        $this->modeltukang = new ModelTukang();
     }
 
     public function HomeCuci()
@@ -62,6 +64,16 @@ class BarangCuci extends BaseController
         ];
 
         return view('cucibarang/print_barcode', $data1);
+    }
+    public function PrintNotaCuci($id)
+    {
+        $data1 = [
+            'datadetailcuci' => $this->modeldetailcuci->PrintNotaCuci($id),
+            'datacuci' => $this->modelcuci->getDataCuciAll($id),
+            // 'img' => $this->barangmodel->getImg($id)
+        ];
+
+        return view('cucibarang/print_nota_cuci', $data1);
     }
     public function CuciBarang()
     {
@@ -110,7 +122,8 @@ class BarangCuci extends BaseController
         $data = [
             'datamastercuci' => $this->modelcuci->getDataCuciAll($id),
             'datacuci' => $this->modeldetailbuyback->getDataCuciAll(),
-            'dataakancuci' => $this->modeldetailcuci->getDetailCuci($id)
+            'dataakancuci' => $this->modeldetailcuci->getDetailCuci($id),
+            'datatukang' => $this->modeltukang->getTukang()
         ];
         return view('cucibarang/cuci_barang', $data);
     }
@@ -122,7 +135,7 @@ class BarangCuci extends BaseController
             $kode = $this->request->getVar('kode');
             $iddate =  $this->request->getVar('iddate');
             $databuyback = $this->modeldetailbuyback->getDataDetailKode($kode);
-            $datadetailcuci = $this->modeldetailcuci->CheckDatacuci($databuyback['kode']);
+            $datadetailcuci = $this->modeldetailcuci->CheckDatacuci($databuyback['id_detail_buyback']);
             $datacuci = $this->modelcuci->getDataCuciAll($iddate);
             if (!$datadetailcuci) {
                 $this->modeldetailcuci->save([
@@ -149,7 +162,7 @@ class BarangCuci extends BaseController
                 $this->modeldetailbuyback->save([
                     'id_detail_buyback' => $databuyback['id_detail_buyback'],
                     'id_karyawan' => $session->get('id_user'),
-                    'status_proses' => 'SudahCuci' . date('y-m-d')
+                    'status_proses' => 'SudahCuci' . $datacuci['no_cuci']
                 ]);
                 $this->modelcuci->save([
                     'id_cuci' => $datacuci['id_cuci'],
@@ -203,6 +216,29 @@ class BarangCuci extends BaseController
             ]);
             $msg = 'sukses';
             echo json_encode($msg);
+        }
+    }
+    public function UbahStatusLanjut()
+    {
+        if ($this->request->isAJAX()) {
+            $session = session();
+            $datadetailcuci = $this->modeldetailcuci->getDataDetailCuci($this->request->getVar('id'));
+            $datadetailbuyback = $this->modeldetailbuyback->getDataDetailKode($datadetailcuci['id_detail_buyback']);
+            $datacuci = $this->modelcuci->getDataCuciAll($datadetailcuci['id_date_cuci']);
+            $this->modeldetailbuyback->save([
+                'id_detail_buyback' => $datadetailcuci['id_detail_buyback'],
+                'id_karyawan' => $session->get('id_user'),
+                'status_proses' => $this->request->getVar('status')
+            ]);
+            $this->modeldetailcuci->delete($this->request->getVar('id'));
+            $this->modelcuci->save([
+                'id_cuci' => $datacuci['id_cuci'],
+                'id_karyawan' => $session->get('id_user'),
+                'jumlah_barang' => $this->modeldetailcuci->CountJumlahCuci($datadetailcuci['id_date_cuci'])['berat'],
+                'total_berat' => $this->modeldetailcuci->SumBeratDetailCuci($datadetailcuci['id_date_cuci'])['berat'],
+            ]);
+            $msg = 'berhasil';
+            echo json_encode($datadetailbuyback);
         }
     }
     public function UpdateCuci()
@@ -309,6 +345,7 @@ class BarangCuci extends BaseController
                     $this->modelcuci->save([
                         'id_cuci' => $datacuci['id_cuci'],
                         'id_karyawan' => $session->get('id_user'),
+                        'nama_tukang' => $this->request->getVar('nama_tukang'),
                         'harga_cuci' => $this->request->getVar('harga_cuci'),
                         'keterangan' =>  $this->request->getVar('keterangan'),
                         'tanggal_cuci' => $this->request->getVar('tanggalcuci'),

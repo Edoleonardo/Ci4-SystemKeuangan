@@ -120,7 +120,7 @@
                       <td>
                         <?= number_format($barang['harga_beli'], 2, ',', '.') ?>
                       </td>
-                      <td>Total Harga Murni :</td>
+                      <td>Total Harga :</td>
                       <td>
                         <?= number_format($barang['total_harga'], 2, ',', '.') ?>
                       </td>

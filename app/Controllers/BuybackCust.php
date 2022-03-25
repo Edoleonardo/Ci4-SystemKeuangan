@@ -125,6 +125,7 @@ class BuybackCust extends BaseController
                 ];
                 $msg = [
                     'data' => view('buybackcust/datamodaldenganota', $data),
+                    'datacust' =>  $datatrans['nohp_cust'],
                 ];
             } else {
                 $msg = [

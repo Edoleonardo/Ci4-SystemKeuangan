@@ -124,13 +124,13 @@
                         <?php if (isset($datamastercuci)) : ?>
                             <?php if ($datamastercuci['status_dokumen'] == 'Selesai') : ?>
                                 <a class="btn btn-app bg-primary" type="button">
-                                    <i class="fas fa-check"></i> Selesai Cuci
+                                    <i class="fas fa-check"></i> Proses Cuci
                                 </a>
                                 <a class="btn btn-app" href="/printbarcodecuci/<?= $datamastercuci['id_date_cuci'] ?>" target="_blank">
                                     <i class="fas fa-barcode"></i> Print Barcode
                                 </a>
-                                <a type="button" class="btn btn-app" onclick="ModalPrintCuci(2,<?= $datamastercuci['id_date_cuci'] ?>)">
-                                    <i class="fas fa-print"></i> Print
+                                <a href="/printnotacuci/<?= $datamastercuci['id_date_cuci'] ?>" target="_blank" class="btn btn-app">
+                                    <i class="fas fa-print"></i> Print Nota
                                 </a>
 
                             <?php else : ?>
@@ -138,7 +138,7 @@
                                     <i class="fas fa-window-close"></i> Batal Cuci
                                 </a>
                                 <a class="btn btn-app bg-danger" type="button" data-toggle="modal" data-target="#modal-lg">
-                                    <i class="fas fa-money-bill"></i> Selesai Cuci
+                                    <i class="fas fa-money-bill"></i> Lanjut Proses
                                 </a>
                             <?php endif ?>
                         <?php endif ?>
@@ -236,15 +236,16 @@
                                 <label>Barang Cuci</label>
                                 <div class="card">
                                     <!-- /.card-header -->
-                                    <div class="card-body table-responsive p-0" style="max-height: 500px;">
-                                        <table class="table table-head-fixed text-nowrap">
+                                    <div class="card-body table-responsive p-0" style="max-height: 500px;" id="tblselesaicuci">
+                                        <table class="table table-head-fixed text-nowrap" id="trselesaicuci">
                                             <thead>
                                                 <tr>
                                                     <th style="text-align: center;">Gambar</th>
                                                     <th style="text-align: center;">Kode</th>
                                                     <th style="text-align: center;">Jenis</th>
                                                     <th style="text-align: center;">Model</th>
-                                                    <th style="text-align: center;">Berat Murni</th>
+                                                    <th style="text-align: center;">Berat</th>
+                                                    <th style="text-align: center;">Status</th>
                                                     <th style="text-align: center;">Cuci</th>
                                                 </tr>
                                             </thead>
@@ -255,7 +256,12 @@
                                                         <td><?= $row['kode'] ?></td>
                                                         <td><?= $row['jenis'] ?></td>
                                                         <td><?= $row['model'] ?></td>
-                                                        <td><?= $row['berat_murni'] ?></td>
+                                                        <td><?= $row['berat'] ?></td>
+                                                        <td> <select name="status_proses" onchange="EditLanjutProses(<?= $row['id_detail_cuci'] ?>,this)" class="form-control" id="status" name="status">
+                                                                <option selected value="Cuci">Cuci</option>
+                                                                <option value="Retur">Retur</option>
+                                                                <option value="Lebur">Lebur</option>
+                                                            </select></td>
                                                         <td>
                                                             <a type="button" href="/detailbarang/<?= $row['kode'] ?>" class="btn btn-block btn-outline-info btn-sm">Detail</a>
                                                             <?php if ($row['status_proses'] != 'SelesaiCuci') : ?>
@@ -297,7 +303,7 @@
                 <form action="/selesaicuci" name="selesaicuci" id="selesaicuci" class="selesaicuci" method="post">
                     <?= csrf_field(); ?>
                     <div class="row">
-                        <div class="col-4">
+                        <div class="col-3">
                             <input type="hidden" name="dateidcuci" id="dateidcuci" value="<?= $datamastercuci['id_date_cuci'] ?>">
                             <div class="form-group" style="margin: 1mm;">
                                 <label>Tanggal Cuci</label>
@@ -306,7 +312,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-4">
+                        <div class="col-3">
                             <div class="form-group" style="margin: 1mm;">
                                 <label>Keterangan</label>
                                 <input type="text" class="form-control keterangan" id="keterangan" name="keterangan" placeholder="Masukan Keterangan">
@@ -314,9 +320,22 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-4">
+                        <div class="col-sm-3">
+                            <!-- text input -->
                             <div class="form-group">
-                                <label>Harga Cuci</label>
+                                <label>Nama Tukang</label>
+                                <select name="nama_tukang" id="nama_tukang" class="form-control nama_tukang" placeholder="Masukan Harga Beli">
+                                    <?php foreach ($datatukang as $row) : ?>
+                                        <option value="<?= $row['nama_tukang'] ?>"><?= $row['nama_tukang'] ?></option>
+                                    <?php endforeach; ?>
+                                </select>
+                                <div id="validationServerUsernameFeedback" class="invalid-feedback nama_tukangmsg">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <div class="form-group">
+                                <label>Ongkos</label>
                                 <input type="number" id="harga_cuci" name="harga_cuci" class="form-control" placeholder="Masukan Nomor Harga Cuci">
                                 <div id="validationServerUsernameFeedback" class="invalid-feedback harga_cucimsg">
                                 </div>
@@ -566,6 +585,46 @@
                 // })
             }
         })
+    }
+
+    function EditLanjutProses(id, val) {
+        Swal.fire({
+            title: 'Ubah Status ' + val.value,
+            text: "Data akan di masukan ke " + val.value + " ?",
+            icon: 'info',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Selesai',
+            cancelButtonText: 'Batal'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    type: "get",
+                    dataType: "json",
+                    url: "<?php echo base_url('ubahstatuslanjut'); ?>",
+                    data: {
+                        id: id,
+                        status: val.value,
+                    },
+                    success: function(hasil) {
+                        // refreshtbl()
+                        $("#tblselesaicuci").load("/draftcuci/" + <?= $datamastercuci['id_date_cuci'] ?> + " #trselesaicuci");
+                        $("#tblcard").load("/draftcuci/" + <?= $datamastercuci['id_date_cuci'] ?> + " #tblheader");
+                    },
+                    error: function(xhr, ajaxOptions, thrownError) {
+                        alert(xhr.status + "\n" + xhr.responseText + "\n" + thrownError);
+                        // Swal.fire({
+                        //     icon: 'warning',
+                        //     title: 'Tidak ada data',
+                        // })
+                    }
+                })
+            } else {
+                $("#tblselesaicuci").load("/draftcuci/" + <?= $datamastercuci['id_date_cuci'] ?> + " #trselesaicuci");
+            }
+        })
+
     }
 
     function hapus(id) {

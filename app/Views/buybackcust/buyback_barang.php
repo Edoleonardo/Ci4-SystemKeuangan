@@ -1378,6 +1378,7 @@
                     $('.notransmsg').html('')
                     document.getElementById('notrans').setAttribute("onkeyup", "ScannoTrans()");
                     document.getElementById('notrans').value = ''
+                    $('#inputcustomer').val(result.datacust)
                     $('#datamodalbuyback').html(result.data)
                 }
             },
@@ -1573,7 +1574,7 @@
             harusbyr = hargabeli * beratmurni
         }
         // brtmurni.innerHTML = beratmurni.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
-        totalharga.innerHTML = harusbyr.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
+        totalharga.innerHTML = Math.round(harusbyr).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
 
     }
 

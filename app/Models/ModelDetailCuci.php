@@ -26,13 +26,20 @@ class ModelDetailCuci extends Model
             return $data->getResult('array');
         }
     }
+    public function PrintNotaCuci($id)
+    {
+        $this->Where(['id_date_cuci' => $id]);
+        $this->orderBy('kadar', 'DESC');
+        $data = $this->get();
+        return $data->getResult('array');
+    }
     public function getDataDetailCuci($id)
     {
         return $this->where(['id_detail_cuci' => $id])->first();
     }
     public function CheckDatacuci($id)
     {
-        return $this->where(['kode' => $id])->first();
+        return $this->where(['id_detail_buyback' => $id])->first();
     }
     public function getDetailCuci($id)
     {
