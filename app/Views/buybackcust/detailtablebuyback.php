@@ -10,8 +10,9 @@
         <td><?= $row['nilai_tukar'] ?></td>
         <td><?= $row['merek'] ?></td>
         <td><?= number_format($row['total_harga'], 2, ',', '.') ?></td>
-        <td><button type='button' class='btn btn-block bg-gradient-danger' onclick="hapus(<?= $row['id_detail_buyback'] ?>,<?= $row['id_date_buyback'] ?>)"><i class='fas fa-trash'></i></button></td>
-
+        <?php if ($databuyback['status_dokumen'] == 'Draft') : ?>
+            <td><button type='button' class='btn btn-block bg-gradient-danger' onclick="hapus(<?= $row['id_detail_buyback'] ?>,<?= $row['id_date_buyback'] ?>)"><i class='fas fa-trash'></i></button></td>
+        <?php endif; ?>
     </tr>
 <?php endforeach; ?>
 <script>

@@ -153,6 +153,8 @@ $routes->get('/batalretur/(:any)', ($session->get('role')) ? 'BarangRetur::Batal
 $routes->get('/tambahretur', ($session->get('role')) ? 'BarangRetur::TambahRetur' : 'Login::Login');
 $routes->get('/hapusretur', ($session->get('role')) ? 'BarangRetur::DeleteRetur' : 'Login::Login');
 $routes->get('/modalprintretur', ($session->get('role')) ? 'BarangRetur::ModalRetur' : 'Login::Login');
+$routes->post('/selesairetur', ($session->get('role')) ? 'BarangRetur::SelesaiRetur' : 'Login::Login');
+$routes->get('/printnotaretur/(:any)', ($session->get('role')) ? 'BarangRetur::PrintNotaRetur/$1' : 'Login::Login');
 
 // $routes->get('/leburbarang/(:any)', ($session->get('role')) ?'BarangRetur::TampilLeburBarang/$1': 'Login::Login');
 $routes->get('/detailbarang', ($session->get('role')) ? 'BarangRetur::DataDetailBarang' : 'Login::Login');

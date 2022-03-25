@@ -126,13 +126,13 @@
                 <!-- Application buttons -->
                 <div class="card">
                     <div class="card-body" id="refreshtombol">
-                        <a type="button" onclick="BatalBuyback()" class="btn btn-app">
+                        <!-- <a type="button" onclick="BatalBuyback()" class="btn btn-app">
                             <i class="fas fa-window-close"></i> Batal Buyback
-                        </a>
+                        </a> -->
                         <?php if ($databuyback['status_dokumen'] == 'Draft') : ?>
-                            <!-- <a type="button" onclick="BatalBuyback()" class="btn btn-app">
+                            <a type="button" onclick="BatalBuyback()" class="btn btn-app">
                                 <i class="fas fa-window-close"></i> Batal Buyback
-                            </a> -->
+                            </a>
                             <a class="btn btn-app tambahcustomer" id="tambahcustomer" data-toggle="modal" data-target="#modal-cust">
                                 <i class="fas fa-users"></i> Tambah Customer
                             </a>
@@ -178,7 +178,9 @@
                                                 <th>Nilai Tukar</th>
                                                 <th>Merek</th>
                                                 <th>Total Harga</th>
-                                                <th>Delete</th>
+                                                <?php if ($databuyback['status_dokumen'] == 'Draft') : ?>
+                                                    <th>Delete</th>
+                                                <?php endif ?>
                                             </tr>
                                         </thead>
                                         <tbody id="databuyback">

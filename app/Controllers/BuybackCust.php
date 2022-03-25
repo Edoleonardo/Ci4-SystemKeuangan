@@ -172,6 +172,7 @@ class BuybackCust extends BaseController
                 'total_harga' => ($totalharga['total_harga'] == null) ? 0 : $totalharga['total_harga'],
             ]);
             $data = [
+                'databuyback' => $databuyback,
                 'tampildata' => $datadetail,
                 // 'tampildatabuyback' => $this->modeldetailbuyback->getDetailAllBuyback(),
             ];

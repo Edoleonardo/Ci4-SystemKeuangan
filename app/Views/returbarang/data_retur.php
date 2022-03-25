@@ -46,7 +46,7 @@
                                 <thead>
                                     <tr>
                                         <th>Nomor Retur</th>
-                                        <th>model</th>
+                                        <th>Jumlah Barang</th>
                                         <th>Berat Murni</th>
                                         <th>Detail</th>
                                     </tr>
@@ -55,8 +55,8 @@
                                     <?php foreach ($dataretur as $row) : ?>
                                         <tr>
                                             <td><?= $row['no_retur'] ?></td>
-                                            <td><?= $row['model'] ?></td>
-                                            <td><?= $row['berat'] ?></td>
+                                            <td><?= $row['jumlah_barang'] ?></td>
+                                            <td><?= $row['total_berat'] ?></td>
                                             <td>
                                                 <?php if ($row['status_dokumen'] == 'Draft') : ?>
                                                     <a type="button" href="draftretur/<?= $row['id_date_retur'] ?>" class="btn btn-block btn-outline-danger btn-sm">Draft</a>
@@ -70,7 +70,7 @@
                                 <tfoot>
                                     <tr>
                                         <th>Kode</th>
-                                        <th>model</th>
+                                        <th>Jumlah Barang</th>
                                         <th>Berat Murni</th>
                                         <th>Detail</th>
                                     </tr>

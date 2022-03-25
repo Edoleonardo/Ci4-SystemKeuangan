@@ -387,7 +387,7 @@ class BarangLebur extends BaseController
                 $this->modeldetailbuyback->save([
                     'id_detail_buyback' => $databuyback['id_detail_buyback'],
                     'id_karyawan' => $session->get('id_user'),
-                    'status_proses' => 'SudahLebur' . date('y-m-d'),
+                    'status_proses' => 'SudahLebur' . $datalebur['no_lebur'],
                 ]);
                 $msg = 'sukses';
             } else {

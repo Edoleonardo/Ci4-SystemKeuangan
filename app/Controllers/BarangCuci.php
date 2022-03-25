@@ -291,10 +291,6 @@ class BarangCuci extends BaseController
                 'harga_beli' => $harga_beli,
                 'status_proses' => 'SelesaiCuci'
             ]);
-            // $this->modelbuyback->save([
-            //     'id_detail_buyback' => $databuyback['id_detail_buyback'],
-            //     'status_proses' => 'SelesaiCuci ' . date('d-m-y')
-            // ]);
 
             $msg = $harga_beli;
             echo json_encode($msg);

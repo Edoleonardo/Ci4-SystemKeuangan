@@ -32,7 +32,7 @@ class ModelDetailLebur extends Model
     }
     public function CheckDataLebur($id)
     {
-        return $this->where(['id_detail_lebur' => $id])->first();
+        return $this->where(['id_detail_buyback' => $id])->first();
     }
     public function getDetailLebur($id)
     {

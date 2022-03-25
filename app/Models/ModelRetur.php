@@ -10,7 +10,7 @@ class ModelRetur extends Model
     protected $table = 'tbl_retur';
     protected $primaryKey = 'id_retur';
     protected $useTimestamps = true;
-    protected $allowedFields = ['id_date_retur', 'id_karyawan', 'no_retur', 'kode', 'jenis', 'model', 'keterangan', 'berat', 'qty', 'tanggal_retur', 'status_dokumen', 'total_harga_bahan'];
+    protected $allowedFields = ['id_date_retur', 'id_karyawan', 'keterangan', 'no_retur', 'total_berat', 'jumlah_barang', 'tanggal_retur', 'nama_supplier', 'status_dokumen'];
 
     public function getDataReturAll($id = false)
     {

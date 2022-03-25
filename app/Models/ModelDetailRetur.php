@@ -26,13 +26,20 @@ class ModelDetailRetur extends Model
             return $data->getResult('array');
         }
     }
+    public function PrintNotaRetur($id)
+    {
+        $this->Where(['id_date_retur' => $id]);
+        $this->orderBy('kadar', 'DESC');
+        $data = $this->get();
+        return $data->getResult('array');
+    }
     public function getDataDetailretur($id)
     {
         return $this->where(['id_detail_retur' => $id])->first();
     }
     public function CheckDataretur($id)
     {
-        return $this->where(['kode' => $id])->first();
+        return $this->where(['id_detail_buyback' => $id])->first();
     }
     public function getDetailretur($id)
     {
@@ -65,54 +72,17 @@ class ModelDetailRetur extends Model
         $query = $this->get();
         return $query->getResult('array');
     }
-    public function getDetailBuyback($id)
+    public function CountBeratDetailRetur($id)
     {
-        $query = $this->getWhere(['id_detail_buyback' => $id]);
-        return $query->getResult('array');
+        $this->selectCount('berat');
+        $this->where('id_date_retur', $id);
+        $query = $this->get();
+        return $query->getResult('array')[0];
     }
-    public function getDetailoneBuyback($id)
-    {
-        return $this->where(['id_detail_buyback' => $id])->first();
-    }
-    public function SumBeratKotorDetailBuyback($id)
+    public function SumBeratDetailRetur($id)
     {
         $this->selectSum('berat');
-        $this->where('id_date_buyback', $id);
-        $query = $this->get();
-        return $query->getResult('array')[0];
-    }
-    public function SumBeratBersihDetailBuyback($id)
-    {
-        $this->selectSum('berat_murni');
-        $this->where('id_date_buyback', $id);
-        $query = $this->get();
-        return $query->getResult('array')[0];
-    }
-    public function SumDataDetailBuyback($id)
-    {
-        $this->selectSum('total_harga');
-        $this->where('id_date_buyback', $id);
-        $query = $this->get();
-        return $query->getResult('array')[0];
-    }
-    public function SumDataDetailBeliBuyback($id)
-    {
-        $this->selectSum('harga_beli');
-        $this->where('id_date_buyback', $id);
-        $query = $this->get();
-        return $query->getResult('array')[0];
-    }
-    public function SumDataOngkosBuyback($id)
-    {
-        $this->selectSum('ongkos');
-        $this->where('id_date_buyback', $id);
-        $query = $this->get();
-        return $query->getResult('array')[0];
-    }
-    public function SumBeratDetailBuyback($id)
-    {
-        $this->selectSum('berat');
-        $this->where('id_date_buyback', $id);
+        $this->where('id_date_retur', $id);
         $query = $this->get();
         return $query->getResult('array')[0];
     }

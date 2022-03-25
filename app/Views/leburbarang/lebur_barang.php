@@ -1,6 +1,5 @@
 <?= $this->extend('layout/template'); ?>
 <?= $this->section('content') ?>
-<script type="text/javascript" src="/js/jquery.js"></script>
 <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/webcamjs/1.0.26/webcam.min.js"></script>
 <style>
@@ -284,7 +283,6 @@
                                                         <td><?= $row['jenis'] ?></td>
                                                         <td><?= $row['model'] ?></td>
                                                         <td><?= $row['berat_murni'] ?></td>
-
                                                     </tr>
                                                 <?php endforeach; ?>
                                             </tbody>

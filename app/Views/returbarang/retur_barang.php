@@ -1,8 +1,6 @@
 <?= $this->extend('layout/template'); ?>
 <?= $this->section('content') ?>
-<script type="text/javascript" src="/js/jquery.js"></script>
 <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/webcamjs/1.0.26/webcam.min.js"></script>
 <style>
     .table>tbody>tr>* {
         vertical-align: middle;
@@ -91,49 +89,34 @@
     <section class="content">
         <div class="row">
             <div class="col-6">
-                <div class="card">
+                <div class="card" id="card1">
                     <!-- /.card-header -->
-                    <?php if (isset($datamasterretur)) : ?>
-                        <?php if ($datamasterretur['status_dokumen'] == 'Selesai') : ?>
-                            <table class="table text-nowrap">
-                                <tr>
-                                    <td>Tanggal Cuci :</td>
-                                    <td>
-                                        <?= $datamasterretur['tanggal_cuci'] ?>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td> Total Berat Murni :</td>
-                                    <td>
-                                        <?= $datamasterretur['berat_murni'] ?> g
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>Qty :</td>
-                                    <td>
-                                        <?= $datamasterretur['qty'] ?>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>Gambar :</td>
-                                    <td>
-                                        <img class="imgg" src="/img/<?= $datamasterretur['nama_img'] ?>">
-                                    </td>
-                                </tr>
-                            </table>
-                        <?php else : ?>
-                            <form action="/leburbarang" name="formleburbarang" id="formleburbarang" class="formleburbarang" method="post">
-                                <?= csrf_field(); ?>
-                                <div class="form-group" style="margin: 1mm;">
-                                    <label>Tanggal Lebur</label>
-                                    <input type="date" class="form-control tanggallebur" id="tanggallebur" name="tanggallebur" value="<?= (isset($datamasterretur['tanggal_lebur'])) ? date_format(date_create($datamasterretur['tanggal_lebur']), "Y-m-d") : '' ?>" placeholder="Masukan Tanggal Lebur">
-                                    <div id="validationServerUsernameFeedback" class="invalid-feedback inputcustomermsg">
-                                    </div>
-                                </div>
-                            </form>
-                        <?php endif ?>
-                    <?php endif ?>
-
+                    <table class="table text-nowrap" id="card2">
+                        <tr>
+                            <td>No Retur :</td>
+                            <td>
+                                <?= $datamasterretur['no_retur'] ?>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Tanggal Retur :</td>
+                            <td>
+                                <?= $datamasterretur['tanggal_retur'] ?>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td> Total Berat Murni :</td>
+                            <td>
+                                <?= $datamasterretur['total_berat'] ?> g
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Jumlah Barang :</td>
+                            <td>
+                                <?= $datamasterretur['jumlah_barang'] ?>
+                            </td>
+                        </tr>
+                    </table>
                 </div>
                 <!-- /.card -->
             </div>
@@ -142,16 +125,19 @@
                 <div class="card">
                     <div class="card-body" id="refreshtombol">
                         <a type="button" onclick="Batal()" class="btn btn-app">
-                            <i class="fas fa-window-close"></i> Batal Lebur
+                            <i class="fas fa-window-close"></i> Batal Retur
                         </a>
                         <?php if (isset($datamasterretur)) : ?>
                             <?php if ($datamasterretur['status_dokumen'] == 'Selesai') : ?>
                                 <a class="btn btn-app bg-primary" type="button">
-                                    <i class="fas fa-check"></i> Selesai Lebur
+                                    <i class="fas fa-check"></i> Proses Retur
+                                </a>
+                                <a href="/printnotaretur/<?= $datamasterretur['id_date_retur'] ?>" target="_blank" class="btn btn-app">
+                                    <i class="fas fa-print"></i> Print Nota
                                 </a>
                             <?php else : ?>
                                 <a class="btn btn-app bg-danger" type="button" data-toggle="modal" data-target="#modal-lg">
-                                    <i class="fas fa-money-bill"></i> Selesai Lebur
+                                    <i class="fas fa-money-bill"></i> Lanjut Proses
                                 </a>
                             <?php endif ?>
                         <?php endif ?>
@@ -169,7 +155,7 @@
                     <?php if (isset($datamasterretur)) : ?>
                         <?php if ($datamasterretur['status_dokumen'] != 'Selesai') : ?>
                             <div class="col-6">
-                                <label>Pilih Barang Lebur</label>
+                                <label>Pilih Barang Retur</label>
                                 <div class="card">
                                     <!-- /.card-header -->
                                     <button type="button" class="btn btn-block btn-outline-info btn-sm" onclick="ModalPrintRetur(1,<?= $datamasterretur['id_date_retur'] ?>)"> <i class="fas fa-print"></i></button>
@@ -210,7 +196,7 @@
                                 <!-- /.card -->
                             </div>
                             <div class="col-6">
-                                <label>Barang Lebur</label>
+                                <label>Barang Retur</label>
                                 <div class="card">
                                     <!-- /.card-header -->
                                     <button type="button" class="btn btn-block btn-outline-info btn-sm" onclick="ModalPrintRetur(2,<?= $datamasterretur['id_date_retur'] ?>)"> <i class="fas fa-print"></i></button>
@@ -247,7 +233,7 @@
                             </div>
                         <?php else : ?>
                             <div class="col-12">
-                                <label>Barang Lebur</label>
+                                <label>Barang Retur</label>
                                 <div class="card">
                                     <!-- /.card-header -->
                                     <div class="card-body table-responsive p-0" style="max-height: 500px;">
@@ -259,6 +245,7 @@
                                                     <th style="text-align: center;">Jenis</th>
                                                     <th style="text-align: center;">Model</th>
                                                     <th style="text-align: center;">Berat Murni</th>
+                                                    <!-- <th>detail</th> -->
                                                 </tr>
                                             </thead>
                                             <tbody id="refreshtbl">
@@ -269,7 +256,8 @@
                                                         <td><?= $row['jenis'] ?></td>
                                                         <td><?= $row['model'] ?></td>
                                                         <td><?= $row['berat_murni'] ?></td>
-
+                                                        <!-- <td> <a type="button" href="/detailbarang/<?= $row['kode'] ?>" class="btn btn-block btn-outline-info btn-sm">Detail</a>
+                                                        </td> -->
                                                     </tr>
                                                 <?php endforeach; ?>
                                             </tbody>
@@ -296,105 +284,42 @@
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title">Tambah Data Lebur</h4>
+                <h4 class="modal-title">Tambah Data Retur</h4>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
-                <form action="/selesailebur" name="selesailebur" id="selesailebur" class="selesailebur" method="post">
+                <form action="/selesairetur" name="selesairetur" id="selesairetur" class="selesairetur" method="post">
                     <?= csrf_field(); ?>
+                    <input type="hidden" name="iddate" id="iddate" value="<?= $datamasterretur['id_date_retur'] ?>">
                     <div class="row">
                         <div class="col-4">
                             <div class="form-group" style="margin: 1mm;">
-                                <label>Tanggal Lebur</label>
-                                <input type="date" class="form-control tanggallebur" id="tanggallebur" name="tanggallebur" value="<?= (isset($datamasterretur['tanggal_lebur'])) ? date_format(date_create($datamasterretur['tanggal_lebur']), "Y-m-d") : '' ?>" placeholder="Masukan Tanggal Lebur">
-                                <div id="validationServerUsernameFeedback" class="invalid-feedback tanggalleburmsg">
+                                <label>Tanggal Retur</label>
+                                <input type="date" class="form-control tanggalretur" id="tanggalretur" name="tanggalretur" value="<?= (isset($datamasterretur['tanggal_retur'])) ? date_format(date_create($datamasterretur['tanggal_retur']), "Y-m-d") : '' ?>">
+                                <div id="validationServerUsernameFeedback" class="invalid-feedback tanggalreturmsg">
                                 </div>
                             </div>
                         </div>
                         <div class="col-4">
                             <div class="form-group" style="margin: 1mm;">
-                                <label>Model Lebur</label>
-                                <input type="text" class="form-control modellebur" id="modellebur" name="modellebur" value="<?= (isset($datamasterretur['model'])) ? $datamasterretur['model'] : '' ?>" placeholder="Masukan Model">
-                                <div id="validationServerUsernameFeedback" class="invalid-feedback modelleburmsg">
+                                <label>Keterangan</label>
+                                <input type="text" class="form-control keterangan" id="keterangan" name="keterangan" placeholder="Masukan Keterangan">
+                                <div id="validationServerUsernameFeedback" class="invalid-feedback keteranganmsg">
                                 </div>
                             </div>
                         </div>
                         <div class="col-4">
                             <div class="form-group">
-                                <label>Berat Murni</label>
-                                <input type="number" id="berat_murni" name="berat_murni" class="form-control" placeholder="Masukan Nomor Nota Supplier">
-                                <div id="validationServerUsernameFeedback" class="invalid-feedback berat_murnimsg">
-                                </div>
+                                <label>Supplier</label>
+                                <select name="supplier" class="form-control" id="supplier" name="supplier">
+                                    <?php foreach ($datasupplier as $m) : ?>
+                                        <option value="<?= $m['nama_supp'] ?>"><?= $m['nama_supp'] ?></option>
+                                    <?php endforeach; ?>
+                                </select>
                             </div>
                         </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-2">
-                            <div class="form-group">
-                                <label>Qty</label>
-                                <input type="number" id="qty" name="qty" value="1" class="form-control" placeholder="Masukan Nomor Nota Supplier">
-                                <input type="hidden" name="dateidlebur" value="<?= $datamasterretur['id_date_retur'] ?>">
-                                <div id="validationServerUsernameFeedback" class="invalid-feedback qtymsg">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-1">
-                            <!-- text input -->
-                            <div class="form-group">
-                                <label>Foto</label><br>
-                                <button type="button" id="ambilgbr" class="btn btn-primary" data-toggle="modal" data-target="#modal-foto" onclick="cameranyala()">
-                                    <i class="fa fa-camera"></i>
-                                </button>
-                                <div id="validationServerUsernameFeedback" class="invalid-feedback ambilgbrmsg"></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal fade" id="modal-foto">
-                        <div class="modal-dialog modal-default">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h4 class="modal-title">Ambil Foto</h4>
-                                    <button type="button" class="close" onclick="$('#modal-foto').modal('toggle');" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                </div>
-                                <div class="modal-body">
-                                    <div class="row">
-                                        <div class="col-sm-12">
-                                            <div class="form-group">
-                                                <div class="form-group"><label>Gambar</label>
-                                                    <div class="custom-file">
-                                                        <input type="file" name="gambar" class="custom-file-input" id="gambar" accept="image/*">
-                                                        <label style="text-align: left" class="custom-file-label" for="gambar">Pilih Gambar</label>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="form-group">
-                                            <div class="col-sm-12">
-                                                <div id='my_camera'>
-                                                </div>
-                                                <button style="text-align: center;" type='button' id='ambilfoto' class='btn btn-info ambilfoto' onclick='Foto_ulang()'>
-                                                    <i class='fa fa-trash'></i></button>
-                                                <button type='button' id='ambilfoto' class='btn btn-info ambilfoto' onclick='Ambil_foto()'>Foto <i class='fa fa-camera'></i>
-                                                </button>
-                                                <input type='hidden' name='gambar' id='gambar' class='image-tag'>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="modal-footer justify-content-between">
-                                        <button type="button" class="btn btn-default" onclick="$('#modal-foto').modal('toggle');">Close</button>
-                                        <button type="button" class="btn btn-primary" onclick="Webcam.reset()" data-dismiss="modal">Done</button>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- /.modal-content -->
-                        </div>
-                        <!-- /.modal-dialog -->
                     </div>
             </div>
             <div class="modal-footer justify-content-between">
@@ -490,7 +415,6 @@
                 status: val.value,
             },
             success: function(hasil) {
-                console.log(hasil)
                 refreshtbl()
             },
             error: function(xhr, ajaxOptions, thrownError) {
@@ -504,7 +428,6 @@
     }
 
     function hapus(id) {
-        console.log(id)
         $.ajax({
             type: "get",
             dataType: "json",
@@ -514,8 +437,6 @@
             },
             success: function(hasil) {
                 refreshtbl()
-
-
             },
             error: function(xhr, ajaxOptions, thrownError) {
                 // alert(xhr.status + "\n" + xhr.responseText + "\n" + thrownError);
@@ -531,7 +452,6 @@
     function openmodaldetail(id) {
         $('#modal-detail').modal('toggle');
         detailbarang(id)
-        console.log(id)
     }
 
     function detailbarang(id) {
@@ -544,7 +464,6 @@
             },
             success: function(hasil) {
                 $('#detailmodelbarang').html(hasil.data)
-                console.log(hasil)
             },
             error: function(xhr, ajaxOptions, thrownError) {
                 alert(xhr.status + "\n" + xhr.responseText + "\n" + thrownError);
@@ -575,7 +494,6 @@
     };
 
     function tambahbarangretur(kode) {
-        console.log(kode)
         $.ajax({
             type: "GET",
             dataType: "json",
@@ -603,15 +521,16 @@
     function refreshtbl() {
         $("#refreshtbl").load("/draftretur/" + <?= $datamasterretur['id_date_retur'] ?> + " #akanretur");
         $("#refreshtbl1").load("/draftretur/" + <?= $datamasterretur['id_date_retur'] ?> + " #dataretur");
+        $("#card1").load("/draftretur/" + <?= $datamasterretur['id_date_retur'] ?> + " #card2");
 
     }
 
     $(document).ready(function() {
-        $('.selesailebur').submit(function(e) {
+        $('.selesairetur').submit(function(e) {
             e.preventDefault()
             Swal.fire({
-                title: 'Selesai Lebur ',
-                text: "Apakah Yakin Selesai Lebur ?",
+                title: 'Lanjut Proses ',
+                text: "Lanjut Proses Retur ?",
                 icon: 'info',
                 showCancelButton: true,
                 cancelButtonColor: '#d33',
@@ -619,46 +538,18 @@
                 confirmButtonText: 'Selesai',
             }).then((result) => {
                 if (result.isConfirmed) {
-                    let form = $('.selesailebur')[0];
+                    let form = $('.selesairetur')[0];
                     let data = new FormData(form)
                     $.ajax({
                         type: "POST",
                         data: data,
-                        url: "<?php echo base_url('selesailebur'); ?>",
+                        url: "<?php echo base_url('selesairetur'); ?>",
                         dataType: "json",
                         contentType: false,
                         processData: false,
                         cache: false,
                         success: function(hasil) {
                             if (hasil.error) {
-                                if (hasil.error.qty) {
-                                    $('#qty').addClass('is-invalid')
-                                    $('.qtymsg').html(hasil.error.qty)
-                                } else {
-                                    $('#qty').removeClass('is-invalid')
-                                    $('.qtymsg').html('')
-                                }
-                                if (hasil.error.berat_murni) {
-                                    $('#berat_murni').addClass('is-invalid')
-                                    $('.berat_murnimsg').html(hasil.error.berat_murni)
-                                } else {
-                                    $('#berat_murni').removeClass('is-invalid')
-                                    $('.berat_murnimsg').html('')
-                                }
-                                if (hasil.error.modellebur) {
-                                    $('#modellebur').addClass('is-invalid')
-                                    $('.modelleburmsg').html(hasil.error.modellebur)
-                                } else {
-                                    $('#modellebur').removeClass('is-invalid')
-                                    $('.modelleburmsg').html('')
-                                }
-                                if (hasil.error.gambar) {
-                                    $('#ambilgbr').addClass('is-invalid')
-                                    $('.ambilgbrmsg').html(hasil.error.gambar)
-                                } else {
-                                    $('#ambilgbr').removeClass('is-invalid')
-                                    $('.ambilgbrmsg').html('')
-                                }
                                 if (hasil.error.data) {
                                     Swal.fire({
                                         icon: 'warning',
@@ -666,16 +557,7 @@
                                     })
                                 }
                             } else {
-                                console.log(hasil)
-                                $('#qty').removeClass('is-invalid')
-                                $('.qtymsg').html('')
-                                $('#berat_murni').removeClass('is-invalid')
-                                $('.berat_murnimsg').html('')
-                                $('#modellebur').removeClass('is-invalid')
-                                $('.modelleburmsg').html('')
-                                $('#ambilgbr').removeClass('is-invalid')
-                                $('.ambilgbrmsg').html('')
-                                window.location.href = "<?php echo base_url('leburbarang/' . $datamasterretur['id_date_retur']); ?>"
+                                location.reload();
                             }
                         },
                         error: function(xhr, ajaxOptions, thrownError) {
@@ -686,41 +568,6 @@
             })
 
         })
-        $(".modal").on("hidden.bs.modal", function() {
-            Webcam.reset('#my_camera')
-        });
     })
-
-    Webcam.set({
-        width: 320,
-        height: 240,
-        image_format: 'jpeg',
-        jpeg_quality: 100,
-        flip_horiz: true,
-    });
-
-    function cameranyala() {
-        if ($(".image-tag").val()) {
-            document.getElementById('my_camera').innerHTML = '<img src="' + data_uri + '">'
-        } else {
-            Webcam.attach('#my_camera');
-        }
-    }
-
-    function Ambil_foto() {
-        Webcam.snap(function(data_uri) {
-            $(".image-tag").val(data_uri);
-            Webcam.reset()
-            // Webcam.attach('#my_camera');
-            // console.log($(".image-tag").val())
-            document.getElementById('my_camera').innerHTML = '<img src="' + data_uri + '">'
-        })
-    }
-
-    function Foto_ulang() {
-        document.getElementById('my_camera').innerHTML = ''
-        $(".image-tag").val('');
-        Webcam.attach('#my_camera');
-    }
 </script>
 <?= $this->endSection(); ?>
