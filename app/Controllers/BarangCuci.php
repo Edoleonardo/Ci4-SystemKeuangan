@@ -16,6 +16,9 @@ use App\Models\ModelDetailKartuStock;
 use App\Models\ModelCuci;
 use App\Models\ModelDetailCuci;
 use App\Models\ModelTukang;
+use App\Models\ModelTransaksi;
+use App\Models\ModelDetailTransaksi;
+use App\Models\ModelBank;
 
 
 use CodeIgniter\Model;
@@ -44,6 +47,9 @@ class BarangCuci extends BaseController
         $this->modelcuci = new ModelCuci();
         $this->modeldetailcuci = new ModelDetailCuci();
         $this->modeltukang = new ModelTukang();
+        $this->modeldetailtransaksi = new ModelDetailTransaksi();
+        $this->modeltransaksi = new ModelTransaksi();
+        $this->modelbank = new ModelBank();
     }
 
     public function HomeCuci()
@@ -88,6 +94,8 @@ class BarangCuci extends BaseController
             'keterangan' => '-',
             'total_berat' => '-',
             'keterangan' => '-',
+            'pembayaran' =>  '-',
+            'nama_bank' =>  $this->request->getVar('namabank'),
             'jumlah_barang' => '0',
             'tanggal_cuci' => date('y-m-d H:i:s'),
             'harga_cuci' => '0',
@@ -123,7 +131,8 @@ class BarangCuci extends BaseController
             'datamastercuci' => $this->modelcuci->getDataCuciAll($id),
             'datacuci' => $this->modeldetailbuyback->getDataCuciAll(),
             'dataakancuci' => $this->modeldetailcuci->getDetailCuci($id),
-            'datatukang' => $this->modeltukang->getTukang()
+            'datatukang' => $this->modeltukang->getTukang(),
+            'bank' => $this->modelbank->getBank()
         ];
         return view('cucibarang/cuci_barang', $data);
     }
@@ -319,13 +328,19 @@ class BarangCuci extends BaseController
                         'required' => 'Jenis Harus di isi',
                     ]
                 ],
+                'harga_cuci' => [
+                    'rules' => 'required',
+                    'errors' => [
+                        'required' => 'Harga Cuci Harus di isi',
+                    ]
+                ],
 
             ]);
             if (!$valid) {
                 $msg = [
                     'error' => [
                         'tanggalcuci' => $validation->getError('tanggalcuci'),
-                        // 'berat' => $validation->getError('berat'),
+                        'harga_cuci' => $validation->getError('harga_cuci'),
                         // 'harga_beli' => $validation->getError('harga_beli'),
                         // 'gambar' => $validation->getError('gambar'),
 
@@ -336,23 +351,36 @@ class BarangCuci extends BaseController
                 $session = session();
                 $datadetailcuci =  $this->modeldetailcuci->getDetailCuci($this->request->getVar('dateidcuci'));
                 $datacuci = $this->modelcuci->getDataCuciAll($this->request->getVar('dateidcuci'));
-
-                if ($datadetailcuci) {
+                $saldobiaya = $this->modeltransaksi->getTransaksi();
+                if ($datadetailcuci && $saldobiaya['saldo_akhir'] >= $this->request->getVar('harga_cuci')) {
                     $this->modelcuci->save([
                         'id_cuci' => $datacuci['id_cuci'],
                         'id_karyawan' => $session->get('id_user'),
                         'nama_tukang' => $this->request->getVar('nama_tukang'),
                         'harga_cuci' => $this->request->getVar('harga_cuci'),
                         'keterangan' =>  $this->request->getVar('keterangan'),
+                        'pembayaran' =>  $this->request->getVar('pembayaran'),
+                        'nama_bank' =>  $this->request->getVar('namabank'),
                         'tanggal_cuci' => $this->request->getVar('tanggalcuci'),
                         'status_dokumen' => 'Selesai'
                     ]);
+                    $this->modeldetailtransaksi->save([
+                        'tanggal_transaksi' => date("Y-m-d H:i:s"),
+                        'id_karyawan' => $session->get('id_user'),
+                        'pembayaran' => $this->request->getVar('pembayaran'),
+                        'keterangan' => $datacuci['no_cuci'],
+                        'id_akun_biaya' => 9,
+                        'masuk' => 0,
+                        'keluar' => $this->request->getVar('harga_cuci'),
+                        'nama_bank' => ($this->request->getVar('namabank')) ? $this->request->getVar('namabank') : null,
+                    ]);
+                    $this->BiayaHarianMaster($saldobiaya['id_transaksi'], $session);
 
                     $msg = 'sukses';
                 } else {
                     $msg = [
                         'error' => [
-                            'data' => 'Tidak ada Data',
+                            'data' => 'Tidak ada Data / Saldo Kurang',
                         ]
                     ];
                 }

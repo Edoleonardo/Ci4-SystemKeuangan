@@ -16,7 +16,8 @@ use App\Models\ModelDetailKartuStock;
 use App\Models\ModelBank;
 use App\Models\ModelCustomer;
 use App\Models\ModelJenis;
-
+use App\Models\ModelTransaksi;
+use App\Models\ModelDetailTransaksi;
 
 use CodeIgniter\Model;
 use CodeIgniter\Validation\Rules;
@@ -44,6 +45,8 @@ class BuybackCust extends BaseController
         $this->modelbank = new ModelBank();
         $this->datacust = new ModelCustomer();
         $this->datajenis = new ModelJenis();
+        $this->modeldetailtransaksi = new ModelDetailTransaksi();
+        $this->modeltransaksi = new ModelTransaksi();
     }
 
     public function BuyBack()
@@ -57,28 +60,28 @@ class BuybackCust extends BaseController
         return view('buybackcust/data_buyback', $data);
     }
 
-    public function detail_pembelian()
-    {
-        $session = session();
-        $dateid = date("ymdhis");
-        $session->set('date_id', $dateid);
-        $notransaksi = $this->NoTransaksiGenerateBuyback();
-        $this->datapembelian->save([
-            'id_date_pembelian' => $session->get('date_id'),
-            'nama_supplier' => '-',
-            'id_karyawan' => $session->get('id_user'),
-            // 'no_faktur_supp' => '-',
-            'no_transaksi' => $notransaksi,
-            'tgl_faktur' => date('Y-m-d h:i:s'),
-            // 'total_berat_murni' => 0,
-            'byr_berat_murni' => 0,
-            'tgl_jatuh_tempo' => date('Y-m-d h:i:s'),
-            'cara_pembayaran' => 'Bayar Nanti',
-            'total_bayar' => 0,
-            'status_dokumen' => 'Draft'
-        ]);
-        return redirect()->to('/draft/' . $dateid);
-    }
+    // public function detail_pembelian()
+    // {
+    //     $session = session();
+    //     $dateid = date("ymdhis");
+    //     $session->set('date_id', $dateid);
+    //     $notransaksi = $this->NoTransaksiGenerateBuyback();
+    //     $this->datapembelian->save([
+    //         'id_date_pembelian' => $session->get('date_id'),
+    //         'nama_supplier' => '-',
+    //         'id_karyawan' => $session->get('id_user'),
+    //         // 'no_faktur_supp' => '-',
+    //         'no_transaksi' => $notransaksi,
+    //         'tgl_faktur' => date('Y-m-d H:i:s'),
+    //         // 'total_berat_murni' => 0,
+    //         'byr_berat_murni' => 0,
+    //         'tgl_jatuh_tempo' => date('Y-m-d H:i:s'),
+    //         'cara_pembayaran' => 'Bayar Nanti',
+    //         'total_bayar' => 0,
+    //         'status_dokumen' => 'Draft'
+    //     ]);
+    //     return redirect()->to('/draft/' . $dateid);
+    // }
     public function HalamanTambah()
     {
         $session = session();
@@ -200,6 +203,7 @@ class BuybackCust extends BaseController
     public function PembayaranBuyback()
     {
         if ($this->request->isAJAX()) {
+            $saldobiaya = $this->modeltransaksi->getTransaksi();
             $validation = \Config\Services::validation();
             if ($this->request->getVar('pembayaran') == 'Transfer') {
                 $valid = $this->validate([
@@ -284,101 +288,193 @@ class BuybackCust extends BaseController
                 echo json_encode($msg);
             } else {
                 $session = session();
+                $totalvar = $this->request->getVar('tunai') + $this->request->getVar('transfer');
                 $databuyback = $this->modelbuyback->getDataBuyback($this->request->getVar('iddate'));
-                $hasilbayar = $databuyback['total_harga'] - ($this->request->getVar('tunai') + $this->request->getVar('transfer'));
-                if ($hasilbayar == 0 && $databuyback['total_harga'] != 0) {
-                    $datadetail = $this->modeldetailbuyback->getDetailAllBuyback($this->request->getVar('iddate'));
-                    $this->modelbuyback->save([
-                        'id_buyback' => $databuyback['id_buyback'],
-                        'id_karyawan' => $session->get('id_user'),
-                        'pembayaran' => $this->request->getVar('pembayaran'),
-                        'nohp_cust' => $this->request->getVar('inputcustomer'),
-                        'tunai' => $this->request->getVar('tunai'),
-                        'transfer' => $this->request->getVar('transfer'),
-                        'nama_bank' => $this->request->getVar('namabank'),
-                        'tgl_selesai' => date("Y-m-d h:i:s"),
-                        'status_dokumen' => 'Selesai'
-                    ]);
+                $hasilbayar = $databuyback['total_harga'] - $totalvar;
+                if ($saldobiaya['saldo_akhir'] >= $totalvar) {
+                    if ($hasilbayar == 0 && $databuyback['total_harga'] != 0) {
+                        $datadetail = $this->modeldetailbuyback->getDetailAllBuyback($this->request->getVar('iddate'));
+                        $this->modelbuyback->save([
+                            'id_buyback' => $databuyback['id_buyback'],
+                            'id_karyawan' => $session->get('id_user'),
+                            'pembayaran' => $this->request->getVar('pembayaran'),
+                            'nohp_cust' => $this->request->getVar('inputcustomer'),
+                            'tunai' => $this->request->getVar('tunai'),
+                            'transfer' => $this->request->getVar('transfer'),
+                            'nama_bank' => $this->request->getVar('namabank'),
+                            'tgl_selesai' => date("Y-m-d H:i:s"),
+                            'status_dokumen' => 'Selesai'
+                        ]);
 
-                    foreach ($datadetail as $row) {
-                        if ($row['no_nota'] == 'NoNota') {
-                            $datamasterstock = $this->datastock->getBarangkode($row['kode']);
-                            $datakartu = $this->modelkartustock->getKartuStockkode($row['kode']);
-                            if ($datakartu) {
-                                $saldoakhir = (substr($row['kode'], 0, 1) == 4) ? $row['berat'] + $datakartu['saldo_akhir']  : $row['qty'] + $datakartu['saldo_akhir'];
-                            } else {
-                                $saldoakhir = (substr($row['kode'], 0, 1) == 4) ? $row['berat'] : $row['qty'];
-                            }
+                        foreach ($datadetail as $row) {
+                            if ($row['no_nota'] == 'NoNota') {
+                                $datamasterstock = $this->datastock->getBarangkode($row['kode']);
+                                $datakartu = $this->modelkartustock->getKartuStockkode($row['kode']);
+                                if ($datakartu) {
+                                    $saldoakhir = (substr($row['kode'], 0, 1) == 4) ? $row['berat'] + $datakartu['saldo_akhir']  : $row['qty'] + $datakartu['saldo_akhir'];
+                                } else {
+                                    $saldoakhir = (substr($row['kode'], 0, 1) == 4) ? $row['berat'] : $row['qty'];
+                                }
 
-                            if (substr($row['kode'], 0, 1) == 4) {
-                                $this->datastock->save([
-                                    'id_stock' => $datamasterstock['id_stock'],
+                                if (substr($row['kode'], 0, 1) == 4) {
+                                    $this->datastock->save([
+                                        'id_stock' => $datamasterstock['id_stock'],
+                                        'id_karyawan' => $session->get('id_user'),
+                                        'status' => 'B',
+                                        'no_faktur' => $databuyback['no_transaksi_buyback'],
+                                        'tgl_faktur' => date("Y-m-d H:i:s"),
+                                        'nama_supplier' => $this->request->getVar('inputcustomer'),
+                                        'qty' => 1,
+                                        'jenis' => $row['jenis'],
+                                        'model' => $row['model'],
+                                        'keterangan' => $row['keterangan'],
+                                        'merek' => $row['merek'],
+                                        'kadar' => $row['kadar'],
+                                        'berat_murni' => $row['berat_murni'],
+                                        'berat' =>  $saldoakhir,
+                                        'nilai_tukar' =>  $row['nilai_tukar'],
+                                        'ongkos' => $row['ongkos'],
+                                        'harga_beli' => $row['harga_beli'],
+                                        'total_harga' => $saldoakhir * $row['harga_beli'],
+                                        'gambar' =>  $row['nama_img'],
+                                    ]);
+                                }
+                                if (substr($row['kode'], 0, 1) == 3) {
+                                    $this->datastock->save([
+                                        'id_stock' => $datamasterstock['id_stock'],
+                                        'id_karyawan' => $session->get('id_user'),
+                                        'status' => 'B',
+                                        'no_faktur' => $databuyback['no_transaksi_buyback'],
+                                        'tgl_faktur' => date("Y-m-d H:i:s"),
+                                        'nama_supplier' => $this->request->getVar('inputcustomer'),
+                                        'qty' =>  $saldoakhir,
+                                        'jenis' => $row['jenis'],
+                                        'model' => $row['model'],
+                                        'keterangan' => $row['keterangan'],
+                                        'merek' => $row['merek'],
+                                        'kadar' => $row['kadar'],
+                                        'berat_murni' => $row['berat_murni'],
+                                        'berat' => $row['berat'],
+                                        'nilai_tukar' =>  $row['nilai_tukar'],
+                                        'ongkos' => $row['ongkos'],
+                                        'harga_beli' => $row['harga_beli'],
+                                        'total_harga' => $row['total_harga'],
+                                        'gambar' =>  $row['nama_img'],
+                                    ]);
+                                }
+                                $this->modeldetailkartustock->save([
+                                    // 'id_detail_kartustock' => $datadetailkartu['id_detail_kartustock'],
+                                    'barcode' => $row['kode'],
                                     'id_karyawan' => $session->get('id_user'),
-                                    'status' => 'B',
+                                    'status' => 'Keluar',
                                     'no_faktur' => $databuyback['no_transaksi_buyback'],
-                                    'tgl_faktur' => date("Y-m-d H:i:s"),
-                                    'nama_supplier' => $this->request->getVar('inputcustomer'),
-                                    'qty' => 1,
+                                    'tgl_faktur' => $databuyback['created_at'],
+                                    'nama_customer' => $this->request->getVar('inputcustomer'),
+                                    'saldo' => $saldoakhir,
+                                    'masuk' => (substr($row['kode'], 0, 1) == 4) ? $row['berat'] : $row['qty'],
+                                    'keluar' => 0,
                                     'jenis' => $row['jenis'],
                                     'model' => $row['model'],
                                     'keterangan' => $row['keterangan'],
                                     'merek' => $row['merek'],
                                     'kadar' => $row['kadar'],
-                                    'berat_murni' => $row['berat_murni'],
-                                    'berat' =>  $saldoakhir,
-                                    'nilai_tukar' =>  $row['nilai_tukar'],
-                                    'ongkos' => $row['ongkos'],
-                                    'harga_beli' => $row['harga_beli'],
-                                    'total_harga' => $saldoakhir * $row['harga_beli'],
-                                    'gambar' =>  $row['nama_img'],
-                                ]);
-                            }
-                            if (substr($row['kode'], 0, 1) == 3) {
-                                $this->datastock->save([
-                                    'id_stock' => $datamasterstock['id_stock'],
-                                    'id_karyawan' => $session->get('id_user'),
-                                    'status' => 'B',
-                                    'no_faktur' => $databuyback['no_transaksi_buyback'],
-                                    'tgl_faktur' => date("Y-m-d h:i:s"),
-                                    'nama_supplier' => $this->request->getVar('inputcustomer'),
-                                    'qty' =>  $saldoakhir,
-                                    'jenis' => $row['jenis'],
-                                    'model' => $row['model'],
-                                    'keterangan' => $row['keterangan'],
-                                    'merek' => $row['merek'],
-                                    'kadar' => $row['kadar'],
-                                    'berat_murni' => $row['berat_murni'],
                                     'berat' => $row['berat'],
                                     'nilai_tukar' =>  $row['nilai_tukar'],
-                                    'ongkos' => $row['ongkos'],
                                     'harga_beli' => $row['harga_beli'],
                                     'total_harga' => $row['total_harga'],
                                     'gambar' =>  $row['nama_img'],
                                 ]);
-                            }
-                            $this->modeldetailkartustock->save([
-                                // 'id_detail_kartustock' => $datadetailkartu['id_detail_kartustock'],
-                                'barcode' => $row['kode'],
-                                'id_karyawan' => $session->get('id_user'),
-                                'status' => 'Keluar',
-                                'no_faktur' => $databuyback['no_transaksi_buyback'],
-                                'tgl_faktur' => $databuyback['created_at'],
-                                'nama_customer' => $this->request->getVar('inputcustomer'),
-                                'saldo' => $saldoakhir,
-                                'masuk' => (substr($row['kode'], 0, 1) == 4) ? $row['berat'] : $row['qty'],
-                                'keluar' => 0,
-                                'jenis' => $row['jenis'],
-                                'model' => $row['model'],
-                                'keterangan' => $row['keterangan'],
-                                'merek' => $row['merek'],
-                                'kadar' => $row['kadar'],
-                                'berat' => $row['berat'],
-                                'nilai_tukar' =>  $row['nilai_tukar'],
-                                'harga_beli' => $row['harga_beli'],
-                                'total_harga' => $row['total_harga'],
-                                'gambar' =>  $row['nama_img'],
-                            ]);
-                            if ($datakartu) {
+                                if ($datakartu) {
+                                    $this->modelkartustock->save([
+                                        'id_kartustock' => $datakartu['id_kartustock'],
+                                        'id_karyawan' => $session->get('id_user'),
+                                        'total_masuk' => $this->modeldetailkartustock->SumMasukKartu($row['kode']),
+                                        'total_keluar' => $this->modeldetailkartustock->SumKeluarKartu($row['kode']),
+                                        'saldo_akhir' => $saldoakhir,
+                                    ]);
+                                } else {
+                                    $this->modelkartustock->save([
+                                        'kode' => $row['kode'],
+                                        'id_karyawan' => $session->get('id_user'),
+                                        'total_masuk' => $this->modeldetailkartustock->SumMasukKartu($row['kode']),
+                                        'total_keluar' => $this->modeldetailkartustock->SumKeluarKartu($row['kode']),
+                                        'saldo_akhir' => $saldoakhir,
+                                    ]);
+                                }
+                            } else {
+                                $datakartu = $this->modelkartustock->getKartuStockkode($row['kode']);
+                                $saldoakhir = (substr($row['kode'], 0, 1) == 4) ? $datakartu['saldo_akhir'] + $row['berat'] : $datakartu['saldo_akhir'] + $row['qty'];
+                                if (substr($row['kode'], 0, 1) == 4) {
+                                    $datamasterstock = $this->datastock->getBarangkode($row['kode']);
+                                    $this->datastock->save([
+                                        'id_stock' => $datamasterstock['id_stock'],
+                                        'id_karyawan' => $session->get('id_user'),
+                                        // 'barcode' => $row['kode'],
+                                        'status' => 'B',
+                                        'no_faktur' => $databuyback['no_transaksi_buyback'],
+                                        'tgl_faktur' => date("Y-m-d H:i:s"),
+                                        'nama_supplier' => $this->request->getVar('inputcustomer'),
+                                        'qty' => 1,
+                                        'jenis' => $row['jenis'],
+                                        'model' => $row['model'],
+                                        'keterangan' => $row['keterangan'],
+                                        'merek' => $row['merek'],
+                                        'kadar' => $row['kadar'],
+                                        'berat_murni' => $row['berat_murni'],
+                                        'berat' =>  $saldoakhir,
+                                        'nilai_tukar' =>  $row['nilai_tukar'],
+                                        'ongkos' => $row['ongkos'],
+                                        'harga_beli' => $row['harga_beli'],
+                                        'total_harga' => $row['total_harga'],
+                                        'gambar' =>  $row['nama_img'],
+                                    ]);
+                                }
+                                if (substr($row['kode'], 0, 1) == 3) {
+                                    $datamasterstock = $this->datastock->getBarangkode($row['kode']);
+                                    $this->datastock->save([
+                                        'id_stock' => $datamasterstock['id_stock'],
+                                        'id_karyawan' => $session->get('id_user'),
+                                        'status' => 'B',
+                                        'no_faktur' => $databuyback['no_transaksi_buyback'],
+                                        'tgl_faktur' => date("Y-m-d H:i:s"),
+                                        'nama_supplier' => $this->request->getVar('inputcustomer'),
+                                        'qty' =>  $saldoakhir,
+                                        'jenis' => $row['jenis'],
+                                        'model' => $row['model'],
+                                        'keterangan' => $row['keterangan'],
+                                        'merek' => $row['merek'],
+                                        'kadar' => $row['kadar'],
+                                        'berat_murni' => $row['berat_murni'],
+                                        'berat' => $row['berat'],
+                                        'nilai_tukar' =>  $row['nilai_tukar'],
+                                        'ongkos' => $row['ongkos'],
+                                        'harga_beli' => $row['harga_beli'],
+                                        'total_harga' => $row['total_harga'],
+                                        'gambar' =>  $row['nama_img'],
+                                    ]);
+                                }
+                                $this->modeldetailkartustock->save([
+                                    // 'id_detail_kartustock' => $datadetailkartu['id_detail_kartustock'],
+                                    'barcode' => $row['kode'],
+                                    'id_karyawan' => $session->get('id_user'),
+                                    'status' => 'Keluar',
+                                    'no_faktur' => $databuyback['no_transaksi_buyback'],
+                                    'tgl_faktur' => $databuyback['created_at'],
+                                    'nama_customer' => $row['no_nota'],
+                                    'saldo' => $saldoakhir,
+                                    'masuk' => (substr($row['kode'], 0, 1) == 4) ? $row['berat'] : $row['qty'],
+                                    'keluar' => 0,
+                                    'jenis' => $row['jenis'],
+                                    'model' => $row['model'],
+                                    'keterangan' => $row['keterangan'],
+                                    'merek' => $row['merek'],
+                                    'kadar' => $row['kadar'],
+                                    'berat' => $row['berat'],
+                                    'nilai_tukar' =>  $row['nilai_tukar'],
+                                    'harga_beli' => $row['harga_beli'],
+                                    'total_harga' => $row['total_harga'],
+                                    'gambar' =>  $row['nama_img'],
+                                ]);
                                 $this->modelkartustock->save([
                                     'id_kartustock' => $datakartu['id_kartustock'],
                                     'id_karyawan' => $session->get('id_user'),
@@ -386,103 +482,34 @@ class BuybackCust extends BaseController
                                     'total_keluar' => $this->modeldetailkartustock->SumKeluarKartu($row['kode']),
                                     'saldo_akhir' => $saldoakhir,
                                 ]);
-                            } else {
-                                $this->modelkartustock->save([
-                                    'kode' => $row['kode'],
-                                    'id_karyawan' => $session->get('id_user'),
-                                    'total_masuk' => $this->modeldetailkartustock->SumMasukKartu($row['kode']),
-                                    'total_keluar' => $this->modeldetailkartustock->SumKeluarKartu($row['kode']),
-                                    'saldo_akhir' => $saldoakhir,
-                                ]);
                             }
-                        } else {
-                            $datakartu = $this->modelkartustock->getKartuStockkode($row['kode']);
-                            $saldoakhir = (substr($row['kode'], 0, 1) == 4) ? $datakartu['saldo_akhir'] + $row['berat'] : $datakartu['saldo_akhir'] + $row['qty'];
-                            if (substr($row['kode'], 0, 1) == 4) {
-                                $datamasterstock = $this->datastock->getBarangkode($row['kode']);
-                                $this->datastock->save([
-                                    'id_stock' => $datamasterstock['id_stock'],
-                                    'id_karyawan' => $session->get('id_user'),
-                                    // 'barcode' => $row['kode'],
-                                    'status' => 'B',
-                                    'no_faktur' => $databuyback['no_transaksi_buyback'],
-                                    'tgl_faktur' => date("Y-m-d h:i:s"),
-                                    'nama_supplier' => $this->request->getVar('inputcustomer'),
-                                    'qty' => 1,
-                                    'jenis' => $row['jenis'],
-                                    'model' => $row['model'],
-                                    'keterangan' => $row['keterangan'],
-                                    'merek' => $row['merek'],
-                                    'kadar' => $row['kadar'],
-                                    'berat_murni' => $row['berat_murni'],
-                                    'berat' =>  $saldoakhir,
-                                    'nilai_tukar' =>  $row['nilai_tukar'],
-                                    'ongkos' => $row['ongkos'],
-                                    'harga_beli' => $row['harga_beli'],
-                                    'total_harga' => $row['total_harga'],
-                                    'gambar' =>  $row['nama_img'],
-                                ]);
-                            }
-                            if (substr($row['kode'], 0, 1) == 3) {
-                                $datamasterstock = $this->datastock->getBarangkode($row['kode']);
-                                $this->datastock->save([
-                                    'id_stock' => $datamasterstock['id_stock'],
-                                    'id_karyawan' => $session->get('id_user'),
-                                    'status' => 'B',
-                                    'no_faktur' => $databuyback['no_transaksi_buyback'],
-                                    'tgl_faktur' => date("Y-m-d h:i:s"),
-                                    'nama_supplier' => $this->request->getVar('inputcustomer'),
-                                    'qty' =>  $saldoakhir,
-                                    'jenis' => $row['jenis'],
-                                    'model' => $row['model'],
-                                    'keterangan' => $row['keterangan'],
-                                    'merek' => $row['merek'],
-                                    'kadar' => $row['kadar'],
-                                    'berat_murni' => $row['berat_murni'],
-                                    'berat' => $row['berat'],
-                                    'nilai_tukar' =>  $row['nilai_tukar'],
-                                    'ongkos' => $row['ongkos'],
-                                    'harga_beli' => $row['harga_beli'],
-                                    'total_harga' => $row['total_harga'],
-                                    'gambar' =>  $row['nama_img'],
-                                ]);
-                            }
-                            $this->modeldetailkartustock->save([
-                                // 'id_detail_kartustock' => $datadetailkartu['id_detail_kartustock'],
-                                'barcode' => $row['kode'],
-                                'id_karyawan' => $session->get('id_user'),
-                                'status' => 'Keluar',
-                                'no_faktur' => $databuyback['no_transaksi_buyback'],
-                                'tgl_faktur' => $databuyback['created_at'],
-                                'nama_customer' => $row['no_nota'],
-                                'saldo' => $saldoakhir,
-                                'masuk' => (substr($row['kode'], 0, 1) == 4) ? $row['berat'] : $row['qty'],
-                                'keluar' => 0,
-                                'jenis' => $row['jenis'],
-                                'model' => $row['model'],
-                                'keterangan' => $row['keterangan'],
-                                'merek' => $row['merek'],
-                                'kadar' => $row['kadar'],
-                                'berat' => $row['berat'],
-                                'nilai_tukar' =>  $row['nilai_tukar'],
-                                'harga_beli' => $row['harga_beli'],
-                                'total_harga' => $row['total_harga'],
-                                'gambar' =>  $row['nama_img'],
-                            ]);
-                            $this->modelkartustock->save([
-                                'id_kartustock' => $datakartu['id_kartustock'],
-                                'id_karyawan' => $session->get('id_user'),
-                                'total_masuk' => $this->modeldetailkartustock->SumMasukKartu($row['kode']),
-                                'total_keluar' => $this->modeldetailkartustock->SumKeluarKartu($row['kode']),
-                                'saldo_akhir' => $saldoakhir,
-                            ]);
                         }
+                        $this->modeldetailtransaksi->save([
+                            'tanggal_transaksi' => date("Y-m-d H:i:s"),
+                            'id_karyawan' => $session->get('id_user'),
+                            'pembayaran' => $this->request->getVar('pembayaran'),
+                            'keterangan' => $databuyback['no_transaksi_buyback'],
+                            'id_akun_biaya' => 8,
+                            'masuk' => 0,
+                            'keluar' =>  $totalvar,
+                            'nama_bank' => ($this->request->getVar('namabank')) ? $this->request->getVar('namabank') : null,
+                        ]);
+                        $this->BiayaHarianMaster($saldobiaya['id_transaksi'], $session);
+
+
+
+                        $msg = 'asd';
+                    } else {
+                        $msg = [
+                            'error' => [
+                                'bayar' => 'Bayar Lebih / Kurang',
+                            ]
+                        ];
                     }
-                    $msg = 'asd';
                 } else {
                     $msg = [
                         'error' => [
-                            'bayar' => 'Bayar Lebih / Kurang',
+                            'bayar' => 'Saldo Biaya Kurang',
                         ]
                     ];
                 }
@@ -639,11 +666,11 @@ class BuybackCust extends BaseController
                             'kadar' =>   $this->request->getVar('kadar'),
                             'nilai_tukar' => $this->request->getVar('nilai_tukar'),
                             'merek' => $this->request->getVar('merek'),
-                            'cara_pembayaran' => $this->request->getVar('pembayaran'),
                             'total_harga' => $totalharga,
-                            'nama_bank' => $this->request->getVar('namabank'),
-                            'tunai' => $this->request->getVar('tunai'),
-                            'transfer' => $this->request->getVar('transfer'),
+                            // 'cara_pembayaran' => $this->request->getVar('pembayaran'),
+                            // 'nama_bank' => $this->request->getVar('namabank'),
+                            // 'tunai' => $this->request->getVar('tunai'),
+                            // 'transfer' => $this->request->getVar('transfer'),
                             'no_nota' => 'NoNota',
                             'status_proses' => 'Murni'
                         ]);
@@ -667,11 +694,11 @@ class BuybackCust extends BaseController
                             'kadar' =>   $this->request->getVar('kadar'),
                             'nilai_tukar' => $this->request->getVar('nilai_tukar'),
                             'merek' => $this->request->getVar('merek'),
-                            'cara_pembayaran' => $this->request->getVar('pembayaran'),
                             'total_harga' => $totalharga,
-                            'nama_bank' => $this->request->getVar('namabank'),
-                            'tunai' => $this->request->getVar('tunai'),
-                            'transfer' => $this->request->getVar('transfer'),
+                            // 'cara_pembayaran' => $this->request->getVar('pembayaran'),
+                            // 'nama_bank' => $this->request->getVar('namabank'),
+                            // 'tunai' => $this->request->getVar('tunai'),
+                            // 'transfer' => $this->request->getVar('transfer'),
                             'no_nota' => 'NoNota',
                             'status_proses' => 'Murni'
                         ]);
@@ -722,11 +749,11 @@ class BuybackCust extends BaseController
                         'kadar' =>   $this->request->getVar('kadar'),
                         'nilai_tukar' => $this->request->getVar('nilai_tukar'),
                         'merek' => $this->request->getVar('merek'),
-                        'cara_pembayaran' => $this->request->getVar('pembayaran'),
                         'total_harga' => $totalharga,
-                        'nama_bank' => $this->request->getVar('namabank'),
-                        'tunai' => $this->request->getVar('tunai'),
-                        'transfer' => $this->request->getVar('transfer'),
+                        // 'cara_pembayaran' => $this->request->getVar('pembayaran'),
+                        // 'nama_bank' => $this->request->getVar('namabank'),
+                        // 'tunai' => $this->request->getVar('tunai'),
+                        // 'transfer' => $this->request->getVar('transfer'),
                         'no_nota' => 'NoNota',
                         'status_proses' => $this->request->getVar('status_proses')
                     ]);

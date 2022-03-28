@@ -11,7 +11,8 @@ use App\Models\ModelDetailPenjualan;
 use App\Models\ModelKartuStock;
 use App\Models\ModelDetailKartuStock;
 use App\Models\ModelBank;
-
+use App\Models\ModelTransaksi;
+use App\Models\ModelDetailTransaksi;
 use CodeIgniter\Model;
 use CodeIgniter\Validation\Rules;
 use Faker\Provider\ar_EG\Person;
@@ -42,6 +43,8 @@ class Barangkeluar extends BaseController
         $this->modelkartustock = new ModelKartuStock();
         $this->modeldetailkartustock = new ModelDetailKartuStock();
         $this->modelbank = new ModelBank();
+        $this->modeldetailtransaksi = new ModelDetailTransaksi();
+        $this->modeltransaksi = new ModelTransaksi();
     }
 
     public function DataPenjualan()
@@ -835,8 +838,25 @@ class Barangkeluar extends BaseController
                             'saldo_akhir' => $saldoakhir,
                         ]);
                     }
-                }
+                    $tunai = ($this->request->getVar('tunai')) ? $this->request->getVar('tunai') : 0;
+                    $transfer = ($this->request->getVar('transfer')) ? $this->request->getVar('transfer') : 0;
+                    $debitcc = ($this->request->getVar('debitcc')) ? $this->request->getVar('debitcc') : 0;
+                    $pembulatan = ($this->request->getVar('pembulatan')) ? $this->request->getVar('pembulatan') : 0;
 
+                    $totalvar = ($tunai + $transfer + $debitcc) - $pembulatan;
+                    $saldobiaya = $this->modeltransaksi->getTransaksi();
+                    $this->modeldetailtransaksi->save([
+                        'tanggal_transaksi' => date("Y-m-d H:i:s"),
+                        'id_karyawan' => $session->get('id_user'),
+                        'pembayaran' => $this->request->getVar('pembayaran'),
+                        'keterangan' => $datapenjualan['no_transaksi_jual'],
+                        'id_akun_biaya' => 26,
+                        'masuk' => $totalvar,
+                        'keluar' =>  0,
+                        'nama_bank' => ($this->request->getVar('namabank')) ? $this->request->getVar('namabank') : null,
+                    ]);
+                    $this->BiayaHarianMaster($saldobiaya['id_transaksi'], $session);
+                }
                 echo json_encode($msg);
             } else {
                 echo json_encode('error');

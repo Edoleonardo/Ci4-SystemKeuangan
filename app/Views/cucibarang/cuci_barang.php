@@ -90,28 +90,44 @@
     <section class="content">
         <div class="row">
             <div class="col-6">
-                <div class="card" id="tblcard">
+                <div class="card">
                     <!-- /.card-header -->
-                    <table class="table text-nowrap" id="tblheader">
-                        <tr>
-                            <td>Tanggal Cuci :</td>
-                            <td>
-                                <?= $datamastercuci['tanggal_cuci'] ?>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td> Total Berat cuci :</td>
-                            <td>
-                                <?= $datamastercuci['total_berat'] ?> g
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Jumlah Barang :</td>
-                            <td>
-                                <?= $datamastercuci['jumlah_barang'] ?>
-                            </td>
-                        </tr>
-                    </table>
+                    <div class="table-responsive" id="tblcard">
+                        <table class="table text-nowrap" id="tblheader">
+                            <tr>
+                                <td>Tanggal Cuci :</td>
+                                <td>
+                                    <?= substr($datamastercuci['tanggal_cuci'], 0, 10) ?>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td> Total Berat cuci :</td>
+                                <td>
+                                    <?= $datamastercuci['total_berat'] ?> g
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Jumlah Barang :</td>
+                                <td>
+                                    <?= $datamastercuci['jumlah_barang'] ?>
+                                </td>
+                            </tr>
+                            <?php if ($datamastercuci['status_dokumen'] == 'Selesai') : ?>
+                                <tr>
+                                    <td>Pembayaran :</td>
+                                    <td>
+                                        <?= $datamastercuci['pembayaran'] ?>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Onkos :</td>
+                                    <td>
+                                        <?= number_format($datamastercuci['harga_cuci'], 0, ',', '.') ?>
+                                    </td>
+                                </tr>
+                            <?php endif; ?>
+                        </table>
+                    </div>
                 </div>
                 <!-- /.card -->
             </div>
@@ -302,7 +318,7 @@
                 <form action="/selesaicuci" name="selesaicuci" id="selesaicuci" class="selesaicuci" method="post">
                     <?= csrf_field(); ?>
                     <div class="row">
-                        <div class="col-3">
+                        <div class="col-4">
                             <input type="hidden" name="dateidcuci" id="dateidcuci" value="<?= $datamastercuci['id_date_cuci'] ?>">
                             <div class="form-group" style="margin: 1mm;">
                                 <label>Tanggal Cuci</label>
@@ -311,7 +327,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-3">
+                        <div class="col-4">
                             <div class="form-group" style="margin: 1mm;">
                                 <label>Keterangan</label>
                                 <input type="text" class="form-control keterangan" id="keterangan" name="keterangan" placeholder="Masukan Keterangan">
@@ -319,7 +335,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-sm-3">
+                        <div class="col-sm-4">
                             <!-- text input -->
                             <div class="form-group">
                                 <label>Nama Tukang</label>
@@ -332,12 +348,31 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-3">
+                    </div>
+                    <div class="row">
+                        <div class="col-4">
                             <div class="form-group">
                                 <label>Ongkos</label>
                                 <input type="number" id="harga_cuci" name="harga_cuci" class="form-control" placeholder="Masukan Nomor Harga Cuci">
                                 <div id="validationServerUsernameFeedback" class="invalid-feedback harga_cucimsg">
                                 </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <!-- text input -->
+                            <div class="form-group">
+                                <label>Pembayaran</label>
+                                <select onchange=" myPembayaran()" name="pembayaran" id="pembayaran" class="form-control pembayaran" placeholder="Masukan Harga Beli">
+                                    <option value="Tunai">Tunai</option>
+                                    <option value="Transfer">Transfer</option>
+                                </select>
+                                <div id="validationServerUsernameFeedback" class="invalid-feedback pembayaranmsg">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-3">
+                            <!-- text input -->
+                            <div class="form-group namabankhtml">
                             </div>
                         </div>
                     </div>
@@ -449,6 +484,15 @@
 
 </footer>
 <script type="text/javascript">
+    function myPembayaran() {
+        const carabyr = document.getElementById('pembayaran').value
+        const nmbank = $('.namabankhtml')
+        nmbank[0].innerHTML = ''
+        var NamaBank = '<label>Nama Bank Debit/CC</label><select type="text" id="namabank" name="namabank" class="form-control" placeholder="Masukan Nama Bank"><?php foreach ($bank as $m) : ?><option value="<?= $m['nama_bank'] ?>"><?= $m['nama_bank'] ?> </option><?php endforeach; ?></select><div id="validationServerUsernameFeedback" class="invalid-feedback namabankmsg"></div>'
+        if (carabyr == 'Transfer') {
+            nmbank[0].innerHTML = NamaBank
+        }
+    }
     $('.updatecuci').submit(function(e) {
         e.preventDefault()
         Swal.fire({
@@ -775,7 +819,7 @@
                                 if (hasil.error.data) {
                                     Swal.fire({
                                         icon: 'warning',
-                                        title: 'Tidak ada data',
+                                        title: hasil.error.data,
                                     })
                                 }
                             } else {

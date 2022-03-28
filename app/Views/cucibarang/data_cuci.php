@@ -46,7 +46,7 @@
                                 <thead>
                                     <tr>
                                         <th>Nomor Cuci</th>
-                                        <th>model</th>
+                                        <th>Keterangan</th>
                                         <th>Total Berat</th>
                                         <th>Detail</th>
                                     </tr>
@@ -70,7 +70,7 @@
                                 <tfoot>
                                     <tr>
                                         <th>Kode</th>
-                                        <th>model</th>
+                                        <th>Keterangan</th>
                                         <th>Berat Murni</th>
                                         <th>Detail</th>
                                     </tr>

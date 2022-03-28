@@ -179,8 +179,9 @@ $routes->POST('/insertukang', ($session->get('role')) ? 'MasterInput::InsertTuka
 $routes->get('/isidata', ($session->get('role')) ? 'MasterInput::DataMaster' : 'Login::Login');
 // }
 
-
-
+//----------------------------------Transaksi-------------------------------------
+$routes->get('/transaksiharian', ($session->get('role')) ? 'Transaksi::DataTransaksi' : 'Login::Login');
+$routes->POST('/tambahinput', ($session->get('role')) ? 'Transaksi::TambahInput' : 'Login::Login');
 
 /*
  * --------------------------------------------------------------------

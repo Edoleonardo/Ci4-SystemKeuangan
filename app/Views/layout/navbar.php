@@ -188,6 +188,12 @@
                                 <p>Kartu Stock</p>
                             </a>
                         </li>
+                        <li class="nav-item">
+                            <a href="/transaksiharian" class="nav-link ">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Transaksi Harian</p>
+                            </a>
+                        </li>
                     </ul>
                 </li>
                 <li class="nav-item menu-open">

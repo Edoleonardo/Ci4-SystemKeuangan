@@ -10,7 +10,7 @@ class ModelCuci extends Model
     protected $table = 'tbl_cuci';
     protected $primaryKey = 'id_cuci';
     protected $useTimestamps = true;
-    protected $allowedFields = ['id_date_cuci', 'id_karyawan', 'nama_tukang', 'no_cuci', 'keterangan', 'total_berat', 'jumlah_barang', 'tanggal_cuci', 'status_dokumen', 'harga_cuci', 'status_proses'];
+    protected $allowedFields = ['id_date_cuci', 'pembayaran', 'nama_bank', 'id_karyawan', 'nama_tukang', 'no_cuci', 'keterangan', 'total_berat', 'jumlah_barang', 'tanggal_cuci', 'status_dokumen', 'harga_cuci', 'status_proses'];
 
     public function getDataCuciAll($id = false)
     {

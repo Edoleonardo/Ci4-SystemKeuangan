@@ -390,9 +390,10 @@ class Barangmasuk extends BaseController
                     ]
                 ],
                 'harga_beli' => [
-                    'rules' => 'required',
+                    'rules' => 'required|greater_than[0]',
                     'errors' => [
                         'required' => 'Berat Bersih Harus di isi',
+                        'greater_than' => 'Tidak Boleh 0'
                     ]
                 ],
                 'ongkos' => [
@@ -476,10 +477,10 @@ class Barangmasuk extends BaseController
             'id_karyawan' => $session->get('id_user'),
             // 'no_faktur_supp' => '-',
             'no_transaksi' => $notransaksi,
-            'tgl_faktur' => date('Y-m-d h:i:s'),
+            'tgl_faktur' => date('Y-m-d H:i:s'),
             // 'total_berat_murni' => 0,
             'byr_berat_murni' => 0,
-            'tgl_jatuh_tempo' => date('Y-m-d h:i:s'),
+            'tgl_jatuh_tempo' => date('Y-m-d H:i:s'),
             'cara_pembayaran' => 'Bayar Nanti',
             'total_bayar' => 0,
             'status_dokumen' => 'Draft'
@@ -568,9 +569,10 @@ class Barangmasuk extends BaseController
                         ]
                     ],
                     'harga_beli' => [
-                        'rules' => 'required',
+                        'rules' => 'required|greater_than[0]',
                         'errors' => [
                             'required' => 'Berat Bersih Harus di isi',
+                            'greater_than' => 'tidak boleh 0'
                         ]
                     ],
                     'ongkos' => [
@@ -619,9 +621,10 @@ class Barangmasuk extends BaseController
                         ]
                     ],
                     'harga_beli' => [
-                        'rules' => 'required',
+                        'rules' => 'required|greater_than[0]',
                         'errors' => [
                             'required' => 'Berat Bersih Harus di isi',
+                            'greater_than' => 'TIdak Boleh 0'
                         ]
                     ],
                     'ongkos' => [
@@ -728,10 +731,10 @@ class Barangmasuk extends BaseController
                     'nama_supplier' => $this->request->getVar('supplier'),
                     'no_faktur_supp' => $this->request->getVar('no_nota_supp'),
                     'no_transaksi' => $datapembelian1['no_transaksi'],
-                    'tgl_faktur' => $this->request->getVar('tanggal_nota_sup') . ' ' . date('h:i:s'),
+                    'tgl_faktur' => $this->request->getVar('tanggal_nota_sup') . ' ' . date('H:i:s'),
                     'total_berat_murni' => $this->request->getVar('total_berat_m'),
                     'byr_berat_murni' => $this->request->getVar('total_berat_m'),
-                    'tgl_jatuh_tempo' => $this->request->getVar('tanggal_tempo') . ' ' . date('h:i:s'),
+                    'tgl_jatuh_tempo' => $this->request->getVar('tanggal_tempo') . ' ' . date('H:i:s'),
                     'cara_pembayaran' => 'Bayar Nanti',
                     'total_bayar' => $this->detailbeli->SumDataDetail($session->get('date_id')),
                     'status_dokumen' => 'Draft'

@@ -9,6 +9,9 @@ use CodeIgniter\HTTP\IncomingRequest;
 use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\ResponseInterface;
 use Psr\Log\LoggerInterface;
+use App\Models\ModelTransaksi;
+use App\Models\ModelDetailTransaksi;
+
 
 /**
  * Class BaseController
@@ -41,6 +44,12 @@ class BaseController extends Controller
     /**
      * Constructor.
      */
+
+    public function __construct()
+    {
+        $this->modeldetailtransaksi = new ModelDetailTransaksi();
+        $this->modeltransaksi = new ModelTransaksi();
+    }
     public function initController(RequestInterface $request, ResponseInterface $response, LoggerInterface $logger)
     {
         // Do Not Edit This Line
@@ -51,7 +60,16 @@ class BaseController extends Controller
         // E.g.: $this->session = \Config\Services::session();
         session();
     }
-    public function asd($as)
+    public function BiayaHarianMaster($id, $session)
     {
+        $sumkeluar = $this->modeldetailtransaksi->SumTotalKeluar();
+        $summasuk = $this->modeldetailtransaksi->SumTotalMasuk();
+        $this->modeltransaksi->save([
+            'id_transaksi' => $id,
+            'id_karyawan' => $session->get('id_user'),
+            'total_keluar' => $sumkeluar['keluar'],
+            'total_masuk' => $summasuk['masuk'],
+            'saldo_akhir' => $summasuk['masuk'] - $sumkeluar['keluar'],
+        ]);
     }
 }
