@@ -1,6 +1,5 @@
 <?= $this->extend('layout/template'); ?>
 <?= $this->section('content') ?>
-<script type="text/javascript" src="/js/jquery.js"></script>
 <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <style>
     .table>tbody>tr>* {
@@ -54,8 +53,8 @@
                         <table class="table table-striped">
                             <tbody>
                                 <tr>
-                                    <td>Id date</td>
-                                    <td><?= $datapembelian['id_date_pembelian'] ?></td>
+                                    <td>Supplier</td>
+                                    <td><?= $datapembelian['nama_supp'] ?></td>
                                 </tr>
                                 <tr>
                                     <td>No Pembayaran</td>

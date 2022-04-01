@@ -54,9 +54,14 @@
                                             <td>
                                                 <?php if ($row['status_dokumen'] == 'Draft') { ?>
                                                     <a type="button" href="draftpenjualan/<?= $row['id_date_penjualan'] ?>" class="btn btn-block btn-outline-danger btn-sm"><?= $row['status_dokumen'] ?></a>
-                                                <?php } else { ?>
-                                                    <a type="button" href="/detailpenjualan/<?= $row['id_date_penjualan'] ?>" class="btn btn-block btn-outline-info btn-sm">Detail</a>
-                                                <?php } ?>
+                                                    <?php } else {
+                                                    if ($row['status_dokumen'] == 'Retur') :
+                                                    ?>
+                                                        <a type="button" href="/detailpenjualan/<?= $row['id_date_penjualan'] ?>" class="btn btn-block btn-outline-danger btn-sm"><?= $row['status_dokumen'] ?></a>
+                                                    <?php else : ?>
+                                                        <a type="button" href="/detailpenjualan/<?= $row['id_date_penjualan'] ?>" class="btn btn-block btn-outline-info btn-sm">Detail</a>
+                                                <?php endif;
+                                                } ?>
                                             </td>
                                         </tr>
                                     <?php endforeach; ?>

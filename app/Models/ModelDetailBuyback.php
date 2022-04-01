@@ -51,6 +51,10 @@ class ModelDetailBuyback extends Model
     {
         return $this->where(['kode' => $id])->first();
     }
+    public function getCheckReturCust($id)
+    {
+        return $this->where(['id_detail_penjualan' => $id])->first();
+    }
     public function getDataDetailKode($id)
     {
         return $this->where(['id_detail_buyback' => $id])->first();

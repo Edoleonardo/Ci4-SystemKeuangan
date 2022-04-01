@@ -81,7 +81,7 @@ function barcodegenerate2($kode)
           <td><?= number_format($row['total_harga'], '2', ',', '.') ?></td>
         </tr>
 
-      <?php $total = $total +  $row['total_harga'] + $row['ongkos'];
+      <?php $total = $total +  $row['total_harga'];
         $ongkos = $ongkos + $row['ongkos'];
         $i++;
       endforeach; ?>

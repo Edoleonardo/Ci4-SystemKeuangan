@@ -36,6 +36,10 @@ class ModelDetailPenjualan extends Model
     {
         return $this->where(['id_detail_penjualan' => $id])->first();
     }
+    public function getDetailRetur($id) //pentingg jangan di hapus untuk retur
+    {
+        return $this->where(['id_date_penjualan' => $id])->first();
+    }
     public function getDetailCheckJual($kode, $id)
     {
         $db = db_connect();

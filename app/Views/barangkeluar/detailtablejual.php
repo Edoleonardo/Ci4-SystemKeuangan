@@ -19,6 +19,7 @@
         <td><?= $row['kadar'] ?></td>
         <td><?= $row['nilai_tukar'] ?></td>
         <td><?= $row['merek'] ?></td>
+        <td><?= number_format($row['total_harga'], 0, '.', ',') ?></td>
         <td><button type='button' class='btn btn-block bg-gradient-danger' onclick="hapus(<?= $row['id_detail_penjualan'] ?>,<?= $row['id_date_penjualan'] ?>)"><i class='fas fa-trash'></i></button></td>
     </tr>
 <?php endforeach; ?>

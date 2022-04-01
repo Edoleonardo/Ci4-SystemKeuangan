@@ -13,6 +13,7 @@ use App\Models\ModelTransaksi;
 use App\Models\ModelDetailTransaksi;
 
 
+
 /**
  * Class BaseController
  *
@@ -70,6 +71,16 @@ class BaseController extends Controller
             'total_keluar' => $sumkeluar['keluar'],
             'total_masuk' => $summasuk['masuk'],
             'saldo_akhir' => $summasuk['masuk'] - $sumkeluar['keluar'],
+        ]);
+    }
+    public function TotalHargaJual($idate, $session)
+    {
+        $datajual = $this->penjualan->getDataPenjualan($idate);
+        $totalharga = $this->modeldetailpenjualan->SumDataDetailJual($idate);
+        $this->penjualan->save([
+            'id_penjualan' => $datajual['id_penjualan'],
+            'id_karyawan' => $session->get('id_user'),
+            'total_harga' => $totalharga,
         ]);
     }
 }

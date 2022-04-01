@@ -104,7 +104,7 @@
                                                             <label>Nama Supplier</label>
                                                             <select name="supplier" class="form-control" id="supplier" name="supplier">
                                                                 <?php foreach ($supplier as $m) : ?>
-                                                                    <option value="<?= $m['nama_supp'] ?>" <?= (isset($datapembelian['nama_supplier']) == $m['nama_supp']) ? ($datapembelian['nama_supplier'] == $m['nama_supp']) ? 'selected' : '' : ''; ?>><?= $m['nama_supp'] ?> </option>
+                                                                    <option value="<?= $m['id_supplier'] ?>" <?= (isset($datapembelian['id_supplier']) == $m['nama_supp']) ? ($datapembelian['id_supplier'] == $m['nama_supp']) ? 'selected' : '' : ''; ?>><?= $m['nama_supp'] ?> </option>
                                                                 <?php endforeach; ?>
                                                             </select>
                                                         </div>

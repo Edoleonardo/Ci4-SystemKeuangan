@@ -151,6 +151,7 @@
                                     <th>Kadar</th>
                                     <th>Nilai Tukar</th>
                                     <th>Merek</th>
+                                    <th>Total Harga</th>
                                     <th>Delete</th>
                                 </tr>
                             </thead>
@@ -613,7 +614,7 @@
             },
             url: "<?php echo base_url('tampilpenjualan'); ?>",
             success: function(result) {
-                var totalharga = parseFloat(result.totalbersih.total_harga) + parseFloat(result.totalongkos.ongkos)
+                var totalharga = parseFloat(result.totalbersih.total_harga)
                 $('#datajual').html(result.data)
                 $('#totalbersih01').html(totalharga.toString().replace(/\B(?=(\d{3})+(?!\d))/g, "."))
                 $('#totalberatbersihhtml01').html(pembulatankoma(result.totalberatbersih.berat_murni))
@@ -688,6 +689,7 @@
                             $('.btnbayar').attr('type', 'submit')
                         },
                         success: function(result) {
+                            console.log(result)
                             if (result != 'error') {
                                 if (result.error) {
                                     if (result.error.debitcc) {
@@ -749,8 +751,9 @@
                                         confirmButtonColor: '#3085d6',
                                         confirmButtonText: 'OK',
                                         allowOutsideClick: false
-                                    }).then((result) => {
-                                        if (result.isConfirmed) {
+                                    }).then((choose) => {
+                                        if (choose.isConfirmed) {
+                                            // console.log(result)
                                             // $('#modal-bayar').modal('toggle');
                                             // $("#refreshpembayaran").load("/draftpenjualan/" + document.getElementById('dateid').value + " #refreshpembayaran");
                                             // $("#refreshtombol").load("/draftpenjualan/" + document.getElementById('dateid').value + " #refreshtombol");
@@ -949,8 +952,8 @@
         const totalbersih = document.getElementById('totalbersih').innerHTML
         totalbersihval = parseFloat(totalbersih.replaceAll('.', ''))
         hasil = totalbersihval - (debitcc + bulat + tunai + transfer)
-        document.getElementById('debitccbyr').innerHTML = debitcc.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
-        document.getElementById('totalbersih1').innerHTML = hasil.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
+        document.getElementById('debitccbyr').innerHTML = Math.round(debitcc).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
+        document.getElementById('totalbersih1').innerHTML = Math.round(hasil).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
 
     }
 
@@ -978,8 +981,8 @@
         const totalbersih = document.getElementById('totalbersih').innerHTML
         totalbersihval = parseFloat(totalbersih.replaceAll('.', ''))
         hasil = totalbersihval - (debitcc + bulat + tunai + transfer)
-        document.getElementById('transferbyr').innerHTML = transfer.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
-        document.getElementById('totalbersih1').innerHTML = hasil.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
+        document.getElementById('transferbyr').innerHTML = Math.round(transfer).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
+        document.getElementById('totalbersih1').innerHTML = Math.round(hasil).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
     }
 
     function byrtunai() {
@@ -1006,8 +1009,8 @@
         const totalbersih = document.getElementById('totalbersih').innerHTML
         totalbersihval = parseFloat(totalbersih.replaceAll('.', ''))
         hasil = totalbersihval - (debitcc + bulat + tunai + transfer)
-        document.getElementById('tunaibyr').innerHTML = tunai.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
-        document.getElementById('totalbersih1').innerHTML = hasil.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
+        document.getElementById('tunaibyr').innerHTML = Math.round(tunai).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
+        document.getElementById('totalbersih1').innerHTML = Math.round(hasil).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
 
     }
 

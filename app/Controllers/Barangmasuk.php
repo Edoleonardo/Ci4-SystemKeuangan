@@ -473,7 +473,7 @@ class Barangmasuk extends BaseController
         $notransaksi = $this->NoTransaksiGenerate();
         $this->datapembelian->save([
             'id_date_pembelian' => $session->get('date_id'),
-            'nama_supplier' => '-',
+            'id_supplier' => '-',
             'id_karyawan' => $session->get('id_user'),
             // 'no_faktur_supp' => '-',
             'no_transaksi' => $notransaksi,
@@ -702,6 +702,9 @@ class Barangmasuk extends BaseController
                 if ($kode == 3) {
                     $totalharga =  $beratmurni *  $harga * $qty;
                 }
+                if ($kode == 6) {
+                    $totalharga = $harga * $qty;
+                }
 
                 $this->detailbeli->save([
                     'created_at' => $this->request->getVar('tanggal_input'),
@@ -728,7 +731,7 @@ class Barangmasuk extends BaseController
                     'id_karyawan' => $session->get('id_user'),
                     'created_at' => $this->request->getVar('tanggal_input'),
                     'id_date_pembelian' => $session->get('date_id'),
-                    'nama_supplier' => $this->request->getVar('supplier'),
+                    'id_supplier' => $this->request->getVar('supplier'),
                     'no_faktur_supp' => $this->request->getVar('no_nota_supp'),
                     'no_transaksi' => $datapembelian1['no_transaksi'],
                     'tgl_faktur' => $this->request->getVar('tanggal_nota_sup') . ' ' . date('H:i:s'),
@@ -935,7 +938,7 @@ class Barangmasuk extends BaseController
     {
 
         $data = [
-            'datapembelian' => $this->datapembelian->getPembelianSupplier($id),
+            'datapembelian' => $this->datapembelian->getPembelianSupplierJoin($id),
             'tampildata' =>  $this->detailbeli->getDetailAll($id),
             'tampil24k' =>  $this->datastock->getKodeBahan24k(),
             'tampilretur' =>  $this->modelbuyback->getDataRetur(),
@@ -950,7 +953,6 @@ class Barangmasuk extends BaseController
 
 
         ];
-
         return view('barangmasuk/detail_pembelian_supplier', $data);
     }
     function ModalBarcode()
@@ -1003,7 +1005,7 @@ class Barangmasuk extends BaseController
                     $this->datapembelian->save([
                         'id_pembelian' =>  $datapembelian['id_pembelian'],
                         'created_at' => $this->request->getVar('tanggal_input'),
-                        'nama_supplier' => $this->request->getVar('supplier'),
+                        'id_supplier' => $this->request->getVar('supplier'),
                         'id_karyawan' => $session->get('id_user'),
                         'no_faktur_supp' => $this->request->getVar('no_nota_supp'),
                         'no_transaksi' => $datapembelian['no_transaksi'],
@@ -1028,7 +1030,7 @@ class Barangmasuk extends BaseController
                                 'status' => $this->StatusBarang(substr($row['kode'], 0, 1)),
                                 'no_faktur' => $datapembelian['no_faktur_supp'],
                                 'tgl_faktur' => $datapembelian['tgl_faktur'],
-                                'nama_supplier' => $datapembelian['nama_supplier'],
+                                'id_supplier' => $datapembelian['id_supplier'],
                                 'qty' => (substr($row['kode'], 0, 1) == 4) ? $row['qty'] : $row['qty'] + $datacheck['qty'],
                                 'jenis' => $row['jenis'],
                                 'model' => $row['model'],
@@ -1051,7 +1053,7 @@ class Barangmasuk extends BaseController
                                 'id_karyawan' => $session->get('id_user'),
                                 'no_faktur' => $datapembelian['no_faktur_supp'],
                                 'tgl_faktur' => $datapembelian['tgl_faktur'],
-                                'nama_customer' => $datapembelian['nama_supplier'],
+                                'nama_customer' => $datapembelian['id_supplier'],
                                 'saldo' => $saldoakhir,
                                 'masuk' => (substr($row['kode'], 0, 1) == 4) ? $row['berat'] : $row['qty'],
                                 'keluar' => 0,
@@ -1081,7 +1083,7 @@ class Barangmasuk extends BaseController
                                 'status' => $this->StatusBarang(substr($row['kode'], 0, 1)),
                                 'no_faktur' => $datapembelian['no_faktur_supp'],
                                 'tgl_faktur' => $datapembelian['tgl_faktur'],
-                                'nama_supplier' => $datapembelian['nama_supplier'],
+                                'id_supplier' => $datapembelian['id_supplier'],
                                 'qty' => $row['qty'],
                                 'jenis' => $row['jenis'],
                                 'model' => $row['model'],
@@ -1110,7 +1112,7 @@ class Barangmasuk extends BaseController
                                 'status' => 'Masuk',
                                 'no_faktur' => $datapembelian['no_faktur_supp'],
                                 'tgl_faktur' => $datapembelian['tgl_faktur'],
-                                'nama_customer' => $datapembelian['nama_supplier'],
+                                'nama_customer' => $datapembelian['id_supplier'],
                                 'saldo' => (substr($row['kode'], 0, 1) == 4) ? $row['berat'] : $row['qty'],
                                 'masuk' => (substr($row['kode'], 0, 1) == 4) ? $row['berat'] : $row['qty'],
                                 'keluar' => 0,
