@@ -102,6 +102,72 @@ class BuybackCust extends BaseController
         //---------------------------------------------------
         return redirect()->to('/draftbuyback/' . $dateidbuyback);
     }
+
+    public function UbahBerat()
+    {
+        if ($this->request->isAJAX()) {
+            $validation = \Config\Services::validation();
+            $session = session();
+            $valid = $this->validate([
+                'val' => [
+                    'rules' => 'required|numeric|greater_than[0]',
+                    'errors' => [
+                        'required' => 'Berat Harus di isi',
+                        'numeric' => 'Harus Number',
+                        'greater_than' => 'Tidak Boleh 0'
+                    ]
+                ],
+            ]);
+            if (!$valid) {
+                $msg = [
+                    'error' => [
+                        'val' => $validation->getError('val'),
+                    ]
+                ];
+                echo json_encode($msg);
+            } else {
+                $this->modeldetailbuyback->save([
+                    'id_detail_buyback' => $this->request->getVar('id'),
+                    'id_karyawan' => $session->get('id_user'),
+                    'berat' => $this->request->getVar('val')
+                ]);
+                $msg = 'berhasil berat';
+                echo json_encode($msg);
+            }
+        }
+    }
+    public function UbahKet()
+    {
+        if ($this->request->isAJAX()) {
+            $validation = \Config\Services::validation();
+            $session = session();
+            $valid = $this->validate([
+                'val' => [
+                    'rules' => 'required',
+                    'errors' => [
+                        'required' => 'Keterangan Harus di isi',
+                    ]
+                ],
+            ]);
+            if (!$valid) {
+                $msg = [
+                    'error' => [
+                        'val' => $validation->getError('val'),
+                    ]
+                ];
+                echo json_encode($msg);
+            } else {
+                $session = session();
+                $this->modeldetailbuyback->save([
+                    'id_detail_buyback' => $this->request->getVar('id'),
+                    'id_karyawan' => $session->get('id_user'),
+                    'keterangan' => $this->request->getVar('val')
+                ]);
+                $msg = 'berhasil keterangan';
+                echo json_encode($msg);
+            }
+        }
+    }
     public function DraftBuyback($id)
     {
         $databuyback = $this->modelbuyback->getDataBuyback($id);

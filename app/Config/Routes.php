@@ -123,6 +123,11 @@ $routes->get('/tampilcustbb', ($session->get('role')) ? 'BuybackCust::TampilCust
 $routes->get('/detailbuyback/(:any)', ($session->get('role')) ? 'BuybackCust::DetailBuyback/$1' : 'Login::Login');
 
 
+
+//-----------------------------ubah----------------------------------
+$routes->get('/ubahberat', ($session->get('role')) ? 'BuybackCust::UbahBerat' : 'Login::Login');
+$routes->get('/ubahket', ($session->get('role')) ? 'BuybackCust::UbahKet' : 'Login::Login');
+
 //-----------------Lebur--------------------------------------------
 $routes->get('/datalebur', ($session->get('role')) ? 'BarangLebur::HomeLebur' : 'Login::Login');
 $routes->get('/leburbarang', ($session->get('role')) ? 'BarangLebur::LeburBarang' : 'Login::Login');

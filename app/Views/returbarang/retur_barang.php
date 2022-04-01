@@ -176,13 +176,13 @@
                                                     <tr id="dataretur">
                                                         <!-- <td class="imgg"><img class="imgg" src="/img/<?= $row['nama_img'] ?>"></td> -->
                                                         <td><a href="#" onclick="openmodaldetail(<?= $row['id_detail_buyback'] ?>)"><?= $row['kode'] ?></a></td>
-                                                        <td><?= $row['jenis'] ?> <?= $row['model'] ?></td>
+                                                        <td><input type="text" onchange="UbahKet(this,<?= $row['id_detail_buyback'] ?>)" id="ubahketerangan" name="ubahketerangan" value="<?= $row['keterangan'] ?>"></td>
                                                         <td> <select name="status_proses" onchange="EditData(<?= $row['id_detail_buyback'] ?>,this)" class="form-control" id="status" name="status">
                                                                 <option value="Cuci">Cuci</option>
                                                                 <option selected value="Retur">Retur</option>
                                                                 <option value="Lebur">Lebur</option>
                                                             </select></td>
-                                                        <td><?= $row['berat'] ?></td>
+                                                        <td><input onchange="UbahBerat(this,<?= $row['id_detail_buyback'] ?>)" type="number" id="ubahberat" name="ubahberat" value="<?= $row['berat'] ?>"></td>
                                                         <td>
                                                             <a type="button" onclick="tambahbarangretur(<?= $row['id_detail_buyback'] ?>)" class="btn btn-block btn-outline-info btn-sm">Retur</a>
                                                         </td>
@@ -217,7 +217,7 @@
                                                     <tr id="akanretur">
                                                         <!-- <td class="imgg"><img class="imgg" src="/img/<?= $row['nama_img'] ?>"></td> -->
                                                         <td><?= $row['kode'] ?></td>
-                                                        <td><?= $row['jenis'] ?> <?= $row['model'] ?></td>
+                                                        <td><?= $row['keterangan'] ?></td>
                                                         <td><?= $row['berat'] ?></td>
                                                         <td>
                                                             <button type='button' class='btn btn-block bg-gradient-danger' onclick="hapus(<?= $row['id_detail_retur'] ?>)"><i class='fas fa-trash'></i></button>
@@ -385,6 +385,59 @@
 
 </footer>
 <script type="text/javascript">
+    function UbahBerat(val, id) {
+        $.ajax({
+            type: "get",
+            dataType: "json",
+            url: "<?php echo base_url('ubahberat'); ?>",
+            data: {
+                id: id,
+                val: val.value
+            },
+            success: function(hasil) {
+                // $('#detailmodelbarang').html(hasil.data)
+                if (hasil.error) {
+                    if (hasil.error.val) {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: hasil.error.val,
+                        })
+                    }
+                }
+            },
+            error: function(xhr, ajaxOptions, thrownError) {
+                alert(xhr.status + "\n" + xhr.responseText + "\n" + thrownError);
+            }
+        })
+    }
+
+    function UbahKet(val, id) {
+        $.ajax({
+            type: "get",
+            dataType: "json",
+            url: "<?php echo base_url('ubahket'); ?>",
+            data: {
+                id: id,
+                val: val.value
+            },
+            success: function(hasil) {
+                // $('#detailmodelbarang').html(hasil.data)
+                if (hasil.error) {
+                    if (hasil.error.val) {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: hasil.error.val,
+                        })
+                    }
+                }
+            },
+            error: function(xhr, ajaxOptions, thrownError) {
+                alert(xhr.status + "\n" + xhr.responseText + "\n" + thrownError);
+
+            }
+        })
+    }
+
     function ModalPrintRetur(id, dateid) {
         $.ajax({
             type: "GET",

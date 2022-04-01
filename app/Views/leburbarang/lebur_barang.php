@@ -193,6 +193,7 @@
                                                     <!-- <th>Gambar</th> -->
                                                     <th>Kode</th>
                                                     <th>Jenis</th>
+                                                    <th>Keterangan</th>
                                                     <th>Status</th>
                                                     <th>Kadar</th>
                                                     <th>Berat</th>
@@ -205,13 +206,14 @@
                                                         <!-- <td class="imgg"><img class="imgg" src="/img/<?= $row['nama_img'] ?>"></td> -->
                                                         <td><a href="#" onclick="openmodaldetail(<?= $row['id_detail_buyback'] ?>)"><?= $row['kode'] ?></a></td>
                                                         <td><?= $row['jenis'] ?></td>
+                                                        <td><input type="text" onchange="UbahKet(this,<?= $row['id_detail_buyback'] ?>)" id="ubahketerangan" name="ubahketerangan" value="<?= $row['keterangan'] ?>"></td>
                                                         <td> <select name="status_proses" onchange="EditData(<?= $row['id_detail_buyback'] ?>,this)" class="form-control" id="status" name="status">
                                                                 <option value="Cuci">Cuci</option>
                                                                 <option value="Retur">Retur</option>
                                                                 <option selected value="Lebur">Lebur</option>
                                                             </select></td>
                                                         <td><?= $row['kadar'] ?></td>
-                                                        <td><?= $row['berat'] ?></td>
+                                                        <td><input onchange="UbahBerat(this,<?= $row['id_detail_buyback'] ?>)" type="number" id="ubahberat" name="ubahberat" value="<?= $row['berat'] ?>"></td>
                                                         <td>
                                                             <a type="button" onclick="tambahbaranglebur(<?= $row['id_detail_buyback'] ?>)" class="btn btn-block btn-outline-info btn-sm">Lebur</a>
                                                         </td>
@@ -245,7 +247,7 @@
                                                     <tr id="akanlebur">
                                                         <!-- <td class="imgg"><img class="imgg" src="/img/<?= $row['nama_img'] ?>"></td> -->
                                                         <td><?= $row['kode'] ?></td>
-                                                        <td><?= $row['jenis'] ?> <?= $row['model'] ?></td>
+                                                        <td><?= $row['keterangan'] ?></td>
                                                         <td><?= $row['berat'] ?></td>
                                                         <td>
                                                             <button type='button' class='btn btn-block bg-gradient-danger' onclick="hapus(<?= $row['id_detail_lebur'] ?>)"><i class='fas fa-trash'></i></button>
@@ -560,6 +562,59 @@
 
 </div>
 <script type="text/javascript">
+    function UbahBerat(val, id) {
+        $.ajax({
+            type: "get",
+            dataType: "json",
+            url: "<?php echo base_url('ubahberat'); ?>",
+            data: {
+                id: id,
+                val: val.value
+            },
+            success: function(hasil) {
+                // $('#detailmodelbarang').html(hasil.data)
+                if (hasil.error) {
+                    if (hasil.error.val) {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: hasil.error.val,
+                        })
+                    }
+                }
+            },
+            error: function(xhr, ajaxOptions, thrownError) {
+                alert(xhr.status + "\n" + xhr.responseText + "\n" + thrownError);
+            }
+        })
+    }
+
+    function UbahKet(val, id) {
+        $.ajax({
+            type: "get",
+            dataType: "json",
+            url: "<?php echo base_url('ubahket'); ?>",
+            data: {
+                id: id,
+                val: val.value
+            },
+            success: function(hasil) {
+                // $('#detailmodelbarang').html(hasil.data)
+                if (hasil.error) {
+                    if (hasil.error.val) {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: hasil.error.val,
+                        })
+                    }
+                }
+            },
+            error: function(xhr, ajaxOptions, thrownError) {
+                alert(xhr.status + "\n" + xhr.responseText + "\n" + thrownError);
+
+            }
+        })
+    }
+
     function PilihBarcode(kode) {
         document.getElementById('barcode').value = kode
         $.ajax({
@@ -633,7 +688,6 @@
     }
 
     function hapus(id) {
-        console.log(id)
         $.ajax({
             type: "get",
             dataType: "json",
@@ -658,7 +712,6 @@
     function openmodaldetail(id) {
         $('#modal-detail').modal('toggle');
         detailbarang(id)
-        console.log(id)
     }
 
     function detailbarang(id) {
@@ -671,7 +724,6 @@
             },
             success: function(hasil) {
                 $('#detailmodelbarang').html(hasil.data)
-                console.log(hasil)
             },
             error: function(xhr, ajaxOptions, thrownError) {
                 alert(xhr.status + "\n" + xhr.responseText + "\n" + thrownError);
@@ -702,7 +754,6 @@
     };
 
     function tambahbaranglebur(kode) {
-        console.log(kode)
         $.ajax({
             type: "GET",
             dataType: "json",
@@ -713,7 +764,6 @@
             },
             success: function(result) {
                 refreshtbl()
-                console.log(result)
                 if (result == 'gagal') {
                     Swal.fire({
                         icon: 'warning',
@@ -802,7 +852,6 @@
                                     })
                                 }
                             } else {
-                                console.log(hasil)
                                 $('#total_berat').removeClass('is-invalid')
                                 $('.total_beratmsg').html('')
                                 $('#nilai_tukar').removeClass('is-invalid')
@@ -826,7 +875,7 @@
             })
 
         })
-        $(".modal").on("hidden.bs.modal", function() {
+        $("#modal-lg").on("hidden.bs.modal", function() {
             Webcam.reset('#my_camera')
         });
     })
@@ -852,7 +901,6 @@
             $(".image-tag").val(data_uri);
             Webcam.reset()
             // Webcam.attach('#my_camera');
-            // console.log($(".image-tag").val())
             document.getElementById('my_camera').innerHTML = '<img src="' + data_uri + '">'
         })
     }
