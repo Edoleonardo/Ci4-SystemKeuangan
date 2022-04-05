@@ -35,55 +35,39 @@
       <div class="row">
         <div class="col-12">
           <div class="card">
-            <!-- <div class="card-header ">
-              <button class="btn btn-app" data-toggle="modal" data-target="#modal-xl">
-                <i class="fas fa-plus"></i> Barang Baru
-              </button>
-              <a class="btn btn-app">
-                <i class="fas fa-print"></i> Print Barcode
-              </a>
-            </div> -->
-            <!-- /.card-header -->
+            <div class="card-body">
+              <div class="row">
+                <div class="col-3">
+                  <div class="form-group">
+                    <label>Filter Kode</label>
+                    <select name="kode" onchange="TampilBarang()" class="form-control" id="kode" name="kode">
+                      <option value="0" selected>Terbaru</option>
+                      <option value="1">Perhiasan Mas</option>
+                      <option value="2">Perhiasan Berlian</option>
+                      <option value="3">Logam Mulia (Antam, UBS, HWT)</option>
+                      <option value="4">Bahan Murni</option>
+                      <option value="5">Loose Diamond</option>
+                      <option value="6">Barang Dagang</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="col-3">
+                  <div class="form-group">
+                    <label>Filter Stock</label>
+                    <select name="stock" onchange="TampilBarang()" class="form-control" id="stock" name="stock">
+                      <option value="0">Semua</option>
+                      <option value="1">Belum Jual</option>
+                      <option value="2">Terjual</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="card">
             <div class="card-body table">
-              <table id="example1" class="table table-bordered table-striped tableasd">
-                <thead>
-                  <tr>
-                    <th>Gambar</th>
-                    <th>Id Barcode</th>
-                    <th>Jenis</th>
-                    <th>model</th>
-                    <th>qty</th>
-                    <th>kadar</th>
-                    <th>Aksi</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <?php foreach ($barang as $r) : ?>
-                    <tr>
-                      <td class="imgg"><img class="imgg" src="/img/<?= $r['gambar'] ?>" alt=""></td>
-                      <td><?= $r['barcode'] ?></td>
-                      <td><?= $r['jenis'] ?></td>
-                      <td><?= $r['model'] ?></td>
-                      <td><?= $r['qty'] ?></td>
-                      <td><?= $r['kadar'] ?></td>
-                      <td>
-                        <a type="button" href="detail/<?= $r['id_stock'] ?>" class="btn btn-block btn-outline-info btn-sm">Detail</a>
-                      </td>
-                    </tr>
-                  <?php endforeach; ?>
-                </tbody>
-                <tfoot>
-                  <tr>
-                    <th>Gambar</th>
-                    <th>Id Barcode</th>
-                    <th>Nama barang</th>
-                    <th>Jenis Barang</th>
-                    <th>Stock</th>
-                    <th>Harga</th>
-                    <th>Asksi</th>
-                  </tr>
-                </tfoot>
-              </table>
+              <div id="datatable">
+              </div>
             </div>
             <!-- /.card-body -->
           </div>
@@ -111,36 +95,27 @@
 </footer>
 
 <script>
-  // let timerInterval
-  // Swal.fire({
-  //   title: 'Auto close alert!',
-  //   html: 'I will close in <b></b> milliseconds.',
-  //   timer: 2000,
-  //   timerProgressBar: true,
-  //   didOpen: () => {
-  //     Swal.showLoading()
-  //     const b = Swal.getHtmlContainer().querySelector('b')
-  //     timerInterval = setInterval(() => {
-  //       b.textContent = Swal.getTimerLeft()
-  //     }, 100)
-  //   },
-  //   willClose: () => {
-  //     clearInterval(timerInterval)
-  //   }
-  // }).then((result) => {
-  //   /* Read more about handling dismissals below */
-  //   if (result.dismiss === Swal.DismissReason.timer) {
-  //     console.log('I was closed by the timer')
-  //   }
-  // })
-  $(function() {
-    $("#example1").DataTable({
-      "responsive": true,
-      "lengthChange": false,
-      "autoWidth": false,
-      "aaSorting": []
-      //"buttons": ["copy", "csv", "excel", "pdf", "print", "colvis", ]
-    }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
-  });
+  function TampilBarang() {
+    $.ajax({
+      type: "GET",
+      dataType: "json",
+      url: "<?php echo base_url('tampildatabarang'); ?>",
+      data: {
+        kode: $('#kode').val(),
+        stock: $('#stock').val(),
+      },
+      success: function(result) {
+        $('#datatable').html(result.databarang)
+
+      },
+      error: function(xhr, ajaxOptions, thrownError) {
+        alert(xhr.status + "\n" + xhr.responseText + "\n" + thrownError);
+      }
+    })
+  }
+
+  $(document).ready(function() {
+    TampilBarang()
+  })
 </script>
 <?= $this->endSection(); ?>

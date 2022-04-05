@@ -66,20 +66,20 @@ class Login extends BaseController
             } else {
                 $username = $this->request->getVar('username');
                 $password = $this->request->getVar('password');
-                if ($this->request->getVar('remember')) {
-                    setcookie("username", $username, time() + (10 * 365 * 24 * 60 * 60));
-                    setcookie("password", $password, time() + (10 * 365 * 24 * 60 * 60));
-                } else {
-                    if (isset($_COOKIE['username'])) {
-                        setcookie('username', '');
-                    }
-                    if (isset($_COOKIE['password'])) {
-                        setcookie('password', '');
-                    }
-                }
                 $check = $this->modellogin->getDatauserAll();
                 $data = $this->multi_array_search($check, array('username' => $username, 'password' =>  $password));
                 if ($data) {
+                    if ($this->request->getVar('remember')) {
+                        setcookie("username", $username, time() + (10 * 365 * 24 * 60 * 60));
+                        setcookie("password", $password, time() + (10 * 365 * 24 * 60 * 60));
+                    } else {
+                        if (isset($_COOKIE['username'])) {
+                            setcookie('username', '');
+                        }
+                        if (isset($_COOKIE['password'])) {
+                            setcookie('password', '');
+                        }
+                    }
                     $session = session();
                     $session->set('role', $check[$data[0]]['role']);
                     $session->set('id_user', $check[$data[0]]['id_pegawai']);

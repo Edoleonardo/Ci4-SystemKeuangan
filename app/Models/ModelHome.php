@@ -23,15 +23,24 @@ class ModelHome extends Model
             // return $data->getResult('array');
 
             $db = db_connect();
-            $data = $db->query('select * from tbl_stock where qty > 0');
+            $data = $db->query('select * from tbl_stock order by created_at DESC limit 10');
             return $data->getResult('array');
         }
         return $this->where(['id_stock' => $id])->first();
     }
-    public function getBarangSold()
+
+    public function getBarangFilter($id, $stock)
     {
         $db = db_connect();
-        $data = $db->query('select * from tbl_stock where qty = 0');
+        if ($stock == 0) {
+            $data = $db->query('select * from tbl_stock where substr(barcode,1,1) = ' . $id . ' order by created_at DESC');
+        }
+        if ($stock == 1) {
+            $data = $db->query('select * from tbl_stock where substr(barcode,1,1) = ' . $id . ' AND qty > 0 order by created_at DESC');
+        }
+        if ($stock == 2) {
+            $data = $db->query('select * from tbl_stock where substr(barcode,1,1) = ' . $id . '  AND qty = 0  order by created_at DESC');
+        }
         return $data->getResult('array');
     }
     public function getBarangkode($id)
@@ -46,9 +55,18 @@ class ModelHome extends Model
     }
     public function CheckData($id)
     {
+        $db = db_connect();
+        $data = $db->query('select * from tbl_stock where barcode = ' . $id . ' and substr(barcode,1,1) = 4 ');
+        // return $this->where(['barcode' => $id])->first();
         // $db = db_connect();
-        // $data = $db->query('select * from tbl_stock where barcode = ' . $id . ' ');
-        return $this->where(['barcode' => $id])->first();
+        // $data = $db->query('select * from tbl_stock where substr(barcode,1,1) = 4 AND barcode = ' . $id . ' ');
+        // $data = $this->get();
+        if ($data->getResult('array')) {
+            $data = $data->getResult('array')[0];
+        } else {
+            $data = $data->getResult('array');
+        }
+        return $data;
     }
     public function getKodeStock($id)
     {
@@ -61,7 +79,7 @@ class ModelHome extends Model
     public function getKodeBahan24k()
     {
         $db = db_connect();
-        $data = $db->query('select * from tbl_stock where substr(barcode,1,1) = 3 or substr(barcode,1,1) = 4 ');
+        $data = $db->query('select * from tbl_stock where substr(barcode,1,1) = 4 ');
         return $data->getResult('array');
         //  $this->get();
         // return $query;

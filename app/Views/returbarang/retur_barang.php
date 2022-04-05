@@ -29,6 +29,11 @@
         width: 100%;
     }
 
+    input[type=number] {
+        background-color: #f1f1f1;
+        width: 100%;
+    }
+
     input[type=submit] {
         background-color: DodgerBlue;
         color: #fff;
@@ -107,6 +112,12 @@
                         <tr>
                             <td> Total Berat Murni :</td>
                             <td>
+                                <?= $datamasterretur['total_berat_murni'] ?> g
+                            </td>
+                        </tr>
+                        <tr>
+                            <td> Total Berat :</td>
+                            <td>
                                 <?= $datamasterretur['total_berat'] ?> g
                             </td>
                         </tr>
@@ -177,12 +188,12 @@
                                                         <!-- <td class="imgg"><img class="imgg" src="/img/<?= $row['nama_img'] ?>"></td> -->
                                                         <td><a href="#" onclick="openmodaldetail(<?= $row['id_detail_buyback'] ?>)"><?= $row['kode'] ?></a></td>
                                                         <td><input type="text" onchange="UbahKet(this,<?= $row['id_detail_buyback'] ?>)" id="ubahketerangan" name="ubahketerangan" value="<?= $row['keterangan'] ?>"></td>
-                                                        <td> <select name="status_proses" onchange="EditData(<?= $row['id_detail_buyback'] ?>,this)" class="form-control" id="status" name="status">
+                                                        <td> <select name="status_proses" style="width: 150%;" onchange="EditData(<?= $row['id_detail_buyback'] ?>,this)" class="form-control" id="status" name="status">
                                                                 <option value="Cuci">Cuci</option>
                                                                 <option selected value="Retur">Retur</option>
                                                                 <option value="Lebur">Lebur</option>
                                                             </select></td>
-                                                        <td><input onchange="UbahBerat(this,<?= $row['id_detail_buyback'] ?>)" type="number" id="ubahberat" name="ubahberat" value="<?= $row['berat'] ?>"></td>
+                                                        <td><input onchange="UbahBerat(this,<?= $row['id_detail_buyback'] ?>)" style="max-width: 50%;" type="number" id="ubahberat" name="ubahberat" value="<?= $row['berat'] ?>"></td>
                                                         <td>
                                                             <a type="button" onclick="tambahbarangretur(<?= $row['id_detail_buyback'] ?>)" class="btn btn-block btn-outline-info btn-sm">Retur</a>
                                                         </td>
@@ -245,18 +256,26 @@
                                                     <th style="text-align: center;">Jenis</th>
                                                     <th style="text-align: center;">Model</th>
                                                     <th style="text-align: center;">Berat Murni</th>
+                                                    <th style="text-align: center;">Status</th>
+
                                                     <!-- <th>detail</th> -->
                                                 </tr>
                                             </thead>
-                                            <tbody id="refreshtbl">
+                                            <tbody id="tblselesairetur">
                                                 <?php foreach ($dataakanretur as $row) : ?>
-                                                    <tr id="akanretur">
+                                                    <tr id="trselesairetur">
                                                         <td class="imgg"><img class="imgg" src="/img/<?= $row['nama_img'] ?>"></td>
                                                         <td><?= $row['kode'] ?></td>
                                                         <td><?= $row['jenis'] ?></td>
                                                         <td><?= $row['model'] ?></td>
                                                         <td><?= $row['berat_murni'] ?></td>
-                                                        <!-- <td> <a type="button" href="/detailbarang/<?= $row['kode'] ?>" class="btn btn-block btn-outline-info btn-sm">Detail</a>
+                                                        <td> <select name="status_proses" onchange="EditLanjutProses(<?= $row['id_detail_retur'] ?>,this)" class="form-control" id="status" name="status">
+                                                                <option selected value="Retur">Retur</option>
+                                                                <option value="Cuci">Cuci</option>
+                                                                <option value="Lebur">Lebur</option>
+                                                            </select></td>
+                                                        <td>
+                                                            <!-- <td> <a type="button" href="/detailbarang/<?= $row['kode'] ?>" class="btn btn-block btn-outline-info btn-sm">Detail</a>
                                                         </td> -->
                                                     </tr>
                                                 <?php endforeach; ?>
@@ -279,7 +298,7 @@
     <!-- /.content -->
 </div>
 <!-- /.content-wrapper -->
-</div>
+
 <div class="modal fade" id="modal-lg">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
@@ -294,7 +313,7 @@
                     <?= csrf_field(); ?>
                     <input type="hidden" name="iddate" id="iddate" value="<?= $datamasterretur['id_date_retur'] ?>">
                     <div class="row">
-                        <div class="col-4">
+                        <div class="col-6">
                             <div class="form-group" style="margin: 1mm;">
                                 <label>Tanggal Retur</label>
                                 <input type="date" class="form-control tanggalretur" id="tanggalretur" name="tanggalretur" value="<?= (isset($datamasterretur['tanggal_retur'])) ? date_format(date_create($datamasterretur['tanggal_retur']), "Y-m-d") : '' ?>">
@@ -302,22 +321,12 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-4">
+                        <div class="col-6">
                             <div class="form-group" style="margin: 1mm;">
                                 <label>Keterangan</label>
                                 <input type="text" class="form-control keterangan" id="keterangan" name="keterangan" placeholder="Masukan Keterangan">
                                 <div id="validationServerUsernameFeedback" class="invalid-feedback keteranganmsg">
                                 </div>
-                            </div>
-                        </div>
-                        <div class="col-4">
-                            <div class="form-group">
-                                <label>Supplier</label>
-                                <select name="supplier" class="form-control" id="supplier" name="supplier">
-                                    <?php foreach ($datasupplier as $m) : ?>
-                                        <option value="<?= $m['nama_supp'] ?>"><?= $m['nama_supp'] ?></option>
-                                    <?php endforeach; ?>
-                                </select>
                             </div>
                         </div>
                     </div>
@@ -437,6 +446,48 @@
             }
         })
     }
+
+    function EditLanjutProses(id, val) {
+        Swal.fire({
+            title: 'Ubah Status ' + val.value,
+            text: "Data akan di masukan ke " + val.value + " ?",
+            icon: 'info',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Selesai',
+            cancelButtonText: 'Batal'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    type: "get",
+                    dataType: "json",
+                    url: "<?php echo base_url('ubahstatuslanjutretur'); ?>",
+                    data: {
+                        id: id,
+                        status: val.value,
+                    },
+                    success: function(hasil) {
+                        console.log(hasil)
+                        // refreshtbl()
+                        $("#tblselesairetur").load("/draftretur/" + <?= $datamasterretur['id_date_retur'] ?> + " #trselesairetur");
+                        $("#card1").load("/draftretur/" + <?= $datamasterretur['id_date_retur'] ?> + " #card2");
+                    },
+                    error: function(xhr, ajaxOptions, thrownError) {
+                        alert(xhr.status + "\n" + xhr.responseText + "\n" + thrownError);
+                        // Swal.fire({
+                        //     icon: 'warning',
+                        //     title: 'Tidak ada data',
+                        // })
+                    }
+                })
+            } else {
+                $("#tblselesairetur").load("/draftretur/" + <?= $datamasterretur['id_date_retur'] ?> + " #trselesairetur");
+            }
+        })
+
+    }
+
 
     function ModalPrintRetur(id, dateid) {
         $.ajax({
@@ -610,7 +661,18 @@
                                     })
                                 }
                             } else {
-                                location.reload();
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Berhasil Retur',
+                                    confirmButtonColor: '#3085d6',
+                                    confirmButtonText: 'OK',
+                                    allowOutsideClick: false
+                                }).then((choose) => {
+                                    if (choose.isConfirmed) {
+                                        location.reload();
+                                    }
+                                })
+
                             }
                         },
                         error: function(xhr, ajaxOptions, thrownError) {

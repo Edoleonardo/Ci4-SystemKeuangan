@@ -41,47 +41,40 @@
             <div class="row">
                 <div class="col-12">
                     <div class="card">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-3">
+                                    <div class="form-group">
+                                        <label>Filter Kode</label>
+                                        <select name="kode" onchange="TampilKartu()" class="form-control" id="kode" name="kode">
+                                            <option value="0" selected>Terbaru</option>
+                                            <option value="1">Perhiasan Mas</option>
+                                            <option value="2">Perhiasan Berlian</option>
+                                            <option value="3">Logam Mulia (Antam, UBS, HWT)</option>
+                                            <option value="4">Bahan Murni</option>
+                                            <option value="5">Loose Diamond</option>
+                                            <option value="6">Barang Dagang</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-3">
+                                    <div class="form-group">
+                                        <label>Filter Stock</label>
+                                        <select name="stock" onchange="TampilKartu()" class="form-control" id="stock" name="stock">
+                                            <option value="0">Semua</option>
+                                            <option value="1">Belum Jual</option>
+                                            <option value="2">Terjual</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card">
                         <div class="card-header ">
-                            <input type="number" placeholder="filter kode">
                         </div>
                         <!-- /.card-header -->
-                        <div class="card-body table">
-                            <table id="example1" class="table table-bordered table-striped tableasd">
-                                <thead id="tbldata">
-                                    <tr>
-                                        <th>Id Barcode</th>
-                                        <th>Total Masuk</th>
-                                        <th>Total Keluar</th>
-                                        <th>Saldo Akhir</th>
-                                        <th>Detail</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <?php
-                                    foreach ($kartustock as $r) :  ?>
-                                        <tr>
-                                            <td><?= $r['kode'] ?></td>
-                                            <td><?= $r['total_masuk'] ?></td>
-                                            <td><?= $r['total_keluar'] ?></td>
-                                            <td><?= $r['saldo_akhir'] ?></td>
-                                            <td>
-                                                <a type="button" onclick="openmodal(<?= $r['kode'] ?>)" class="btn btn-block btn-outline-info btn-sm">Detail</a>
-                                            </td>
-                                        </tr>
-                                    <?php
-                                    endforeach;
-                                    ?>
-                                </tbody>
-                                <tfoot>
-                                    <tr>
-                                        <th>Id Barcode</th>
-                                        <th>Total Masuk</th>
-                                        <th>Total Keluar</th>
-                                        <th>Saldo Akhir</th>
-                                        <th>Detail</th>
-                                    </tr>
-                                </tfoot>
-                            </table>
+                        <div class="card-body table" id="tablekartu">
                         </div>
                         <!-- /.card-body -->
                     </div>
@@ -129,14 +122,28 @@
         })
 
     }
-    $(function() {
-        $("#example1").DataTable({
-            "responsive": true,
-            "lengthChange": false,
-            "autoWidth": false,
-            "aaSorting": []
-            //"buttons": ["copy", "csv", "excel", "pdf", "print", "colvis", ]
-        }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
-    });
+
+    function TampilKartu() {
+        $.ajax({
+            type: "GET",
+            dataType: "json",
+            url: "<?php echo base_url('tampildatakartu'); ?>",
+            data: {
+                kode: $('#kode').val(),
+                stock: $('#stock').val(),
+            },
+            success: function(result) {
+                $('#tablekartu').html(result.datakartu)
+
+            },
+            error: function(xhr, ajaxOptions, thrownError) {
+                alert(xhr.status + "\n" + xhr.responseText + "\n" + thrownError);
+            }
+        })
+    }
+
+    $(document).ready(function() {
+        TampilKartu()
+    })
 </script>
 <?= $this->endSection(); ?>

@@ -45,12 +45,13 @@ $routes->POST('/masuklogin', 'Login::MasukLogin');
 
 $routes->get('/', ($session->get('role')) ? 'Home::index' : 'Login::Login');
 $routes->get('/databarang', ($session->get('role')) ? 'Home::databarang' : 'Login::Login');
-$routes->get('/databarangjual', ($session->get('role')) ? 'Home::databarangjual' : 'Login::Login');
 $routes->get('/detail/(:any)', ($session->get('role')) ? 'Home::detail/$1' : 'Login::Login');
 $routes->get('/print/(:any)', ($session->get('role')) ? 'Home::print/$1' : 'Login::Login');
 $routes->get('/kartustock', ($session->get('role')) ? 'Home::KatruStock' : 'Login::Login');
 $routes->get('/modaldetailkartustock', ($session->get('role')) ? 'Home::DetailKartuStock' : 'Login::Login');
+$routes->get('/tampildatakartu', ($session->get('role')) ? 'Home::TampilDataKartu' : 'Login::Login');
 $routes->get('/detailbarang/(:any)', ($session->get('role')) ? 'Home::DetailBarangKode/$1' : 'Login::Login');
+$routes->get('/tampildatabarang', ($session->get('role')) ? 'Home::TampilDataBarang' : 'Login::Login');
 
 
 // --------------------BarangMasuk-----------
@@ -72,7 +73,8 @@ $routes->delete('/cancelbarang/(:num)', ($session->get('role')) ? 'Barangmasuk::
 $routes->get('/ajaxdetailpembelian', ($session->get('role')) ? 'Barangmasuk::pembelian_detail_read' : 'Login::Login');
 $routes->post('/ajaxpembayaran', ($session->get('role')) ? 'Barangmasuk::Pembayaran_beli' : 'Login::Login');
 $routes->get('/editdetail', ($session->get('role')) ? 'Barangmasuk::GetDataDetail' : 'Login::Login');
-$routes->post('/editdataform', ($session->get('role')) ? 'Barangmasuk::EditDataPost' : 'Login::Login');
+$routes->get('/selesaipembayaran', ($session->get('role')) ? 'Barangmasuk::SelesaiPembayaran' : 'Login::Login');
+// $routes->post('/editdataform', ($session->get('role')) ? 'Barangmasuk::EditDataPost' : 'Login::Login');
 $routes->get('/deletepembayaran', ($session->get('role')) ? 'Barangmasuk::DeletePembayaran' : 'Login::Login');
 $routes->get('/modalbarcode', ($session->get('role')) ? 'Barangmasuk::ModalBarcode' : 'Login::Login');
 $routes->get('/detailbarcode', ($session->get('role')) ? 'Barangmasuk::DetailBarcode' : 'Login::Login');
@@ -115,6 +117,7 @@ $routes->get('/tampildatabuyback', ($session->get('role')) ? 'BuybackCust::Tampi
 $routes->post('/tambahbuyback', ($session->get('role')) ? 'BuybackCust::TambahBuyback' : 'Login::Login');
 $routes->post('/tambahbuybacknonota', ($session->get('role')) ? 'BuybackCust::TambahBuybackNonota' : 'Login::Login');
 $routes->get('/draftbuyback/(:any)', ($session->get('role')) ? 'BuybackCust::DraftBuyback/$1' : 'Login::Login');
+$routes->post('/scanbarcode', ($session->get('role')) ? 'BuybackCust::ScanBarcodeData' : 'Login::Login');
 $routes->get('/deletedetailbuyback', ($session->get('role')) ? 'BuybackCust::DeleteDetailBuyback' : 'Login::Login');
 $routes->post('/pembayaranform', ($session->get('role')) ? 'BuybackCust::PembayaranBuyback' : 'Login::Login');
 $routes->get('/batalbuyback/(:any)', ($session->get('role')) ? 'BuybackCust::BatalBuyback/$1' : 'Login::Login');
@@ -168,6 +171,7 @@ $routes->get('/hapusretur', ($session->get('role')) ? 'BarangRetur::DeleteRetur'
 $routes->get('/modalprintretur', ($session->get('role')) ? 'BarangRetur::ModalRetur' : 'Login::Login');
 $routes->post('/selesairetur', ($session->get('role')) ? 'BarangRetur::SelesaiRetur' : 'Login::Login');
 $routes->get('/printnotaretur/(:any)', ($session->get('role')) ? 'BarangRetur::PrintNotaRetur/$1' : 'Login::Login');
+$routes->get('/ubahstatuslanjutretur', ($session->get('role')) ? 'BarangRetur::UbahStatusLanjut' : 'Login::Login');
 
 // $routes->get('/leburbarang/(:any)', ($session->get('role')) ?'BarangRetur::TampilLeburBarang/$1': 'Login::Login');
 $routes->get('/detailbarang', ($session->get('role')) ? 'BarangRetur::DataDetailBarang' : 'Login::Login');
@@ -187,6 +191,7 @@ $routes->POST('/updatecust', ($session->get('role')) ? 'MasterInput::UpdateCust'
 $routes->POST('/insertjenis', ($session->get('role')) ? 'MasterInput::InsertJenis' : 'Login::Login');
 $routes->POST('/insertuser', ($session->get('role')) ? 'MasterInput::InsertUser' : 'Login::Login');
 $routes->POST('/insertukang', ($session->get('role')) ? 'MasterInput::InsertTukang' : 'Login::Login');
+$routes->POST('/insertakun', ($session->get('role')) ? 'MasterInput::InsertAkun' : 'Login::Login');
 
 // $routes->POST('/hapusdata', 'MasterInput::HapusData');
 $routes->get('/isidata', ($session->get('role')) ? 'MasterInput::DataMaster' : 'Login::Login');

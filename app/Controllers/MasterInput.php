@@ -14,6 +14,8 @@ use App\Models\ModelBank;
 use App\Models\ModelJenis;
 use App\Models\ModelUsers;
 use App\Models\ModelTukang;
+use App\Models\ModelAkunBiaya;
+
 use CodeIgniter\Validation\Rules;
 use app\Config\Cache;
 use Config\Cache as ConfigCache;
@@ -35,6 +37,7 @@ class MasterInput extends BaseController
         $this->modelusers = new ModelUsers();
         $this->modeltukang = new ModelTukang();
         $this->chace = new ConfigCache();
+        $this->modelakun = new ModelAkunBiaya();
     }
     public function HomeInput()
     {
@@ -47,6 +50,7 @@ class MasterInput extends BaseController
             'databank' => $this->modelbank->getBank(),
             'datausers' => $this->modelusers->getUsers(),
             'datatukang' => $this->modeltukang->getTukang(),
+            'dataakun' => $this->modelakun->getAkunBiaya(),
         ];
 
         return view('masterinput/masterinput_home', $data);
@@ -254,6 +258,45 @@ class MasterInput extends BaseController
                 } else {
                     $this->modelbank->save([
                         'nama_bank' => $this->request->getVar('nama_bank'),
+                        'id_karyawan' => $session->get('id_user'),
+                    ]);
+                }
+                $msg = 'sukses';
+                echo json_encode($msg);
+            }
+        }
+    }
+    public function InsertAkun()
+    {
+        if ($this->request->isAJAX()) {
+            $validation = \Config\Services::validation();
+            $valid = $this->validate([
+                'nama_akun' => [
+                    'rules' => 'required|is_unique[tbl_akun_biaya.nama_akun]',
+                    'errors' => [
+                        'required' => 'Nama Akun Harus di isi',
+                        'is_unique' => 'Nama Sudah Ada',
+                    ]
+                ]
+            ]);
+            if (!$valid) {
+                $msg = [
+                    'error' => [
+                        'nama_akun' => $validation->getError('nama_akun'),
+                    ]
+                ];
+                echo json_encode($msg);
+            } else {
+                $session = session();
+                if ($this->request->getVar('id_akun')) {
+                    $this->modelakun->save([
+                        'id_akun_biaya' => $this->request->getVar('id_akun'),
+                        'id_karyawan' => $session->get('id_user'),
+                        'nama_akun' => $this->request->getVar('nama_akun'),
+                    ]);
+                } else {
+                    $this->modelakun->save([
+                        'nama_akun' => $this->request->getVar('nama_akun'),
                         'id_karyawan' => $session->get('id_user'),
                     ]);
                 }
@@ -513,6 +556,9 @@ class MasterInput extends BaseController
             }
             if ($jenis == 'tukang') {
                 $data = $this->modeltukang->getTukang($id);
+            }
+            if ($jenis == 'namaakun') {
+                $data = $this->modelakun->getAkunBiaya($id);
             }
             echo json_encode($data);
         }

@@ -1049,7 +1049,7 @@ class Barangkeluar extends BaseController
                         $databarangnew = $this->datastock->getBarangkode($datadetailpenjualan['kode']);
                         $this->modeldetailkartustock->save([
                             'barcode' => $datadetailpenjualan['kode'],
-                            'status' => 'Keluar',
+                            'status' => 'Masuk',
                             'id_karyawan' => $session->get('id_user'),
                             'no_faktur' => $datapenjualan['no_transaksi_jual'],
                             'tgl_faktur' => $datapenjualan['created_at'],

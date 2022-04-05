@@ -300,6 +300,22 @@
                             </div>
                         </form>
                     </div>
+                    <div class="col-6">
+                        <form action="/scanbarcode" name="scanbarcode" id="scanbarcode" class="scanbarcode" method="post">
+                            <?= csrf_field(); ?>
+                            <div class="form-group" style="margin: 1mm;">
+                                <label>Masukan Barcode (Nota)</label>
+                                <div class="input-group input-group-sm">
+                                    <input type="text" class="form-control nobarcode" id="nobarcode" onkeyup="Scanbarcode()" name="nobarcode" placeholder="Masukan Nomor Nota">
+                                    <span class="input-group-append">
+                                        <button type="submit" id="scanbarcodebtn" class="btn btn-info btn-flat scanbarcodebtn">Ok</button>
+                                    </span>
+                                    <div id="validationServerUsernameFeedback" class="invalid-feedback barcodemsg">
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
                 </div>
                 <br>
                 <div class="row">
@@ -1357,6 +1373,10 @@
         $('#scannotransbtn').trigger('click');
     }
 
+    function Scanbarcode() {
+        $('#scanbarcodebtn').trigger('click');
+    }
+
     $('.scannotrans').submit(function(e) {
         e.preventDefault()
         let form = $('.scannotrans')[0];
@@ -1380,6 +1400,41 @@
                     $('.notransmsg').html('')
                     document.getElementById('notrans').setAttribute("onkeyup", "ScannoTrans()");
                     document.getElementById('notrans').value = ''
+                    $('#inputcustomer').val(result.datacust)
+                    $('#datamodalbuyback').html(result.data)
+                }
+            },
+            error: function(xhr, ajaxOptions, thrownError) {
+                alert(xhr.status + "\n" + xhr.responseText + "\n" + thrownError);
+            }
+        })
+
+    })
+
+    $('.scanbarcode').submit(function(e) {
+        e.preventDefault()
+        let form = $('.scanbarcode')[0];
+        let data = new FormData(form)
+        $.ajax({
+            type: "POST",
+            data: data,
+            url: "<?php echo base_url('scanbarcode'); ?>",
+            contentType: false,
+            processData: false,
+            cache: false,
+            dataType: "json",
+            success: function(result) {
+                console.log(result)
+                if (result.pesan_error) {
+                    console.log(result)
+                    $('#nobarcode').addClass('is-invalid')
+                    $('.barcodemsg').html(result.pesan_error)
+
+                } else {
+                    $('#nobarcode').removeClass('is-invalid')
+                    $('.barcodemsg').html('')
+                    document.getElementById('nobarcode').setAttribute("onkeyup", "Scanbarcode()");
+                    document.getElementById('nobarcode').value = ''
                     $('#inputcustomer').val(result.datacust)
                     $('#datamodalbuyback').html(result.data)
                 }
@@ -1518,6 +1573,7 @@
 
 
     function tambah(id) {
+        console.log(id)
         $.ajax({
             type: "get",
             dataType: "json",

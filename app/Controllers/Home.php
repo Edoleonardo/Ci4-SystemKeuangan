@@ -38,8 +38,6 @@ class Home extends BaseController
     }
     public function databarang()
     {
-        session();
-        //dd($this->barangmodel->getBarang()[0]->getResult());
         $data = [
             'barang' => $this->barangmodel->getBarang(),
             'pages' => 1,
@@ -50,13 +48,23 @@ class Home extends BaseController
         $this->cachePage(1);
         return view('home/data_barang', $data);
     }
-    public function databarangjual()
+    public function TampilDataBarang()
     {
-        $data = [
-            'barang' => $this->barangmodel->getBarangSold(),
-        ];
-        $this->cachePage(1);
-        return view('home/data_barang_jual', $data);
+        if ($this->request->isAJAX()) {
+            if ($this->request->getVar('kode') != 0) {
+                $dabar = $this->barangmodel->getBarangFilter($this->request->getVar('kode'), $this->request->getVar('stock'));
+            } else {
+                $dabar = $this->barangmodel->getBarang();
+            }
+            $data = [
+                'barang' =>  $dabar,
+            ];
+            $result = [
+                'databarang' => view('home/tabledatabarang', $data),
+            ];
+            $this->cachePage(1);
+            echo json_encode($result);
+        }
     }
     public function KatruStock()
     {
@@ -64,7 +72,26 @@ class Home extends BaseController
             'kartustock' => $this->modelkartustock->getKartuStock(),
             'detailkartustock' => $this->modeldetailkartustock->getDetailKartuStock(),
         ];
+        $this->cachePage(1);
         return view('home/data_kartustock', $data);
+    }
+    public function TampilDataKartu()
+    {
+        if ($this->request->isAJAX()) {
+            if ($this->request->getVar('kode') != 0) {
+                $dakar = $this->modelkartustock->getKartuFilter($this->request->getVar('kode'), $this->request->getVar('stock'));
+            } else {
+                $dakar = $this->modelkartustock->getKartuStock();
+            }
+            $data = [
+                'kartustock' =>  $dakar,
+            ];
+            $result = [
+                'datakartu' => view('home/tablekartustock', $data),
+            ];
+            $this->cachePage(1);
+            echo json_encode($result);
+        }
     }
     public function DetailKartuStock()
     {

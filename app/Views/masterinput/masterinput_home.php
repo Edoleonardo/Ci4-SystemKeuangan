@@ -97,6 +97,7 @@
                                         <th>Alamat</th>
                                         <th>Kota</th>
                                         <th>Nama Sales</th>
+                                        <th>Deposit</th>
                                         <th>No Hp</th>
                                         <th>No Kantor</th>
                                     </tr>
@@ -108,6 +109,7 @@
                                             <td><?= $row['alamat_supp'] ?></td>
                                             <td><?= $row['kota_supp'] ?></td>
                                             <td><?= $row['sales_supp'] ?></td>
+                                            <td><?= $row['deposit'] ?></td>
                                             <td><?= $row['no_hp'] ?></td>
                                             <td><?= $row['no_ktr'] ?></td>
                                         </tr>
@@ -119,6 +121,7 @@
                                         <th>Alamat</th>
                                         <th>Kota</th>
                                         <th>Nama Sales</th>
+                                        <th>Deposit</th>
                                         <th>No Hp</th>
                                         <th>No Kantor</th>
                                     </tr>
@@ -131,7 +134,7 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-md-4">
+                <div class="col-md-6">
                     <div class="card">
                         <div class="card-header">
                             <h3 class="card-title">Data Kadar</h3>
@@ -165,7 +168,7 @@
                         </div>
                     </div>
                 </div>
-                <div class=" col-md-4">
+                <div class=" col-md-6">
                     <div class="card">
                         <div class="card-header">
                             <h3 class="card-title">Merek</h3>
@@ -199,7 +202,9 @@
                     </div>
                     <!-- /.card -->
                 </div>
-                <div class="col-4">
+            </div>
+            <div class="row">
+                <div class="col-6">
                     <div class="card">
                         <div class="card-header">
                             <h3 class="card-title">Pembayaran Bank</h3>
@@ -225,6 +230,40 @@
                                 <tfoot>
                                     <tr>
                                         <th>Pembayaran Bank</th>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                        <!-- /.card-body -->
+                    </div>
+                    <!-- /.card -->
+                </div>
+                <div class="col-6">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Nama Akun</h3>
+                        </div>
+                        <!-- /.card-header -->
+                        <a class="btn btn-app tambahcustomer" id="tambahcustomer" onclick="OpenModalData('akunbiaya')">
+                            <i class="fas fa-plus"></i> Tambah Akun
+                        </a>
+                        <div class="card-body">
+                            <table id="akunbiaya" class="table table-bordered table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Nama Akun</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php foreach ($dataakun as $row) : ?>
+                                        <tr onclick="Updatedata(<?= $row['id_akun_biaya'] ?>, 'namaakun')">
+                                            <td><?= $row['nama_akun'] ?></td>
+                                        </tr>
+                                    <?php endforeach; ?>
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <th>Nama Akun</th>
                                     </tr>
                                 </tfoot>
                             </table>
@@ -751,6 +790,37 @@
     </div>
 </div>
 </div>
+<div class="modal fade" id="modal-akunbiaya">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="titleakunbiaya">Tambah Data Merek</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form action="/insertakun" name="insertakun" id="insertakun" class="insertakun" method="post">
+                <?= csrf_field(); ?>
+                <input type="hidden" name="id_akun" id="id_akun" value="">
+                <div class="row" style="margin: 10px;">
+                    <div class="col-12">
+                        <div class="form-group">
+                            <label>Nama Akun</label>
+                            <input type="text" id="nama_akun" name="nama_akun" class="form-control nama_akun" placeholder="Masukan Akun">
+                            <div id="validationServerUsernameFeedback" class="invalid-feedback nama_akunmsg">
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Tutup</button>
+                    <button type="submit" class="btn btn-primary btntambah" id="buttonakunbiaya">Tambah</button>
+            </form>
+        </div>
+    </div>
+</div>
+</div>
 <!-- /.modal-content -->
 <!-- Control Sidebar -->
 <aside class="control-sidebar control-sidebar-dark">
@@ -1268,6 +1338,53 @@
             }
         })
     })
+    $('.insertakun').submit(function(e) {
+        e.preventDefault()
+        let form = $('.insertakun')[0];
+        let data = new FormData(form)
+        $.ajax({
+            type: "POST",
+            data: data,
+            url: "<?php echo base_url('insertakun'); ?>",
+            dataType: "json",
+            contentType: false,
+            processData: false,
+            cache: false,
+            beforeSend: function() {
+                $('.btntambah').html('<i class="fa fa-spin fa-spinner">')
+            },
+            complete: function() {
+                $('.btntambah').html('Tambah')
+            },
+            success: function(result) {
+                if (result.error) {
+                    if (result.error.nama_akun) {
+                        $('#nama_akun').addClass('is-invalid')
+                        $('.nama_akunmsg').html(result.error.nama_akun)
+                    } else {
+                        $('#nama_akun').removeClass('is-invalid')
+                        $('.nama_akunmsg').html('')
+                    }
+
+                } else {
+                    $('#nama_akun').removeClass('is-invalid')
+                    $('.nama_akunmsg').html('')
+                    Swal.fire({
+                        title: 'Berhasil',
+                        icon: 'success',
+                        confirmButtonColor: '#3085d6',
+                        confirmButtonText: 'Ok',
+                    }).then((result) => {
+                        location.reload();
+                    })
+                }
+
+            },
+            error: function(xhr, ajaxOptions, thrownError) {
+                alert(xhr.status + "\n" + xhr.responseText + "\n" + thrownError);
+            }
+        })
+    })
 
 
     function OpenModalData(jenis) {
@@ -1305,6 +1422,11 @@
             $('#titletukang').html('Tambah tukang Barang')
             $('#buttontukang').html('Tambah')
             $('#modal-tukang').modal('toggle')
+        }
+        if (jenis == 'akunbiaya') {
+            $('#titleakunbiaya').html('Tambah Akun Biaya')
+            $('#buttonakunbiaya').html('Tambah')
+            $('#modal-akunbiaya').modal('toggle')
         }
 
     }
@@ -1388,6 +1510,13 @@
                     $('#titletukang').html('Update Data tukang')
                     $('#buttontukang').html('Update')
                     $('#modal-tukang').modal('toggle')
+                }
+                if (jenis == 'namaakun') {
+                    $('#nama_akun').val(result.nama_akun);
+                    $('#id_akun').val(id);
+                    $('#titleakunbiaya').html('Update Data Akun Biaya')
+                    $('#buttonakunbiaya').html('Update')
+                    $('#modal-akunbiaya').modal('toggle')
                 }
             },
             error: function(xhr, ajaxOptions, thrownError) {
@@ -1507,6 +1636,13 @@
         //"buttons": ["copy", "csv", "excel", "pdf", "print", "colvis", ]
     }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
     $("#tukang").DataTable({
+        "responsive": true,
+        "lengthChange": false,
+        "autoWidth": false,
+        "aaSorting": []
+        //"buttons": ["copy", "csv", "excel", "pdf", "print", "colvis", ]
+    }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
+    $("#akunbiaya").DataTable({
         "responsive": true,
         "lengthChange": false,
         "autoWidth": false,

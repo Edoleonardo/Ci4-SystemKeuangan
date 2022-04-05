@@ -10,7 +10,7 @@ class ModelRetur extends Model
     protected $table = 'tbl_retur';
     protected $primaryKey = 'id_retur';
     protected $useTimestamps = true;
-    protected $allowedFields = ['id_date_retur', 'id_karyawan', 'keterangan', 'no_retur', 'total_berat', 'jumlah_barang', 'tanggal_retur', 'nama_supplier', 'status_dokumen'];
+    protected $allowedFields = ['id_date_retur', 'id_karyawan', 'keterangan', 'no_retur', 'total_berat_murni', 'total_berat', 'jumlah_barang', 'tanggal_retur', 'no_transaksi', 'status_dokumen'];
 
     public function getDataReturAll($id = false)
     {
@@ -22,9 +22,25 @@ class ModelRetur extends Model
         }
         return $this->where(['id_date_retur' => $id])->first();
     }
+    public function getDataReturBayar($id = false)
+    {
+        if ($id == false) {
+            $this->select('*');
+            $this->where(['status_dokumen' => 'Selesai']);
+            $this->where(['no_transaksi' => null]);
+            $this->orderBy('created_at', 'DESC');
+            $data = $this->get();
+            return $data->getResult('array');
+        }
+        return $this->where(['id_date_retur' => $id])->first();
+    }
     public function getBarangkode($id)
     {
         return $this->where(['barcode' => $id])->first();
+    }
+    public function getBarangNomor($id)
+    {
+        return $this->where(['no_retur' => $id])->first();
     }
     public function getNoTransRetur()
     {

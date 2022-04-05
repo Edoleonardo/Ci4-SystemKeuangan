@@ -83,4 +83,18 @@ class BaseController extends Controller
             'total_harga' => $totalharga,
         ]);
     }
+    public function KartuStockMaster($kode, $session)
+    {
+        $datakartu = $this->modelkartustock->getKartuStockkode($kode);
+        $masuk = $this->modeldetailkartustock->SumMasukKartu($kode)['masuk'];
+        $keluar = $this->modeldetailkartustock->SumKeluarKartu($kode)['keluar'];
+        $saldoakhir = $masuk - $keluar;
+        $this->modelkartustock->save([
+            'id_kartustock' => $datakartu['id_kartustock'],
+            'id_karyawan' => $session->get('id_user'),
+            'total_masuk' => $masuk,
+            'total_keluar' => $keluar,
+            'saldo_akhir' => $saldoakhir,
+        ]);
+    }
 }

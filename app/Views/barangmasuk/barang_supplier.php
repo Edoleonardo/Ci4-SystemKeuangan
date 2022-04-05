@@ -52,14 +52,25 @@
                       <td><?= date("d-m-Y", strtotime($row['tgl_jatuh_tempo'])) ?></td>
                       <td><?= $row['no_faktur_supp'] ?></td>
                       <td><?= number_format($row['total_bayar']) ?></td>
-                      <td><?= $row['cara_pembayaran'] ?></td>
-                      <td>
+                      <?php if ($row['cara_pembayaran'] == 'Lunas') : ?>
+                        <td>
+                          <?= $row['cara_pembayaran'] ?></td>
+                        <td>
+                        <?php elseif ($row['cara_pembayaran'] == 'Belum Selesai') : ?>
+                        <td style="background-color: lightgoldenrodyellow;">
+                          <?= $row['cara_pembayaran'] ?></td>
+                        <td>
+                        <?php else : ?>
+                        <td style="background-color: lightcoral;">
+                          <?= $row['cara_pembayaran'] ?></td>
+                        <td>
+                        <?php endif; ?>
                         <?php if ($row['status_dokumen'] == 'Draft') { ?>
                           <a type="button" href="draft/<?= $row['id_date_pembelian'] ?>" class="btn btn-block btn-outline-danger btn-sm"><?= $row['status_dokumen'] ?></a>
                         <?php } else { ?>
                           <a type="button" href="/detailpembelian/<?= $row['id_date_pembelian'] ?>" class="btn btn-block btn-outline-info btn-sm">Detail</a>
                         <?php } ?>
-                      </td>
+                        </td>
                     </tr>
                   <?php endforeach; ?>
                 </tbody>

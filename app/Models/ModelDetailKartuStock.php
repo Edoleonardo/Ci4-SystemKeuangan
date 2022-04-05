@@ -8,7 +8,7 @@ class ModelDetailKartuStock extends Model
 {
 
     protected $table = 'tbl_detail_kartustock';
-    protected $primaryKey = 'id_detail_kartustock ';
+    protected $primaryKey = 'id_detail_kartustock';
     protected $useTimestamps = true;
     protected $allowedFields = ['barcode', 'id_karyawan', 'status', 'no_faktur', 'nama_customer', 'saldo', 'masuk', 'keluar', 'jenis', 'model', 'keterangan', 'merek', 'kadar', 'berat', 'nilai_tukar', 'harga_beli', 'total_harga', 'gambar'];
 
@@ -54,6 +54,14 @@ class ModelDetailKartuStock extends Model
     {
         $this->selectSum('keluar');
         $this->where('barcode', $id);
+        $query = $this->get();
+        return $query->getResult('array')[0];
+    }
+    public function GetDataDelete($id, $nofaktur)
+    {
+        $this->selectSum('id_detail_kartustock');
+        $this->where('barcode', $id);
+        $this->where('no_faktur', $nofaktur);
         $query = $this->get();
         return $query->getResult('array')[0];
     }

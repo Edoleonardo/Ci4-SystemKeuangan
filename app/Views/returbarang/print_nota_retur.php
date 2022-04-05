@@ -28,6 +28,13 @@ function barcodegenerate2($kode)
 }
 ?>
 <style>
+  table,
+  tbody,
+  tr>* {
+    vertical-align: middle;
+    text-align: center;
+  }
+
   /* #gmbr {
     position: absolute;
     z-index: 1;
@@ -48,7 +55,7 @@ function barcodegenerate2($kode)
   <tbody>
     <tr>
       <td style='border:none; width: 160mm;'><?= barcodegenerate($dataretur['no_retur']) ?></td>
-      <td style='border:none;'>No.Nota : <?= $dataretur['no_retur'] ?><br>Tangerang, <?= date('d-m-y') ?><br>Nama Supplier: <?= $dataretur['nama_supplier'] ?></td>
+      <td style='border:none;'>No.Nota : <?= $dataretur['no_retur'] ?><br>Tangerang, <?= date('d-m-y') ?><br>Nama Supplier: <?= (isset($dataretur['nama_supplier'])) ? $dataretur['nama_supplier'] : '________' ?></td>
     </tr>
   </tbody>
 </table>
@@ -65,13 +72,16 @@ function barcodegenerate2($kode)
           <th style="width: 100px;">Merek</th>
           <th style="width: 100px;">Qty</th>
           <th style="width: 100px;">Berat</th>
+          <th style="width: 100px;">Berat Murni</th>
         </tr>
       </thead>
       <?php
       $totalakhirqty = 0;
       $totalakhirberat = 0;
+      $totalakhirberatm = 0;
       $qty = 0;
       $berat = 0;
+      $beratm = 0;
       $datatotal = 0;
       $kadar = '';
       $i = 1;
@@ -87,14 +97,17 @@ function barcodegenerate2($kode)
               <td style='border-right:none;border-left:none;'></td>
               <td style='border-right:none;border-left:none;'><?= $qty ?></td>
               <td style='border-right:none;border-left:none;'><?= $berat ?></td>
+              <td style='border-right:none;border-left:none;'><?= $beratm ?></td>
             </tr>
           <?php $datatotal = 0;
             $qty = 0;
             $berat = 0;
+            $beratm = 0;
           endif; ?>
           <tr style="background-color: aqua !important;">
             <td style='border-right:none;border-left:none;'></td>
             <td style='border-right:none;border-left:none;'><?= $row['kadar'] ?></td>
+            <td style='border-right:none;border-left:none;'></td>
             <td style='border-right:none;border-left:none;'></td>
             <td style='border-right:none;border-left:none;'></td>
             <td style='border-right:none;border-left:none;'></td>
@@ -110,13 +123,16 @@ function barcodegenerate2($kode)
           <td style="vertical-align: middle;"><?= $row['merek'] ?></td>
           <td style="vertical-align: middle;"><?= $row['qty'] ?></td>
           <td style="text-align: center;"><?= $row['berat'] ?></td>
+          <td style="text-align: center;"><?= $row['berat_murni'] ?></td>
         </tr>
 
       <?php
         $qty = $qty + $row['qty'];
         $berat = $berat + $row['berat'];
+        $beratm = $beratm + $row['berat_murni'];
         $totalakhirqty = $totalakhirqty + $row['qty'];
         $totalakhirberat = $totalakhirberat + $row['berat'];
+        $totalakhirberatm = $totalakhirberatm + $row['berat_murni'];
         $datatotal = 1;
         $kadar = $row['kadar'];
         $i++;
@@ -129,6 +145,7 @@ function barcodegenerate2($kode)
         <td style='border-right:none;border-left:none;'></td>
         <td style='border-right:none;border-left:none;'><?= $qty ?></td>
         <td style='border-right:none;border-left:none;'><?= $berat ?></td>
+        <td style='border-right:none;border-left:none;'><?= $beratm ?></td>
       </tr>
       <tr style="background-color: lightyellow;">
         <td style='border-right:none;border-left:none;'></td>
@@ -138,6 +155,7 @@ function barcodegenerate2($kode)
         <td style='border-right:none;border-left:none;'></td>
         <td style='border-right:none;border-left:none;'><?= $totalakhirqty ?></td>
         <td style='border-right:none;border-left:none;'><?= $totalakhirberat ?></td>
+        <td style='border-right:none;border-left:none;'> <?= $totalakhirberatm ?></td>
       </tr>
     </tbody>
   </table>

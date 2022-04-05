@@ -30,6 +30,11 @@
         width: 100%;
     }
 
+    input[type=number] {
+        background-color: #f1f1f1;
+        width: 100%;
+    }
+
     input[type=submit] {
         background-color: DodgerBlue;
         color: #fff;
@@ -207,13 +212,13 @@
                                                         <td><a href="#" onclick="openmodaldetail(<?= $row['id_detail_buyback'] ?>)"><?= $row['kode'] ?></a></td>
                                                         <td><?= $row['jenis'] ?></td>
                                                         <td><input type="text" onchange="UbahKet(this,<?= $row['id_detail_buyback'] ?>)" id="ubahketerangan" name="ubahketerangan" value="<?= $row['keterangan'] ?>"></td>
-                                                        <td> <select name="status_proses" onchange="EditData(<?= $row['id_detail_buyback'] ?>,this)" class="form-control" id="status" name="status">
+                                                        <td><select name="status_proses" onchange="EditData(<?= $row['id_detail_buyback'] ?>,this)" class="form-control" id="status" name="status">
                                                                 <option value="Cuci">Cuci</option>
                                                                 <option value="Retur">Retur</option>
                                                                 <option selected value="Lebur">Lebur</option>
                                                             </select></td>
                                                         <td><?= $row['kadar'] ?></td>
-                                                        <td><input onchange="UbahBerat(this,<?= $row['id_detail_buyback'] ?>)" type="number" id="ubahberat" name="ubahberat" value="<?= $row['berat'] ?>"></td>
+                                                        <td><input type="number" onchange="UbahBerat(this,<?= $row['id_detail_buyback'] ?>)" id="ubahberat" name="ubahberat" value="<?= $row['berat'] ?>"></td>
                                                         <td>
                                                             <a type="button" onclick="tambahbaranglebur(<?= $row['id_detail_buyback'] ?>)" class="btn btn-block btn-outline-info btn-sm">Lebur</a>
                                                         </td>

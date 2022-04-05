@@ -86,6 +86,13 @@ class ModelDetailRetur extends Model
         $query = $this->get();
         return $query->getResult('array')[0];
     }
+    public function SumBeratMurniDetailRetur($id)
+    {
+        $this->selectSum('berat_murni');
+        $this->where('id_date_retur', $id);
+        $query = $this->get();
+        return $query->getResult('array')[0];
+    }
     public function getKode($id)
     {
         $db = db_connect();

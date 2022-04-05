@@ -126,12 +126,16 @@ class BuybackCust extends BaseController
                 ];
                 echo json_encode($msg);
             } else {
+                $datadetailbuyback = $this->modeldetailbuyback->getDataDetailKode($this->request->getVar('id'));
+                $berat = $this->request->getVar('val');
+                $hasil = round($berat * ($datadetailbuyback['nilai_tukar'] / 100), 2);
                 $this->modeldetailbuyback->save([
                     'id_detail_buyback' => $this->request->getVar('id'),
                     'id_karyawan' => $session->get('id_user'),
-                    'berat' => $this->request->getVar('val')
+                    'berat' => $this->request->getVar('val'),
+                    'berat_murni' => $hasil,
                 ]);
-                $msg = 'berhasil berat';
+                $msg = $hasil;
                 echo json_encode($msg);
             }
         }
@@ -733,10 +737,6 @@ class BuybackCust extends BaseController
                             'nilai_tukar' => $this->request->getVar('nilai_tukar'),
                             'merek' => $this->request->getVar('merek'),
                             'total_harga' => $totalharga,
-                            // 'cara_pembayaran' => $this->request->getVar('pembayaran'),
-                            // 'nama_bank' => $this->request->getVar('namabank'),
-                            // 'tunai' => $this->request->getVar('tunai'),
-                            // 'transfer' => $this->request->getVar('transfer'),
                             'no_nota' => 'NoNota',
                             'status_proses' => 'Murni'
                         ]);
@@ -761,10 +761,6 @@ class BuybackCust extends BaseController
                             'nilai_tukar' => $this->request->getVar('nilai_tukar'),
                             'merek' => $this->request->getVar('merek'),
                             'total_harga' => $totalharga,
-                            // 'cara_pembayaran' => $this->request->getVar('pembayaran'),
-                            // 'nama_bank' => $this->request->getVar('namabank'),
-                            // 'tunai' => $this->request->getVar('tunai'),
-                            // 'transfer' => $this->request->getVar('transfer'),
                             'no_nota' => 'NoNota',
                             'status_proses' => 'Murni'
                         ]);
@@ -816,10 +812,6 @@ class BuybackCust extends BaseController
                         'nilai_tukar' => $this->request->getVar('nilai_tukar'),
                         'merek' => $this->request->getVar('merek'),
                         'total_harga' => $totalharga,
-                        // 'cara_pembayaran' => $this->request->getVar('pembayaran'),
-                        // 'nama_bank' => $this->request->getVar('namabank'),
-                        // 'tunai' => $this->request->getVar('tunai'),
-                        // 'transfer' => $this->request->getVar('transfer'),
                         'no_nota' => 'NoNota',
                         'status_proses' => $this->request->getVar('status_proses')
                     ]);
@@ -1012,6 +1004,11 @@ class BuybackCust extends BaseController
                     if ($kode == 3) {
                         $totalharga =  $beratmurni *  $harga * $qty;
                     }
+                    if ($kode == 3 || $kode == 4 || $kode == 6) {
+                        $statusproses = 'Murni';
+                    } else {
+                        $statusproses = $this->request->getVar('status_proses');
+                    }
                     $datapenjualan = $this->penjualan->getDataPenjualan($databarang['id_date_penjualan']);
                     $this->modeldetailbuyback->save([
                         'nama_img' => $databarang['nama_img'],
@@ -1022,7 +1019,7 @@ class BuybackCust extends BaseController
                         'qty' => $this->request->getVar('qty1'),
                         'jenis' =>  $databarang['jenis'],
                         'model' =>  $databarang['model'],
-                        'status' => $this->request->getVar('status_proses'),
+                        'status' => $statusproses,
                         'keterangan' =>  $databarang['keterangan'],
                         'berat' =>  $this->request->getVar('berat1'),
                         'berat_murni' =>  $beratmurni,
@@ -1033,7 +1030,7 @@ class BuybackCust extends BaseController
                         'merek' => $databarang['merek'],
                         'no_nota' => $datapenjualan['no_transaksi_jual'],
                         'total_harga' => $totalharga,
-                        'status_proses' => $this->request->getVar('status_proses')
+                        'status_proses' => $statusproses
                     ]);
                     $this->modeldetailpenjualan->save([
                         'id_detail_penjualan' => $databarang['id_detail_penjualan'],
@@ -1108,6 +1105,36 @@ class BuybackCust extends BaseController
             $notransaksi = 'B-' . date('ym') . str_pad(1, 4, '0', STR_PAD_LEFT);
 
             return $notransaksi;
+        }
+    }
+
+    public function ScanBarcodeData()
+    {
+        if ($this->request->isAJAX()) {
+            $databarcode = $this->modeldetailpenjualan->getDetailKode($this->request->getVar('nobarcode'));
+            if ($databarcode) {
+                $datatrans = $this->penjualan->getDataPenjualan($databarcode['id_date_penjualan']);
+                if ($datatrans != null && $datatrans['pembayaran'] != 'Bayar Nanti') {
+                    $data = [
+                        'tampildata' => $this->modeldetailpenjualan->getDetailAlljual($datatrans['id_date_penjualan']),
+                        'tampildatabuyback' => $this->modeldetailbuyback->getDetailAllBuyback(),
+
+                    ];
+                    $msg = [
+                        'data' => view('buybackcust/datamodaldenganota', $data),
+                        'datacust' =>  $datatrans['nohp_cust'],
+                    ];
+                } else {
+                    $msg = [
+                        'pesan_error' => 'Tidak ada Data Barcode'
+                    ];
+                }
+            } else {
+                $msg = [
+                    'pesan_error' => 'Tidak ada Data Barcode'
+                ];
+            }
+            echo json_encode($msg);
         }
     }
 }

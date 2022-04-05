@@ -32,6 +32,15 @@ class ModelPembelian extends Model
         $data = $this->get();
         return $data->getResult('array')[0];
     }
+    public function getPembelianRetur($id)
+    {
+        $this->select('*');
+        $this->join('tbl_supplier', 'tbl_supplier.id_supplier = tbl_pembelian.id_supplier');
+        $this->where(['no_transaksi' => $id]);
+        $this->orderBy('tbl_pembelian.created_at', 'DESC');
+        $data = $this->get();
+        return $data->getResult('array')[0];
+    }
     public function getNoTrans()
     {
         $db = db_connect();

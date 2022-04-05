@@ -36,4 +36,12 @@ class ModelDetailTransaksi extends Model
         $query = $this->get();
         return $query->getResult('array')[0];
     }
+    public function getDataDeleteTrans($faktur, $method)
+    {
+        $this->selectSum('id_detail_transaksi');
+        $this->where(['keterangan' => $faktur]);
+        $this->where(['pembayaran' => $method]);
+        $query = $this->get();
+        return $query->getResult('array')[0];
+    }
 }

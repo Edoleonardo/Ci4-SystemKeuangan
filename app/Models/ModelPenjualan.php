@@ -15,15 +15,10 @@ class ModelPenjualan extends Model
     public function getDataPenjualan($id = false)
     {
         if ($id == false) {
-            // $query =  $this->db->table('tbl_img')
-            //     ->select('*')
-            //     ->get();
-            // $data[0] = $query;
             $this->findAll();
             $this->orderBy('created_at', 'DESC');
             $data = $this->get();
             return $data->getResult('array');
-            //return $this->findAll();
         }
         return $this->where(['id_date_penjualan' => $id])->first();
     }

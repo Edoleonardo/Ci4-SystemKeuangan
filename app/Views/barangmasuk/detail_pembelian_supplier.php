@@ -80,6 +80,10 @@
                                     <td>Total Berat Murni</td>
                                     <td><?= $datapembelian['total_berat_murni'] ?></td>
                                 </tr>
+                                <tr>
+                                    <td>Deposit</td>
+                                    <td><?= $datapembelian['deposit'] ?></td>
+                                </tr>
                             </tbody>
                         </table>
                     </div>
@@ -92,27 +96,24 @@
                 <div id="cardbayar">
                     <div class="card">
                         <div class="card-body">
-                            <a class="btn btn-app">
-                                <i class="fas fa-edit"></i> Edit
-                            </a>
                             <a class="btn btn-app" href="/printbarcode/<?= $datapembelian['id_date_pembelian'] ?>" target="_blank">
                                 <i class="fas fa-barcode"></i> Print Barcode
                             </a>
-                            <a class="btn btn-app" type="button" data-toggle="modal" data-target="#modal-xl">
-                                <i class="fas fa-redo"></i> Retur Barang
-                            </a>
-                            <form id="cancelform" action="/cancelbarang/<?= $datapembelian['id_date_pembelian'] ?>" method="POST" class="d-inline">
+                            <!-- <form id="cancelform" action="/cancelbarang/<?= $datapembelian['id_date_pembelian'] ?>" method="POST" class="d-inline">
                                 <?= csrf_field(); ?>
                                 <input type="hidden" name="_method" value="DELETE">
                                 <button type="button" class="btn btn-app" onclick="return konfrimcancel()"><i class="fas fa-window-close"></i> Cancel Pembelian </button>
-                            </form>
-                            <?php if ($datapembelian['byr_berat_murni'] > 0) : ?>
-                                <a class="btn btn-app bg-danger" type="button" data-toggle="modal" data-target="#modal-bayar">
-                                    <i class="fas fa-money-bill"></i> Bayar
+                            </form> -->
+                            <?php if ($datapembelian['cara_pembayaran'] == 'Lunas') : ?>
+                                <a class="btn btn-app bg-primary" type="button">
+                                    <i class="fas fa-check"></i> Lunas
                                 </a>
                             <?php else : ?>
-                                <a class="btn btn-app bg-primary" type="button" data-toggle="modal" data-target="#modal-bayar">
-                                    <i class="fas fa-check"></i> Lunas
+                                <a class="btn btn-app" type="button" data-toggle="modal" data-target="#modal-xl">
+                                    <i class="fas fa-redo"></i> Retur Barang
+                                </a>
+                                <a class="btn btn-app bg-danger" type="button" data-toggle="modal" data-target="#modal-bayar">
+                                    <i class="fas fa-money-bill"></i> Bayar
                                 </a>
                             <?php endif ?>
                         </div>
@@ -200,9 +201,32 @@
                         </div>
                         <div class="col-sm-6">
                             <div class="card">
-                                <!-- /.card-header -->
-
-                                <!-- /.card-body -->
+                                <?php if ($databayar) : ?>
+                                    <!-- /.card-header -->
+                                    <div class="card-body p-0" id="byr11">
+                                        <table class="table table-striped" id="byr22">
+                                            <thead>
+                                                <tr>
+                                                    <th>Cara Pembayaran</th>
+                                                    <th style="text-align: center;">Kode</th>
+                                                    <th>Jumlah Bayar</th>
+                                                    <th>Berat Murni</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <?php foreach ($databayar as $byr) : ?>
+                                                    <tr>
+                                                        <td> <?= $byr['cara_pembayaran'] ?> </td>
+                                                        <td><?= ($byr['no_retur']) ? $byr['no_retur'] : $byr['kode_24k'] ?></td>
+                                                        <td><?= number_format($byr['jumlah_pembayaran'], 2, ',', '.') ?></td>
+                                                        <td><?= $byr['berat_murni'] ?></td>
+                                                    </tr>
+                                                <?php endforeach; ?>
+                                            </tbody>
+                                        </table>
+                                        <!-- /.card-body -->
+                                    </div>
+                                <?php endif; ?>
                             </div>
                         </div>
                     </div>
@@ -307,7 +331,6 @@
                                             <div id="validationServerUsernameFeedback" class="invalid-feedback harga_murnimsg">
                                             </div>
                                             <input type="hidden" id="dateid" name="dateid" value="<?= $datapembelian['id_date_pembelian'] ?>">
-
                                         </div>
                                     </div>
                                     <div class="col-sm-12">
@@ -372,7 +395,7 @@
                                                         <tr>
                                                             <td> <?= $byr['cara_pembayaran'] ?> </td>
                                                             <td><?= number_format($byr['jumlah_pembayaran'], 2, ',', '.') ?></td>
-                                                            <td><?= ($byr['kode_retur']) ? $byr['kode_retur'] : $byr['kode_24k'] ?></td>
+                                                            <td><?= ($byr['no_retur']) ? $byr['no_retur'] : $byr['kode_24k'] ?></td>
                                                             <td><?= $byr['berat_murni'] ?></td>
                                                             <td><button type='button' class='btn btn-block bg-gradient-danger' onclick="hapus(<?= $byr['id_pembayaran'] ?>)"><i class='fas fa-trash'></i></button></td>
                                                         </tr>
@@ -437,10 +460,9 @@
                                 <!-- /.card-header -->
                                 <div class="card-header">
                                     <h3 class="card-title" id="titletable"></h3>
-
                                 </div>
                                 <div class="card-body table-responsive p-0">
-                                    <table id="bahan24k" class="table table-bordered table-striped">
+                                    <table id="bahan24k" class="table table-bordered table-hover table-striped">
                                         <thead>
                                             <tr>
                                                 <th>Gambar</th>
@@ -457,12 +479,11 @@
                                                 <th>Nilai Tukar</th>
                                                 <th>Merek</th>
                                                 <th>Total Harga</th>
-                                                <th>Tambah</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             <?php foreach ($tampil24k as $row) : ?>
-                                                <tr>
+                                                <tr onclick="DataBahan24k(<?= $row['barcode'] ?>)">
                                                     <td><img src='/img/<?= $row['gambar'] ?>' class='imgg'></td>
                                                     <td><?= $row['barcode'] ?></td>
                                                     <td><?= $row['qty'] ?></td>
@@ -477,9 +498,6 @@
                                                     <td><?= $row['nilai_tukar'] ?></td>
                                                     <td><?= $row['merek'] ?></td>
                                                     <td><?= number_format($row['total_harga'], 2, ",", ".") ?></td>
-                                                    <td>
-                                                        <button type="button" onclick="DataBahan24k(<?= $row['barcode'] ?>)" class="btn btn-primary">Pilih </button>
-                                                    </td>
                                                 </tr>
                                             <?php endforeach; ?>
                                         </tbody>
@@ -510,49 +528,26 @@
                                 <!-- /.card-header -->
                                 <div class="card-header">
                                     <h3 class="card-title" id="titletable"></h3>
-
                                 </div>
-                                <div class="card-body table-responsive p-0">
-                                    <table id="retursales" class="table table-bordered table-striped">
+                                <div class="card-body table-responsive p-0" id="tblretur">
+                                    <table id="retursales" class="table table-bordered table-hover table-striped">
                                         <thead>
                                             <tr>
-                                                <th>Gambar</th>
-                                                <th>Kode</th>
-                                                <th>Qty</th>
-                                                <th>Jenis</th>
-                                                <th>Model</th>
-                                                <th>Keterangan</th>
-                                                <th>Berat</th>
-                                                <th>Berat Murni</th>
-                                                <th>Harga Beli</th>
-                                                <th>ongkos</th>
-                                                <th>Kadar</th>
-                                                <th>Nilai Tukar</th>
-                                                <th>Merek</th>
-                                                <th>Total Harga</th>
-                                                <th>Tambah</th>
+                                                <th>Nomor Retur</th>
+                                                <th>keterangan</th>
+                                                <th>total_berat_murni</th>
+                                                <th>tanggal_retur</th>
+                                                <th>jumlah_barang</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             <?php foreach ($tampilretur as $row) : ?>
-                                                <tr>
-                                                    <td><img src='/img/<?= $row['nama_img'] ?>' class='imgg'></td>
-                                                    <td><?= $row['kode'] ?></td>
-                                                    <td><?= $row['qty'] ?></td>
-                                                    <td><?= $row['jenis'] ?></td>
-                                                    <td><?= $row['model'] ?></td>
+                                                <tr onclick="DataReturSales('<?= $row['no_retur'] ?>')">
+                                                    <td><?= $row['no_retur'] ?></td>
                                                     <td><?= $row['keterangan'] ?></td>
-                                                    <td><?= $row['berat'] ?></td>
-                                                    <td><?= $row['berat_murni'] ?></td>
-                                                    <td><?= number_format($row['harga_beli'], 2, ",", ".") ?></td>
-                                                    <td><?= number_format($row['ongkos'], 2, ",", ".") ?></td>
-                                                    <td><?= $row['kadar'] ?></td>
-                                                    <td><?= $row['nilai_tukar'] ?></td>
-                                                    <td><?= $row['merek'] ?></td>
-                                                    <td><?= number_format($row['total_harga'], 2, ",", ".") ?></td>
-                                                    <td>
-                                                        <button type="button" onclick="DataReturSales(<?= $row['kode'] ?>)" class="btn btn-primary">Pilih </button>
-                                                    </td>
+                                                    <td><?= $row['total_berat_murni'] ?></td>
+                                                    <td><?= $row['tanggal_retur'] ?></td>
+                                                    <td><?= $row['jumlah_barang'] ?></td>
                                                 </tr>
                                             <?php endforeach; ?>
                                         </tbody>
@@ -609,7 +604,6 @@
                             title: 'Data Berhasil Dihapus',
                         })
                         $("#refresbayartbl").load("/detailpembelian/" + document.getElementById('dateid').value + " #refresbayartbl");
-
                         myDataBayar()
                     },
                     error: function(xhr, ajaxOptions, thrownError) {
@@ -623,131 +617,167 @@
     }
 
     function SelesaiBayar() {
-        console.log('selesai')
-        $('#modal-bayar').modal('toggle');
-        $("#cardbayar").load("/detailpembelian/" + document.getElementById('dateid').value + " #cardbayar");
+        Swal.fire({
+            title: 'Selesai',
+            text: "Selesai Bayar ?",
+            icon: 'info',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Selesai',
+        }).then((choose) => {
+            if (choose.isConfirmed) {
+                $.ajax({
+                    type: "GET",
+                    dataType: "json",
+                    url: "<?php echo base_url('selesaipembayaran'); ?>",
+                    data: {
+                        dateid: document.getElementById('dateid').value
+                    },
+                    success: function(result) {
+                        if (result.error) {
+                            Swal.fire({
+                                icon: 'warning',
+                                title: result.error,
+                            })
+                        }
+                        if (result.pesan) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: result.pesan,
+                            })
+                            $('#modal-bayar').modal('toggle');
+                            $("#cardbayar").load("/detailpembelian/" + document.getElementById('dateid').value + " #cardbayar");
+                            $("#byr11").load("/detailpembelian/" + document.getElementById('dateid').value + " #byr22");
 
+                        }
+                    },
+                    error: function(xhr, ajaxOptions, thrownError) {
+                        alert(xhr.status + "\n" + xhr.responseText + "\n" + thrownError);
+                    }
+                })
+
+            }
+        })
     }
 
     function DataBahan24k(id) {
-        console.log(id)
         $('#kode_bahan24k').val(id)
         $('#modal-bahan24k').modal('toggle');
     }
 
     function DataReturSales(id) {
-        $('#kode_retur').val(id)
+        $('#no_retur').val(id)
         $('#modal-retur').modal('toggle');
     }
 
 
     $('.editdataform').submit(function(e) {
-        e.preventDefault()
-        let form = $('.editdataform')[0];
-        let data = new FormData(form)
-        $.ajax({
-            type: "POST",
-            data: data,
-            url: "<?php echo base_url('editdataform') ?>",
-            dataType: "json",
-            contentType: false,
-            processData: false,
-            cache: false,
-            beforeSend: function() {
-                $('.btnedit').html('<i class="fa fa-spin fa-spinner">')
-            },
-            complete: function() {
-                $('.btnedit').html('Edit')
-            },
-            success: function(result) {
-                if (result != 'error') {
-                    if (result.error) {
-                        console.log(result)
-                        if (result.error.qty) {
-                            $('#qty').addClass('is-invalid')
-                            $('.qtymsg').html(result.error.qty)
-                        } else {
-                            $('#qty').removeClass('is-invalid')
-                            $('.qtymsg').html('')
-                        }
-                        if (result.error.nilai_tukar) {
-                            $('#nilai_tukar').addClass('is-invalid')
-                            $('.nilai_tukarmsg').html(result.error.nilai_tukar)
-                        } else {
-                            $('#nilai_tukar').removeClass('is-invalid')
-                            $('.nilai_tukarmsg').html('')
-                        }
-                        if (result.error.jenis) {
-                            $('#jenis').addClass('is-invalid')
-                            $('.jenismsg').html(result.error.jenis)
-                        } else {
-                            $('#jenis').removeClass('is-invalid')
-                            $('.jenismsg').html('')
-                        }
-                        if (result.error.berat) {
-                            $('#berat').addClass('is-invalid')
-                            $('.beratmsg').html(result.error.berat)
-                        } else {
-                            $('#berat').removeClass('is-invalid')
-                            $('.beratmsg').html('')
-                        }
-                        if (result.error.harga_beli) {
-                            $('#harga_beli').addClass('is-invalid')
-                            $('.harga_belimsg').html(result.error.harga_beli)
-                        } else {
-                            $('#harga_beli').removeClass('is-invalid')
-                            $('.harga_belimsg').html('')
-                        }
-                        if (result.error.ongkos) {
-                            $('#ongkos').addClass('is-invalid')
-                            $('.ongkosmsg').html(result.error.ongkos)
-                        } else {
-                            $('#ongkos').removeClass('is-invalid')
-                            $('.ongkosmsg').html('')
-                        }
-                    } else {
-                        $('#qty').removeClass('is-invalid')
-                        $('.qtymsg').html('')
-                        $('#total_berat').removeClass('is-invalid')
-                        $('.total_beratmsg').html('')
-                        $('#nilai_tukar').removeClass('is-invalid')
-                        $('.nilai_tukarmsg').html('')
-                        $('#jenis').removeClass('is-invalid')
-                        $('.jenismsg').html('')
-                        $('#berat').removeClass('is-invalid')
-                        $('.beratmsg').html('')
-                        $('#harga_beli').removeClass('is-invalid')
-                        $('.harga_belimsg').html('')
-                        $('#ongkos').removeClass('is-invalid')
-                        $('.ongkosmsg').html('')
+        //     e.preventDefault()
+        //     let form = $('.editdataform')[0];
+        //     let data = new FormData(form)
+        //     $.ajax({
+        //         type: "POST",
+        //         data: data,
+        //         url: "<?php echo base_url('editdataform') ?>",
+        //         dataType: "json",
+        //         contentType: false,
+        //         processData: false,
+        //         cache: false,
+        //         beforeSend: function() {
+        //             $('.btnedit').html('<i class="fa fa-spin fa-spinner">')
+        //         },
+        //         complete: function() {
+        //             $('.btnedit').html('Edit')
+        //         },
+        //         success: function(result) {
+        //             if (result != 'error') {
+        //                 if (result.error) {
+        //                     if (result.error.qty) {
+        //                         $('#qty').addClass('is-invalid')
+        //                         $('.qtymsg').html(result.error.qty)
+        //                     } else {
+        //                         $('#qty').removeClass('is-invalid')
+        //                         $('.qtymsg').html('')
+        //                     }
+        //                     if (result.error.nilai_tukar) {
+        //                         $('#nilai_tukar').addClass('is-invalid')
+        //                         $('.nilai_tukarmsg').html(result.error.nilai_tukar)
+        //                     } else {
+        //                         $('#nilai_tukar').removeClass('is-invalid')
+        //                         $('.nilai_tukarmsg').html('')
+        //                     }
+        //                     if (result.error.jenis) {
+        //                         $('#jenis').addClass('is-invalid')
+        //                         $('.jenismsg').html(result.error.jenis)
+        //                     } else {
+        //                         $('#jenis').removeClass('is-invalid')
+        //                         $('.jenismsg').html('')
+        //                     }
+        //                     if (result.error.berat) {
+        //                         $('#berat').addClass('is-invalid')
+        //                         $('.beratmsg').html(result.error.berat)
+        //                     } else {
+        //                         $('#berat').removeClass('is-invalid')
+        //                         $('.beratmsg').html('')
+        //                     }
+        //                     if (result.error.harga_beli) {
+        //                         $('#harga_beli').addClass('is-invalid')
+        //                         $('.harga_belimsg').html(result.error.harga_beli)
+        //                     } else {
+        //                         $('#harga_beli').removeClass('is-invalid')
+        //                         $('.harga_belimsg').html('')
+        //                     }
+        //                     if (result.error.ongkos) {
+        //                         $('#ongkos').addClass('is-invalid')
+        //                         $('.ongkosmsg').html(result.error.ongkos)
+        //                     } else {
+        //                         $('#ongkos').removeClass('is-invalid')
+        //                         $('.ongkosmsg').html('')
+        //                     }
+        //                 } else {
+        //                     $('#qty').removeClass('is-invalid')
+        //                     $('.qtymsg').html('')
+        //                     $('#total_berat').removeClass('is-invalid')
+        //                     $('.total_beratmsg').html('')
+        //                     $('#nilai_tukar').removeClass('is-invalid')
+        //                     $('.nilai_tukarmsg').html('')
+        //                     $('#jenis').removeClass('is-invalid')
+        //                     $('.jenismsg').html('')
+        //                     $('#berat').removeClass('is-invalid')
+        //                     $('.beratmsg').html('')
+        //                     $('#harga_beli').removeClass('is-invalid')
+        //                     $('.harga_belimsg').html('')
+        //                     $('#ongkos').removeClass('is-invalid')
+        //                     $('.ongkosmsg').html('')
 
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Berhasil Edit',
-                            confirmButtonColor: '#3085d6',
-                            confirmButtonText: 'OK',
-                            allowOutsideClick: false
-                        }).then((choose) => {
-                            if (choose.isConfirmed) {
-                                $('#modal-edit').modal('toggle');
-                                $("#datatable").load("/detailpembelian/" + document.getElementById('dateid').value + " #datatable");
-                                $("#refresharga").load("/detailpembelian/" + document.getElementById('dateid').value + " #refresharga");
-                                myDataBayar()
-                            }
-                        })
-                    }
-                } else {
-                    Swal.fire({
-                        icon: 'warning',
-                        title: 'Tidak ada Data',
-                    })
-                }
+        //                     Swal.fire({
+        //                         icon: 'success',
+        //                         title: 'Berhasil Edit',
+        //                         confirmButtonColor: '#3085d6',
+        //                         confirmButtonText: 'OK',
+        //                         allowOutsideClick: false
+        //                     }).then((choose) => {
+        //                         if (choose.isConfirmed) {
+        //                             $('#modal-edit').modal('toggle');
+        //                             $("#datatable").load("/detailpembelian/" + document.getElementById('dateid').value + " #datatable");
+        //                             $("#refresharga").load("/detailpembelian/" + document.getElementById('dateid').value + " #refresharga");
+        //                             myDataBayar()
+        //                         }
+        //                     })
+        //                 }
+        //             } else {
+        //                 Swal.fire({
+        //                     icon: 'warning',
+        //                     title: 'Tidak ada Data',
+        //                 })
+        //             }
 
-            },
-            error: function(xhr, ajaxOptions, thrownError) {
-                alert(xhr.status + "\n" + xhr.responseText + "\n" + thrownError);
-            }
-        })
+        //         },
+        //         error: function(xhr, ajaxOptions, thrownError) {
+        //             alert(xhr.status + "\n" + xhr.responseText + "\n" + thrownError);
+        //         }
+        //     })
     })
 
     function pembulatankoma(berat) {
@@ -815,30 +845,6 @@
         })
     }
 
-    function tampilbarangbayar() {
-        $.ajax({
-            type: "GET",
-            dataType: "json",
-            url: "<?php echo base_url('ajaxdetailpembelian'); ?>",
-            data: {
-                dateid: '<?php echo $datapembelian['id_date_pembelian'] ?>'
-            },
-            success: function(result) {
-                $('#totalberatmurnihtml').html(pembulatankoma(result.totalberatmurni.total_berat_murni))
-
-                document.getElementById('totalberatmurnihtml1').innerHTML = pembulatankoma(result.totalberatmurni.byr_berat_murni)
-                // document.getElementById('totalbersih').innerHTML = pembulatankoma(result.totalbersih.total_harga).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
-                document.getElementById('harga_murnihtml').innerHTML = ''
-                // document.getElementById('harga_murni').value = ''
-                Harganow()
-
-            },
-            error: function(xhr, ajaxOptions, thrownError) {
-                alert(xhr.status + "\n" + xhr.responseText + "\n" + thrownError);
-            }
-        })
-    }
-
     $('.pembayaranform').submit(function(e) {
         e.preventDefault()
         let form = $('.pembayaranform')[0];
@@ -895,12 +901,19 @@
                             $('#kode_bahan24k').removeClass('is-invalid')
                             $('.kode_bahan24k').html('')
                         }
-                        if (result.error.kode_retur) {
-                            $('#kode_retur').addClass('is-invalid')
-                            $('.kode_returmsg').html(result.error.kode_retur)
+                        if (result.error.beratbahan) {
+                            $('#beratbahan').addClass('is-invalid')
+                            $('.beratbahanmsg').html(result.error.beratbahan)
                         } else {
-                            $('#kode_retur').removeClass('is-invalid')
-                            $('.kode_retur').html('')
+                            $('#beratbahan').removeClass('is-invalid')
+                            $('.beratbahan').html('')
+                        }
+                        if (result.error.no_retur) {
+                            $('#no_retur').addClass('is-invalid')
+                            $('.no_returmsg').html(result.error.no_retur)
+                        } else {
+                            $('#no_retur').removeClass('is-invalid')
+                            $('.no_retur').html('')
                         }
                     } else {
                         $('#namabank').removeClass('is-invalid')
@@ -913,21 +926,35 @@
                         $('.harga_murni').html('')
                         $('#kode_bahan24k').removeClass('is-invalid')
                         $('.kode_bahan24k').html('')
-                        $('#kode_retur').removeClass('is-invalid')
-                        $('.kode_retur').html('')
+                        $('#beratbahan').removeClass('is-invalid')
+                        $('.beratbahan').html('')
+                        $('#no_retur').removeClass('is-invalid')
+                        $('.no_retur').html('')
 
                         $("#refresbayartbl").load("/detailpembelian/" + document.getElementById('dateid').value + " #refresbayartbl");
-
                         myDataBayar()
-
-                        if (result.pesan_lebih.pesan) {
-                            Swal.fire({
-                                icon: 'info',
-                                title: 'Lebih Bayar',
-                                confirmButtonColor: '#3085d6',
-                                confirmButtonText: 'OK',
-                            })
+                        if (result.pesan_lebih) {
+                            if (result.pesan_lebih.pesan) {
+                                Swal.fire({
+                                    icon: 'info',
+                                    title: 'Lebih Bayar',
+                                    confirmButtonColor: '#3085d6',
+                                    confirmButtonText: 'OK',
+                                })
+                            }
                         }
+                        if (result.pesan_deposit) {
+                            if (result.pesan_deposit.pesan) {
+                                Swal.fire({
+                                    icon: 'info',
+                                    title: result.pesan_deposit.pesan,
+                                    confirmButtonColor: '#3085d6',
+                                    confirmButtonText: 'OK',
+                                })
+                            }
+                        }
+
+
                         // Swal.fire({
                         //     icon: 'success',
                         //     title: 'Berhasil Bayar',
@@ -941,9 +968,6 @@
 
                         //     }
                         // })
-
-
-
                     }
                 } else {
                     Swal.fire({
@@ -959,9 +983,12 @@
         })
     })
 
+    function refreshdata() {
+        $("#tblretur").load("/detailpembelian/" + document.getElementById('dateid').value + " #retursales");
+
+    }
 
     function myPembayaran() {
-        console.log('masuk')
         const carabyr = document.getElementById('pembayaran').value
         const metod1 = $('.metodebayar')
         const nmbank = $('.namabankhtml')
@@ -974,13 +1001,14 @@
         bank[0].innerHTML = ''
 
         var NamaBank = '<label>Nama Bank Debit/CC</label><select  type="text" id="namabank" name="namabank" class="form-control" placeholder="Masukan Nama Bank"><?php foreach ($bank as $m) : ?><option value="<?= $m['nama_bank'] ?>"><?= $m['nama_bank'] ?> </option><?php endforeach; ?></select><div id="validationServerUsernameFeedback" class="invalid-feedback namabankmsg"></div>'
-        var retur = '<label>retur %</label><input type="number"  min="0" id="retur" name="retur" class="form-control" placeholder="Masukan retur"><div id="validationServerUsernameFeedback" class="invalid-feedback returmsg"></div>'
-        var Transfer = '<label>Transfer</label><input type="number"  min="0" id="transfer" name="transfer" class="form-control" placeholder="Masukan transfer"><div id="validationServerUsernameFeedback" class="invalid-feedback transfermsg"></div>'
-        var Tunai = '<label>Tunai</label><input type="number" min="0" id="tunai" name="tunai" class="form-control" placeholder="Masukan tunai"><div id="validationServerUsernameFeedback" class="invalid-feedback tunaimsg"></div>'
-        var Bahan24k = '<label>Masukan Kode Bahan 24K</label><input type="number" min="0" id="kode_bahan24k" name="kode_bahan24k" class="form-control" placeholder="Masukan kode Bahan"><div id="validationServerUsernameFeedback" class="invalid-feedback kode_bahan24kmsg"></div>'
-        var Retursales = '<label>Masukan Kode Barang Retur</label><input type="number"  min="0" id="kode_retur" name="kode_retur" class="form-control" placeholder="Masukan kode"><div id="validationServerUsernameFeedback" class="invalid-feedback kode_returmsg"></div>'
+        var retur = '<label>retur %</label><input type="number"  min="1" id="retur" name="retur" class="form-control" placeholder="Masukan retur"><div id="validationServerUsernameFeedback" class="invalid-feedback returmsg"></div>'
+        var Transfer = '<label>Transfer</label><input type="number"  min="1" id="transfer" name="transfer" class="form-control" placeholder="Masukan transfer"><div id="validationServerUsernameFeedback" class="invalid-feedback transfermsg"></div>'
+        var Tunai = '<label>Tunai</label><input type="number" min="1" id="tunai" name="tunai" class="form-control" placeholder="Masukan tunai"><div id="validationServerUsernameFeedback" class="invalid-feedback tunaimsg"></div>'
+        var Bahan24k = '<label>Masukan Kode Bahan 24K</label><input type="number" min="1" id="kode_bahan24k" name="kode_bahan24k" class="form-control" placeholder="Masukan kode Bahan"><div id="validationServerUsernameFeedback" class="invalid-feedback kode_bahan24kmsg"></div>'
+        var Retursales = '<label>Masukan Nomor Retur</label><input type="text" id="no_retur" name="no_retur" class="form-control" placeholder="Masukan kode"><div id="validationServerUsernameFeedback" class="invalid-feedback no_returmsg"></div>'
         var modalpilihr24k = '<label>Pilih Barang 24K</label><a class="form-control btn bg-green" type="button" data-toggle="modal" data-target="#modal-bahan24k"><i class="fas fa-plus"></i></a>'
         var modalpilihretur = '<label>Pilih Barang Retur</label><a class="form-control btn bg-green" type="button" data-toggle="modal" data-target="#modal-retur"><i class="fas fa-plus"></i></a>'
+        var beratbahan = '<label>Masukan Berat</label><input type="number" step="0.01" min="1" id="beratbahan" name="beratbahan" class="form-control" placeholder="Masukan Berat Bahan"><div id="validationServerUsernameFeedback" class="invalid-feedback beratbahanmsg"></div>'
         if (carabyr == 'Bayar Nanti') {
             myDataBayar()
             metod1[0].innerHTML = ''
@@ -1004,7 +1032,7 @@
             myDataBayar()
             metod1[0].innerHTML = Bahan24k
             metod2[0].innerHTML = modalpilihr24k
-
+            nmbank[0].innerHTML = beratbahan
         }
         if (carabyr == 'ReturSales') {
             myDataBayar()
@@ -1012,7 +1040,6 @@
             metod2[0].innerHTML = modalpilihretur
 
         }
-        console.log(carabyr)
     }
 
 
@@ -1036,70 +1063,10 @@
         const beratmurni = document.getElementById('totalberatmurnihtml1').innerHTML
         beratmurnival = parseFloat(beratmurni)
         var hasil = (beratmurnival * harga_murni)
-        document.getElementById('totalbersih1').innerHTML = hasil.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
+        document.getElementById('totalbersih1').innerHTML = Math.round(hasil, 2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
         document.getElementById('harga_murnihtml').innerHTML = harga_murni.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
 
     }
-
-    // function brycas() {
-    //     var val = document.getElementById('retur').value
-    //     const totalbersih = document.getElementById('totalbersihconst').innerHTML
-    //     totalbersihval = parseFloat(totalbersih.replaceAll('.', ''))
-    //     hasil = totalbersihval + (val * (totalbersihval / 100))
-    //     document.getElementById('totalbersih').innerHTML = hasil.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
-    //     document.getElementById('totalbersih1').innerHTML = hasil.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
-    //     document.getElementById('returbyr').innerHTML = val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".") + '%'
-    //     Harganow()
-    //     byrtransfer()
-    //     byrtunai()
-    // }
-
-    // function byrtransfer() {
-    //     if (document.getElementById('harga_murni')) {
-    //         bulat = (isNaN(parseFloat(document.getElementById('harga_murni').value))) ? 0 : parseFloat(document.getElementById('harga_murni').value)
-    //     } else {
-    //         bulat = 0
-    //     }
-    //     if (document.getElementById('transfer')) {
-    //         transfer = (isNaN(parseFloat(document.getElementById('transfer').value))) ? 0 : parseFloat(document.getElementById('transfer').value)
-    //     } else {
-    //         transfer = 0
-    //     }
-    //     if (document.getElementById('tunai')) {
-    //         tunai = (isNaN(parseFloat(document.getElementById('tunai').value))) ? 0 : parseFloat(document.getElementById('tunai').value)
-    //     } else {
-    //         tunai = 0
-    //     }
-    //     const totalbersih = document.getElementById('totalbersih').innerHTML
-    //     totalbersihval = parseFloat(totalbersih.replaceAll('.', ''))
-    //     hasil = totalbersihval - (bulat + tunai + transfer)
-    //     document.getElementById('transferbyr').innerHTML = transfer.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
-    //     document.getElementById('totalbersih1').innerHTML = hasil.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
-    // }
-
-    // function byrtunai() {
-    //     if (document.getElementById('harga_murni')) {
-    //         bulat = (isNaN(parseFloat(document.getElementById('harga_murni').value))) ? 0 : parseFloat(document.getElementById('harga_murni').value)
-    //     } else {
-    //         bulat = 0
-    //     }
-    //     if (document.getElementById('transfer')) {
-    //         transfer = (isNaN(parseFloat(document.getElementById('transfer').value))) ? 0 : parseFloat(document.getElementById('transfer').value)
-    //     } else {
-    //         transfer = 0
-    //     }
-    //     if (document.getElementById('tunai')) {
-    //         tunai = (isNaN(parseFloat(document.getElementById('tunai').value))) ? 0 : parseFloat(document.getElementById('tunai').value)
-    //     } else {
-    //         tunai = 0
-    //     }
-    //     const totalbersih = document.getElementById('totalbersih').innerHTML
-    //     totalbersihval = parseFloat(totalbersih.replaceAll('.', ''))
-    //     hasil = totalbersihval - (bulat + tunai + transfer)
-    //     document.getElementById('tunaibyr').innerHTML = tunai.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
-    //     document.getElementById('totalbersih1').innerHTML = hasil.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
-
-    // }
 
 
     $(document).ready(function() {
@@ -1111,14 +1078,14 @@
             "aaSorting": []
             //"buttons": ["copy", "csv", "excel", "pdf", "print", "colvis", ]
         }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
-
-        $("#retursales").DataTable({
-            "responsive": true,
-            "lengthChange": false,
-            "autoWidth": false,
-            "aaSorting": []
-            //"buttons": ["copy", "csv", "excel", "pdf", "print", "colvis", ]
-        }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
     })
+
+    $("#retursales").DataTable({
+        "responsive": true,
+        "lengthChange": false,
+        "autoWidth": false,
+        "aaSorting": []
+        //"buttons": ["copy", "csv", "excel", "pdf", "print", "colvis", ]
+    }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
 </script>
 <?= $this->endSection(); ?>
