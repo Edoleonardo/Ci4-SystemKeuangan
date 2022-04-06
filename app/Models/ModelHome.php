@@ -57,10 +57,17 @@ class ModelHome extends Model
     {
         $db = db_connect();
         $data = $db->query('select * from tbl_stock where barcode = ' . $id . ' and substr(barcode,1,1) = 4 ');
-        // return $this->where(['barcode' => $id])->first();
-        // $db = db_connect();
-        // $data = $db->query('select * from tbl_stock where substr(barcode,1,1) = 4 AND barcode = ' . $id . ' ');
-        // $data = $this->get();
+        if ($data->getResult('array')) {
+            $data = $data->getResult('array')[0];
+        } else {
+            $data = $data->getResult('array');
+        }
+        return $data;
+    }
+    public function CheckDataCuci($id) //untukcuci
+    {
+        $db = db_connect();
+        $data = $db->query('select * from tbl_stock where barcode = ' . $id . ' ');
         if ($data->getResult('array')) {
             $data = $data->getResult('array')[0];
         } else {

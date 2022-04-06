@@ -621,6 +621,7 @@
                                 title: 'Berhasil Di Retur',
                             })
                             $('#modal-retur').modal('hide')
+                            $("#refrshtbl1").load("/detailpenjualan/" + document.getElementById('iddate1').value + " #refrshtbl2");
                             $("#rfs1").load("/detailpenjualan/" + document.getElementById('iddate1').value + " #rfs2");
                             $("#card1").load("/detailpenjualan/" + document.getElementById('iddate1').value + " #card2");
                             document.getElementById('pembayaran').value = 'Bayar Nanti'

@@ -282,7 +282,7 @@ class BarangCuci extends BaseController
             $session = session();
             $id = $this->request->getVar('id');
             $datadetailcuci = $this->modeldetailcuci->getDataDetailCuci($id);
-            $datastock = $this->datastock->CheckData($datadetailcuci['kode']);
+            $datastock = $this->datastock->CheckDataCuci($datadetailcuci['kode']);
             $harga_beli = round($datadetailcuci['total_harga'] / $this->request->getVar('berat'));
             $this->datastock->save([
                 'id_karyawan' => $session->get('id_user'),

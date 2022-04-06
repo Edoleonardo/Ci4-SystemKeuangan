@@ -1241,8 +1241,15 @@ class Barangkeluar extends BaseController
                     if ($databarang && $databarang['qty'] > 0) {
                         if (substr($databarang['barcode'], 0, 1) == 3) {
                             $totalharga = $databarang['harga_beli'] * $databarang['berat'] * $databarang['qty'];
-                        } else {
+                        }
+                        if (substr($databarang['barcode'], 0, 1) == 2) {
+                            $totalharga = $databarang['harga_beli'];
+                        }
+                        if (substr($databarang['barcode'], 0, 1) == 1 || substr($databarang['barcode'], 0, 1) == 4 || substr($databarang['barcode'], 0, 1) == 5) {
                             $totalharga = $databarang['harga_beli'] * $databarang['berat'];
+                        }
+                        if (substr($databarang['barcode'], 0, 1) == 6) {
+                            $totalharga = $databarang['harga_beli'] * $databarang['qty'];
                         }
                         $checkdata = $this->modeldetailpenjualan->getDetailCheckJual($databarang['barcode'], $this->request->getVar('iddate'));
                         if (!$checkdata) {

@@ -249,11 +249,16 @@
                                                         <td><?= $row['jenis'] ?></td>
                                                         <td><?= $row['model'] ?></td>
                                                         <td><?= $row['berat'] ?></td>
-                                                        <td> <select name="status_proses" onchange="EditLanjutProses(<?= $row['id_detail_cuci'] ?>,this)" class="form-control" id="status" name="status">
-                                                                <option selected value="Cuci">Cuci</option>
-                                                                <option value="Retur">Retur</option>
-                                                                <option value="Lebur">Lebur</option>
-                                                            </select></td>
+                                                        <?php if ($row['status_proses'] == 'SelesaiCuci') : ?>
+                                                            <td><?= $row['status_proses'] ?></td>
+                                                        <?php else : ?>
+                                                            <td> <select name="status_proses" onchange="EditLanjutProses(<?= $row['id_detail_cuci'] ?>,this)" class="form-control" id="status" name="status">
+                                                                    <option selected value="Cuci">Cuci</option>
+                                                                    <option value="Retur">Retur</option>
+                                                                    <option value="Lebur">Lebur</option>
+                                                                </select>
+                                                            </td>
+                                                        <?php endif; ?>
                                                         <td>
                                                             <a type="button" href="/detailbarang/<?= $row['kode'] ?>" class="btn btn-block btn-outline-info btn-sm">Detail</a>
                                                             <?php if ($row['status_proses'] != 'SelesaiCuci') : ?>

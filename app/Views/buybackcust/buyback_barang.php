@@ -1010,7 +1010,6 @@
             success: function(result) {
                 $('#barcodeview').html(result.modalbarcode)
                 // $('#modal-xl').modal('toggle');
-                // console.log(result)
             },
             error: function(xhr, ajaxOptions, thrownError) {
                 alert(xhr.status + "\n" + xhr.responseText + "\n" + thrownError);
@@ -1240,7 +1239,6 @@
                                                 // $('#modal-nonota').modal('toggle');
                                                 // $("#refrestbl").load("/buybackcust #refrestbl");
                                                 // tampildatabuyback()
-                                                console.log(result)
                                             }
                                         })
                                     }
@@ -1391,7 +1389,6 @@
             dataType: "json",
             success: function(result) {
                 if (result.pesan_error) {
-                    console.log(result)
                     $('#notrans').addClass('is-invalid')
                     $('.notransmsg').html(result.pesan_error)
 
@@ -1424,9 +1421,7 @@
             cache: false,
             dataType: "json",
             success: function(result) {
-                console.log(result)
                 if (result.pesan_error) {
-                    console.log(result)
                     $('#nobarcode').addClass('is-invalid')
                     $('.barcodemsg').html(result.pesan_error)
 
@@ -1546,7 +1541,6 @@
                             $('.harga_beli1msg').html('')
                             $('#qty1').removeClass('is-invalid')
                             $('.qty1msg').html('')
-                            console.log(result)
 
                             Swal.fire({
                                 icon: 'success',
@@ -1573,7 +1567,6 @@
 
 
     function tambah(id) {
-        console.log(id)
         $.ajax({
             type: "get",
             dataType: "json",
@@ -1582,8 +1575,9 @@
                 id: id,
             },
             success: function(result) {
-                if (result.data.kode.substr(0, 1) != 3) {
-                    $('#qty1').attr('readonly', 'readonly')
+                if (result.data.kode.substr(0, 1) == 3) {
+                    $('#qty1').removeAttr('readonly')
+                    $('#berat1').attr('readonly', 'readonly')
                     $('#qty1').val(result.data.saldo)
                     $('#berat1').val(result.data.berat)
                 }
@@ -1591,11 +1585,18 @@
                     $('#qty1').attr('readonly', 'readonly')
                     $('#qty1').val(result.data.qty)
                     $('#berat1').val(result.data.saldo)
-                    // console.log('asdddddddd')
 
-                } else {
-                    $('#qty1').removeAttr('readonly')
+                }
+                if (result.data.kode.substr(0, 1) == 1 || result.data.kode.substr(0, 1) == 2 || result.data.kode.substr(0, 1) == 5) {
                     $('#berat1').attr('readonly', 'readonly')
+                    $('#qty1').attr('readonly', 'readonly')
+                    $('#qty1').val(result.data.saldo)
+                    $('#berat1').val(result.data.berat)
+
+                }
+                if (result.data.kode.substr(0, 1) == 6) {
+                    $('#berat1').attr('readonly', 'readonly')
+                    $('#qty1').attr('readonly', 'readonly')
                     $('#qty1').val(result.data.saldo)
                     $('#berat1').val(result.data.berat)
                 }
@@ -1605,7 +1606,6 @@
                 $('#harga_beli1').val(result.data.harga_beli)
                 $('#id').val(result.data.id_detail_penjualan)
                 $('#kel').val(result.data.kode.substr(0, 1))
-                // console.log($('#id').val())
                 HarusBayar()
 
             },
@@ -1627,9 +1627,17 @@
         const totalharga = document.getElementById('totalhargaedit')
         if (kel == 3) {
             harusbyr = berat * qty * hargabeli
-        } else {
+        }
+        if (kel == 2) {
+            harusbyr = hargabeli
+
+        }
+        if (kel == 1 || kel == 4 || kel == 5) {
             beratmurni = berat * nilaitukar / 100
             harusbyr = hargabeli * beratmurni
+        }
+        if (kel == 6) {
+            harusbyr = hargabeli * qty
         }
         // brtmurni.innerHTML = beratmurni.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
         totalharga.innerHTML = Math.round(harusbyr).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
@@ -1657,7 +1665,6 @@
             $(".image-tag").val(data_uri);
             Webcam.reset()
             // Webcam.attach('#my_camera');
-            // console.log($(".image-tag").val())
             document.getElementById('my_camera').innerHTML = '<img src="' + data_uri + '">'
         })
     }
