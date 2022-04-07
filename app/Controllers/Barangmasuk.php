@@ -339,7 +339,23 @@ class Barangmasuk extends BaseController
                             $datatransaksi = $this->modeltransaksi->getTransaksi();
                             $harga = $datapembelian['byr_berat_murni'] * $this->request->getVar('harga_murni');
                             if ($jumlah_pembayaran <= $harga) {
-                                if ($jumlah_pembayaran <= $datatransaksi['saldo_akhir']) {
+                                if ($datatransaksi['total_akhir_tunai'] >= $jumlah_pembayaran && $this->request->getVar('pembayaran') == 'Tunai') {
+                                    $sukses = true;
+                                }
+                                if ($datatransaksi['total_akhir_transfer'] >= $jumlah_pembayaran && $this->request->getVar('pembayaran') == 'Transfer') {
+                                    $sukses = true;
+                                }
+                                if ($datatransaksi['total_akhir_debitcc'] >= $jumlah_pembayaran && $this->request->getVar('pembayaran') == 'Debitcc') {
+                                    $sukses = true;
+                                }
+                                if (!isset($sukses)) {
+                                    $msg = [
+                                        'error' => [
+                                            strtolower($this->request->getVar('pembayaran')) => 'Saldo Kurang'
+                                        ]
+                                    ];
+                                }
+                                if (isset($sukses)) {
                                     $beratmurni = round($jumlah_pembayaran / $this->request->getVar('harga_murni'), 2);
                                     $byrberatmurni = round($datapembelian['byr_berat_murni'] - $beratmurni, 2);
                                     $this->datapembelian->save([
@@ -376,12 +392,6 @@ class Barangmasuk extends BaseController
                                     $msg = [
                                         'pesan' => [
                                             'pesan' => 'berhasil'
-                                        ]
-                                    ];
-                                } else {
-                                    $msg = [
-                                        'error' => [
-                                            strtolower($this->request->getVar('pembayaran')) => 'Saldo Kurang'
                                         ]
                                     ];
                                 }
@@ -1069,7 +1079,7 @@ class Barangmasuk extends BaseController
                         'id_karyawan' => $session->get('id_user'),
                         'no_faktur_supp' => $this->request->getVar('no_nota_supp'),
                         'no_transaksi' => $datapembelian['no_transaksi'],
-                        'tgl_faktur' => $this->request->getVar('tanggal_nota_sup'),
+                        'tgl_faktur' => $this->request->getVar('tanggal_nota_sup') . ' ' . date('H:i:s'),
                         'total_berat_murni' => $this->request->getVar('total_berat_m'),
                         'byr_berat_murni' => $this->request->getVar('total_berat_m'),
                         'tgl_jatuh_tempo' => $this->request->getVar('tanggal_tempo'),

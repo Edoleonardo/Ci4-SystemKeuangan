@@ -129,11 +129,17 @@ class BuybackCust extends BaseController
                 $datadetailbuyback = $this->modeldetailbuyback->getDataDetailKode($this->request->getVar('id'));
                 $berat = $this->request->getVar('val');
                 $hasil = round($berat * ($datadetailbuyback['nilai_tukar'] / 100), 2);
+                if (substr($datadetailbuyback['kode'], 0, 1) == 2) {
+                    $harabeli = $datadetailbuyback['harga_beli'];
+                } else {
+                    $harabeli = round($datadetailbuyback['total_harga'] / $berat);
+                }
                 $this->modeldetailbuyback->save([
                     'id_detail_buyback' => $this->request->getVar('id'),
                     'id_karyawan' => $session->get('id_user'),
                     'berat' => $this->request->getVar('val'),
                     'berat_murni' => $hasil,
+                    'harga_beli' => $harabeli
                 ]);
                 $msg = $hasil;
                 echo json_encode($msg);
@@ -202,7 +208,7 @@ class BuybackCust extends BaseController
                 ];
             } else {
                 $msg = [
-                    'pesan_error' => 'Tidak ada Data No Trans'
+                    'pesan_error' => 'Tidak ada No Transaksi'
                 ];
             }
             echo json_encode($msg);
@@ -316,7 +322,6 @@ class BuybackCust extends BaseController
                 ]);
             }
             if ($this->request->getVar('pembayaran') == 'Tunai&Transfer' || $this->request->getVar('pembayaran') == null) {
-
                 $valid = $this->validate([
                     'inputcustomer' => [
                         'rules' => 'required',
@@ -361,7 +366,16 @@ class BuybackCust extends BaseController
                 $totalvar = $this->request->getVar('tunai') + $this->request->getVar('transfer');
                 $databuyback = $this->modelbuyback->getDataBuyback($this->request->getVar('iddate'));
                 $hasilbayar = $databuyback['total_harga'] - $totalvar;
-                if ($saldobiaya['saldo_akhir'] >= $totalvar) {
+                if ($saldobiaya['total_akhir_tunai'] >= $this->request->getVar('tunai') && $this->request->getVar('tunai') == 'Tunai') {
+                    $sukses = true;
+                }
+                if ($saldobiaya['total_akhir_transfer'] >= $this->request->getVar('transfer') && $this->request->getVar('pembayaran') == 'Transfer') {
+                    $sukses = true;
+                }
+                if ($saldobiaya['total_akhir_transfer'] >= $this->request->getVar('transfer') && $saldobiaya['total_akhir_tunai'] >= $this->request->getVar('tunai') && $this->request->getVar('pembayaran') == 'Tunai&Transfer') {
+                    $sukses = true;
+                }
+                if (isset($sukses)) {
                     if ($hasilbayar == 0 && $databuyback['total_harga'] != 0) {
                         $datadetail = $this->modeldetailbuyback->getDetailAllBuyback($this->request->getVar('iddate'));
                         $this->modelbuyback->save([
@@ -554,21 +568,32 @@ class BuybackCust extends BaseController
                                 ]);
                             }
                         }
-                        $this->modeldetailtransaksi->save([
-                            'tanggal_transaksi' => date("Y-m-d H:i:s"),
-                            'id_karyawan' => $session->get('id_user'),
-                            'pembayaran' => $this->request->getVar('pembayaran'),
-                            'keterangan' => $databuyback['no_transaksi_buyback'],
-                            'id_akun_biaya' => 8,
-                            'masuk' => 0,
-                            'keluar' =>  $totalvar,
-                            'nama_bank' => ($this->request->getVar('namabank')) ? $this->request->getVar('namabank') : null,
-                        ]);
+                        if ($this->request->getVar('tunai')) {
+                            $this->modeldetailtransaksi->save([
+                                'tanggal_transaksi' => date("Y-m-d H:i:s"),
+                                'id_karyawan' => $session->get('id_user'),
+                                'pembayaran' => 'Tunai',
+                                'keterangan' => $databuyback['no_transaksi_buyback'],
+                                'id_akun_biaya' => 8,
+                                'masuk' => 0,
+                                'keluar' =>  $this->request->getVar('tunai'),
+                                'nama_bank' => ($this->request->getVar('namabank')) ? $this->request->getVar('namabank') : null,
+                            ]);
+                        }
+                        if ($this->request->getVar('transfer')) {
+                            $this->modeldetailtransaksi->save([
+                                'tanggal_transaksi' => date("Y-m-d H:i:s"),
+                                'id_karyawan' => $session->get('id_user'),
+                                'pembayaran' => 'Transfer',
+                                'keterangan' => $databuyback['no_transaksi_buyback'],
+                                'id_akun_biaya' => 8,
+                                'masuk' => 0,
+                                'keluar' => $this->request->getVar('transfer'),
+                                'nama_bank' => ($this->request->getVar('namabank')) ? $this->request->getVar('namabank') : null,
+                            ]);
+                        }
                         $this->BiayaHarianMaster($saldobiaya['id_transaksi'], $session);
-
-
-
-                        $msg = 'asd';
+                        $msg = 'sukses';
                     } else {
                         $msg = [
                             'error' => [

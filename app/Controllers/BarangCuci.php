@@ -283,7 +283,11 @@ class BarangCuci extends BaseController
             $id = $this->request->getVar('id');
             $datadetailcuci = $this->modeldetailcuci->getDataDetailCuci($id);
             $datastock = $this->datastock->CheckDataCuci($datadetailcuci['kode']);
-            $harga_beli = round($datadetailcuci['total_harga'] / $this->request->getVar('berat'));
+            if (substr($datadetailcuci['kode'], 0, 1) == 2) {
+                $harga_beli = $datadetailcuci['harga_beli'];
+            } else {
+                $harga_beli = round($datadetailcuci['total_harga'] / $this->request->getVar('berat'));
+            }
             $this->datastock->save([
                 'id_karyawan' => $session->get('id_user'),
                 'id_stock' => $datastock['id_stock'],
@@ -341,9 +345,6 @@ class BarangCuci extends BaseController
                     'error' => [
                         'tanggalcuci' => $validation->getError('tanggalcuci'),
                         'harga_cuci' => $validation->getError('harga_cuci'),
-                        // 'harga_beli' => $validation->getError('harga_beli'),
-                        // 'gambar' => $validation->getError('gambar'),
-
                     ]
                 ];
                 echo json_encode($msg);
@@ -352,7 +353,13 @@ class BarangCuci extends BaseController
                 $datadetailcuci =  $this->modeldetailcuci->getDetailCuci($this->request->getVar('dateidcuci'));
                 $datacuci = $this->modelcuci->getDataCuciAll($this->request->getVar('dateidcuci'));
                 $saldobiaya = $this->modeltransaksi->getTransaksi();
-                if ($datadetailcuci && $saldobiaya['saldo_akhir'] >= $this->request->getVar('harga_cuci')) {
+                if ($saldobiaya['total_akhir_tunai'] >= $this->request->getVar('harga_cuci') && $this->request->getVar('pembayaran') == 'Tunai') {
+                    $sukses = true;
+                }
+                if ($saldobiaya['total_akhir_transfer'] >= $this->request->getVar('harga_cuci') && $this->request->getVar('pembayaran') == 'Transfer') {
+                    $sukses = true;
+                }
+                if ($datadetailcuci && isset($sukses)) {
                     $this->modelcuci->save([
                         'id_cuci' => $datacuci['id_cuci'],
                         'id_karyawan' => $session->get('id_user'),

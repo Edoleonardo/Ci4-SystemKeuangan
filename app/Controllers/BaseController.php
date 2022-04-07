@@ -65,9 +65,24 @@ class BaseController extends Controller
     {
         $sumkeluar = $this->modeldetailtransaksi->SumTotalKeluar();
         $summasuk = $this->modeldetailtransaksi->SumTotalMasuk();
+        $sumbmasuktunai = $this->modeldetailtransaksi->SumTotalMasukTunai();
+        $sumkeluartunai = $this->modeldetailtransaksi->SumTotalKeluarTunai();
+        $sumbmasuktransfer = $this->modeldetailtransaksi->SumTotalMasukTransfer();
+        $sumkeluartransfer = $this->modeldetailtransaksi->SumTotalKeluarTransfer();
+        $sumbmasukdebitcc = $this->modeldetailtransaksi->SumTotalMasukDebitcc();
+        $sumkeluardebitcc = $this->modeldetailtransaksi->SumTotalKeluarDebitcc();
         $this->modeltransaksi->save([
             'id_transaksi' => $id,
             'id_karyawan' => $session->get('id_user'),
+            'total_masuk_tunai' => $sumbmasuktunai['masuk'],
+            'total_keluar_tunai' => $sumkeluartunai['keluar'],
+            'total_akhir_tunai' => $sumbmasuktunai['masuk'] - $sumkeluartunai['keluar'],
+            'total_masuk_transfer' => $sumbmasuktransfer['masuk'],
+            'total_keluar_transfer' => $sumkeluartransfer['keluar'],
+            'total_akhir_transfer' => $sumbmasuktransfer['masuk'] - $sumkeluartransfer['keluar'],
+            'total_masuk_debitcc' => $sumbmasukdebitcc['masuk'],
+            'total_keluar_debitcc' => $sumkeluardebitcc['keluar'],
+            'total_akhir_debitcc' =>  $sumbmasukdebitcc['masuk'] - $sumkeluardebitcc['keluar'],
             'total_keluar' => $sumkeluar['keluar'],
             'total_masuk' => $summasuk['masuk'],
             'saldo_akhir' => $summasuk['masuk'] - $sumkeluar['keluar'],

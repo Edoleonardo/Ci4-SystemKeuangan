@@ -423,8 +423,8 @@
                             <!-- /.card-header -->
                             <div class="card-body p-0">
                                 <input type="hidden" name="hiddenharga" id="hiddenharga">
-                                <table class="table table-hover text-nowrap">
-                                    <tbody>
+                                <table class="table table-hover text-nowrap" id="tblbyr11">
+                                    <tbody id="tblbyr22">
                                         <tr>
                                             <td>Harga Lama</td>
                                             <td id="totalbersih01"></td>
@@ -624,6 +624,8 @@
                             $("#refrshtbl1").load("/detailpenjualan/" + document.getElementById('iddate1').value + " #refrshtbl2");
                             $("#rfs1").load("/detailpenjualan/" + document.getElementById('iddate1').value + " #rfs2");
                             $("#card1").load("/detailpenjualan/" + document.getElementById('iddate1').value + " #card2");
+                            $("#total1").load("/detailpenjualan/" + document.getElementById('iddate1').value + " #total2");
+                            $("#tblbyr11").load("/detailpenjualan/" + document.getElementById('iddate1').value + " #tblbyr22");
                             document.getElementById('pembayaran').value = 'Bayar Nanti'
                             myPembayaran()
                         }

@@ -1,19 +1,10 @@
 <?= $this->extend('layout/template'); ?>
 <?= $this->section('content') ?>
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <style>
-    /* .table>tbody>tr>* {
-        vertical-align: middle;
-        text-align: center;
-    } */
-
     .imgg {
         width: 100px;
     }
-
-    /* body {
-        background: #eee;
-        font-family: Assistant, sans-serif
-    } */
 
     .cell-1 {
         border-collapse: separate;
@@ -23,27 +14,6 @@
         background-clip: padding-box;
         cursor: pointer
     }
-
-    /*
-    thead {
-        background: #dddcdc
-    }
-
-    .table-elipse {
-        cursor: pointer
-    }
-
-    #demo {
-        -webkit-transition: all 0.3s ease-in-out;
-        -moz-transition: all 0.3s ease-in-out;
-        -o-transition: all 0.3s 0.1s ease-in-out;
-        transition: all 0.3s ease-in-out
-    }
-*/
-    /* .row-child {
-        background-color: #000;
-        color: #fff
-    } */
 </style>
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
@@ -52,7 +22,7 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1 class="m-0">Transaksi</h1>
+                    <h1 class="m-0">Transaksi Harian</h1>
                 </div><!-- /.col -->
                 <!-- /.content-header -->
                 <div class="col-sm-6">
@@ -68,27 +38,54 @@
     <section class="content">
         <div class="container-fluid">
             <div class="row">
-                <div class="col-6">
+                <div class="col-8">
                     <div class="card">
                         <!-- /.card-header -->
                         <div class="table-responsive" id="refreshtitle">
                             <table class="table text-nowrap" id="titletr">
                                 <tr>
-                                    <td> Total Masuk :</td>
+                                    <td style="text-align: center;" colspan="6">Total Detail</td>
+                                </tr>
+                                <tr>
+                                    <td>Masuk Tunai :</td>
                                     <td>
-                                        <?= number_format($datatransaksi['total_masuk'], 0, ',', '.') ?>
+                                        <?= number_format($datatransaksi['total_masuk_tunai'], 0, ',', '.') ?>
+                                    </td>
+                                    <td>Masuk Transfer :</td>
+                                    <td>
+                                        <?= number_format($datatransaksi['total_masuk_transfer'], 0, ',', '.') ?>
+                                    </td>
+                                    <td>Masuk Debit/CC :</td>
+                                    <td>
+                                        <?= number_format($datatransaksi['total_masuk_debitcc'], 0, ',', '.') ?>
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td> Total Keluar :</td>
+                                    <td>Keluar Tunai:</td>
                                     <td>
-                                        <?= number_format($datatransaksi['total_keluar'], 0, ',', '.') ?>
+                                        <?= number_format($datatransaksi['total_keluar_tunai'], 0, ',', '.') ?>
+                                    </td>
+                                    <td>Keluar Transfer:</td>
+                                    <td>
+                                        <?= number_format($datatransaksi['total_keluar_transfer'], 0, ',', '.') ?>
+                                    </td>
+                                    <td>Keluar Debit/CC:</td>
+                                    <td>
+                                        <?= number_format($datatransaksi['total_keluar_debitcc'], 0, ',', '.') ?>
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td> Saldo Akhir :</td>
+                                    <td>Saldo Tunai:</td>
                                     <td>
-                                        <?= number_format($datatransaksi['saldo_akhir'], 0, ',', '.') ?>
+                                        <?= number_format($datatransaksi['total_akhir_tunai'], 0, ',', '.') ?>
+                                    </td>
+                                    <td>Saldo Transfer:</td>
+                                    <td>
+                                        <?= number_format($datatransaksi['total_akhir_transfer'], 0, ',', '.') ?>
+                                    </td>
+                                    <td>Saldo Debit/CC:</td>
+                                    <td>
+                                        <?= number_format($datatransaksi['total_akhir_debitcc'], 0, ',', '.') ?>
                                     </td>
                                 </tr>
                             </table>
@@ -96,7 +93,7 @@
                     </div>
                     <!-- /.card -->
                 </div>
-                <div class="col-6">
+                <div class="col-4">
                     <!-- Application buttons -->
                     <div class="card">
                         <div class="card-body" id="refreshtombol">
@@ -112,12 +109,18 @@
                 <div class="col-12">
                     <div class="card">
                         <div class="card-header">
-                            <h3 class="card-title">Expandable Table</h3>
+                            <h3 class="card-title">Transaksi Harian</h3>
                         </div>
                         <!-- ./card-header -->
                         <div class="table-responsive" id="refreshtbl">
                             <table class="table table-bordered table-hover" id="tbldata">
                                 <thead>
+                                    <tr>
+                                        <th colspan="4">Total Akhir</th>
+                                        <th><?= number_format($datatransaksi['total_masuk'], 0, ',', '.') ?></th>
+                                        <th><?= number_format($datatransaksi['total_keluar'], 0, ',', '.') ?></th>
+                                        <th><?= number_format($datatransaksi['saldo_akhir'], 0, ',', '.') ?></th>
+                                    </tr>
                                     <tr>
                                         <th class="text-center">No</th>
                                         <th>Pembayaran</th>
@@ -248,6 +251,7 @@
                                 <select onchange=" myPembayaran()" name="pembayaran" id="pembayaran" class="form-control pembayaran" placeholder="Masukan Harga Beli">
                                     <option value="Tunai">Tunai</option>
                                     <option value="Transfer">Transfer</option>
+                                    <option value="Debitcc">Debit/CC</option>
                                 </select>
                                 <div id="validationServerUsernameFeedback" class="invalid-feedback pembayaranmsg">
                                 </div>
@@ -295,7 +299,7 @@
         const nmbank = $('.namabankhtml')
         nmbank[0].innerHTML = ''
         var NamaBank = '<label>Nama Bank Debit/CC</label><select type="text" id="namabank" name="namabank" class="form-control" placeholder="Masukan Nama Bank"><?php foreach ($bank as $m) : ?><option value="<?= $m['nama_bank'] ?>"><?= $m['nama_bank'] ?> </option><?php endforeach; ?></select><div id="validationServerUsernameFeedback" class="invalid-feedback namabankmsg"></div>'
-        if (carabyr == 'Transfer') {
+        if (carabyr == 'Transfer' || carabyr == 'Debitcc') {
             nmbank[0].innerHTML = NamaBank
         }
     }

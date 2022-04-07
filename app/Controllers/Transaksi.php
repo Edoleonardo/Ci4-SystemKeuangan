@@ -103,38 +103,45 @@ class Transaksi extends BaseController
                 $session = session();
                 $datatransaksi = $this->modeltransaksi->getTransaksi($this->request->getVar('id_transaksi'));
                 if ($this->request->getVar('kategori') == 'keluar') { //--------------------------------Kategori Masuk
-                    if ($datatransaksi['saldo_akhir'] >= $this->request->getVar('amount')) {
-                        $this->modeldetailtransaksi->save([
-                            'tanggal_transaksi' => $this->request->getVar('tangalinput'),
-                            'id_karyawan' => $session->get('id_user'),
-                            'pembayaran' => $this->request->getVar('pembayaran'),
-                            'keterangan' => $this->request->getVar('keterangan'),
-                            'id_akun_biaya' => $this->request->getVar('nama_akun'),
-                            'keluar' => $this->request->getVar('amount'),
-                            'nama_bank' => ($this->request->getVar('namabank')) ? $this->request->getVar('namabank') : null,
-                            'masuk' => 0
-                        ]);
-
-                        $this->BiayaHarianMaster($datatransaksi['id_transaksi'], $session);
-                        $msg = 'berhasil';
-                    } else {
+                    if ($datatransaksi['total_akhir_tunai'] >= $this->request->getVar('amount') && $this->request->getVar('pembayaran') == 'Tunai') {
+                        $keluar = $this->request->getVar('amount');
+                        $masuk = 0;
+                        $sukses = true;
+                    }
+                    if ($datatransaksi['total_akhir_transfer'] >= $this->request->getVar('amount') && $this->request->getVar('pembayaran') == 'Transfer') {
+                        $keluar = $this->request->getVar('amount');
+                        $masuk = 0;
+                        $sukses = true;
+                    }
+                    if ($datatransaksi['total_akhir_debitcc'] >= $this->request->getVar('amount') && $this->request->getVar('pembayaran') == 'Debitcc') {
+                        $keluar = $this->request->getVar('amount');
+                        $masuk = 0;
+                        $sukses = true;
+                    }
+                    if (!isset($sukses)) {
                         $msg = [
                             'error' => [
                                 'saldo' => 'Saldo Kurang',
                             ]
                         ];
                     }
-                } else { //--------------------------------Kategori Masuk
+                } else {
+                    $keluar = 0;
+                    $masuk = $this->request->getVar('amount');
+                    $sukses = true;
+                }
+                if (isset($sukses)) {
                     $this->modeldetailtransaksi->save([
                         'tanggal_transaksi' => $this->request->getVar('tangalinput'),
                         'id_karyawan' => $session->get('id_user'),
                         'pembayaran' => $this->request->getVar('pembayaran'),
                         'keterangan' => $this->request->getVar('keterangan'),
                         'id_akun_biaya' => $this->request->getVar('nama_akun'),
-                        'masuk' => $this->request->getVar('amount'),
+                        'keluar' => $keluar,
+                        'masuk' => $masuk,
                         'nama_bank' => ($this->request->getVar('namabank')) ? $this->request->getVar('namabank') : null,
-                        'keluar' => 0
                     ]);
+
                     $this->BiayaHarianMaster($datatransaksi['id_transaksi'], $session);
                     $msg = 'berhasil';
                 }

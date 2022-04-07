@@ -36,6 +36,53 @@ class ModelDetailTransaksi extends Model
         $query = $this->get();
         return $query->getResult('array')[0];
     }
+    //----------------------------tunai
+
+    public function SumTotalMasukTunai()
+    {
+        $this->selectSum('masuk');
+        $this->where(['pembayaran' => 'Tunai']);
+        $query = $this->get();
+        return $query->getResult('array')[0];
+    }
+    public function SumTotalKeluarTunai()
+    {
+        $this->selectSum('keluar');
+        $this->where(['pembayaran' => 'Tunai']);
+        $query = $this->get();
+        return $query->getResult('array')[0];
+    }
+    //----------------------------transfer
+
+    public function SumTotalMasukTransfer()
+    {
+        $this->selectSum('masuk');
+        $this->where(['pembayaran' => 'Transfer']);
+        $query = $this->get();
+        return $query->getResult('array')[0];
+    }
+    public function SumTotalKeluarTransfer()
+    {
+        $this->selectSum('keluar');
+        $this->where(['pembayaran' => 'Transfer']);
+        $query = $this->get();
+        return $query->getResult('array')[0];
+    }
+    //----------------------------debitcc
+    public function SumTotalMasukDebitcc()
+    {
+        $this->selectSum('masuk');
+        $this->where(['pembayaran' => 'Debitcc']);
+        $query = $this->get();
+        return $query->getResult('array')[0];
+    }
+    public function SumTotalKeluarDebitcc()
+    {
+        $this->selectSum('keluar');
+        $this->where(['pembayaran' => 'Debitcc']);
+        $query = $this->get();
+        return $query->getResult('array')[0];
+    }
     public function getDataDeleteTrans($faktur, $method)
     {
         $this->selectSum('id_detail_transaksi');

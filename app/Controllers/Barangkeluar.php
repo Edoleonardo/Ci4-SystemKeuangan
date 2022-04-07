@@ -310,12 +310,6 @@ class Barangkeluar extends BaseController
             $data = $this->modeldetailpenjualan->getDetailoneJual($id);
             $databarang = $this->datastock->getBarangkode($data['kode']);
             $datakartu = $this->modelkartustock->getKartuStockkode($data['kode']);
-
-            $this->penjualan->save([
-                'id_penjualan' =>  $datapenjualan['id_penjualan'],
-                'id_karyawan' => $session->get('id_user'),
-                'total_harga' =>  $this->modeldetailpenjualan->SumDataDetailJual($this->request->getVar('iddate'))['total_harga'],
-            ]);
             if (substr($data['kode'], 0, 1) == 4) {
                 $this->datastock->save([
                     'id_stock' => $databarang['id_stock'],
@@ -331,6 +325,11 @@ class Barangkeluar extends BaseController
                 ]);
             }
             $this->modeldetailpenjualan->delete($id);
+            $this->penjualan->save([
+                'id_penjualan' =>  $datapenjualan['id_penjualan'],
+                'id_karyawan' => $session->get('id_user'),
+                'total_harga' =>  $this->modeldetailpenjualan->SumDataDetailJual($this->request->getVar('iddate'))['total_harga'],
+            ]);
 
             $msg = [
                 'sukses' => 'Berhasil'
@@ -614,12 +613,12 @@ class Barangkeluar extends BaseController
                         ];
                         $status = true;
                     } else {
-                        // $msg = [
-                        //     'error' => [
-                        //         'kurang' => 'Bayar Kurang / lebih'
-                        //     ]
-                        // ];
-                        $msg = $hasil;
+                        $msg = [
+                            'error' => [
+                                'kurang' => 'Bayar Kurang / lebih'
+                            ]
+                        ];
+                        // $msg = $hasil;
                     }
                 }
                 if (isset($status)) {
@@ -658,23 +657,45 @@ class Barangkeluar extends BaseController
                             'saldo_akhir' => $saldoakhir,
                         ]);
                     }
-                    $tunai = ($this->request->getVar('tunai')) ? $this->request->getVar('tunai') : 0;
-                    $transfer = ($this->request->getVar('transfer')) ? $this->request->getVar('transfer') : 0;
-                    $debitcc = ($this->request->getVar('debitcc')) ? $this->request->getVar('debitcc') : 0;
-                    $pembulatan = ($this->request->getVar('pembulatan')) ? $this->request->getVar('pembulatan') : 0;
 
-                    $totalvar = ($tunai + $transfer + $debitcc) - $pembulatan;
                     $saldobiaya = $this->modeltransaksi->getTransaksi();
-                    $this->modeldetailtransaksi->save([
-                        'tanggal_transaksi' => date("Y-m-d H:i:s"),
-                        'id_karyawan' => $session->get('id_user'),
-                        'pembayaran' => $this->request->getVar('pembayaran'),
-                        'keterangan' => $datapenjualan['no_transaksi_jual'],
-                        'id_akun_biaya' => 26,
-                        'masuk' => $totalvar,
-                        'keluar' =>  0,
-                        'nama_bank' => ($this->request->getVar('namabank')) ? $this->request->getVar('namabank') : null,
-                    ]);
+                    if ($this->request->getVar('tunai')) {
+                        $this->modeldetailtransaksi->save([
+                            'tanggal_transaksi' => date("Y-m-d H:i:s"),
+                            'id_karyawan' => $session->get('id_user'),
+                            'pembayaran' => 'Tunai',
+                            'keterangan' => $datapenjualan['no_transaksi_jual'],
+                            'id_akun_biaya' => 26,
+                            'masuk' => $this->request->getVar('tunai'),
+                            'keluar' =>  0,
+                            'nama_bank' => ($this->request->getVar('namabank')) ? $this->request->getVar('namabank') : null,
+                        ]);
+                    }
+                    if ($this->request->getVar('transfer')) {
+                        $this->modeldetailtransaksi->save([
+                            'tanggal_transaksi' => date("Y-m-d H:i:s"),
+                            'id_karyawan' => $session->get('id_user'),
+                            'pembayaran' => 'Transfer',
+                            'keterangan' => $datapenjualan['no_transaksi_jual'],
+                            'id_akun_biaya' => 26,
+                            'masuk' => $this->request->getVar('transfer'),
+                            'keluar' =>  0,
+                            'nama_bank' => ($this->request->getVar('namabank')) ? $this->request->getVar('namabank') : null,
+                        ]);
+                    }
+                    if ($this->request->getVar('debitcc')) {
+                        $this->modeldetailtransaksi->save([
+                            'tanggal_transaksi' => date("Y-m-d H:i:s"),
+                            'id_karyawan' => $session->get('id_user'),
+                            'pembayaran' => 'Debitcc',
+                            'keterangan' => $datapenjualan['no_transaksi_jual'],
+                            'id_akun_biaya' => 26,
+                            'masuk' => $this->request->getVar('debitcc'),
+                            'keluar' =>  0,
+                            'nama_bank' => ($this->request->getVar('namabank')) ? $this->request->getVar('namabank') : null,
+                        ]);
+                    }
+
                     $this->BiayaHarianMaster($saldobiaya['id_transaksi'], $session);
                 }
                 echo json_encode($msg);
@@ -879,19 +900,44 @@ class Barangkeluar extends BaseController
                         ];
                     }
                 }
-                if (isset($status)) {
-                    $totalvar = ($tunai + $transfer + $debitcc) - $pembulatan;
+                if (isset($status) && $hasil == 0 && $datapenjualan2['status_dokumen'] != 'Selesai') {
                     $saldobiaya = $this->modeltransaksi->getTransaksi();
-                    $this->modeldetailtransaksi->save([
-                        'tanggal_transaksi' => date("Y-m-d H:i:s"),
-                        'id_karyawan' => $session->get('id_user'),
-                        'pembayaran' => $this->request->getVar('pembayaran'),
-                        'keterangan' => $datapenjualan2['no_transaksi_jual'],
-                        'id_akun_biaya' => 38,
-                        'masuk' => $totalvar,
-                        'keluar' =>  0,
-                        'nama_bank' => ($this->request->getVar('namabank')) ? $this->request->getVar('namabank') : null,
-                    ]);
+                    if ($this->request->getVar('tunai')) {
+                        $this->modeldetailtransaksi->save([
+                            'tanggal_transaksi' => date("Y-m-d H:i:s"),
+                            'id_karyawan' => $session->get('id_user'),
+                            'pembayaran' => 'Tunai',
+                            'keterangan' => $datapenjualan2['no_transaksi_jual'],
+                            'id_akun_biaya' => 38,
+                            'masuk' => $this->request->getVar('tunai'),
+                            'keluar' =>  0,
+                            'nama_bank' => ($this->request->getVar('namabank')) ? $this->request->getVar('namabank') : null,
+                        ]);
+                    }
+                    if ($this->request->getVar('transfer')) {
+                        $this->modeldetailtransaksi->save([
+                            'tanggal_transaksi' => date("Y-m-d H:i:s"),
+                            'id_karyawan' => $session->get('id_user'),
+                            'pembayaran' => 'Transfer',
+                            'keterangan' => $datapenjualan2['no_transaksi_jual'],
+                            'id_akun_biaya' => 38,
+                            'masuk' => $this->request->getVar('transfer'),
+                            'keluar' =>  0,
+                            'nama_bank' => ($this->request->getVar('namabank')) ? $this->request->getVar('namabank') : null,
+                        ]);
+                    }
+                    if ($this->request->getVar('debitcc')) {
+                        $this->modeldetailtransaksi->save([
+                            'tanggal_transaksi' => date("Y-m-d H:i:s"),
+                            'id_karyawan' => $session->get('id_user'),
+                            'pembayaran' => 'Debitcc',
+                            'keterangan' => $datapenjualan2['no_transaksi_jual'],
+                            'id_akun_biaya' => 38,
+                            'masuk' => $this->request->getVar('debitcc'),
+                            'keluar' =>  0,
+                            'nama_bank' => ($this->request->getVar('namabank')) ? $this->request->getVar('namabank') : null,
+                        ]);
+                    }
                     $this->BiayaHarianMaster($saldobiaya['id_transaksi'], $session);
                 }
             } else {
