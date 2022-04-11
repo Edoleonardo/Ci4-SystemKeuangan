@@ -419,6 +419,7 @@
                                     <option value="Cuci">Cuci</option>
                                     <option value="Retur">Retur Sales</option>
                                     <option value="Lebur">Lebur</option>
+                                    <option value="CancelBeli">CancelBeli</option>
                                 </select>
                             </div>
                         </div>
@@ -583,6 +584,7 @@
                                     <option value="Cuci">Cuci</option>
                                     <option value="Retur">Retur Sales</option>
                                     <option value="Lebur">Lebur</option>
+                                    <option value="CancelBeli">CancelBeli</option>
                                 </select>
                             </div>
                         </div>
@@ -1278,7 +1280,7 @@
             harusbyr = hargabeli
         }
 
-        brtmurni.innerHTML = beratmurni.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
+        brtmurni.innerHTML = (Math.round(beratmurni * 100) / 100).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
         totalbayar.innerHTML = harusbyr.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
     }
 
@@ -1452,9 +1454,9 @@
             success: function(result) {
                 $('#databuyback').html(result.data)
                 $('#totalhargaview').html(result.totalharga.toString().replace(/\B(?=(\d{3})+(?!\d))/g, "."))
-                $('#totalberatview').html(result.totalberat.toString().replace(/\B(?=(\d{3})+(?!\d))/g, "."))
+                $('#totalberatview').html((Math.round(result.totalberat * 100) / 100).toString().replace(/\B(?=(\d{3})+(?!\d))/g, "."))
                 $('#harusbayar').html(result.totalharga.toString().replace(/\B(?=(\d{3})+(?!\d))/g, "."))
-                $('#brtmurni').html(result.totalberat.toString().replace(/\B(?=(\d{3})+(?!\d))/g, "."))
+                $('#brtmurni').html((Math.round(result.totalberat * 100) / 100).toString().replace(/\B(?=(\d{3})+(?!\d))/g, "."))
 
                 // var totalharga = parseFloat(result.totalbersih.total_harga) + parseFloat(result.totalongkos.ongkos)
                 // $('#datajual').html(result.data)

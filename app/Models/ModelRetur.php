@@ -22,6 +22,24 @@ class ModelRetur extends Model
         }
         return $this->where(['id_date_retur' => $id])->first();
     }
+    public function GetDataJoinRetur($id)
+    {
+        $this->select('tbl_retur.id_retur,tbl_retur.id_date_retur, tbl_retur.id_karyawan, tbl_retur.keterangan, tbl_retur.no_retur, tbl_retur.total_berat_murni, tbl_retur.total_berat, tbl_retur.jumlah_barang, tbl_retur.tanggal_retur, tbl_retur.no_transaksi, tbl_retur.status_dokumen,tbl_pembelian.id_date_pembelian,tbl_pembelian.id_pembelian, tbl_pembelian.id_supplier, tbl_pembelian.no_faktur_supp, tbl_pembelian.tgl_faktur , tbl_pembelian.tgl_jatuh_tempo, tbl_pembelian.byr_berat_murni, tbl_pembelian.total_berat_rill, tbl_pembelian.berat_murni_rill, tbl_pembelian.total_qty');
+        $this->join('tbl_pembelian', 'tbl_pembelian.no_transaksi = tbl_retur.no_transaksi');
+        $this->where(['id_date_retur' => $id]);
+        $this->orderBy('tbl_retur.created_at', 'DESC');
+        $data = $this->get();
+        return $data->getResult('array')[0];
+    }
+    public function GetDataNoRetur($id)
+    {
+        $this->select('tbl_retur.id_retur,tbl_retur.id_date_retur, tbl_retur.id_karyawan, tbl_retur.keterangan, tbl_retur.no_retur, tbl_retur.total_berat_murni, tbl_retur.total_berat, tbl_retur.jumlah_barang, tbl_retur.tanggal_retur, tbl_retur.no_transaksi, tbl_retur.status_dokumen,tbl_pembelian.id_date_pembelian,tbl_pembelian.id_pembelian, tbl_pembelian.id_supplier, tbl_pembelian.no_faktur_supp, tbl_pembelian.tgl_faktur , tbl_pembelian.tgl_jatuh_tempo, tbl_pembelian.byr_berat_murni, tbl_pembelian.total_berat_rill, tbl_pembelian.berat_murni_rill, tbl_pembelian.total_qty');
+        $this->join('tbl_pembelian', 'tbl_pembelian.no_transaksi = tbl_retur.no_transaksi');
+        $this->where(['no_retur' => $id]);
+        $this->orderBy('tbl_retur.created_at', 'DESC');
+        $data = $this->get();
+        return $data->getResult('array')[0];
+    }
     public function getDataReturBayar($id = false)
     {
         if ($id == false) {

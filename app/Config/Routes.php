@@ -55,7 +55,7 @@ $routes->get('/tampildatabarang', ($session->get('role')) ? 'Home::TampilDataBar
 
 
 // --------------------BarangMasuk-----------
-
+$routes->get('/ubahhargamurni', ($session->get('role')) ? 'Barangmasuk::UbahHargaMurni' : 'Login::Login');
 $routes->get('/barangmasuk', ($session->get('role')) ? 'Barangmasuk::supplier' : 'Login::Login');
 $routes->get('/pembelian', ($session->get('role')) ? 'Barangmasuk::detail_pembelian' : 'Login::Login');
 $routes->get('/ajaxpembelian', ($session->get('role')) ? 'Barangmasuk::pembelian_read' : 'Login::Login');
@@ -126,6 +126,8 @@ $routes->get('/tampilcustbb', ($session->get('role')) ? 'BuybackCust::TampilCust
 $routes->get('/detailbuyback/(:any)', ($session->get('role')) ? 'BuybackCust::DetailBuyback/$1' : 'Login::Login');
 
 
+
+$routes->get('/modaldetail', ($session->get('role')) ? 'ModalDetail::ModalDetail' : 'Login::Login');
 
 //-----------------------------ubah----------------------------------
 $routes->get('/ubahberat', ($session->get('role')) ? 'BuybackCust::UbahBerat' : 'Login::Login');
@@ -200,6 +202,7 @@ $routes->get('/isidata', ($session->get('role')) ? 'MasterInput::DataMaster' : '
 //----------------------------------Transaksi-------------------------------------
 $routes->get('/transaksiharian', ($session->get('role')) ? 'Transaksi::DataTransaksi' : 'Login::Login');
 $routes->POST('/tambahinput', ($session->get('role')) ? 'Transaksi::TambahInput' : 'Login::Login');
+$routes->get('/tampiltrans', ($session->get('role')) ? 'Transaksi::TampilTransaksi' : 'Login::Login');
 
 /*
  * --------------------------------------------------------------------

@@ -39,4 +39,11 @@ class ModelPembayaranBeli extends Model
     {
         return $this->where(['id_pembayaran' => $id])->first();
     }
+    public function SumTotalBayar($id)
+    {
+        $this->selectSum('berat_murni');
+        $this->where(['id_date_pembelian' => $id]);
+        $query = $this->get();
+        return $query->getResult('array')[0];
+    }
 }

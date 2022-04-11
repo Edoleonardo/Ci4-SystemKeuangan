@@ -14,7 +14,6 @@ use App\Models\ModelDetailKartuStock;
 use App\Models\ModelRetur;
 use App\Models\ModelDetailRetur;
 use App\Models\ModelPembelian;
-use App\Models\ModelDeposit;
 use App\Models\ModelSupplier;
 use App\Models\ModelPembayaranBeli;
 
@@ -42,7 +41,6 @@ class BarangRetur extends BaseController
         $this->modelretur = new ModelRetur();
         $this->modeldetailretur = new ModelDetailRetur();
         $this->modelpembelian = new ModelPembelian();
-        $this->modeldeposit = new ModelDeposit();
         $this->modelsupplier = new ModelSupplier();
         $this->modelpembayaran = new ModelPembayaranBeli();
     }
@@ -53,36 +51,49 @@ class BarangRetur extends BaseController
         // dd($asd['total']);
         $data = [
             'dataretur' => $this->modelretur->getDataReturAll(),
+            'datapembelian' => $this->modelpembelian->getPembelianTotalRetur(),
         ];
         return view('returbarang/data_retur', $data);
     }
     public function ReturBarang()
     {
-        $session = session();
-        $dateid = date('ymdhis');
-        $this->modelretur->save([
-            // 'created_at' => date("y-m-d"),
-            'id_date_retur' => $dateid,
-            'id_karyawan' => $session->get('id_user'),
-            'no_retur' => $this->NoTransaksiGenerateRetur(),
-            'total_berat' => 0,
-            'total_berat_murni' => 0,
-            'jumlah_barang' => 0,
-            'tanggal_retur' => date('y-m-d H:i:s'),
-            'total_harga_bahan' => '0',
-            'status_dokumen' => 'Draft'
-        ]);
-        //---------------------------------------------------
-        return redirect()->to('/draftretur/' . $dateid);
+        if ($this->request->isAJAX()) {
+            $session = session();
+            $dateid = date('ymdhis');
+            $datapembelian = $this->modelpembelian->getPembelian($this->request->getVar('idbeli'));
+            $this->modelretur->save([
+                // 'created_at' => date("y-m-d"),
+                'id_date_retur' => $dateid,
+                'id_karyawan' => $session->get('id_user'),
+                'no_retur' => $this->NoTransaksiGenerateRetur(),
+                'no_transaksi' => $datapembelian['no_transaksi'],
+                'total_berat' => 0,
+                'total_berat_murni' => 0,
+                'jumlah_barang' => 0,
+                'tanggal_retur' => date('y-m-d H:i:s'),
+                'total_harga_bahan' => '0',
+                'status_dokumen' => 'Draft'
+            ]);
+            $msg = [
+                'success' => 'berhasil',
+                'dateid' => $dateid
+            ];
+            echo json_encode($msg);
+        }
     }
     public function DraftReturBarang($id)
     {
-        $data = [
-            'datamasterretur' => $this->modelretur->getDataReturAll($id),
-            'dataretur' => $this->modeldetailbuyback->getDataReturAll(),
-            'dataakanretur' => $this->modeldetailretur->getDetailRetur($id)
-        ];
-        return view('returbarang/retur_barang', $data);
+        $check = $this->modelretur->GetDataJoinRetur($id);
+        if ($check['no_transaksi'] != null) {
+            $data = [
+                'datamasterretur' =>  $check,
+                'dataretur' => $this->modeldetailbuyback->getDataReturAll(),
+                'dataakanretur' => $this->modeldetailretur->getDetailRetur($id),
+            ];
+            return view('returbarang/retur_barang', $data);
+        } else {
+            return redirect()->to('/dataretur');
+        }
     }
 
     public function SelesaiRetur()
@@ -96,25 +107,86 @@ class BarangRetur extends BaseController
                         'required' => 'Jenis Harus di isi',
                     ]
                 ],
+                'harga_murni' => [
+                    'rules' => 'required|greater_than[0]',
+                    'errors' => [
+                        'required' => 'Harga Harus di isi',
+                        'greater_than' => 'Harus Lebih Dari 0',
+                    ]
+                ],
             ]);
             if (!$valid) {
                 $msg = [
                     'error' => [
                         'tanggalretur' => $validation->getError('tanggalretur'),
+                        'harga_murni' => $validation->getError('harga_murni'),
                     ]
                 ];
                 echo json_encode($msg);
             } else {
                 $session = session();
                 $datadetailretur =  $this->modeldetailretur->getDetailAllretur($this->request->getVar('iddate'));
-                $dateretur = $this->modelretur->getDataReturAll($this->request->getVar('iddate'));
+                $dataretur = $this->modelretur->GetDataJoinRetur($this->request->getVar('iddate'));
+                $datasupp = $this->modelsupplier->getSupplier($dataretur['id_supplier']);
                 if ($datadetailretur) {
+                    $jmlbyr = $this->request->getVar('harga_murni') * $dataretur['total_berat_murni'];
                     $this->modelretur->save([
-                        'id_retur' => $dateretur['id_retur'],
+                        'id_retur' => $dataretur['id_retur'],
                         'id_karyawan' => $session->get('id_user'),
                         'keterangan' => $this->request->getVar('keterangan'),
                         'status_dokumen' => 'Selesai'
                     ]);
+                    $this->modelpembelian->save([
+                        'id_pembelian' => $dataretur['id_pembelian'],
+                        'id_karyawan' => $session->get('id_user'),
+                        'harga_murni' => $this->request->getVar('harga_murni'),
+                    ]);
+                    $this->modelpembayaran->save([
+                        'id_date_pembelian' => $dataretur['id_date_pembelian'],
+                        'id_karyawan' => $session->get('id_user'),
+                        'nama_bank' => null,
+                        'cara_pembayaran' => 'ReturSales',
+                        'jumlah_pembayaran' => $jmlbyr,
+                        'qty' => $dataretur['jumlah_barang'],
+                        'no_retur' => $dataretur['no_retur'],
+                        'kode_24k' => null,
+                        'harga_murni' => $this->request->getVar('harga_murni'),
+                        'berat_murni' => $dataretur['total_berat_murni'],
+                    ]);
+                    foreach ($datadetailretur as $row) {
+                        $datadetailkartu = $this->modelkartustock->getKartuStockkode($row['kode']);
+                        $this->modeldetailkartustock->save([
+                            'barcode' => $row['kode'],
+                            'status' => 'Keluar',
+                            'id_karyawan' => $session->get('id_user'),
+                            'no_faktur' => $dataretur['no_retur'],
+                            'tgl_faktur' => $dataretur['tanggal_retur'],
+                            'nama_customer' => $datasupp['nama_supp'],
+                            'saldo' => $datadetailkartu['saldo_akhir'] - $row['qty'],
+                            'masuk' => 0,
+                            'keluar' => $row['qty'],
+                            'jenis' => $row['jenis'],
+                            'model' => $row['model'],
+                            'keterangan' => 'Retur Sales',
+                            'merek' => $row['merek'],
+                            'kadar' => $row['kadar'],
+                            'berat' => $row['berat'],
+                            'nilai_tukar' =>  $row['nilai_tukar'],
+                            'harga_beli' => $row['harga_beli'],
+                            'total_harga' => $row['total_harga'],
+                            'gambar' =>  $row['nama_img'],
+                        ]);
+                        // $this->KartuStockMaster($row['kode'], $session);
+                        $masuk = $this->modeldetailkartustock->SumMasukKartu($row['kode'])['masuk'];
+                        $keluar = $this->modeldetailkartustock->SumKeluarKartu($row['kode'])['keluar'];
+                        $this->modelkartustock->save([
+                            'id_kartustock' => $datadetailkartu['id_kartustock'],
+                            'id_karyawan' => $session->get('id_user'),
+                            'total_masuk' => $masuk,
+                            'total_keluar' => $keluar,
+                            'saldo_akhir' => 0,
+                        ]);
+                    }
                     $msg = 'sukses';
                 } else {
                     $msg = [
@@ -135,34 +207,8 @@ class BarangRetur extends BaseController
             $dataretur = $this->modelretur->getDatareturAll($datadetailretur['id_date_retur']);
             if ($dataretur['no_transaksi']) {
                 $datapembelian = $this->modelpembelian->getPembelianRetur($dataretur['no_transaksi']);
-                if ($datapembelian['deposit'] != 0) {
-                    $datadeposit = $this->modeldeposit->getDataDeleteDepo($datapembelian['no_transaksi'], $dataretur['no_retur']);
-                    $selisihdepo =  $datapembelian['deposit'] - $datadetailretur['berat_murni'];
-                    if ($selisihdepo < 0) {
-                        $this->modeldeposit->delete($datadeposit['id_deposit']);
-                        $harusbayar = $datapembelian['byr_berat_murni'] + abs(round($selisihdepo, 2));
-                        $updatestat = true;
-                        $this->modelsupplier->save([
-                            'id_supplier' => $datapembelian['id_supplier'],
-                            'id_karyawan' => $session->get('id_user'),
-                            'deposit' => 0,
-                        ]);
-                    } else {
-                        $this->modeldeposit->save([
-                            'id_deposit' => $datadeposit['id_deposit'],
-                            'id_karyawan' => $session->get('id_user'),
-                            'masuk' => $selisihdepo,
-                        ]);
-                        $this->modelsupplier->save([
-                            'id_supplier' => $datapembelian['id_supplier'],
-                            'id_karyawan' => $session->get('id_user'),
-                            'deposit' => $selisihdepo,
-                        ]);
-                    }
-                } else {
-                    $harusbayar = $datapembelian['byr_berat_murni'] + $datadetailretur['berat_murni'];
-                    $updatestat = true;
-                }
+                $harusbayar = $datapembelian['byr_berat_murni'] + $datadetailretur['berat_murni'];
+                $updatestat = true;
             }
 
             $this->modeldetailbuyback->save([
@@ -170,6 +216,9 @@ class BarangRetur extends BaseController
                 'id_karyawan' => $session->get('id_user'),
                 'status_proses' => $this->request->getVar('status')
             ]);
+            $datadetailkartu = $this->modeldetailkartustock->GetDataDelete($datadetailretur['kode'], $dataretur['no_retur']);
+            $this->modeldetailkartustock->delete($datadetailkartu['id_detail_kartustock']);
+            $this->KartuStockMaster($datadetailretur['kode'], $session);
             $this->modeldetailretur->delete($this->request->getVar('id'));
             $totalberatmurni = round($this->modeldetailretur->SumBeratMurniDetailRetur($datadetailretur['id_date_retur'])['berat_murni'], 2);
             $this->modelretur->save([
@@ -190,17 +239,16 @@ class BarangRetur extends BaseController
                     'cara_pembayaran' => 'Belum Selesai',
                 ]);
                 $msg = $harusbayar;
-            }
-            $databayar = $this->modelpembayaran->getCheckNoRetur($dataretur['no_retur']);
-            $jumlahbayar = $totalberatmurni * $databayar['harga_murni'];
-            $this->modelpembayaran->save([
-                'id_pembayaran' => $databayar['id_pembayaran'],
-                'id_karyawan' => $session->get('id_user'),
-                'berat_murni' => $totalberatmurni,
-                'qty' => $this->modeldetailretur->CountBeratDetailRetur($datadetailretur['id_date_retur'])['berat'],
-                'jumlah_pembayaran' => $jumlahbayar,
-            ]);
 
+                $jumlahbayar = $totalberatmurni * $databayar['harga_murni'];
+                $this->modelpembayaran->save([
+                    'id_pembayaran' => $databayar['id_pembayaran'],
+                    'id_karyawan' => $session->get('id_user'),
+                    'berat_murni' => $totalberatmurni,
+                    'qty' => $this->modeldetailretur->CountBeratDetailRetur($datadetailretur['id_date_retur'])['berat'],
+                    'jumlah_pembayaran' => $jumlahbayar,
+                ]);
+            }
             $msg = 'berhasil';
 
             echo json_encode($msg);
@@ -208,9 +256,11 @@ class BarangRetur extends BaseController
     }
     public function PrintNotaRetur($id)
     {
+        $dataretur = $this->modelretur->GetDataJoinRetur($id);
         $data1 = [
             'datadetailretur' => $this->modeldetailretur->getDetailAllretur($id),
-            'dataretur' => $this->modelretur->getDataReturAll($id),
+            'dataretur' => $dataretur,
+            'datasup' => $this->modelsupplier->getSupplier($dataretur['id_supplier'])
             // 'img' => $this->barangmodel->getImg($id)
         ];
 
@@ -223,44 +273,55 @@ class BarangRetur extends BaseController
             $kode = $this->request->getVar('kode');
             $iddate =  $this->request->getVar('iddate');
             $databuyback = $this->modeldetailbuyback->getDataDetailKode($kode);
-            $dataretur = $this->modelretur->getDataReturAll($iddate);
+            $dataretur = $this->modelretur->GetDataJoinRetur($iddate);
             $datadetailretur = $this->modeldetailretur->CheckDataretur($databuyback['id_detail_buyback']);
+            $sumberat = round($this->modeldetailretur->SumBeratMurniDetailRetur($iddate)['berat_murni'], 2);
+            // $hasilskhr = $sumberat + $databuyback['berat_murni'];
             if (!$datadetailretur) {
-                $this->modeldetailretur->save([
-                    'id_date_retur' => $iddate,
-                    'id_karyawan' => $session->get('id_user'),
-                    'id_detail_buyback' => $databuyback['id_detail_buyback'],
-                    'nama_img' => $databuyback['nama_img'],
-                    'kode' =>  $databuyback['kode'],
-                    'qty' => $databuyback['qty'],
-                    'jenis' =>  $databuyback['jenis'],
-                    'model' =>  $databuyback['model'],
-                    'keterangan' =>  $databuyback['keterangan'],
-                    'berat' =>  $databuyback['berat'],
-                    'berat_murni' =>  $databuyback['berat_murni'],
-                    'harga_beli' =>  $databuyback['harga_beli'],
-                    'ongkos' => $databuyback['ongkos'],
-                    'kadar' =>   $databuyback['kadar'],
-                    'nilai_tukar' =>   $databuyback['nilai_tukar'],
-                    'merek' =>  $databuyback['merek'],
-                    'total_harga' => $databuyback['total_harga'],
-                    'status_proses' => 'Retur'
-                ]);
-                $this->modelretur->save([
-                    'id_retur' => $dataretur['id_retur'],
-                    'id_karyawan' => $session->get('id_user'),
-                    'total_berat' => round($this->modeldetailretur->SumBeratDetailRetur($iddate)['berat'], 2),
-                    'total_berat_murni' => round($this->modeldetailretur->SumBeratMurniDetailRetur($iddate)['berat_murni'], 2),
-                    'jumlah_barang' => $this->modeldetailretur->CountBeratDetailRetur($iddate)['berat'],
-                ]);
-                $this->modeldetailbuyback->save([
-                    'id_detail_buyback' => $databuyback['id_detail_buyback'],
-                    'id_karyawan' => $session->get('id_user'),
-                    'status_proses' => 'SudahRetur' . $dataretur['no_retur']
-                ]);
-                $msg = 'sukses';
+                if ($databuyback['berat_murni'] <= $dataretur['byr_berat_murni']) {
+                    $this->modeldetailretur->save([
+                        'id_date_retur' => $iddate,
+                        'id_karyawan' => $session->get('id_user'),
+                        'id_detail_buyback' => $databuyback['id_detail_buyback'],
+                        'nama_img' => $databuyback['nama_img'],
+                        'kode' =>  $databuyback['kode'],
+                        'qty' => $databuyback['qty'],
+                        'jenis' =>  $databuyback['jenis'],
+                        'model' =>  $databuyback['model'],
+                        'keterangan' =>  $databuyback['keterangan'],
+                        'berat' =>  $databuyback['berat'],
+                        'berat_murni' =>  $databuyback['berat_murni'],
+                        'harga_beli' =>  $databuyback['harga_beli'],
+                        'ongkos' => $databuyback['ongkos'],
+                        'kadar' =>   $databuyback['kadar'],
+                        'nilai_tukar' =>   $databuyback['nilai_tukar'],
+                        'merek' =>  $databuyback['merek'],
+                        'total_harga' => $databuyback['total_harga'],
+                        'status_proses' => 'Retur'
+                    ]);
+                    $this->modelpembelian->save([
+                        'id_pembelian' => $dataretur['id_pembelian'],
+                        'id_karyawan' => $session->get('id_user'),
+                        'byr_berat_murni' => $dataretur['byr_berat_murni'] - $databuyback['berat_murni']
+                    ]);
+                    $this->modelretur->save([
+                        'id_retur' => $dataretur['id_retur'],
+                        'id_karyawan' => $session->get('id_user'),
+                        'total_berat' => round($this->modeldetailretur->SumBeratDetailRetur($iddate)['berat'], 2),
+                        'total_berat_murni' => round($this->modeldetailretur->SumBeratMurniDetailRetur($iddate)['berat_murni'], 2),
+                        'jumlah_barang' => $this->modeldetailretur->CountBeratDetailRetur($iddate)['berat'],
+                    ]);
+                    $this->modeldetailbuyback->save([
+                        'id_detail_buyback' => $databuyback['id_detail_buyback'],
+                        'id_karyawan' => $session->get('id_user'),
+                        'status_proses' => 'SudahRetur' . $dataretur['no_retur']
+                    ]);
+                    $msg = 'sukses';
+                } else {
+                    $msg = ['error' => 'Lebih Bayar'];
+                }
             } else {
-                $msg = 'gagal';
+                $msg = ['error' => 'Data Sudah Masuk'];;
             }
             echo json_encode($msg);
         }
@@ -280,7 +341,13 @@ class BarangRetur extends BaseController
     public function BatalRetur($id)
     {
         $session = session();
+        $dataretur = $this->modelretur->GetDataJoinRetur($id);
         $datadetailretur =  $this->modeldetailretur->getDetailAllretur($id);
+        $this->modelpembelian->save([
+            'id_pembelian' => $dataretur['id_pembelian'],
+            'id_karyawan' => $session->get('id_user'),
+            'byr_berat_murni' => $dataretur['byr_berat_murni'] + $dataretur['total_berat_murni']
+        ]);
         foreach ($datadetailretur as $row) {
             $databuyback = $this->modeldetailbuyback->getDataDetailRetur($row['kode']);
             $this->modeldetailbuyback->save([
@@ -299,11 +366,16 @@ class BarangRetur extends BaseController
             $session = session();
             $kode =  $this->modeldetailretur->getDataDetailRetur($this->request->getVar('id'));
             $databuyback = $this->modeldetailbuyback->getDataDetailRetur($kode['kode']);
-            $dataretur = $this->modelretur->getDataReturAll($kode['id_date_retur']);
+            $dataretur = $this->modelretur->GetDataJoinRetur($kode['id_date_retur']);
             $this->modeldetailbuyback->save([
                 'id_detail_buyback' => $databuyback['id_detail_buyback'],
                 'id_karyawan' => $session->get('id_user'),
                 'status_proses' => 'Retur'
+            ]);
+            $this->modelpembelian->save([
+                'id_pembelian' => $dataretur['id_pembelian'],
+                'id_karyawan' => $session->get('id_user'),
+                'byr_berat_murni' => $dataretur['byr_berat_murni'] + $kode['berat_murni']
             ]);
             $this->modeldetailretur->delete($this->request->getVar('id'));
             $this->modelretur->save([

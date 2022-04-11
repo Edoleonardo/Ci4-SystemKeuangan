@@ -2,19 +2,14 @@
 
 namespace App\Controllers;
 
-use CodeItNow\BarcodeBundle\Utils\BarcodeGenerator;
-use App\Models\ModelHome;
-use App\Models\ModelKartuStock;
-use App\Models\ModelDetailKartuStock;
-use App\Models\ModelLogin;
 use App\Models\ModelDetailTransaksi;
 use App\Models\ModelTransaksi;
 use App\Models\ModelAkunBiaya;
 use App\Models\ModelBank;
 
-use CodeIgniter\Validation\Rules;
-use app\Config\Cache;
-use Config\Cache as ConfigCache;
+// use CodeIgniter\Validation\Rules;
+// use app\Config\Cache;
+// use Config\Cache as ConfigCache;
 
 class Transaksi extends BaseController
 {
@@ -23,13 +18,6 @@ class Transaksi extends BaseController
 
     public function __construct()
     {
-
-        // $this->barcodeG =  new BarcodeGenerator();
-        // $this->barangmodel = new ModelHome();
-        // $this->modelkartustock = new ModelKartuStock();
-        // $this->modeldetailkartustock = new ModelDetailKartuStock();
-        // $this->modellogin = new ModelLogin();
-        // $this->chace = new ConfigCache();
         $this->modeldetailtransaksi = new ModelDetailTransaksi();
         $this->modeltransaksi = new ModelTransaksi();
         $this->modelakun = new ModelAkunBiaya();
@@ -46,6 +34,22 @@ class Transaksi extends BaseController
         ];
         // dd($this->modeltransaksi->getTransaksi());
         return view('transaksi/data_transaksi', $data);
+    }
+    public function TampilTransaksi()
+    {
+        if ($this->request->isAJAX()) {
+            if ($this->request->getVar('dari') < $this->request->getVar('sampai')) {
+                $msg = ['error' => 'Dari Tanggal Harus Lebih Besar'];
+            } else {
+                $data = [
+                    'detailtransaksi' => $this->modeldetailtransaksi->getDetailTransaksiFilter($this->request->getVar('dari'), $this->request->getVar('sampai')),
+                    'datatransaksi' => $this->modeltransaksi->getTransaksi(),
+                ];
+                $msg = ['tampiltrans' => view('transaksi/tabletransaksi', $data)];
+            }
+
+            echo json_encode($msg);
+        }
     }
     public function TambahInput()
     {
@@ -132,7 +136,7 @@ class Transaksi extends BaseController
                 }
                 if (isset($sukses)) {
                     $this->modeldetailtransaksi->save([
-                        'tanggal_transaksi' => $this->request->getVar('tangalinput'),
+                        'tanggal_transaksi' => $this->request->getVar('tangalinput') . ' ' . date("H:i:s"),
                         'id_karyawan' => $session->get('id_user'),
                         'pembayaran' => $this->request->getVar('pembayaran'),
                         'keterangan' => $this->request->getVar('keterangan'),

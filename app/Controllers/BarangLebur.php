@@ -193,8 +193,8 @@ class BarangLebur extends BaseController
                 $datalebur = $this->modellebur->getDataLeburAll($this->request->getVar('dateidlebur'));
                 $checkkode = $this->datastock->getBarangkode($this->request->getVar('barcode'));
 
-                if ($datadetaillebur) { // jikda ada barcode
-                    if ($this->request->getVar('barcode') && $checkkode) {
+                if ($datadetaillebur) {
+                    if ($this->request->getVar('barcode') && $checkkode) { // jikda ada barcode
                         $datakartu = $this->modelkartustock->getKartuStockkode($checkkode['barcode']);
                         $saldoakhir = $this->request->getVar('berat') + $datakartu['saldo_akhir'];
 
@@ -209,7 +209,7 @@ class BarangLebur extends BaseController
                             'keterangan' =>  $this->request->getVar('keterangan'),
                             'kadar' => '24K',
                             'berat_murni' => $this->request->getVar('berat'),
-                            'tanggal_lebur' => $this->request->getVar('tanggallebur'),
+                            'tanggal_lebur' => $this->request->getVar('tanggallebur') . ' ' . date('H:i:s'),
                             'status_dokumen' => 'Selesai'
                         ]);
 
@@ -275,7 +275,7 @@ class BarangLebur extends BaseController
                             'keterangan' =>  $this->request->getVar('keterangan'),
                             'kadar' => '24K',
                             'berat_murni' => $this->request->getVar('berat'),
-                            'tanggal_lebur' => $this->request->getVar('tanggallebur'),
+                            'tanggal_lebur' => $this->request->getVar('tanggallebur') . ' ' . date('H:i:s'),
                             'status_dokumen' => 'Selesai'
                         ]);
 
@@ -333,6 +333,31 @@ class BarangLebur extends BaseController
 
 
                         $msg = $barcode;
+                    }
+                    foreach ($datadetaillebur as $row) {
+                        $datadetailkartu = $this->modelkartustock->getKartuStockkode($row['kode']);
+                        $this->modeldetailkartustock->save([
+                            'barcode' => $row['kode'],
+                            'status' => 'Keluar',
+                            'id_karyawan' => $session->get('id_user'),
+                            'no_faktur' => $datalebur['no_lebur'],
+                            'tgl_faktur' => $datalebur['tanggal_lebur'] . ' ' . date('H:i:s'),
+                            'nama_customer' => $datalebur['no_lebur'],
+                            'saldo' => $datadetailkartu['saldo_akhir'] - $row['qty'],
+                            'masuk' => 0,
+                            'keluar' => $row['qty'],
+                            'jenis' => $row['jenis'],
+                            'model' => $row['model'],
+                            'keterangan' => 'Lebur Barang',
+                            'merek' => $row['merek'],
+                            'kadar' => $row['kadar'],
+                            'berat' => $row['berat'],
+                            'nilai_tukar' =>  $row['nilai_tukar'],
+                            'harga_beli' => $row['harga_beli'],
+                            'total_harga' => $row['total_harga'],
+                            'gambar' =>  $row['nama_img'],
+                        ]);
+                        $this->KartuStockMaster($row['kode'], $session);
                     }
                 } else {
                     $msg = [

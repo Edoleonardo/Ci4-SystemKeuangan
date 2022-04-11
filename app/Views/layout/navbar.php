@@ -6,7 +6,7 @@
             <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
         </li>
         <li class="nav-item d-none d-sm-inline-block">
-            <a href="index.html" class="nav-link">Home</a>
+            <a href="/" class="nav-link">Home</a>
         </li>
         <li class="nav-item d-none d-sm-inline-block">
             <a href="/logout" class="nav-link">Logout</a>
@@ -193,10 +193,10 @@
                 </li>
                 <li class="nav-item menu-open">
                     <a href="#" class="nav-link">
-                        <i class="nav-icon fas fa-book"></i>
+                        <i class="nav-icon far fa-plus-square"></i>
                         <p>
                             Barang Masuk
-                            <i class="right fas fa-angle-left"></i>
+                            <i class=" right fas fa-angle-left"></i>
                         </p>
                     </a>
                     <ul class="nav nav-treeview">
@@ -216,7 +216,7 @@
                 </li>
                 <li class="nav-item menu-open">
                     <a href="#" class="nav-link">
-                        <i class="nav-icon fas fa-book"></i>
+                        <i class="nav-icon fas fa-share-square"></i>
                         <p>
                             Barang Keluar
                             <i class="right fas fa-angle-left"></i>
@@ -233,7 +233,7 @@
                 </li>
                 <li class="nav-item menu-open">
                     <a href="#" class="nav-link">
-                        <i class="nav-icon fas fa-book"></i>
+                        <i class="nav-icon fas fa-cog"></i>
                         <p>
                             Proses Barang
                             <i class="right fas fa-angle-left"></i>
@@ -279,7 +279,7 @@
                 </li>
                 <li class="nav-item menu-open">
                     <a href="#" class="nav-link">
-                        <i class="nav-icon fas fa-book"></i>
+                        <i class="nav-icon fas fa-table"></i>
                         <p>
                             Input Master Data
                             <i class="right fas fa-angle-left"></i>

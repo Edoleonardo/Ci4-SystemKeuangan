@@ -4,7 +4,7 @@
         <td><?= $row['kode'] ?></td>
         <td><?= $row['qty'] ?></td>
         <td><?= number_format($row['harga_beli'], 2, ',', '.')  ?></td>
-        <td><?= $row['jenis'] ?> <?= $row['model'] ?> <?= $row['keterangan'] ?> (<?= $row['no_nota'] ?>, <?= $row['status'] ?>)</td>
+        <td><?= $row['jenis'] ?> <?= $row['model'] ?> <?= $row['keterangan'] ?> (<?= $row['no_nota'] ?>, <?= $row['status_proses'] ?>)</td>
         <td><?= $row['berat'] ?></td>
         <td><?= $row['kadar'] ?></td>
         <td><?= $row['nilai_tukar'] ?></td>

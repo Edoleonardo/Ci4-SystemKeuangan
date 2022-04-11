@@ -80,10 +80,6 @@
                                     <td>Total Berat Murni</td>
                                     <td><?= $datapembelian['total_berat_murni'] ?></td>
                                 </tr>
-                                <tr>
-                                    <td>Deposit</td>
-                                    <td><?= $datapembelian['deposit'] ?></td>
-                                </tr>
                             </tbody>
                         </table>
                     </div>
@@ -327,7 +323,7 @@
                                         <!-- text input -->
                                         <div class="form-group">
                                             <label>Harga Murni Saat Ini </label>
-                                            <input type="number" min="0" value="<?= $datapembelian['harga_murni'] ?>" id="harga_murni" name="harga_murni" onkeyup="Harganow()" class="form-control harga_murni" placeholder="Masukan harga murni">
+                                            <input type="number" onchange="UbahHargaMurni(this)" min="0" value="<?= $datapembelian['harga_murni'] ?>" id="harga_murni" name="harga_murni" onkeyup="Harganow()" class="form-control harga_murni" placeholder="Masukan harga murni">
                                             <div id="validationServerUsernameFeedback" class="invalid-feedback harga_murnimsg">
                                             </div>
                                             <input type="hidden" id="dateid" name="dateid" value="<?= $datapembelian['id_date_pembelian'] ?>">
@@ -397,7 +393,11 @@
                                                             <td><?= number_format($byr['jumlah_pembayaran'], 2, ',', '.') ?></td>
                                                             <td><?= ($byr['no_retur']) ? $byr['no_retur'] : $byr['kode_24k'] ?></td>
                                                             <td><?= $byr['berat_murni'] ?></td>
-                                                            <td><button type='button' class='btn btn-block bg-gradient-danger' onclick="hapus(<?= $byr['id_pembayaran'] ?>)"><i class='fas fa-trash'></i></button></td>
+                                                            <?php if ($byr['cara_pembayaran'] != 'ReturSales') : ?>
+                                                                <td><button type='button' class='btn btn-block bg-gradient-danger' onclick="hapus(<?= $byr['id_pembayaran'] ?>)"><i class='fas fa-trash'></i></button></td>
+                                                            <?php else : ?>
+                                                                <td><i class='fa fa-check'></i></td>
+                                                            <?php endif; ?>
                                                         </tr>
                                                     <?php endforeach; ?>
                                                     <tr>
@@ -579,6 +579,38 @@
 
 </footer>
 <script type="text/javascript">
+    function isivalue() {
+        var jenisbayar = $('#pembayaran').val();
+        var harusbayar = $('#totalbersih1').html().replaceAll('.', '');
+        if (jenisbayar == 'Transfer') {
+            $('#transfer').val(harusbayar);
+            byrtransfer()
+        }
+        if (jenisbayar == 'Tunai') {
+            $('#tunai').val(harusbayar);
+            byrtunai()
+        }
+    }
+
+    function UbahHargaMurni(val) {
+        $.ajax({
+            type: "GET",
+            dataType: "json",
+            url: "<?php echo base_url('ubahhargamurni'); ?>",
+            data: {
+                val: val.value,
+                dateid: document.getElementById('dateid').value
+            },
+            success: function(result) {
+                $("#refresbayartbl").load("/detailpembelian/" + document.getElementById('dateid').value + " #refresbayartbl");
+                myDataBayar()
+            },
+            error: function(xhr, ajaxOptions, thrownError) {
+                alert(xhr.status + "\n" + xhr.responseText + "\n" + thrownError);
+            }
+        })
+    }
+
     function hapus(id) {
         Swal.fire({
             title: 'Hapus',
@@ -671,115 +703,6 @@
         $('#modal-retur').modal('toggle');
     }
 
-
-    $('.editdataform').submit(function(e) {
-        //     e.preventDefault()
-        //     let form = $('.editdataform')[0];
-        //     let data = new FormData(form)
-        //     $.ajax({
-        //         type: "POST",
-        //         data: data,
-        //         url: "<?php echo base_url('editdataform') ?>",
-        //         dataType: "json",
-        //         contentType: false,
-        //         processData: false,
-        //         cache: false,
-        //         beforeSend: function() {
-        //             $('.btnedit').html('<i class="fa fa-spin fa-spinner">')
-        //         },
-        //         complete: function() {
-        //             $('.btnedit').html('Edit')
-        //         },
-        //         success: function(result) {
-        //             if (result != 'error') {
-        //                 if (result.error) {
-        //                     if (result.error.qty) {
-        //                         $('#qty').addClass('is-invalid')
-        //                         $('.qtymsg').html(result.error.qty)
-        //                     } else {
-        //                         $('#qty').removeClass('is-invalid')
-        //                         $('.qtymsg').html('')
-        //                     }
-        //                     if (result.error.nilai_tukar) {
-        //                         $('#nilai_tukar').addClass('is-invalid')
-        //                         $('.nilai_tukarmsg').html(result.error.nilai_tukar)
-        //                     } else {
-        //                         $('#nilai_tukar').removeClass('is-invalid')
-        //                         $('.nilai_tukarmsg').html('')
-        //                     }
-        //                     if (result.error.jenis) {
-        //                         $('#jenis').addClass('is-invalid')
-        //                         $('.jenismsg').html(result.error.jenis)
-        //                     } else {
-        //                         $('#jenis').removeClass('is-invalid')
-        //                         $('.jenismsg').html('')
-        //                     }
-        //                     if (result.error.berat) {
-        //                         $('#berat').addClass('is-invalid')
-        //                         $('.beratmsg').html(result.error.berat)
-        //                     } else {
-        //                         $('#berat').removeClass('is-invalid')
-        //                         $('.beratmsg').html('')
-        //                     }
-        //                     if (result.error.harga_beli) {
-        //                         $('#harga_beli').addClass('is-invalid')
-        //                         $('.harga_belimsg').html(result.error.harga_beli)
-        //                     } else {
-        //                         $('#harga_beli').removeClass('is-invalid')
-        //                         $('.harga_belimsg').html('')
-        //                     }
-        //                     if (result.error.ongkos) {
-        //                         $('#ongkos').addClass('is-invalid')
-        //                         $('.ongkosmsg').html(result.error.ongkos)
-        //                     } else {
-        //                         $('#ongkos').removeClass('is-invalid')
-        //                         $('.ongkosmsg').html('')
-        //                     }
-        //                 } else {
-        //                     $('#qty').removeClass('is-invalid')
-        //                     $('.qtymsg').html('')
-        //                     $('#total_berat').removeClass('is-invalid')
-        //                     $('.total_beratmsg').html('')
-        //                     $('#nilai_tukar').removeClass('is-invalid')
-        //                     $('.nilai_tukarmsg').html('')
-        //                     $('#jenis').removeClass('is-invalid')
-        //                     $('.jenismsg').html('')
-        //                     $('#berat').removeClass('is-invalid')
-        //                     $('.beratmsg').html('')
-        //                     $('#harga_beli').removeClass('is-invalid')
-        //                     $('.harga_belimsg').html('')
-        //                     $('#ongkos').removeClass('is-invalid')
-        //                     $('.ongkosmsg').html('')
-
-        //                     Swal.fire({
-        //                         icon: 'success',
-        //                         title: 'Berhasil Edit',
-        //                         confirmButtonColor: '#3085d6',
-        //                         confirmButtonText: 'OK',
-        //                         allowOutsideClick: false
-        //                     }).then((choose) => {
-        //                         if (choose.isConfirmed) {
-        //                             $('#modal-edit').modal('toggle');
-        //                             $("#datatable").load("/detailpembelian/" + document.getElementById('dateid').value + " #datatable");
-        //                             $("#refresharga").load("/detailpembelian/" + document.getElementById('dateid').value + " #refresharga");
-        //                             myDataBayar()
-        //                         }
-        //                     })
-        //                 }
-        //             } else {
-        //                 Swal.fire({
-        //                     icon: 'warning',
-        //                     title: 'Tidak ada Data',
-        //                 })
-        //             }
-
-        //         },
-        //         error: function(xhr, ajaxOptions, thrownError) {
-        //             alert(xhr.status + "\n" + xhr.responseText + "\n" + thrownError);
-        //         }
-        //     })
-    })
-
     function pembulatankoma(berat) {
         var num = Number(berat) // The Number() only visualizes the type and is not needed
         var roundedString = num.toFixed(2);
@@ -803,6 +726,7 @@
                 document.getElementById('harga_murnihtml').innerHTML = ''
                 // document.getElementById('harga_murni').value = ''
                 Harganow()
+                isivalue()
 
             },
             error: function(xhr, ajaxOptions, thrownError) {
@@ -943,31 +867,6 @@
                                 })
                             }
                         }
-                        if (result.pesan_deposit) {
-                            if (result.pesan_deposit.pesan) {
-                                Swal.fire({
-                                    icon: 'info',
-                                    title: result.pesan_deposit.pesan,
-                                    confirmButtonColor: '#3085d6',
-                                    confirmButtonText: 'OK',
-                                })
-                            }
-                        }
-
-
-                        // Swal.fire({
-                        //     icon: 'success',
-                        //     title: 'Berhasil Bayar',
-                        //     confirmButtonColor: '#3085d6',
-                        //     confirmButtonText: 'OK',
-                        //     allowOutsideClick: false
-                        // }).then((result) => {
-                        //     if (result.isConfirmed) {
-                        //         $('#modal-bayar').modal('toggle');
-                        //         window.location.reload();
-
-                        //     }
-                        // })
                     }
                 } else {
                     Swal.fire({

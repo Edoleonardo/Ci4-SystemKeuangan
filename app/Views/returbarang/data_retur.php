@@ -1,7 +1,7 @@
 <?= $this->extend('layout/template'); ?>
 <?= $this->section('content') ?>
 <style>
-    .table>tbody>tr>* {
+    .table {
         vertical-align: middle;
         text-align: center;
     }
@@ -36,7 +36,7 @@
                 <div class="col-12">
                     <div class="card">
                         <div class="card-header ">
-                            <a class="btn btn-app" href="/returbarang">
+                            <a class="btn btn-app" href="#" data-toggle="modal" data-target="#modal-lg">
                                 <i class="fas fa-plus"></i> Retur Barang
                             </a>
                         </div>
@@ -90,7 +90,59 @@
     <!-- /.content -->
 </div>
 <!-- /.content-wrapper -->
+<div class="modal fade" id="modal-lg">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Pilih Data Pembelian</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            <!-- /.card-header -->
+                            <div class="card-body table-responsive p-0">
+                                <table id="pembelian1" class="table table-hover text-nowrap">
+                                    <thead>
+                                        <tr>
+                                            <th>No Transaksi</th>
+                                            <th>Supplier</th>
+                                            <th>Tanggal Faktur</th>
+                                            <th>Jatuh Tempo</th>
+                                            <th>Bayar Berat Murni</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php foreach ($datapembelian as $row) : ?>
+                                            <tr class="masukretur" onclick="MasukRetur(<?= $row['id_pembelian'] ?>)">
+                                                <td><?= $row['no_transaksi'] ?></td>
+                                                <td><?= $row['nama_supp'] ?></td>
+                                                <td><?= substr($row['tgl_faktur'], 0, 10) ?></td>
+                                                <td><?= substr($row['tgl_jatuh_tempo'], 0, 10) ?></td>
+                                                <td><?= $row['byr_berat_murni'] ?></td>
+                                            </tr>
+                                        <?php endforeach; ?>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <!-- /.card-body -->
+                        </div>
+                        <!-- /.card -->
+                    </div>
+                </div>
 
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Tutup</button>
+                <!-- <button type="submit" class="btn btn-primary btntambah">Selesai</button> -->
+            </div>
+        </div>
+    </div>
+    <!-- /.modal-content -->
+</div>
 <!-- Control Sidebar -->
 <aside class="control-sidebar control-sidebar-dark">
     <!-- Control sidebar content goes here -->
@@ -101,8 +153,40 @@
 
 </footer>
 <script>
+    function MasukRetur(id) {
+        $.ajax({
+            type: "GET",
+            dataType: "json",
+            url: "<?php echo base_url('returbarang'); ?>",
+            data: {
+                idbeli: id,
+            },
+            beforeSend: function() {
+                $(".masukretur").attr('onclick', ' ')
+            },
+            // complete: function() {
+            //     $('.btntambah').html('Tambah')
+            // },
+            success: function(result) {
+                if (result.success) {
+                    window.location.href = "/draftretur/" + result.dateid
+                }
+            },
+            error: function(xhr, ajaxOptions, thrownError) {
+                alert(xhr.status + "\n" + xhr.responseText + "\n" + thrownError);
+            }
+        })
+    }
     $(function() {
         $("#example1").DataTable({
+            "responsive": true,
+            "lengthChange": false,
+            "autoWidth": false,
+            "aaSorting": []
+            //"buttons": ["copy", "csv", "excel", "pdf", "print", "colvis", ]
+        }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
+
+        $("#pembelian1").DataTable({
             "responsive": true,
             "lengthChange": false,
             "autoWidth": false,

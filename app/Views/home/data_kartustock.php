@@ -1,7 +1,7 @@
 <?= $this->extend('layout/template'); ?>
 <?= $this->section('content') ?>
 <style>
-    #tbldata {
+    .table>tbody>tr>* {
         vertical-align: middle;
         text-align: center;
     }
@@ -23,7 +23,7 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1 class="m-0">Data Barang</h1>
+                    <h1 class="m-0">Data Kartu Stock</h1>
                 </div><!-- /.col -->
                 <!-- /.content-header -->
                 <div class="col-sm-6">
@@ -47,7 +47,7 @@
                                     <div class="form-group">
                                         <label>Filter Kode</label>
                                         <select name="kode" onchange="TampilKartu()" class="form-control" id="kode" name="kode">
-                                            <option value="0" selected>Terbaru</option>
+                                            <option value="0" selected>10 Terbaru</option>
                                             <option value="1">Perhiasan Mas</option>
                                             <option value="2">Perhiasan Berlian</option>
                                             <option value="3">Logam Mulia (Antam, UBS, HWT)</option>
@@ -111,7 +111,6 @@
                 kode: kode,
             },
             success: function(result) {
-                console.log(result)
                 $('.viewmodal').html(result.modal).show();
                 $('#title').html('Detail Kartu Stock ' + kode)
                 $('#modal-xl').modal('show');

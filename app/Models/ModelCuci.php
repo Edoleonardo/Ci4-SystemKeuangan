@@ -26,6 +26,10 @@ class ModelCuci extends Model
     {
         return $this->where(['barcode' => $id])->first();
     }
+    public function getNoCuci($id)
+    {
+        return $this->where(['no_cuci' => $id])->first();
+    }
     public function getNoTransCuci()
     {
         $db = db_connect();

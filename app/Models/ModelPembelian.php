@@ -23,6 +23,26 @@ class ModelPembelian extends Model
         }
         return $this->where(['id_date_pembelian' => $id])->first();
     }
+    public function getPembelian($id)
+    {
+        $this->select('no_transaksi');
+        $this->where(['id_pembelian' => $id]);
+        $data = $this->get();
+        return $data->getResult('array')[0];
+    }
+    public function GetDataNotrans($id)
+    {
+        $this->select('*');
+        $this->join('tbl_supplier', 'tbl_supplier.id_supplier = tbl_pembelian.id_supplier');
+        $this->where(['no_transaksi' => $id]);
+        $this->orderBy('tbl_pembelian.created_at', 'DESC');
+        $data = $this->get();
+        if ($data->getResult('array')) {
+            return $data->getResult('array')[0];
+        } else {
+            return $data->getResult('array');
+        }
+    }
     public function getPembelianSupplierJoin($id)
     {
         $this->select('*');
@@ -40,6 +60,12 @@ class ModelPembelian extends Model
         $this->orderBy('tbl_pembelian.created_at', 'DESC');
         $data = $this->get();
         return $data->getResult('array')[0];
+    }
+    public function getPembelianTotalRetur()
+    {
+        $db = db_connect();
+        $data = $db->query('select * from tbl_pembelian join tbl_supplier on tbl_supplier.id_supplier = tbl_pembelian.id_supplier where tbl_pembelian.status_dokumen = "Selesai" AND (tbl_pembelian.cara_pembayaran = "Bayar Nanti" OR tbl_pembelian.cara_pembayaran ="Belum Selesai") order by tbl_pembelian.created_at DESC;');
+        return $data->getResult('array');
     }
     public function getNoTrans()
     {

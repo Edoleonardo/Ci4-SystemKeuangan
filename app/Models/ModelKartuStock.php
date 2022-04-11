@@ -38,7 +38,7 @@ class ModelKartuStock extends Model
             $data = $db->query('select * from tbl_kartustock where substr(kode,1,1) = ' . $id . ' AND saldo_akhir > 0 order by updated_at DESC');
         }
         if ($stock == 2) {
-            $data = $db->query('select * from tbl_kartustock where substr(kode,1,1) = ' . $id . '  AND saldo_akhir = 0  order by updated_at DESC');
+            $data = $db->query('select * from tbl_kartustock where substr(kode,1,1) = ' . $id . '  AND saldo_akhir <= 0  order by updated_at DESC');
         }
         return $data->getResult('array');
     }

@@ -84,6 +84,12 @@
                                 </td>
                             </tr>
                             <tr>
+                                <td>Nama Tukang :</td>
+                                <td>
+                                    <?= $datamastercuci['nama_tukang'] ?>
+                                </td>
+                            </tr>
+                            <tr>
                                 <td>Jumlah Barang :</td>
                                 <td>
                                     <?= $datamastercuci['jumlah_barang'] ?>

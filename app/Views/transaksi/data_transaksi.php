@@ -2,6 +2,11 @@
 <?= $this->section('content') ?>
 <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <style>
+    .table>tbody>tr>* {
+        vertical-align: middle;
+        text-align: center;
+    }
+
     .imgg {
         width: 100px;
     }
@@ -14,6 +19,11 @@
         background-clip: padding-box;
         cursor: pointer
     }
+
+    /* #fixedasd {
+        z-index: 99999999;
+        position: fixed;
+    } */
 </style>
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
@@ -96,10 +106,26 @@
                 <div class="col-4">
                     <!-- Application buttons -->
                     <div class="card">
-                        <div class="card-body" id="refreshtombol">
-                            <a class="btn btn-app bg-primary" type="button" data-toggle="modal" data-target="#modal-input">
-                                <i class="fas fa-plus"></i>Tambah Biaya
-                            </a>
+                        <div class="card-body">
+                            <div class="row">
+                                <a class="btn btn-app bg-primary" type="button" data-toggle="modal" data-target="#modal-input">
+                                    <i class="fas fa-plus"></i>Tambah Biaya
+                                </a>
+                            </div>
+                            <div class="row">
+                                <div class="col-6">
+                                    <div class="form-group">
+                                        <label>Filter Dari Tanggal</label>
+                                        <input type="date" onchange="TampilTrans()" id="daritgl" name="daritgl" class="form-control" placeholder="Masukan daritgl" value="<?= date("Y-m-d") ?>">
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="form-group">
+                                        <label>Sampai Dari Tanggal</label>
+                                        <input type="date" onchange="TampilTrans()" id="sampaitgl" name="sampaitgl" class="form-control" placeholder="Masukan sampaitgl" value="<?= date("Y-m-d", strtotime("-10 days")) ?>">
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                         <!-- /.card-body -->
                     </div>
@@ -113,71 +139,7 @@
                         </div>
                         <!-- ./card-header -->
                         <div class="table-responsive" id="refreshtbl">
-                            <table class="table table-bordered table-hover" id="tbldata">
-                                <thead>
-                                    <tr>
-                                        <th colspan="4">Total Akhir</th>
-                                        <th><?= number_format($datatransaksi['total_masuk'], 0, ',', '.') ?></th>
-                                        <th><?= number_format($datatransaksi['total_keluar'], 0, ',', '.') ?></th>
-                                        <th><?= number_format($datatransaksi['saldo_akhir'], 0, ',', '.') ?></th>
-                                    </tr>
-                                    <tr>
-                                        <th class="text-center">No</th>
-                                        <th>Pembayaran</th>
-                                        <th>Keterangan</th>
-                                        <th>Akun Biaya</th>
-                                        <th>Masuk</th>
-                                        <th>Keluar</th>
-                                        <th>Total Saldo Akhir</th>
-                                    </tr>
-                                </thead>
-                                <tbody class="table-body">
-                                    <?php $i = 0;
-                                    $saldoakhir = 0;
-                                    $totalmasuk = 0;
-                                    $totalkeluar = 0;
-                                    $tanggal = '';
-                                    foreach ($detailtransaksi as $r) :
-                                        if ($tanggal != substr($r['tanggal_transaksi'], 0, 10)) :
-                                            if ($i > 0) : ?>
-                                                <tr id="demo-<?= $i ?>" class="collapse cell-1 row-child">
-                                                    <td colspan="4">Total Akhir</td>
-                                                    <td><?= number_format($totalmasuk, 0, ',', '.') ?></td>
-                                                    <td><?= number_format($totalkeluar, 0, ',', '.') ?></td>
-                                                    <td><?= number_format($totalmasuk - $totalkeluar, 0, ',', '.') ?></td>
-                                                </tr>
-                                            <?php endif;
-                                            $i++; ?>
-                                            <tr class="cell-1" data-toggle="collapse" data-target="#demo-<?= $i ?>">
-                                                <td class="text-center"><?= $i ?></td>
-                                                <td colspan="6"><?= substr($r['tanggal_transaksi'], 0, 10) ?></td>
-                                            </tr>
-                                        <?php $saldoakhir = 0;
-                                            $totalmasuk = 0;
-                                            $totalkeluar = 0;
-                                        endif; ?>
-                                        <tr id="demo-<?= $i ?>" class="collapse cell-1 row-child">
-                                            <td class="text-center"><i class="fa fa-angle-up"></i></td>
-                                            <td><?= $r['pembayaran'] ?></td>
-                                            <td><?= $r['keterangan'] ?></td>
-                                            <td><?= $r['nama_akun'] ?></td>
-                                            <td><?= number_format($r['masuk'], 0, ',', '.') ?></td>
-                                            <td><?= number_format($r['keluar'], 0, ',', '.') ?></td>
-                                            <td></td>
-                                        </tr>
-                                    <?php
-                                        $totalmasuk = $totalmasuk + $r['masuk'];
-                                        $totalkeluar = $totalkeluar + $r['keluar'];
-                                        $tanggal =  substr($r['tanggal_transaksi'], 0, 10);
-                                    endforeach; ?>
-                                    <tr id="demo-<?= $i ?>" class="collapse cell-1 row-child">
-                                        <td colspan="4">Total Akhir</td>
-                                        <td><?= number_format($totalmasuk, 0, ',', '.') ?></td>
-                                        <td><?= number_format($totalkeluar, 0, ',', '.') ?></td>
-                                        <td><?= number_format($totalmasuk - $totalkeluar, 0, ',', '.') ?></td>
-                                    <tr>
-                                </tbody>
-                            </table>
+                            <!-- ------------------------------------------------------------------- -->
                         </div>
                         <!-- /.card-body -->
                     </div>
@@ -283,6 +245,8 @@
     <!-- /.modal-content -->
 </div>
 <!-- Control Sidebar -->
+<div id="openmodaldetail">
+</div>
 <aside class="control-sidebar control-sidebar-dark">
     <!-- Control sidebar content goes here -->
 </aside>
@@ -326,7 +290,6 @@
                     processData: false,
                     cache: false,
                     success: function(result) {
-                        console.log(result)
                         if (result.error) {
                             if (result.error.kategori) {
                                 $('#kategori').addClass('is-invalid')
@@ -370,7 +333,6 @@
                                 })
                             }
                         } else {
-                            // console.log(result)
                             $('#total_tangalinput').removeClass('is-invalid')
                             $('.total_tangalinputmsg').html('')
                             $('#kategori').removeClass('is-invalid')
@@ -387,9 +349,9 @@
                                 icon: 'success',
                                 title: 'Berhasil Di Tambah',
                             })
-
-                            refreshtbl()
+                            $("#refreshtitle").load("/transaksiharian/ #titletr");
                             $('#modal-input').modal('toggle')
+                            TampilTrans()
                         }
                     },
                     error: function(xhr, ajaxOptions, thrownError) {
@@ -397,16 +359,37 @@
                     }
                 })
             } else {
-                refreshtbl()
+                $("#refreshtitle").load("/transaksiharian/ #titletr");
+                TampilTrans()
             }
         })
 
     })
 
-    function refreshtbl() {
-        $("#refreshtbl").load("/transaksiharian/ #tbldata");
-        $("#refreshtitle").load("/transaksiharian/ #titletr");
+    function TampilTrans() {
+        $.ajax({
+            type: "get",
+            url: "<?php echo base_url('tampiltrans'); ?>",
+            dataType: "json",
+            data: {
+                dari: $('#daritgl').val(),
+                sampai: $('#sampaitgl').val(),
+            },
+            success: function(result) {
+                if (result.error) {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: result.error,
+                    })
+                }
+                $('#refreshtbl').html(result.tampiltrans)
+            },
+            error: function(xhr, ajaxOptions, thrownError) {
+                alert(xhr.status + "\n" + xhr.responseText + "\n" + thrownError);
+            }
+        })
     }
+
     $(function() {
         $("#example1").DataTable({
             "responsive": true,
@@ -416,5 +399,9 @@
             //"buttons": ["copy", "csv", "excel", "pdf", "print", "colvis", ]
         }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
     });
+
+    $(document).ready(function() {
+        TampilTrans()
+    })
 </script>
 <?= $this->endSection(); ?>

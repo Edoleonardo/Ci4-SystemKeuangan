@@ -10,7 +10,7 @@ class ModelDetailPenjualan extends Model
     protected $table = 'tbl_detail_penjualan';
     protected $primaryKey = 'id_detail_penjualan';
     protected $useTimestamps = true;
-    protected $allowedFields = ['id_date_penjualan', 'id_karyawan', 'nama_img', 'kode', 'jenis', 'qty', 'saldo', 'model', 'keterangan', 'berat_murni', 'berat', 'harga_beli', 'ongkos', 'kadar', 'nilai_tukar', 'merek', 'total_harga'];
+    protected $allowedFields = ['id_date_penjualan', 'id_karyawan', 'status', 'nama_img', 'kode', 'jenis', 'qty', 'saldo', 'model', 'keterangan', 'berat_murni', 'berat', 'harga_beli', 'ongkos', 'kadar', 'nilai_tukar', 'merek', 'total_harga'];
 
     public function getDetailAllJual($id)
     {
@@ -32,6 +32,7 @@ class ModelDetailPenjualan extends Model
         $this->select('*');
         $this->where('kode', $id);
         $this->where('LENGTH(id_date_penjualan)', 12);
+        $this->orderBy('created_at', 'DESC');
         $query = $this->get();
         if ($query->getResult('array')) {
             $data = $query->getResult('array')[0];

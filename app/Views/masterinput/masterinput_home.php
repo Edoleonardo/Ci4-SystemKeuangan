@@ -94,10 +94,10 @@
                                 <thead>
                                     <tr>
                                         <th>Nama Supplier</th>
+                                        <th>Inisial</th>
                                         <th>Alamat</th>
                                         <th>Kota</th>
                                         <th>Nama Sales</th>
-                                        <th>Deposit</th>
                                         <th>No Hp</th>
                                         <th>No Kantor</th>
                                     </tr>
@@ -106,10 +106,10 @@
                                     <?php foreach ($datasup as $row) : ?>
                                         <tr onclick="Updatedata(<?= $row['id_supplier'] ?>, 'supplier')">
                                             <td><?= $row['nama_supp'] ?></td>
+                                            <td><?= $row['inisial'] ?></td>
                                             <td><?= $row['alamat_supp'] ?></td>
                                             <td><?= $row['kota_supp'] ?></td>
                                             <td><?= $row['sales_supp'] ?></td>
-                                            <td><?= $row['deposit'] ?></td>
                                             <td><?= $row['no_hp'] ?></td>
                                             <td><?= $row['no_ktr'] ?></td>
                                         </tr>
@@ -118,10 +118,10 @@
                                 <tfoot>
                                     <tr>
                                         <th>Nama Supplier</th>
+                                        <th>Inisial</th>
                                         <th>Alamat</th>
                                         <th>Kota</th>
                                         <th>Nama Sales</th>
-                                        <th>Deposit</th>
                                         <th>No Hp</th>
                                         <th>No Kantor</th>
                                     </tr>
@@ -468,6 +468,12 @@
                             <label>Nama Supplier</label>
                             <input type="text" id="nama_supp" name="nama_supp" class="form-control nama_supp" placeholder="Masukan Nomor Nama Supplier">
                             <div id="validationServerUsernameFeedback" class="invalid-feedback nama_suppmsg">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Inisial</label>
+                            <input type="text" id="inisial" name="inisial" class="form-control inisial" placeholder="Masukan Nomor Nama Supplier">
+                            <div id="validationServerUsernameFeedback" class="invalid-feedback inisialmsg">
                             </div>
                         </div>
                         <div class="form-group">
@@ -852,6 +858,7 @@
                 $('.btntambah').html('Tambah')
             },
             success: function(result) {
+                console.log(result)
                 if (result.error) {
                     if (result.error.nama_supp) {
                         $('#nama_supp').addClass('is-invalid')
@@ -859,6 +866,13 @@
                     } else {
                         $('#nama_supp').removeClass('is-invalid')
                         $('.nama_suppmsg').html('')
+                    }
+                    if (result.error.inisial) {
+                        $('#inisial').addClass('is-invalid')
+                        $('.inisialmsg').html(result.error.inisial)
+                    } else {
+                        $('#inisial').removeClass('is-invalid')
+                        $('.inisialmsg').html('')
                     }
                     if (result.error.alamat) {
                         $('#alamat1').addClass('is-invalid')
@@ -898,6 +912,8 @@
                 } else {
                     $('#nama_supp').removeClass('is-invalid')
                     $('.nama_suppmsg').html('')
+                    $('#inisial').removeClass('is-invalid')
+                    $('.inisialmsg').html('')
                     $('#alamat1').removeClass('is-invalid')
                     $('.alamat1msg').html('')
                     $('#kota1').removeClass('is-invalid')
@@ -1455,6 +1471,7 @@
                     $('#no_hp').val(result.no_hp);
                     $('#no_ktr').val(result.no_ktr);
                     $('#alamat1').val(result.alamat_supp);
+                    $('#inisial').val(result.inisial);
                     $('#kota1').val(result.kota_supp);
                     $('#id_supp').val(id);
                     $('#titlesupp').html('Update Data Supplier')

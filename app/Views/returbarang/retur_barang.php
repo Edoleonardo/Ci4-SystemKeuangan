@@ -2,7 +2,7 @@
 <?= $this->section('content') ?>
 <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <style>
-    .table>tbody>tr>* {
+    .table {
         vertical-align: middle;
         text-align: center;
     }
@@ -93,45 +93,57 @@
     <!-- Main content -->
     <section class="content">
         <div class="row">
-            <div class="col-6">
+            <div class="col-8">
                 <div class="card" id="card1">
                     <!-- /.card-header -->
-                    <table class="table text-nowrap" id="card2">
-                        <tr>
-                            <td>No Retur :</td>
-                            <td>
-                                <?= $datamasterretur['no_retur'] ?>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Tanggal Retur :</td>
-                            <td>
-                                <?= $datamasterretur['tanggal_retur'] ?>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td> Total Berat Murni :</td>
-                            <td>
-                                <?= $datamasterretur['total_berat_murni'] ?> g
-                            </td>
-                        </tr>
-                        <tr>
-                            <td> Total Berat :</td>
-                            <td>
-                                <?= $datamasterretur['total_berat'] ?> g
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Jumlah Barang :</td>
-                            <td>
-                                <?= $datamasterretur['jumlah_barang'] ?>
-                            </td>
-                        </tr>
-                    </table>
+                    <div class="card-body table-responsive p-0" id="card2">
+                        <table class="table table-head-fixed text-nowrap">
+                            <tr>
+                                <td>No Retur :</td>
+                                <td>
+                                    <?= $datamasterretur['no_retur'] ?>
+                                </td>
+                                <td>No Transaksi :</td>
+                                <td>
+                                    <?= $datamasterretur['no_transaksi'] ?>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Tanggal Retur :</td>
+                                <td>
+                                    <?= substr($datamasterretur['tanggal_retur'], 0, 10) ?>
+                                </td>
+                                <td>Tanggal Jatuh Tempo :</td>
+                                <td>
+                                    <?= substr($datamasterretur['tgl_jatuh_tempo'], 0, 10) ?>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td> Total Berat :</td>
+                                <td>
+                                    <?= $datamasterretur['total_berat_murni'] ?> g
+                                </td>
+                                <td> Bayar Berat Murni :</td>
+                                <td>
+                                    <?= $datamasterretur['byr_berat_murni'] ?> g
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Jumlah Barang :</td>
+                                <td>
+                                    <?= $datamasterretur['jumlah_barang'] ?>
+                                </td>
+                                <td>No Faktur :</td>
+                                <td>
+                                    <?= $datamasterretur['no_faktur_supp'] ?>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
                 </div>
                 <!-- /.card -->
             </div>
-            <div class="col-6">
+            <div class="col-4">
                 <!-- Application buttons -->
                 <div class="card">
                     <div class="card-body" id="refreshtombol">
@@ -171,7 +183,7 @@
                                     <!-- /.card-header -->
                                     <button type="button" class="btn btn-block btn-outline-info btn-sm" onclick="ModalPrintRetur(1,<?= $datamasterretur['id_date_retur'] ?>)"> <i class="fas fa-print"></i></button>
                                     <div class="card-body table-responsive p-0" style="max-height: 500px;">
-                                        <table class="table table-head-fixed text-nowrap">
+                                        <table class="table table-sm">
                                             <thead>
                                                 <tr>
                                                     <!-- <th>Gambar</th> -->
@@ -179,6 +191,7 @@
                                                     <th>Keterangan</th>
                                                     <th>Status</th>
                                                     <th>Berat</th>
+                                                    <th>Murni</th>
                                                     <th>Pilih</th>
                                                 </tr>
                                             </thead>
@@ -188,12 +201,13 @@
                                                         <!-- <td class="imgg"><img class="imgg" src="/img/<?= $row['nama_img'] ?>"></td> -->
                                                         <td><a href="#" onclick="openmodaldetail(<?= $row['id_detail_buyback'] ?>)"><?= $row['kode'] ?></a></td>
                                                         <td><input type="text" onchange="UbahKet(this,<?= $row['id_detail_buyback'] ?>)" id="ubahketerangan" name="ubahketerangan" value="<?= $row['keterangan'] ?>"></td>
-                                                        <td> <select name="status_proses" style="width: 150%;" onchange="EditData(<?= $row['id_detail_buyback'] ?>,this)" class="form-control" id="status" name="status">
+                                                        <td><select name="status_proses" style="width: 150%;" onchange="EditData(<?= $row['id_detail_buyback'] ?>,this)" class="form-control" id="status" name="status">
                                                                 <option value="Cuci">Cuci</option>
                                                                 <option selected value="Retur">Retur</option>
                                                                 <option value="Lebur">Lebur</option>
                                                             </select></td>
                                                         <td><input onchange="UbahBerat(this,<?= $row['id_detail_buyback'] ?>)" style="max-width: 50%;" type="number" id="ubahberat" name="ubahberat" value="<?= $row['berat'] ?>"></td>
+                                                        <td><?= $row['berat_murni'] ?></td>
                                                         <td>
                                                             <a type="button" onclick="tambahbarangretur(<?= $row['id_detail_buyback'] ?>)" class="btn btn-block btn-outline-info btn-sm">Retur</a>
                                                         </td>
@@ -220,6 +234,7 @@
                                                     <th>Kode</th>
                                                     <th>Keterangan</th>
                                                     <th>Berat</th>
+                                                    <th>Berat Murni</th>
                                                     <th>Hapus</th>
                                                 </tr>
                                             </thead>
@@ -230,6 +245,7 @@
                                                         <td><?= $row['kode'] ?></td>
                                                         <td><?= $row['keterangan'] ?></td>
                                                         <td><?= $row['berat'] ?></td>
+                                                        <td><?= $row['berat_murni'] ?></td>
                                                         <td>
                                                             <button type='button' class='btn btn-block bg-gradient-danger' onclick="hapus(<?= $row['id_detail_retur'] ?>)"><i class='fas fa-trash'></i></button>
                                                         </td>
@@ -313,7 +329,7 @@
                     <?= csrf_field(); ?>
                     <input type="hidden" name="iddate" id="iddate" value="<?= $datamasterretur['id_date_retur'] ?>">
                     <div class="row">
-                        <div class="col-6">
+                        <div class="col-4">
                             <div class="form-group" style="margin: 1mm;">
                                 <label>Tanggal Retur</label>
                                 <input type="date" class="form-control tanggalretur" id="tanggalretur" name="tanggalretur" value="<?= (isset($datamasterretur['tanggal_retur'])) ? date_format(date_create($datamasterretur['tanggal_retur']), "Y-m-d") : '' ?>">
@@ -321,11 +337,19 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-6">
+                        <div class="col-4">
                             <div class="form-group" style="margin: 1mm;">
                                 <label>Keterangan</label>
                                 <input type="text" class="form-control keterangan" id="keterangan" name="keterangan" placeholder="Masukan Keterangan">
                                 <div id="validationServerUsernameFeedback" class="invalid-feedback keteranganmsg">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="form-group" style="margin: 1mm;">
+                                <label>Harga Berat Murni</label>
+                                <input type="number" class="form-control harga_murni" id="harga_murni" name="harga_murni" placeholder="Masukan harga_murni">
+                                <div id="validationServerUsernameFeedback" class="invalid-feedback harga_murnimsg">
                                 </div>
                             </div>
                         </div>
@@ -404,6 +428,7 @@
                 val: val.value
             },
             success: function(hasil) {
+                refreshtbl()
                 // $('#detailmodelbarang').html(hasil.data)
                 if (hasil.error) {
                     if (hasil.error.val) {
@@ -608,10 +633,10 @@
             },
             success: function(result) {
                 refreshtbl()
-                if (result == 'gagal') {
+                if (result.error) {
                     Swal.fire({
                         icon: 'warning',
-                        title: 'Data Sudah Di masukan',
+                        title: result.error,
                     })
                 }
             },
@@ -654,13 +679,23 @@
                         cache: false,
                         success: function(hasil) {
                             if (hasil.error) {
+                                if (hasil.error.harga_murni) {
+                                    $('#harga_murni').addClass('is-invalid')
+                                    $('.harga_murnimsg').html(hasil.error.harga_murni)
+                                } else {
+                                    $('#harga_murni').removeClass('is-invalid')
+                                    $('.harga_murnimsg').html('')
+                                }
                                 if (hasil.error.data) {
                                     Swal.fire({
                                         icon: 'warning',
                                         title: 'Tidak ada data',
                                     })
                                 }
+
                             } else {
+                                $('#harga_murni').removeClass('is-invalid')
+                                $('.harga_murnimsg').html('')
                                 Swal.fire({
                                     icon: 'success',
                                     title: 'Berhasil Retur',

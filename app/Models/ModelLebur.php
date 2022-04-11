@@ -26,6 +26,10 @@ class ModelLebur extends Model
     {
         return $this->where(['barcode' => $id])->first();
     }
+    public function getNoLebur($id)
+    {
+        return $this->where(['no_lebur' => $id])->first();
+    }
     public function getNoTransLebur()
     {
         $db = db_connect();

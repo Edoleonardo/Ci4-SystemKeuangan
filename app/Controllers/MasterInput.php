@@ -59,49 +59,147 @@ class MasterInput extends BaseController
     {
         if ($this->request->isAJAX()) {
             $validation = \Config\Services::validation();
-            $valid = $this->validate([
-                'nama_supp' => [
-                    'rules' => 'required',
-                    'errors' => [
-                        'required' => 'Nama Supplier Harus di isi',
-                    ]
-                ],
-                'alamat1' => [
-                    'rules' => 'required',
-                    'errors' => [
-                        'required' => 'Alamat Harus di isi',
-                    ]
-                ],
-                'kota1' => [
-                    'rules' => 'required',
-                    'errors' => [
-                        'required' => 'Kota Harus di isi',
-                    ]
-                ],
-                'nama_sales' => [
-                    'rules' => 'required',
-                    'errors' => [
-                        'required' => 'Nama Sales Harus di isi',
-                    ]
-                ],
-                'no_hp' => [
-                    'rules' => 'required',
-                    'errors' => [
-                        'required' => 'No Hp Harus di isi',
-                    ]
-                ],
-                'no_ktr' => [
-                    'rules' => 'required',
-                    'errors' => [
-                        'required' => 'No kantor Harus di isi',
-                    ]
-                ],
-            ]);
+            if ($this->request->getVar('id_supp')) {
+                $datasupp = $this->modelsup->getSupplier($this->request->getVar('id_supp'));
+                if ($datasupp && $this->request->getVar('inisial') == $datasupp['inisial']) {
+                    $valid = $this->validate([
+                        'nama_supp' => [
+                            'rules' => 'required',
+                            'errors' => [
+                                'required' => 'Nama Supplier Harus di isi',
+                            ]
+                        ],
+                        'alamat1' => [
+                            'rules' => 'required',
+                            'errors' => [
+                                'required' => 'Alamat Harus di isi',
+                            ]
+                        ],
+                        'kota1' => [
+                            'rules' => 'required',
+                            'errors' => [
+                                'required' => 'Kota Harus di isi',
+                            ]
+                        ],
+                        'nama_sales' => [
+                            'rules' => 'required',
+                            'errors' => [
+                                'required' => 'Nama Sales Harus di isi',
+                            ]
+                        ],
+                        'no_hp' => [
+                            'rules' => 'required',
+                            'errors' => [
+                                'required' => 'No Hp Harus di isi',
+                            ]
+                        ],
+                        'no_ktr' => [
+                            'rules' => 'required',
+                            'errors' => [
+                                'required' => 'No kantor Harus di isi',
+                            ]
+                        ],
+                    ]);
+                } else {
+                    $valid = $this->validate([
+                        'nama_supp' => [
+                            'rules' => 'required',
+                            'errors' => [
+                                'required' => 'Nama Supplier Harus di isi',
+                            ]
+                        ],
+                        'inisial' => [
+                            'rules' => 'required|is_unique[tbl_supplier.inisial]',
+                            'errors' => [
+                                'required' => 'Inisial Harus di isi',
+                                'is_unique' => 'Inisial Sudah Ada',
+                            ]
+                        ],
+                        'alamat1' => [
+                            'rules' => 'required',
+                            'errors' => [
+                                'required' => 'Alamat Harus di isi',
+                            ]
+                        ],
+                        'kota1' => [
+                            'rules' => 'required',
+                            'errors' => [
+                                'required' => 'Kota Harus di isi',
+                            ]
+                        ],
+                        'nama_sales' => [
+                            'rules' => 'required',
+                            'errors' => [
+                                'required' => 'Nama Sales Harus di isi',
+                            ]
+                        ],
+                        'no_hp' => [
+                            'rules' => 'required',
+                            'errors' => [
+                                'required' => 'No Hp Harus di isi',
+                            ]
+                        ],
+                        'no_ktr' => [
+                            'rules' => 'required',
+                            'errors' => [
+                                'required' => 'No kantor Harus di isi',
+                            ]
+                        ],
+                    ]);
+                }
+            } else {
+                $valid = $this->validate([
+                    'nama_supp' => [
+                        'rules' => 'required',
+                        'errors' => [
+                            'required' => 'Nama Supplier Harus di isi',
+                        ]
+                    ],
+                    'inisial' => [
+                        'rules' => 'required|is_unique[tbl_supplier.inisial]',
+                        'errors' => [
+                            'required' => 'Inisial Harus di isi',
+                            'is_unique' => 'Inisial Sudah Ada',
+                        ]
+                    ],
+                    'alamat1' => [
+                        'rules' => 'required',
+                        'errors' => [
+                            'required' => 'Alamat Harus di isi',
+                        ]
+                    ],
+                    'kota1' => [
+                        'rules' => 'required',
+                        'errors' => [
+                            'required' => 'Kota Harus di isi',
+                        ]
+                    ],
+                    'nama_sales' => [
+                        'rules' => 'required',
+                        'errors' => [
+                            'required' => 'Nama Sales Harus di isi',
+                        ]
+                    ],
+                    'no_hp' => [
+                        'rules' => 'required',
+                        'errors' => [
+                            'required' => 'No Hp Harus di isi',
+                        ]
+                    ],
+                    'no_ktr' => [
+                        'rules' => 'required',
+                        'errors' => [
+                            'required' => 'No kantor Harus di isi',
+                        ]
+                    ],
+                ]);
+            }
             if (!$valid) {
                 $msg = [
                     'error' => [
                         'nama_supp' => $validation->getError('nama_supp'),
                         'alamat' => $validation->getError('alamat1'),
+                        'inisial' => $validation->getError('inisial'),
                         'kota' => $validation->getError('kota1'),
                         'nama_sales' => $validation->getError('nama_sales'),
                         'no_hp' => $validation->getError('no_hp'),
@@ -116,6 +214,7 @@ class MasterInput extends BaseController
                         'id_supplier' => $this->request->getVar('id_supp'),
                         'id_karyawan' => $session->get('id_user'),
                         'nama_supp' => $this->request->getVar('nama_supp'),
+                        'inisial' => $this->request->getVar('inisial'),
                         'alamat_supp' => $this->request->getVar('alamat1'),
                         'kota_supp' => $this->request->getVar('kota1'),
                         'sales_supp' => $this->request->getVar('nama_sales'),
@@ -127,6 +226,7 @@ class MasterInput extends BaseController
                         'nama_supp' => $this->request->getVar('nama_supp'),
                         'id_karyawan' => $session->get('id_user'),
                         'alamat_supp' => $this->request->getVar('alamat1'),
+                        'inisial' => $this->request->getVar('inisial'),
                         'kota_supp' => $this->request->getVar('kota1'),
                         'sales_supp' => $this->request->getVar('nama_sales'),
                         'no_hp' => $this->request->getVar('no_hp'),

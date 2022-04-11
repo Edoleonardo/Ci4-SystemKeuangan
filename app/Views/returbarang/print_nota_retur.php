@@ -54,12 +54,13 @@ function barcodegenerate2($kode)
 <table style='border:none;'>
   <tbody>
     <tr>
-      <td style='border:none; width: 160mm;'><?= barcodegenerate($dataretur['no_retur']) ?></td>
-      <td style='border:none;'>No.Nota : <?= $dataretur['no_retur'] ?><br>Tangerang, <?= date('d-m-y') ?><br>Nama Supplier: <?= (isset($dataretur['nama_supplier'])) ? $dataretur['nama_supplier'] : '________' ?></td>
+      <td style='border:none; text-align: left;'><?= barcodegenerate($dataretur['no_retur']) ?></td>
+      <td style='border:none; width: 40%;'></td>
+      <td style=' border:none; text-align:left'>No.Nota : <?= $dataretur['no_retur'] ?><br>Tangerang, <?= date('d-m-y') ?><br>Nama Supplier: <?= (isset($datasup['nama_supp'])) ? $datasup['nama_supp'] : '________' ?><br>No Supplier: <?= $dataretur['no_faktur_supp'] ?></td>
     </tr>
   </tbody>
 </table>
-<br><br><br><br><br>
+<br><br>
 <div class="row">
   <table style='border-bottom:none;'>
     <tbody>

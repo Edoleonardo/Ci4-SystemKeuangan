@@ -30,7 +30,7 @@
                                     <td><?= $row['kadar'] ?></td>
                                     <td><?= $row['berat'] ?></td>
                                     <td><?= substr($row['created_at'], 0, 10) ?></td>
-                                    <td><?= $row['no_faktur'] ?></td>
+                                    <td><a href="#" type="button" onclick="OpenModalDetail('<?= $row['no_faktur'] ?>')"><?= $row['no_faktur'] ?></a></td>
                                     <td><?= $row['nama_customer'] ?></td>
                                     <td><?= $row['keluar'] ?></td>
                                     <td><?= $row['masuk'] ?></td>
@@ -50,3 +50,29 @@
     </div>
     <!-- /.modal-dialog -->
 </div>
+<div id="openmodaldetail"></div>
+<script>
+    function OpenModalDetail(no_id) {
+        $.ajax({
+            type: "get",
+            url: "<?php echo base_url('modaldetail'); ?>",
+            dataType: "json",
+            data: {
+                no_id: no_id
+            },
+            success: function(result) {
+                if (result.error) {
+                    console.log(result.error);
+                } else {
+                    $('#openmodaldetail').html(result.modaldetail)
+                    $('#modal-modal').modal('toggle')
+                }
+
+
+            },
+            error: function(xhr, ajaxOptions, thrownError) {
+                alert(xhr.status + "\n" + xhr.responseText + "\n" + thrownError);
+            }
+        })
+    }
+</script>

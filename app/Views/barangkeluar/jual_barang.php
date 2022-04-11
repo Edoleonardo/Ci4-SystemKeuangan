@@ -552,6 +552,23 @@
         });
     }
 
+    function isivalue() {
+        var jenisbayar = $('#pembayaran').val();
+        var harusbayar = $('#totalbersih').html().replaceAll('.', '');
+        if (jenisbayar == 'Transfer') {
+            $('#transfer').val(harusbayar);
+            byrtransfer()
+        }
+        if (jenisbayar == 'Tunai') {
+            $('#tunai').val(harusbayar);
+            byrtunai()
+        }
+        if (jenisbayar == 'Debit/CC') {
+            $('#debitcc').val(harusbayar);
+            byrdebitcc()
+        }
+        console.log(harusbayar)
+    }
 
     function tampilcustomer() {
         $.ajax({
@@ -647,6 +664,7 @@
                 document.getElementById('totalbersih').innerHTML = pembulatankoma(totalharga).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
                 document.getElementById('pembulatanhtml').innerHTML = ''
                 document.getElementById('pembulatan').value = ''
+                isivalue()
 
             },
             error: function(xhr, ajaxOptions, thrownError) {
@@ -657,130 +675,141 @@
 
     $('.pembayaranform').submit(function(e) {
         e.preventDefault()
-        $.ajax({
-            type: "GET",
-            dataType: "json",
-            data: {
-                nohp_cust: document.getElementById('inputcustomer').value
-            },
-            url: "<?php echo base_url('checkcust'); ?>",
-            success: function(result) {
-                if (result == 'gagal') {
-                    isicust = document.getElementById('inputcustomer').value
-                    document.getElementById("nohp").value = isicust
-                    $('#tambahcustomer').trigger('click');
-                } else {
-                    let form = $('.pembayaranform')[0];
-                    let data = new FormData(form)
-                    $.ajax({
-                        type: "POST",
-                        data: data,
-                        url: "<?php echo base_url('ajaxpembayaranjual') ?>",
-                        dataType: "json",
-                        contentType: false,
-                        processData: false,
-                        cache: false,
-                        beforeSend: function() {
-                            $('.btnbayar').html('<i class="fa fa-spin fa-spinner">')
-                            $('.btnbayar').attr('type', 'button')
-                        },
-                        complete: function() {
-                            $('.btnbayar').html('Bayar')
-                            $('.btnbayar').attr('type', 'submit')
-                        },
-                        success: function(result) {
-                            console.log(result)
-                            if (result != 'error') {
-                                if (result.error) {
-                                    if (result.error.debitcc) {
-                                        $('#debitcc').addClass('is-invalid')
-                                        $('.debitccmsg').html(result.error.debitcc)
+        Swal.fire({
+            title: 'Bayar',
+            text: "Selesai Bayar ?",
+            icon: 'info',
+            showCancelButton: true,
+            cancelButtonColor: '#d33',
+            confirmButtonColor: '#3085d6',
+            confirmButtonText: 'Selesai',
+        }).then((choose) => {
+            if (choose.isConfirmed) {
+                $.ajax({
+                    type: "GET",
+                    dataType: "json",
+                    data: {
+                        nohp_cust: document.getElementById('inputcustomer').value
+                    },
+                    url: "<?php echo base_url('checkcust'); ?>",
+                    success: function(result) {
+                        if (result == 'gagal') {
+                            isicust = document.getElementById('inputcustomer').value
+                            document.getElementById("nohp").value = isicust
+                            $('#tambahcustomer').trigger('click');
+                        } else {
+                            let form = $('.pembayaranform')[0];
+                            let data = new FormData(form)
+                            $.ajax({
+                                type: "POST",
+                                data: data,
+                                url: "<?php echo base_url('ajaxpembayaranjual') ?>",
+                                dataType: "json",
+                                contentType: false,
+                                processData: false,
+                                cache: false,
+                                beforeSend: function() {
+                                    $('.btnbayar').html('<i class="fa fa-spin fa-spinner">')
+                                    $('.btnbayar').attr('type', 'button')
+                                },
+                                complete: function() {
+                                    $('.btnbayar').html('Bayar')
+                                    $('.btnbayar').attr('type', 'submit')
+                                },
+                                success: function(result) {
+                                    console.log(result)
+                                    if (result != 'error') {
+                                        if (result.error) {
+                                            if (result.error.debitcc) {
+                                                $('#debitcc').addClass('is-invalid')
+                                                $('.debitccmsg').html(result.error.debitcc)
+                                            } else {
+                                                $('#debitcc').removeClass('is-invalid')
+                                                $('.debitccmsg').html('')
+                                            }
+                                            if (result.error.namabank) {
+                                                $('#namabank').addClass('is-invalid')
+                                                $('.namabankmsg').html(result.error.namabank)
+                                            } else {
+                                                $('#namabank').removeClass('is-invalid')
+                                                $('.namabankmsg').html('')
+                                            }
+                                            if (result.error.transfer) {
+                                                $('#transfer').addClass('is-invalid')
+                                                $('.transfermsg').html(result.error.transfer)
+                                            } else {
+                                                $('#transfer').removeClass('is-invalid')
+                                                $('.transfermsg').html('')
+                                            }
+                                            if (result.error.tunai) {
+                                                $('#tunai').addClass('is-invalid')
+                                                $('.tunaimsg').html(result.error.tunai)
+                                            } else {
+                                                $('#tunai').removeClass('is-invalid')
+                                                $('.tunaimsg').html('')
+                                            }
+                                            if (result.error.inputcustomer) {
+                                                $('#inputcustomer').addClass('is-invalid')
+                                                $('.inputcustomermsg').html(result.error.inputcustomer)
+                                            } else {
+                                                $('#inputcustomer').removeClass('is-invalid')
+                                                $('.inputcustomermsg').html('')
+                                            }
+                                            if (result.error.kurang) {
+                                                Swal.fire({
+                                                    icon: 'warning',
+                                                    title: result.error.kurang,
+                                                })
+                                            }
+                                        } else {
+                                            $('#debitcc').removeClass('is-invalid')
+                                            $('.debitccmsg').html('')
+                                            $('#namabank').removeClass('is-invalid')
+                                            $('.namabankmsg').html('')
+                                            $('#transfer').removeClass('is-invalid')
+                                            $('.transfermsg').html('')
+                                            $('#tunai').removeClass('is-invalid')
+                                            $('.tunaimsg').html('')
+                                            $('#inputcustomer').removeClass('is-invalid')
+                                            $('.inputcustomermsg').html('')
+
+                                            Swal.fire({
+                                                icon: 'success',
+                                                title: 'Berhasil Bayar',
+                                                confirmButtonColor: '#3085d6',
+                                                confirmButtonText: 'OK',
+                                                allowOutsideClick: false
+                                            }).then((choose) => {
+                                                if (choose.isConfirmed) {
+                                                    // console.log(result)
+                                                    // $('#modal-bayar').modal('toggle');
+                                                    // $("#refreshpembayaran").load("/draftpenjualan/" + document.getElementById('dateid').value + " #refreshpembayaran");
+                                                    // $("#refreshtombol").load("/draftpenjualan/" + document.getElementById('dateid').value + " #refreshtombol");
+                                                    window.location.href = "/detailpenjualan/" + document.getElementById('dateid').value
+                                                }
+                                            })
+                                        }
                                     } else {
-                                        $('#debitcc').removeClass('is-invalid')
-                                        $('.debitccmsg').html('')
-                                    }
-                                    if (result.error.namabank) {
-                                        $('#namabank').addClass('is-invalid')
-                                        $('.namabankmsg').html(result.error.namabank)
-                                    } else {
-                                        $('#namabank').removeClass('is-invalid')
-                                        $('.namabankmsg').html('')
-                                    }
-                                    if (result.error.transfer) {
-                                        $('#transfer').addClass('is-invalid')
-                                        $('.transfermsg').html(result.error.transfer)
-                                    } else {
-                                        $('#transfer').removeClass('is-invalid')
-                                        $('.transfermsg').html('')
-                                    }
-                                    if (result.error.tunai) {
-                                        $('#tunai').addClass('is-invalid')
-                                        $('.tunaimsg').html(result.error.tunai)
-                                    } else {
-                                        $('#tunai').removeClass('is-invalid')
-                                        $('.tunaimsg').html('')
-                                    }
-                                    if (result.error.inputcustomer) {
-                                        $('#inputcustomer').addClass('is-invalid')
-                                        $('.inputcustomermsg').html(result.error.inputcustomer)
-                                    } else {
-                                        $('#inputcustomer').removeClass('is-invalid')
-                                        $('.inputcustomermsg').html('')
-                                    }
-                                    if (result.error.kurang) {
                                         Swal.fire({
                                             icon: 'warning',
-                                            title: result.error.kurang,
+                                            title: 'Tidak ada Data',
                                         })
                                     }
-                                } else {
-                                    $('#debitcc').removeClass('is-invalid')
-                                    $('.debitccmsg').html('')
-                                    $('#namabank').removeClass('is-invalid')
-                                    $('.namabankmsg').html('')
-                                    $('#transfer').removeClass('is-invalid')
-                                    $('.transfermsg').html('')
-                                    $('#tunai').removeClass('is-invalid')
-                                    $('.tunaimsg').html('')
-                                    $('#inputcustomer').removeClass('is-invalid')
-                                    $('.inputcustomermsg').html('')
 
-                                    Swal.fire({
-                                        icon: 'success',
-                                        title: 'Berhasil Bayar',
-                                        confirmButtonColor: '#3085d6',
-                                        confirmButtonText: 'OK',
-                                        allowOutsideClick: false
-                                    }).then((choose) => {
-                                        if (choose.isConfirmed) {
-                                            // console.log(result)
-                                            // $('#modal-bayar').modal('toggle');
-                                            // $("#refreshpembayaran").load("/draftpenjualan/" + document.getElementById('dateid').value + " #refreshpembayaran");
-                                            // $("#refreshtombol").load("/draftpenjualan/" + document.getElementById('dateid').value + " #refreshtombol");
-                                            window.location.href = "/detailpenjualan/" + document.getElementById('dateid').value
-                                        }
-                                    })
+                                },
+                                error: function(xhr, ajaxOptions, thrownError) {
+                                    alert(xhr.status + "\n" + xhr.responseText + "\n" + thrownError);
                                 }
-                            } else {
-                                Swal.fire({
-                                    icon: 'warning',
-                                    title: 'Tidak ada Data',
-                                })
-                            }
-
-                        },
-                        error: function(xhr, ajaxOptions, thrownError) {
-                            alert(xhr.status + "\n" + xhr.responseText + "\n" + thrownError);
+                            })
                         }
-                    })
-                }
-            },
-            error: function(xhr, ajaxOptions, thrownError) {
-                alert(xhr.status + "\n" + xhr.responseText + "\n" + thrownError);
+                    },
+                    error: function(xhr, ajaxOptions, thrownError) {
+                        alert(xhr.status + "\n" + xhr.responseText + "\n" + thrownError);
+                    }
+                })
+
             }
         })
-
-
     })
 
 
@@ -805,12 +834,11 @@
 
         var DebitCC = '<label>Debit/CC</label><input type="number" onkeyup = "byrdebitcc()" min="0" id="debitcc" name="debitcc" class="form-control" placeholder="Masukan debit/cc"><div id="validationServerUsernameFeedback" class="invalid-feedback debitccmsg"></div>'
         var NamaBank = '<label>Nama Bank Debit/CC</label><select onchange = "byrnamabank()" type="text" id="namabank" name="namabank" class="form-control" placeholder="Masukan Nama Bank"><?php foreach ($bank as $m) : ?><option value="<?= $m['nama_bank'] ?>"><?= $m['nama_bank'] ?> </option><?php endforeach; ?></select><div id="validationServerUsernameFeedback" class="invalid-feedback namabankmsg"></div>'
-        var Charge = '<label>Charge %</label><input type="number" onkeyup = "brycas()" min="0" id="charge" name="charge" class="form-control" placeholder="Masukan Charge"><div id="validationServerUsernameFeedback" class="invalid-feedback chargemsg"></div>'
+        var Charge = '<label>Charge %</label><input type="number" onkeyup = "brycas()" step="0.01" id="charge" name="charge" class="form-control" placeholder="Masukan Charge"><div id="validationServerUsernameFeedback" class="invalid-feedback chargemsg"></div>'
         var Transfer = '<label>Transfer</label><input type="number" onkeyup = "byrtransfer()" min="0" id="transfer" name="transfer" class="form-control" placeholder="Masukan transfer"><div id="validationServerUsernameFeedback" class="invalid-feedback transfermsg"></div>'
         var Tunai = '<label>Tunai</label><input type="number" onkeyup = "byrtunai()" min="0" id="tunai" name="tunai" class="form-control" placeholder="Masukan tunai"><div id="validationServerUsernameFeedback" class="invalid-feedback tunaimsg"></div>'
 
         if (carabyr == 'Bayar Nanti') {
-            myDataBayar()
             metod1[0].innerHTML = ''
             nmbank[0].innerHTML = ''
             charge[0].innerHTML = ''
@@ -819,18 +847,18 @@
             table2[0].innerHTML = ''
             table3[0].innerHTML = ''
             bank[0].innerHTML = ''
+            myDataBayar()
         }
         if (carabyr == 'Debit/CC') {
-            myDataBayar()
             metod1[0].innerHTML = DebitCC
             nmbank[0].innerHTML = NamaBank
             charge[0].innerHTML = Charge
             bank[0].innerHTML = '<td>Nama Bank</td><td id="bankbyr"></td>'
             table1[0].innerHTML = '<td>Charge</td><td id="chargebyr"></td>'
             table2[0].innerHTML = '<td>Debit/CC</td><td id="debitccbyr"></td>'
+            myDataBayar()
         }
         if (carabyr == 'Debit/CCTranfer') {
-            myDataBayar()
             metod1[0].innerHTML = DebitCC
             nmbank[0].innerHTML = NamaBank
             charge[0].innerHTML = Charge
@@ -839,23 +867,23 @@
             table1[0].innerHTML = '<td>Charge</td><td id="chargebyr"></td>'
             table2[0].innerHTML = '<td>Debit/CC</td><td id="debitccbyr"></td>'
             table3[0].innerHTML = '<td>Tranfer</td><td id="transferbyr"></td>'
+            myDataBayar()
         }
         if (carabyr == 'Transfer') {
-            myDataBayar()
             metod1[0].innerHTML = Transfer
             nmbank[0].innerHTML = NamaBank
             bank[0].innerHTML = '<td>Nama Bank</td><td id="bankbyr"></td>'
             table2[0].innerHTML = '<td>Tranfer</td><td id="transferbyr"></td>'
+            myDataBayar()
 
         }
         if (carabyr == 'Tunai') {
-            myDataBayar()
             metod1[0].innerHTML = Tunai
             table1[0].innerHTML = '<td>Tunai</td><td id="tunaibyr"></td>'
+            myDataBayar()
 
         }
         if (carabyr == 'Tunai&Debit/CC') {
-            myDataBayar()
             metod1[0].innerHTML = DebitCC
             nmbank[0].innerHTML = NamaBank
             charge[0].innerHTML = Charge
@@ -864,16 +892,17 @@
             table1[0].innerHTML = '<td>Charge</td><td id="chargebyr"></td>'
             table2[0].innerHTML = '<td>Debit/CC</td><td id="debitccbyr"></td>'
             table3[0].innerHTML = '<td>Tunai</td><td id="tunaibyr"></td>'
+            myDataBayar()
         }
 
         if (carabyr == 'Tunai&Transfer') {
-            myDataBayar()
             metod1[0].innerHTML = Transfer
             nmbank[0].innerHTML = NamaBank
             metod2[0].innerHTML = Tunai
             bank[0].innerHTML = '<td>Nama Bank</td><td id="bankbyr"></td>'
             table3[0].innerHTML = '<td>Tunai</td><td id="tunaibyr"></td>'
             table2[0].innerHTML = '<td>Tranfer</td><td id="transferbyr"></td>'
+            myDataBayar()
 
         }
     }
@@ -912,6 +941,7 @@
         var hasil = totalbersihval - (bulat + debitcc + transfer + tunai)
         document.getElementById('totalbersih1').innerHTML = hasil.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
         document.getElementById('pembulatanhtml').innerHTML = bulat.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
+        isivalue()
     }
 
     function brycas() {

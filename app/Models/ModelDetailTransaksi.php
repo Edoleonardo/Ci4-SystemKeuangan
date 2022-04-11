@@ -24,6 +24,12 @@ class ModelDetailTransaksi extends Model
         }
         return $this->where(['id_detail_transaksi' => $id])->first();
     }
+    public function getDetailTransaksiFilter($dari, $sampai)
+    {
+        $db = db_connect();
+        $data = $db->query('select * from tbl_detail_transaksi join tbl_akun_biaya on tbl_akun_biaya.id_akun_biaya = tbl_detail_transaksi.id_akun_biaya where SUBSTR(tbl_detail_transaksi.tanggal_transaksi,1,10) <= "' . $dari  . '" and SUBSTR(tbl_detail_transaksi.tanggal_transaksi,1,10) >= "' .  $sampai   . '" order by tanggal_transaksi DESC');
+        return $data->getResult('array');
+    }
     public function SumTotalKeluar()
     {
         $this->selectSum('keluar');
