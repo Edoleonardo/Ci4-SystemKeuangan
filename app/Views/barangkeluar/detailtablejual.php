@@ -2,7 +2,7 @@
     <tr>
         <td><img src='/img/<?= $row['nama_img'] ?>' class='imgg'></td>
         <td><?= $row['kode'] ?></td>
-        <?php if (substr($row['kode'], 0, 1) == 3) : ?>
+        <?php if (substr($row['kode'], 0, 1) == 3 || substr($row['kode'], 0, 1) == 6) : ?>
             <td><input style="width: 100px;" id="qty <?= $row['id_detail_penjualan'] ?>" onchange="UbahHarga(<?= $row['id_detail_penjualan'] ?>,<?= $row['id_date_penjualan'] ?>,<?= substr($row['kode'], 0, 1) ?>,<?= $row['qty'] ?>,<?= $row['berat'] ?>)" type="number" class="form-control" value="<?= $row['qty'] ?>"></td>
         <?php else : ?>
             <td><?= $row['qty'] ?></td>

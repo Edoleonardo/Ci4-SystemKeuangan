@@ -21,4 +21,8 @@ class ModelMerek extends Model
         }
         return $this->where(['id_merek' => $id])->first();
     }
+    public function getNamaMerek($id = false)
+    {
+        return $this->where(['nama_merek' => $id])->first();
+    }
 }

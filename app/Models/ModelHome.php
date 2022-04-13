@@ -29,6 +29,14 @@ class ModelHome extends Model
         return $this->where(['id_stock' => $id])->first();
     }
 
+    public function Getsemuadata()
+    {
+        $this->findAll();
+        // $this->limit(10);
+        $data = $this->get();
+        return $data->getResult('array');
+    }
+
     public function getBarangFilter($id, $stock)
     {
         $db = db_connect();

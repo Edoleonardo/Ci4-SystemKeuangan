@@ -532,13 +532,13 @@
                     <div class="col-12">
                         <div class="form-group">
                             <label>Nama Kadar</label>
-                            <input type="text" id="nama_kadar" name="nama_kadar" class="form-control nama_kadar" placeholder="Masukan Nomor Nama Supplier">
+                            <input type="text" id="nama_kadar" name="nama_kadar" class="form-control nama_kadar" placeholder="Masukan Kadar">
                             <div id="validationServerUsernameFeedback" class="invalid-feedback nama_kadarmsg">
                             </div>
                         </div>
                         <div class="form-group">
                             <label>Nilai Kadar</label>
-                            <input type="number" id="nilai_kadar" name="nilai_kadar" class="form-control nilai_kadar" placeholder="Masukan Nomor Hp">
+                            <input type="number" step="0.01" id="nilai_kadar" name="nilai_kadar" class="form-control nilai_kadar" placeholder="Masukan Nilai Kadar">
                             <div id="validationServerUsernameFeedback" class="invalid-feedback nilai_kadarmsg">
                             </div>
                         </div>

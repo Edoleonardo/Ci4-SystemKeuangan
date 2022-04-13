@@ -814,6 +814,7 @@ class Barangmasuk extends BaseController
                     'created_at' => $this->request->getVar('tanggal_input'),
                     'id_date_pembelian' => $session->get('date_id'),
                     'id_supplier' => $this->request->getVar('supplier'),
+                    'harga_murni' => $this->request->getVar('harga_beli'),
                     'no_faktur_supp' => $datasupp['inisial'] . '-' . $this->request->getVar('no_nota_supp'),
                     'no_transaksi' => $datapembelian1['no_transaksi'],
                     'tgl_faktur' => $this->request->getVar('tanggal_nota_sup') . ' ' . date('H:i:s'),
@@ -1299,12 +1300,41 @@ class Barangmasuk extends BaseController
         if ($this->request->isAJAX()) {
             $session = session();
             $datapembelian = $this->datapembelian->getPembelianSupplier($this->request->getVar('dateid'));
+            $datadetailbeli = $this->detailbeli->getDetailAll($this->request->getVar('dateid'));
             if ($datapembelian['byr_berat_murni'] <= 0) {
                 $this->datapembelian->save([
                     'id_pembelian' =>  $datapembelian['id_pembelian'],
                     'id_karyawan' => $session->get('id_user'),
                     'cara_pembayaran' => 'Lunas',
                 ]);
+                foreach ($datadetailbeli as $row) {
+                    $qty = $row['qty'];
+                    $harga = $datapembelian['harga_murni'];
+                    $berat = $row['berat'];
+                    $beratmurni = round($berat * ($row['nilai_tukar'] / 100), 2);
+                    $kode = substr($row['kode'], 0, 1);
+                    if ($kode == 1 || $kode == 4 || $kode == 5) {
+                        $totalharga =  $beratmurni *  $harga;
+                    }
+                    if ($kode == 2) {
+                        $totalharga = $harga;
+                    }
+                    if ($kode == 3) {
+                        $totalharga =  $beratmurni *  $harga * $qty;
+                    }
+                    if ($kode == 6) {
+                        $totalharga = $harga * $qty;
+                    }
+
+                    $this->detailbeli->save([
+                        'id_detail_pembelian' => $row['id_detail_pembelian'],
+                        'id_karyawan' => $session->get('id_user'),
+                        'berat_murni' => $beratmurni,
+                        'ongkos' => $row['ongkos'],
+                        'harga_beli' => $harga,
+                        'total_harga' => $totalharga + $row['ongkos'],
+                    ]);
+                }
                 $msg = [
                     'pesan' => 'Pembayaran Berhasil'
                 ];

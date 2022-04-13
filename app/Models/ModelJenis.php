@@ -21,4 +21,8 @@ class ModelJenis extends Model
         }
         return $this->where(['id_jenis' => $id])->first();
     }
+    public function getNamaJenis($id = false)
+    {
+        return $this->where(['nama' => $id])->first();
+    }
 }

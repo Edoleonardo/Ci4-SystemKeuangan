@@ -21,4 +21,8 @@ class ModelKadar extends Model
         }
         return $this->where(['id_kadar' => $id])->first();
     }
+    public function getNamaKadar($id = false)
+    {
+        return $this->where(['nama_kadar' => $id])->first();
+    }
 }

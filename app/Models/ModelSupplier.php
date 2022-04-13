@@ -21,4 +21,8 @@ class ModelSupplier extends Model
         }
         return $this->where(['id_supplier' => $id])->first();
     }
+    public function getSupplierNama($id = false)
+    {
+        return $this->where(['nama_supp' => $id])->first();
+    }
 }

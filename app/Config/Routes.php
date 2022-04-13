@@ -80,6 +80,7 @@ $routes->get('/modalbarcode', ($session->get('role')) ? 'Barangmasuk::ModalBarco
 $routes->get('/detailbarcode', ($session->get('role')) ? 'Barangmasuk::DetailBarcode' : 'Login::Login');
 
 
+$routes->get('/pindahindata', ($session->get('role')) ? 'PindahBarang::HomePindah' : 'Login::Login');
 
 
 //--------------------------BarangKeluar---------------------------
