@@ -15,18 +15,32 @@ class ModelHome extends Model
     public function getBarang($id = false)
     {
         if ($id == false) {
-
-            // $this->findAll();
-            // $this->orderBy('created_at', 'DESC');
-            // // $this->limit(10);
-            // $data = $this->get();
-            // return $data->getResult('array');
-
             $db = db_connect();
             $data = $db->query('select * from tbl_stock order by created_at DESC limit 10');
             return $data->getResult('array');
         }
         return $this->where(['id_stock' => $id])->first();
+    }
+
+    public function getBarangOpname($id)
+    {
+        $db = db_connect();
+        $data = $db->query('SELECT * FROM `tbl_stock` WHERE barcode in (SELECT kode from tbl_kartustock) AND barcode = ' . $id . ';');
+        if ($data->getResult('array')) {
+            return $data->getResult('array')[0];
+        } else {
+            return $data->getResult('array');
+        }
+    }
+    public function getBarangOpnameId($id)
+    {
+        $db = db_connect();
+        $data = $db->query('SELECT * FROM `tbl_stock` WHERE barcode in (SELECT kode from tbl_kartustock) AND id_stock = ' . $id . ';');
+        if ($data->getResult('array')) {
+            return $data->getResult('array')[0];
+        } else {
+            return $data->getResult('array');
+        }
     }
 
     public function Getsemuadata()
@@ -106,5 +120,23 @@ class ModelHome extends Model
         return 0;
         //  $this->get();
         // return $query;
+    }
+    public function SisahOpname()
+    {
+        $db = db_connect();
+        $data = $db->query('SELECT count(barcode) barcode FROM `tbl_stock` WHERE barcode NOT IN (SELECT barcode FROM tbl_stock_opname);');
+        return $data->getResult('array')[0];
+    }
+    public function BelumOpname()
+    {
+        $db = db_connect();
+        $data = $db->query('SELECT * FROM `tbl_stock` WHERE barcode NOT IN (SELECT barcode FROM tbl_stock_opname)  limit 20;');
+        return $data->getResult('array');
+    }
+    public function CountDataStock()
+    {
+        $this->selectCount('barcode');
+        $query = $this->get();
+        return $query->getResult('array')[0];
     }
 }

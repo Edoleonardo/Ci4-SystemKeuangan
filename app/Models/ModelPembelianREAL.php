@@ -20,7 +20,7 @@ class ModelPembelianREAL extends Model
     }
     public function getBarangkode($id)
     {
-        return $this->where(['barcode' => $id])->first();
+        return $this->where(['Kode' => $id])->first();
     }
     public function getNoCuci($id)
     {

@@ -176,16 +176,7 @@ class BarangRetur extends BaseController
                             'total_harga' => $row['total_harga'],
                             'gambar' =>  $row['nama_img'],
                         ]);
-                        // $this->KartuStockMaster($row['kode'], $session);
-                        $masuk = $this->modeldetailkartustock->SumMasukKartu($row['kode'])['masuk'];
-                        $keluar = $this->modeldetailkartustock->SumKeluarKartu($row['kode'])['keluar'];
-                        $this->modelkartustock->save([
-                            'id_kartustock' => $datadetailkartu['id_kartustock'],
-                            'id_karyawan' => $session->get('id_user'),
-                            'total_masuk' => $masuk,
-                            'total_keluar' => $keluar,
-                            'saldo_akhir' => 0,
-                        ]);
+                        $this->KartuStockMaster($row['kode'], $session);
                     }
                     $msg = 'sukses';
                 } else {

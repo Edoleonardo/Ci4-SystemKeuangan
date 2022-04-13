@@ -130,6 +130,24 @@
                                 <table class="table table-hover text-nowrap">
                                     <thead>
                                         <tr>
+                                            <th></th>
+                                            <th></th>
+                                            <th style="text-align: center;"><?= $datapembelian['total_qty'] ?></th>
+                                            <th></th>
+                                            <th></th>
+                                            <th></th>
+                                            <th style="text-align: center;"><?= $datapembelian['total_berat_rill'] ?></th>
+                                            <th style="text-align: center;"><?= $datapembelian['berat_murni_rill'] ?></th>
+                                            <th></th>
+                                            <th></th>
+                                            <th></th>
+                                            <th></th>
+                                            <th></th>
+                                            <th style="text-align: center;"><?= number_format($datapembelian['total_bayar'], 0, '.', ',') ?></th>
+                                        </tr>
+                                    </thead>
+                                    <thead>
+                                        <tr>
                                             <th>Gambar</th>
                                             <th>Kode</th>
                                             <th>Qty</th>
@@ -588,7 +606,6 @@
         }
         if (jenisbayar == 'Tunai') {
             $('#tunai').val(harusbayar);
-            byrtunai()
         }
     }
 

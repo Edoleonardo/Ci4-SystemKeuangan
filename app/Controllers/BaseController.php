@@ -102,8 +102,8 @@ class BaseController extends Controller
     {
         $datakartu = $this->modelkartustock->getKartuStockkode($kode);
         if ($datakartu) {
-            $masuk = $this->modeldetailkartustock->SumMasukKartu($kode)['masuk'];
-            $keluar = $this->modeldetailkartustock->SumKeluarKartu($kode)['keluar'];
+            $masuk = round($this->modeldetailkartustock->SumMasukKartu($kode)['masuk'], 2);
+            $keluar = round($this->modeldetailkartustock->SumKeluarKartu($kode)['keluar'], 2);
             $saldoakhir = $masuk - $keluar;
             $this->modelkartustock->save([
                 'id_kartustock' => $datakartu['id_kartustock'],
@@ -113,8 +113,8 @@ class BaseController extends Controller
                 'saldo_akhir' => $saldoakhir,
             ]);
         } else {
-            $masuk = $this->modeldetailkartustock->SumMasukKartu($kode)['masuk'];
-            $keluar = $this->modeldetailkartustock->SumKeluarKartu($kode)['keluar'];
+            $masuk = round($this->modeldetailkartustock->SumMasukKartu($kode)['masuk'], 2);
+            $keluar = round($this->modeldetailkartustock->SumKeluarKartu($kode)['keluar'], 2);
             $saldoakhir = $masuk - $keluar;
             $this->modelkartustock->save([
                 'kode' => $kode,

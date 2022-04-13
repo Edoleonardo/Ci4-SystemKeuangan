@@ -290,6 +290,14 @@
                     </ul>
                 </li>
                 <li class="nav-item">
+                    <a href="/stockopname" class="nav-link">
+                        <i class="nav-icon far fa fa-list-alt"></i>
+                        <p>
+                            Stock Opname
+                        </p>
+                    </a>
+                </li>
+                <li class="nav-item">
                     <a href="/logout" class="nav-link">
                         <i class="nav-icon far fa fa-power-off"></i>
                         <p>

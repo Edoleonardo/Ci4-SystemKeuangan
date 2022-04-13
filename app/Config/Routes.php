@@ -52,6 +52,13 @@ $routes->get('/modaldetailkartustock', ($session->get('role')) ? 'Home::DetailKa
 $routes->get('/tampildatakartu', ($session->get('role')) ? 'Home::TampilDataKartu' : 'Login::Login');
 $routes->get('/detailbarang/(:any)', ($session->get('role')) ? 'Home::DetailBarangKode/$1' : 'Login::Login');
 $routes->get('/tampildatabarang', ($session->get('role')) ? 'Home::TampilDataBarang' : 'Login::Login');
+$routes->get('/stockopname', ($session->get('role')) ? 'StockOpname::HomeOpname' : 'Login::Login');
+$routes->get('/tampilopname', ($session->get('role')) ? 'StockOpname::TampilOpname' : 'Login::Login');
+$routes->get('/modaldetailopname', ($session->get('role')) ? 'StockOpname::TampilModalDetail' : 'Login::Login');
+$routes->get('/editopname', ($session->get('role')) ? 'StockOpname::EditOpname' : 'Login::Login');
+$routes->get('/caribarcodeopname', ($session->get('role')) ? 'StockOpname::CariBarcode' : 'Login::Login');
+$routes->get('/pilihbarangopname', ($session->get('role')) ? 'StockOpname::PilihBarangOpname' : 'Login::Login');
+$routes->get('/hapusopname', ($session->get('role')) ? 'StockOpname::HapusOpname' : 'Login::Login');
 
 
 // --------------------BarangMasuk-----------

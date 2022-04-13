@@ -10,9 +10,6 @@ use App\Models\ModelKadar;
 use App\Models\ModelMerek;
 use App\Models\ModelSupplier;
 use App\Models\ModelHome;
-// use App\Models\ModelBuyback;
-use App\Models\ModelKartuStock;
-use App\Models\ModelDetailKartuStock;
 use App\Models\ModelCuci;
 use App\Models\ModelDetailCuci;
 use App\Models\ModelTukang;
@@ -20,11 +17,6 @@ use App\Models\ModelTransaksi;
 use App\Models\ModelDetailTransaksi;
 use App\Models\ModelBank;
 
-
-use CodeIgniter\Model;
-use CodeIgniter\Validation\Rules;
-use Faker\Provider\ar_EG\Person;
-use PhpParser\Node\Expr\Isset_;
 
 class BarangCuci extends BaseController
 {
@@ -41,9 +33,6 @@ class BarangCuci extends BaseController
         $this->datakadar = new ModelKadar();
         $this->datamerek = new ModelMerek();
         $this->datastock = new ModelHome();
-        // $this->modelbuyback = new ModelBuyback();
-        $this->modelkartustock = new ModelKartuStock();
-        $this->modeldetailkartustock = new ModelDetailKartuStock();
         $this->modelcuci = new ModelCuci();
         $this->modeldetailcuci = new ModelDetailCuci();
         $this->modeltukang = new ModelTukang();

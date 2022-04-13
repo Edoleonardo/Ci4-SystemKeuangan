@@ -253,14 +253,7 @@ class BarangLebur extends BaseController
                             'total_harga' => $datalebur['total_harga_bahan'],
                             'gambar' =>  $namafile,
                         ]);
-
-                        $this->modelkartustock->save([
-                            'id_kartustock' => $datakartu['id_kartustock'],
-                            'id_karyawan' => $session->get('id_user'),
-                            'total_masuk' => $this->modeldetailkartustock->SumMasukKartu($checkkode['barcode']),
-                            'total_keluar' => $this->modeldetailkartustock->SumKeluarKartu($checkkode['barcode']),
-                            'saldo_akhir' => $saldoakhir,
-                        ]);
+                        $this->KartuStockMaster($checkkode['barcode'], $session);
                         $msg = $saldoakhir;
                     } else { // jika tanpa barcode, create baru
                         $barcode = $this->KodeDatailGenerate(4);

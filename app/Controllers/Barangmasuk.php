@@ -1108,14 +1108,7 @@ class Barangmasuk extends BaseController
                                 'total_harga' => $row['total_harga'],
                                 'gambar' =>  $row['nama_img'],
                             ]);
-
-                            $this->modelkartustock->save([
-                                'id_kartustock' => $datakartu['id_kartustock'],
-                                'id_karyawan' => $session->get('id_user'),
-                                'total_masuk' => $this->modeldetailkartustock->SumMasukKartu($row['kode']),
-                                'total_keluar' => $this->modeldetailkartustock->SumKeluarKartu($row['kode']),
-                                'saldo_akhir' => $saldoakhir,
-                            ]);
+                            $this->KartuStockMaster($row['kode'], $session);
                         } else {
                             $this->datastock->save([
                                 'barcode' => $row['kode'],
@@ -1139,13 +1132,6 @@ class Barangmasuk extends BaseController
                                 'kode_beli' =>  'JN',
                                 'gambar' =>  $row['nama_img'],
                             ]);
-                            $this->modelkartustock->save([
-                                'total_masuk' => 0,
-                                'id_karyawan' => $session->get('id_user'),
-                                'total_keluar' => 0,
-                                'saldo_akhir' => (substr($row['kode'], 0, 1) == 4) ? $row['berat'] : $row['qty'],
-                                'kode' => $row['kode']
-                            ]);
                             $this->modeldetailkartustock->save([
                                 'barcode' => $row['kode'],
                                 'id_karyawan' => $session->get('id_user'),
@@ -1167,6 +1153,7 @@ class Barangmasuk extends BaseController
                                 'total_harga' => $row['total_harga'],
                                 'gambar' =>  $row['nama_img'],
                             ]);
+                            $this->KartuStockMaster($row['kode'], $session);
                         }
                     }
                     $msg = [
@@ -1302,11 +1289,6 @@ class Barangmasuk extends BaseController
             $datapembelian = $this->datapembelian->getPembelianSupplier($this->request->getVar('dateid'));
             $datadetailbeli = $this->detailbeli->getDetailAll($this->request->getVar('dateid'));
             if ($datapembelian['byr_berat_murni'] <= 0) {
-                $this->datapembelian->save([
-                    'id_pembelian' =>  $datapembelian['id_pembelian'],
-                    'id_karyawan' => $session->get('id_user'),
-                    'cara_pembayaran' => 'Lunas',
-                ]);
                 foreach ($datadetailbeli as $row) {
                     $qty = $row['qty'];
                     $harga = $datapembelian['harga_murni'];
@@ -1335,6 +1317,13 @@ class Barangmasuk extends BaseController
                         'total_harga' => $totalharga + $row['ongkos'],
                     ]);
                 }
+                $this->datapembelian->save([
+                    'id_pembelian' =>  $datapembelian['id_pembelian'],
+                    'id_karyawan' => $session->get('id_user'),
+                    'cara_pembayaran' => 'Lunas',
+                    'total_bayar' => $this->detailbeli->SumDataDetail($this->request->getVar('dateid')),
+                ]);
+
                 $msg = [
                     'pesan' => 'Pembayaran Berhasil'
                 ];

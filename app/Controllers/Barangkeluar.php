@@ -650,13 +650,7 @@ class Barangkeluar extends BaseController
                             'gambar' =>  $row['nama_img'],
                         ]);
 
-                        $this->modelkartustock->save([
-                            'id_kartustock' => $datakartu['id_kartustock'],
-                            'id_karyawan' => $session->get('id_user'),
-                            'total_masuk' => $this->modeldetailkartustock->SumMasukKartu($row['kode']),
-                            'total_keluar' => $this->modeldetailkartustock->SumKeluarKartu($row['kode']),
-                            'saldo_akhir' => $saldoakhir,
-                        ]);
+                        $this->KartuStockMaster($row['kode'], $session);
                     }
 
                     $saldobiaya = $this->modeltransaksi->getTransaksi();
@@ -1047,13 +1041,7 @@ class Barangkeluar extends BaseController
                                 'total_harga' => $dataretur['total_harga'],
                                 'gambar' =>  $dataretur['nama_img'],
                             ]);
-                            $this->modelkartustock->save([
-                                'id_kartustock' => $datakartu['id_kartustock'],
-                                'id_karyawan' => $session->get('id_user'),
-                                'total_masuk' => $this->modeldetailkartustock->SumMasukKartu($dataretur['kode']),
-                                'total_keluar' => $this->modeldetailkartustock->SumKeluarKartu($dataretur['kode']),
-                                'saldo_akhir' => $saldoakhir,
-                            ]);
+                            $this->KartuStockMaster($dataretur['kode'], $session);
                         } else {
                             $selisihqty = $datakartu['saldo_akhir'] - $dataretur['qty'];
                             $this->datastock->save([
@@ -1082,13 +1070,7 @@ class Barangkeluar extends BaseController
                                 'total_harga' => $dataretur['total_harga'],
                                 'gambar' =>  $dataretur['nama_img'],
                             ]);
-                            $this->modelkartustock->save([
-                                'id_kartustock' => $datakartu['id_kartustock'],
-                                'id_karyawan' => $session->get('id_user'),
-                                'total_masuk' => $this->modeldetailkartustock->SumMasukKartu($dataretur['kode']),
-                                'total_keluar' => $this->modeldetailkartustock->SumKeluarKartu($dataretur['kode']),
-                                'saldo_akhir' => $saldoakhir,
-                            ]);
+                            $this->KartuStockMaster($dataretur['kode'], $session);
                         }
 
                         $datakartunew = $this->modelkartustock->getKartuStockkode($datadetailpenjualan['kode']);
@@ -1115,13 +1097,8 @@ class Barangkeluar extends BaseController
                             'total_harga' => $datadetailpenjualan['total_harga'],
                             'gambar' =>  $datadetailpenjualan['nama_img'],
                         ]);
-                        $this->modelkartustock->save([
-                            'id_kartustock' => $datakartunew['id_kartustock'],
-                            'id_karyawan' => $session->get('id_user'),
-                            'total_masuk' => $this->modeldetailkartustock->SumMasukKartu($datadetailpenjualan['kode']),
-                            'total_keluar' => $this->modeldetailkartustock->SumKeluarKartu($datadetailpenjualan['kode']),
-                            'saldo_akhir' => $saldoakhirnew,
-                        ]);
+                        $this->KartuStockMaster($datadetailpenjualan['kode'], $session);
+
                         if (substr($datadetailpenjualan['kode'], 0, 1) == 4) {
                             $this->datastock->save([
                                 'id_stock' => $databarangnew['id_stock'],

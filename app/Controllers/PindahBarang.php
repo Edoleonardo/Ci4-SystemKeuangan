@@ -61,10 +61,16 @@ class PindahBarang extends BaseController
     public function HomePindah()
     {
         $session = session();
-        $data = $this->datastock->Getsemuadata();
+
+        $data = $this->modeljualreal->getDataPenjualan();
         // dd($datapembelianreal);
         foreach ($data as $row) {
+            $datajual = $this->penjualan->getDataNoTrans($row['No_Nota']);
+            $datakartu = $this->modelkartustock->getKartuStockkode($row['Kode']);
+            if ($datajual && $datakartu) {
+            }
         }
+
         return view('pindahindata');
     }
 
@@ -102,125 +108,11 @@ class PindahBarang extends BaseController
 //     ]);
 // }
 
-// id_detail_pembelian
-// if (!$databelikw) {
-//     $datasup = $this->datasupplier->getSupplierNama($row['Nama_Supplier']);
-//     $this->modelpembelian->save([
-//         'created_at' => $row['Tanggal'] . ' ' . date('H:i:s'),
-//         'id_date_pembelian' => $this->randomNumber(12),
-//         'id_supplier' => ($datasup) ?  $datasup['id_supplier'] : '122',
-//         'id_karyawan' => 1,
-//         'no_faktur_supp' => $row['No_Faktur'],
-//         'tgl_jatuh_tempo' => $row['Tanggal'] . ' ' . date('H:i:s'),
-//         'no_transaksi' => ($row['No_Nota']) ? $row['No_Nota'] : 'NoNoTrans',
-//         'tgl_faktur' => $row['Tanggal'] . ' ' . date('H:i:s'),
-//         'status_dokumen' => 'Selesai'
-//     ]);
-// }
 
-                // 'total_berat_murni' => $this->request->getVar('total_berat_m'),
-                // 'byr_berat_murni' => $this->request->getVar('total_berat_m'),
-                // 'tgl_jatuh_tempo' => $this->request->getVar('tanggal_tempo'),
-                // 'total_berat_rill' => round($this->detailbeli->SumBeratDetail($this->request->getVar('dateid'))['berat'], 2),
-                // 'berat_murni_rill' => round($this->detailbeli->SumBeratMurniDetail($this->request->getVar('dateid'))['berat_murni'], 2),
-                // 'total_qty' => $this->detailbeli->SumQty($this->request->getVar('dateid'))['qty'],
-                // 'total_bayar' =>  $totalharga,
-
-
-
-//tbl_stock, kartustock, detail kartu stock
-// $databelikw = $this->modelpembelian->GetDataNotrans($row['No_Nota']);
-// $datasup = $this->datasupplier->getSupplierNama($row['Nama_Supplier']);
-// $kode = substr($row['Kode'], 0, 1);
-// $beratmurni = round($row['Berat'] * ($row['Nilai_Tukar'] / 100), 2);
-// $harga = 800000;
-// $qty = $row['Qty'];
-// if ($kode == 1 || $kode == 4 || $kode == 5) {
-//     $totalharga =  $beratmurni *  $harga;
-// }
-// if ($kode == 2) {
-//     $totalharga = $harga;
-// }
-// if ($kode == 3) {
-//     $totalharga =  $beratmurni *  $harga * $qty;
-// }
-// if ($kode == 6) {
-//     $totalharga = $harga * $qty;
-// }
-
-// $this->modeldetailpembelian->save([
-//     'id_karyawan' => 0,
-//     'id_date_pembelian' => $row['id_date_pembelianreal'],
-//     'nama_img' => $row['Kode'] . '.jpg',
-//     'kode' =>   $row['Kode'],
-//     'qty' => $qty,
-//     'jenis' => $row['Jenis'],
-//     'model' => $row['Model'],
-//     'keterangan' => $row['Keterangan'],
-//     'berat' => round($row['Berat'], 2),
-//     'berat_murni' => $beratmurni,
-//     'ongkos' => $row['Ongkos'],
-//     'harga_beli' => $harga,
-//     'kadar' =>  $row['Kadar'],
-//     'nilai_tukar' =>  $row['Nilai_Tukar'],
-//     'merek' => $row['Merek'],
-//     'total_harga' => $totalharga + $row['Ongkos'],
-// ]);
-// $this->datastock->save([
-//     'barcode' => $row['Kode'],
-//     'id_karyawan' => $session->get('id_user'),
-//     'status' => 'B',
-//     'no_faktur' => $row['No_Nota'],
-//     'tgl_faktur' =>  $row['Tanggal'],
-//     'id_supplier' => ($datasup) ?  $datasup['id_supplier'] : '122',
-//     'qty' => $qty,
-//     'jenis' => $row['Jenis'],
-//     'model' => $row['Model'],
-//     'keterangan' => $row['Keterangan'],
-//     'merek' => $row['Merek'],
-//     'kadar' => $row['Kadar'],
-//     'berat_murni' => $beratmurni,
-//     'berat' => round($row['Berat'], 2),
-//     'nilai_tukar' =>  $row['Nilai_Tukar'],
-//     'ongkos' => $row['Ongkos'],
-//     'harga_beli' => $harga,
-//     'total_harga' => $totalharga + $row['Ongkos'],
-//     'gambar' =>  $row['Kode'] . '.jpg',
-// ]);
-// if ($kode == 4) {
-//     $saldo =  round($row['Berat'], 2);
-// } else {
-//     $saldo =  $qty;
-// }
-// $this->modeldetailkartustock->save([
-//     // 'id_detail_kartustock' => $datadetailkartu['id_detail_kartustock'],
-//     'barcode' =>  $row['Kode'],
-//     'status' => 'Masuk',
-//     'id_karyawan' => 1,
-//     'no_faktur' => $row['No_Nota'],
-//     'tgl_faktur' => $row['Tanggal'],
-//     'nama_customer' => $row['Nama_Supplier'],
-//     'saldo' => $saldo,
-//     'masuk' => $saldo,
-//     'keluar' => 0,
-//     'jenis' => $row['Jenis'],
-//     'model' => $row['Model'],
-//     'keterangan' => 'Pembelian Supplier',
-//     'merek' => $row['Merek'],
-//     'kadar' => $row['Kadar'],
-//     'berat' => round($row['Berat'], 2),
-//     'nilai_tukar' =>  $row['Nilai_Tukar'],
-//     'harga_beli' => $harga,
-//     'total_harga' => $totalharga + $row['Ongkos'],
-//     'gambar' => $row['Kode'] . '.jpg',
-// ]);
-// $this->KartuStockMaster($row['Kode'], $session);
-
-
-
-
-// datastock
-  // $kode = substr($row['Kode_Brg'], 0, 1);
+        //////////////////////////////////////////DIPAKE//////////////////////////////////////////////////////
+   
+        ////////////////////Tbl_stock///////////////////////////// urut 1
+ // $kode = substr($row['Kode_Brg'], 0, 1);
             // $beratmurni = round($row['Berat'] * ($row['N_Tukar'] / 100), 2);
             // $harga = 800000;
             // $qty = $row['Jml'];
@@ -257,3 +149,209 @@ class PindahBarang extends BaseController
             //     'total_harga' => $totalharga + $row['Ongkos'],
             //     'gambar' =>  $row['Kode_Brg'] . '.jpg',
             // ]);
+
+
+        ///////////////////////Tbl_Pembelian/////////////////////////// urut 2
+        
+        // $data = $this->modelbelireal->getDataBeliREAL();
+        // foreach ($data as $row) {
+        //     $checkpembelian = $this->modelpembelian->GetNotransPindah($row['No_Nota']);
+        //     if (!$checkpembelian) {
+        //         $datasup = $this->datasupplier->getSupplierNama($row['Nama_Supplier']);
+        //         $this->modelpembelian->save([
+        //             'created_at' => $row['Tanggal'] . ' ' . date('H:i:s'),
+        //             'id_date_pembelian' => $this->randomNumber(12),
+        //             'id_supplier' => ($datasup) ?  $datasup['id_supplier'] : '122',
+        //             'id_karyawan' => 1,
+        //             'no_faktur_supp' => $row['No_Faktur'],
+        //             'tgl_jatuh_tempo' => $row['Tanggal'] . ' ' . date('H:i:s'),
+        //             'no_transaksi' => ($row['No_Nota']) ? $row['No_Nota'] : 'NoNoTrans',
+        //             'tgl_faktur' => $row['Tanggal'] . ' ' . date('H:i:s'),
+        //             'status_dokumen' => 'Selesai'
+        //         ]);
+        //     }
+
+
+
+///////////////////////Tbl_Kartu,Tbl_detailkart,Tbl_stock,tbl_detailbeli/////////////////////////// urut 3
+        // $data = $this->modelbelireal->getDataBeliREAL();
+        // // dd($datapembelianreal);
+        // foreach ($data as $row) {
+        //     $datapembelian = $this->modelpembelian->GetNotransPindah($row['No_Nota']);
+        //     $kode = substr($row['Kode'], 0, 1);
+        //     $beratmurni = round($row['Berat'] * ($row['Nilai_Tukar'] / 100), 2);
+        //     $harga = 800000;
+        //     $qty = $row['Qty'];
+        //     if ($kode == 1 || $kode == 4 || $kode == 5) {
+        //         $totalharga =  $beratmurni *  $harga;
+        //     }
+        //     if ($kode == 2) {
+        //         $totalharga = $harga;
+        //     }
+        //     if ($kode == 3) {
+        //         $totalharga =  $beratmurni *  $harga * $qty;
+        //     }
+        //     if ($kode == 6) {
+        //         $totalharga = $harga * $qty;
+        //     }
+
+        //     $this->modeldetailpembelian->save([
+        //         'id_karyawan' => 0,
+        //         'id_date_pembelian' => $datapembelian['id_date_pembelian'],
+        //         'nama_img' => $row['Kode'] . '.jpg',
+        //         'kode' =>   $row['Kode'],
+        //         'qty' => $qty,
+        //         'jenis' => $row['Jenis'],
+        //         'model' => $row['Model'],
+        //         'keterangan' => $row['Keterangan'],
+        //         'berat' => round($row['Berat'], 2),
+        //         'berat_murni' => $beratmurni,
+        //         'ongkos' => $row['Ongkos'],
+        //         'harga_beli' => $harga,
+        //         'kadar' =>  $row['Kadar'],
+        //         'nilai_tukar' =>  $row['Nilai_Tukar'],
+        //         'merek' => $row['Merek'],
+        //         'total_harga' => $totalharga + $row['Ongkos'],
+        //     ]);
+
+        //     $datastock = $this->datastock->getBarangkode($row['Kode']);
+        //     if ($datastock) {
+        //         $this->datastock->delete($datastock['id_stock']);
+        //         $bikinbaru = true;
+        //     } else {
+        //         $bikinbaru = true;
+        //     }
+        //     if ($bikinbaru) {
+        //         $this->datastock->save([
+        //             'barcode' => $row['Kode'],
+        //             'id_karyawan' => $session->get('id_user'),
+        //             'status' => 'B',
+        //             'no_faktur' => $row['No_Nota'],
+        //             'tgl_faktur' =>  $row['Tanggal'],
+        //             'id_supplier' => $datapembelian['id_supplier'],
+        //             'qty' => $qty,
+        //             'jenis' => $row['Jenis'],
+        //             'model' => $row['Model'],
+        //             'keterangan' => $row['Keterangan'],
+        //             'merek' => $row['Merek'],
+        //             'kadar' => $row['Kadar'],
+        //             'berat_murni' => $beratmurni,
+        //             'berat' => round($row['Berat'], 2),
+        //             'nilai_tukar' =>  $row['Nilai_Tukar'],
+        //             'ongkos' => $row['Ongkos'],
+        //             'harga_beli' => $harga,
+        //             'total_harga' => $totalharga + $row['Ongkos'],
+        //             'gambar' =>  $row['Kode'] . '.jpg',
+        //         ]);
+        //     }
+
+        //     $datakartu = $this->modelkartustock->getKartuStockkode($row['Kode']);
+        //     if ($datakartu) {
+        //         $saldoakhir = $datakartu['saldo_akhir'];
+        //     } else {
+        //         $saldoakhir = 0;
+        //     }
+        //     if ($kode == 4) {
+        //         $saldo =  round($row['Berat'], 2);
+        //         $saldofinal = round($row['Berat'], 2) + $saldoakhir;
+        //     } else {
+        //         $saldo =  $qty;
+        //         $saldofinal =  $qty + $saldoakhir;
+        //     }
+        //     $this->modeldetailkartustock->save([
+        //         // 'id_detail_kartustock' => $datadetailkartu['id_detail_kartustock'],
+        //         'barcode' =>  $row['Kode'],
+        //         'status' => 'Masuk',
+        //         'id_karyawan' => 1,
+        //         'no_faktur' => $row['No_Nota'],
+        //         'tgl_faktur' => $row['Tanggal'],
+        //         'nama_customer' => $row['Nama_Supplier'],
+        //         'saldo' => $saldofinal,
+        //         'masuk' => $saldo,
+        //         'keluar' => 0,
+        //         'jenis' => $row['Jenis'],
+        //         'model' => $row['Model'],
+        //         'keterangan' => 'Pembelian Supplier',
+        //         'merek' => $row['Merek'],
+        //         'kadar' => $row['Kadar'],
+        //         'berat' => round($row['Berat'], 2),
+        //         'nilai_tukar' =>  $row['Nilai_Tukar'],
+        //         'harga_beli' => $harga,
+        //         'total_harga' => $totalharga + $row['Ongkos'],
+        //         'gambar' => $row['Kode'] . '.jpg',
+        //     ]);
+        //     $this->KartuStockMaster($row['Kode'], $session);
+        // }
+
+        ////////////////////////////////Update Tbl_Pembelian///////////////////////////////////////////////
+        // foreach ($data as $row) {
+        //     $this->modelpembelian->save([
+        //         'id_pembelian' => $row['id_pembelian'],
+        //         'total_berat_murni' => round($this->modeldetailpembelian->SumBeratMurniDetail($row['id_date_pembelian'])['berat_murni'], 2),
+        //         'byr_berat_murni' => round($this->modeldetailpembelian->SumBeratMurniDetail($row['id_date_pembelian'])['berat_murni'], 2),
+        //         'total_berat_rill' => round($this->modeldetailpembelian->SumBeratDetail($row['id_date_pembelian'])['berat'], 2),
+        //         'berat_murni_rill' => round($this->modeldetailpembelian->SumBeratMurniDetail($row['id_date_pembelian'])['berat_murni'], 2),
+        //         'cara_pembayaran' => 'Bayar Nanti',
+        //         'total_bayar' => $this->modeldetailpembelian->SumDataDetail($row['id_date_pembelian']),
+        //         'total_qty' => $this->modeldetailpembelian->SumQty($row['id_date_pembelian'])['qty'],
+        //     ]);
+        // }
+
+
+        /////////////////////////////////Tbl_Penjualan/////////////////////////////////////////////
+        //$data = $this->modeljualreal->getDataPenjualan();
+        // foreach ($data as $row) {
+        //     $datajual = $this->penjualan->getDataNoTrans($row['No_Nota']);
+        //     $datakartu = $this->modelkartustock->getKartuStockkode($row['Kode']);
+        //     if (!$datajual && $datakartu) {
+        //         $this->penjualan->save([
+        //             'id_date_penjualan' => $this->randomNumber(12),
+        //             'no_transaksi_jual' => $row['No_Nota'],
+        //             'id_customer' => '',
+        //             'id_karyawan' => $session->get('id_user'),
+        //             'nohp_cust' => $row['Nama_Customer'],
+        //             'jumlah' => '0',
+        //             'pembulatan' => '0',
+        //             'total_harga' => '0',
+        //             'nama_bank' => 'NoBank',
+        //             'charge' =>   $this->request->getVar('charge'),
+        //             'pembayaran' => $row['Pembayaran'],
+        //             'tunai' =>  $row['Tunai'],
+        //             'debitcc' =>  $row['DebitCC'],
+        //             'transfer' =>  $row['Transfer'],
+        //             'status_dokumen' => 'Selesai',
+        //         ]);
+        //     }
+
+
+        /////////////////////////////Tbl_detailjual//////////////////////////////////
+        // $data = $this->modeljualreal->getDataPenjualan();
+        // // dd($datapembelianreal);
+        // foreach ($data as $row) {
+        //     $datajual = $this->penjualan->getDataNoTrans($row['No_Nota']);
+        //     $datakartu = $this->modelkartustock->getKartuStockkode($row['Kode']);
+        //     if ($datajual && $datakartu) {
+        //         // $datastock = $this->modelkartustock->getKartuStockkode($row['Kode']);
+        //         $datastock = $this->datastock->getBarangkode($row['Kode']);
+        //         $this->modeldetailpenjualan->save([
+        //             'id_date_penjualan' => $datajual['id_date_penjualan'],
+        //             'id_karyawan' => $session->get('id_user'),
+        //             'nama_img' => $datastock['gambar'],
+        //             'status' => $datastock['status'],
+        //             'kode' =>  $datastock['barcode'],
+        //             'qty' => $row['Qty'],
+        //             'saldo' => $row['Qty'],
+        //             'jenis' =>  $row['Jenis'],
+        //             'model' =>  $row['Model'],
+        //             'keterangan' =>  $row['Keterangan'],
+        //             'berat' =>  $row['Berat'],
+        //             'berat_murni' =>  $datastock['berat_murni'],
+        //             'harga_beli' =>  $datastock['harga_beli'],
+        //             'ongkos' => $datastock['ongkos'],
+        //             'kadar' =>   $row['Kadar'],
+        //             'nilai_tukar' =>   $datastock['nilai_tukar'],
+        //             'merek' =>  $datastock['merek'],
+        //             'total_harga' => $row['Total'],
+        //         ]);
+        //     }
+        // }

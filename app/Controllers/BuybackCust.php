@@ -490,17 +490,7 @@ class BuybackCust extends BaseController
                                     'total_harga' => $row['total_harga'],
                                     'gambar' =>  $row['nama_img'],
                                 ]);
-                                if ($datakartu) {
-                                    $this->KartuStockMaster($row['kode'], $session);
-                                } else {
-                                    $this->modelkartustock->save([
-                                        'kode' => $row['kode'],
-                                        'id_karyawan' => $session->get('id_user'),
-                                        'total_masuk' => $this->modeldetailkartustock->SumMasukKartu($row['kode']),
-                                        'total_keluar' => $this->modeldetailkartustock->SumKeluarKartu($row['kode']),
-                                        'saldo_akhir' => $saldoakhir,
-                                    ]);
-                                }
+                                $this->KartuStockMaster($row['kode'], $session);
                             } else {
                                 $datakartu = $this->modelkartustock->getKartuStockkode($row['kode']);
                                 $saldoakhir = (substr($row['kode'], 0, 1) == 4) ? $datakartu['saldo_akhir'] + $row['berat'] : $datakartu['saldo_akhir'] + $row['qty'];

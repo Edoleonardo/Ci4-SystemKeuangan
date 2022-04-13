@@ -23,6 +23,10 @@ class ModelPembelian extends Model
         }
         return $this->where(['id_date_pembelian' => $id])->first();
     }
+    public function GetNotransPindah($id) //pindah data
+    {
+        return $this->where(['no_transaksi' => $id])->first();
+    }
     public function getPembelian($id)
     {
         $this->select('no_transaksi');
