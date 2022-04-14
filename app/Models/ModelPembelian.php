@@ -74,7 +74,7 @@ class ModelPembelian extends Model
     public function getNoTrans()
     {
         $db = db_connect();
-        $data = $db->query('select max(substr(no_transaksi,3,10)) no_transaksi from tbl_pembelian limit 1');
+        $data = $db->query('select max(substr(no_transaksi,3,10)) no_transaksi from tbl_pembelian where substr(no_transaksi,1,2) = "M-" limit 1');
         return $data->getResult('array')[0];
     }
 }

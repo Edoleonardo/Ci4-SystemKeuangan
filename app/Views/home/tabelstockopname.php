@@ -56,7 +56,6 @@
                 no_id: no_id
             },
             success: function(result) {
-                console.log(result);
                 if (result.error) {
                     console.log(result.error);
                 } else {

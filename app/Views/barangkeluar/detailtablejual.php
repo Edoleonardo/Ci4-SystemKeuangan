@@ -9,13 +9,13 @@
         <?php endif; ?>
         <td><input style="width: 100px;" id="harganow <?= $row['id_detail_penjualan'] ?>" class="harganow" onchange="UbahHarga(<?= $row['id_detail_penjualan'] ?>,<?= $row['id_date_penjualan'] ?>,<?= substr($row['kode'], 0, 1) ?>,<?= $row['qty'] ?>,<?= $row['berat'] ?>)" type="number" class="form-control" value="<?= $row['harga_beli'] ?>"></td>
         <td><?= number_format($row['ongkos'], 2, ',', '.') ?></td>
-        <td><?= $row['jenis'] ?> <?= $row['model'] ?> <?= $row['keterangan'] ?></td>
+        <td><?= $row['jenis'] ?> <?= $row['model'] ?></td>
+        <td><input style="width: 100px;" id="keterangan <?= $row['id_detail_penjualan'] ?>" onchange="UbahKet(<?= $row['id_detail_penjualan'] ?>,this)" type="text" class="form-control" value="<?= $row['keterangan'] ?>"></td>
         <?php if (substr($row['kode'], 0, 1) == 4) : ?>
             <td><input style="width: 100px;" id="berat <?= $row['id_detail_penjualan'] ?>" onchange="UbahHarga(<?= $row['id_detail_penjualan'] ?>,<?= $row['id_date_penjualan'] ?>,<?= substr($row['kode'], 0, 1) ?>,<?= $row['qty'] ?>,<?= $row['berat'] ?>)" type="number" class="form-control" value="<?= $row['berat'] ?>"></td>
         <?php else : ?>
             <td><?= $row['berat'] ?></td>
         <?php endif; ?>
-        <td><?= $row['berat_murni'] ?></td>
         <td><?= $row['kadar'] ?></td>
         <td><?= $row['nilai_tukar'] ?></td>
         <td><?= $row['merek'] ?></td>

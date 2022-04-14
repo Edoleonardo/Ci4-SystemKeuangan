@@ -145,9 +145,9 @@
                                     <th>Qty</th>
                                     <th>Harga Jual</th>
                                     <th>Ongkos</th>
+                                    <th>Jenis</th>
                                     <th>Keterangan</th>
                                     <th>Berat</th>
-                                    <th>Berat Murni</th>
                                     <th>Kadar</th>
                                     <th>Nilai Tukar</th>
                                     <th>Merek</th>
@@ -448,6 +448,25 @@
 
 </footer>
 <script type="text/javascript">
+    function UbahKet(id, value) {
+        $.ajax({
+            type: "get",
+            dataType: "json",
+            url: "<?php echo base_url('ubahketjual'); ?>",
+            data: {
+                id: id,
+                value: value.value,
+            },
+            success: function(result) {
+                tampildata()
+                myDataBayar()
+            },
+            error: function(xhr, ajaxOptions, thrownError) {
+                alert(xhr.status + "\n" + xhr.responseText + "\n" + thrownError);
+            }
+        })
+    }
+
     function autocomplete(inp, arr) {
         /*the autocomplete function takes two arguments,
         the text field element and an array of possible autocompleted values:*/

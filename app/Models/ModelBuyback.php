@@ -41,7 +41,7 @@ class ModelBuyback extends Model
     public function getNoTrans()
     {
         $db = db_connect();
-        $data = $db->query('select max(substr(no_transaksi_buyback,3,10)) no_transaksi_buyback from tbl_buyback limit 1');
+        $data = $db->query('select max(substr(no_transaksi_buyback,3,10)) no_transaksi_buyback from tbl_buyback where substr(no_transaksi_buyback,1,2) = "B-" limit 1');
         return $data->getResult('array')[0];
     }
 }

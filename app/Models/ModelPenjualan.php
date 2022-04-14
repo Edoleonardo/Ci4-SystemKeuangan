@@ -36,7 +36,7 @@ class ModelPenjualan extends Model
     public function getNoTrans()
     {
         $db = db_connect();
-        $data = $db->query('select max(substr(no_transaksi_jual,3,10)) no_transaksi_jual from tbl_penjualan limit 1');
+        $data = $db->query('select max(substr(no_transaksi_jual,3,10)) no_transaksi_jual from tbl_penjualan where substr(no_transaksi_jual,1,2) = "S-" limit 1');
         return $data->getResult('array')[0];
     }
 }

@@ -1414,4 +1414,17 @@ class Barangkeluar extends BaseController
             return $notransaksi;
         }
     }
+
+    public function UbahKeterangan()
+    {
+        if ($this->request->isAJAX()) {
+            $session = session();
+            $this->modeldetailpenjualan->save([
+                'id_detail_penjualan' => $this->request->getVar('id'),
+                'id_karyawan' => $session->get('id_user'),
+                'keterangan' => $this->request->getVar('value')
+            ]);
+            echo json_encode('sukses');
+        }
+    }
 }

@@ -59,6 +59,8 @@ $routes->get('/editopname', ($session->get('role')) ? 'StockOpname::EditOpname' 
 $routes->get('/caribarcodeopname', ($session->get('role')) ? 'StockOpname::CariBarcode' : 'Login::Login');
 $routes->get('/pilihbarangopname', ($session->get('role')) ? 'StockOpname::PilihBarangOpname' : 'Login::Login');
 $routes->get('/hapusopname', ($session->get('role')) ? 'StockOpname::HapusOpname' : 'Login::Login');
+$routes->POST('/formeditopname', ($session->get('role')) ? 'StockOpname::SelesaiEdit' : 'Login::Login');
+$routes->get('/selesaiopname', ($session->get('role')) ? 'StockOpname::SelesaiOpname' : 'Login::Login');
 
 
 // --------------------BarangMasuk-----------
@@ -115,6 +117,7 @@ $routes->get('/printinvoice/(:any)', ($session->get('role')) ? 'Barangkeluar::Pr
 $routes->get('/detailpenjualan/(:any)', ($session->get('role')) ? 'Barangkeluar::DetailDataPenjualan/$1' : 'Login::Login');
 $routes->get('/tampilcust', ($session->get('role')) ? 'Barangkeluar::TampilCustomer' : 'Login::Login');
 $routes->get('/checkcust', ($session->get('role')) ? 'Barangkeluar::CheckCustomer' : 'Login::Login');
+$routes->get('/ubahketjual', ($session->get('role')) ? 'Barangkeluar::UbahKeterangan' : 'Login::Login');
 
 //------------------buyback----------------
 $routes->get('/buybackcust', ($session->get('role')) ? 'BuybackCust::BuyBack' : 'Login::Login');

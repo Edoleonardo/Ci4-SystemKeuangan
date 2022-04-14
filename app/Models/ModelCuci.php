@@ -33,7 +33,7 @@ class ModelCuci extends Model
     public function getNoTransCuci()
     {
         $db = db_connect();
-        $data = $db->query('select max(substr(no_cuci,3,10)) no_cuci from tbl_cuci limit 1');
+        $data = $db->query('select max(substr(no_cuci,3,10)) no_cuci from tbl_cuci where substr(no_cuci,1,2) = "C-" limit 1');
         return $data->getResult('array')[0];
     }
 }

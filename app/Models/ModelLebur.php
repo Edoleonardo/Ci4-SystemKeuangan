@@ -33,7 +33,7 @@ class ModelLebur extends Model
     public function getNoTransLebur()
     {
         $db = db_connect();
-        $data = $db->query('select max(substr(no_lebur,3,10)) no_lebur from tbl_lebur limit 1');
+        $data = $db->query('select max(substr(no_lebur,3,10)) no_lebur from tbl_lebur  where substr(no_lebur,1,2) = "L-" limit 1');
         return $data->getResult('array')[0];
     }
     public function getKodeLebur($id)

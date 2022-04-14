@@ -22,6 +22,11 @@ class ModelHome extends Model
         return $this->where(['id_stock' => $id])->first();
     }
 
+    public function getBarangBarcode($id)
+    {
+        return $this->where(['barcode' => $id])->first();
+    }
+
     public function getBarangOpname($id)
     {
         $db = db_connect();

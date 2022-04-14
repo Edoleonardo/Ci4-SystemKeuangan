@@ -63,7 +63,7 @@ class ModelRetur extends Model
     public function getNoTransRetur()
     {
         $db = db_connect();
-        $data = $db->query('select max(substr(no_retur,3,10)) no_retur from tbl_retur limit 1');
+        $data = $db->query('select max(substr(no_retur,3,10)) no_retur from tbl_retur where substr(no_retur,1,2) = "R-" limit 1');
         return $data->getResult('array')[0];
     }
 }

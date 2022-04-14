@@ -1,6 +1,7 @@
 <?= $this->extend('layout/template'); ?>
 <?= $this->section('content') ?>
 <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/webcamjs/1.0.26/webcam.min.js"></script>
 <style>
     .table>tbody>tr>* {
         vertical-align: middle;
@@ -55,6 +56,11 @@
                                 <option value="sudah">Sudah Opname</option>
                             </select>
                         </div>
+                    </div>
+                    <div class="form-group" style="margin: 1mm;">
+                        <a class="btn btn-app bg-primary" type="button" onclick="SelesaiOpname()">
+                            <i class="fas fa-check"></i> Selesai Stock Opname
+                        </a>
                     </div>
                 </div>
                 <!-- /.card -->
@@ -130,7 +136,6 @@
             },
             url: "<?php echo base_url('caribarcodeopname'); ?>",
             success: function(result) {
-                console.log(result)
                 if (result.error) {
                     $('#kodebarang').addClass('is-invalid')
                     $('.kodebarangmsg').html(result.error)
@@ -157,7 +162,6 @@
             },
             url: "<?php echo base_url('pilihbarangopname'); ?>",
             success: function(result) {
-                console.log(result)
                 if (result.error) {
                     Swal.fire({
                         icon: 'warning',
@@ -175,6 +179,44 @@
             },
             error: function(xhr, ajaxOptions, thrownError) {
                 alert(xhr.status + "\n" + xhr.responseText + "\n" + thrownError);
+            }
+        })
+    }
+
+    function SelesaiOpname() {
+        Swal.fire({
+            title: 'Stock Opname',
+            text: "Selesai Stock Opname ?",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Selesai',
+        }).then((choose) => {
+            if (choose.isConfirmed) {
+                $.ajax({
+                    type: "GET",
+                    dataType: "json",
+                    url: "<?php echo base_url('selesaiopname'); ?>",
+                    success: function(result) {
+                        console.log(result);
+                        if (result.error) {
+                            Swal.fire({
+                                icon: 'warning',
+                                title: result.error,
+                            })
+                        } else {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Berhasil Stock Opname',
+                            })
+                            tampildata()
+                        }
+                    },
+                    error: function(xhr, ajaxOptions, thrownError) {
+                        alert(xhr.status + "\n" + xhr.responseText + "\n" + thrownError);
+                    }
+                })
             }
         })
     }
@@ -208,7 +250,6 @@
             },
             url: "<?php echo base_url('editopname'); ?>",
             success: function(result) {
-                console.log(result)
                 $('#openmodaledit').html(result.tampilmodaledit)
                 $('#modal-edit').modal('toggle')
             },
@@ -219,6 +260,113 @@
     }
     $(document).ready(function() {
         tampildata()
+
+        $('.formeditopname').submit(function(e) {
+            e.preventDefault()
+            let form = $('.formeditopname')[0];
+            let data = new FormData(form)
+            $.ajax({
+                type: "POST",
+                data: data,
+                url: "<?php echo base_url('formeditopname'); ?>",
+                dataType: "json",
+                enctype: 'multipart/form-data',
+                contentType: false,
+                processData: false,
+                cache: false,
+                beforeSend: function() {
+                    $('.btntambah').html('<i class="fa fa-spin fa-spinner">')
+                },
+                complete: function() {
+                    $('.btntambah').html('Tambah')
+                },
+                success: function(result) {
+                    if (result.error) {
+                        if (result.error.qty) {
+                            $('#qty').addClass('is-invalid')
+                            $('.qtymsg').html(result.error.qty)
+                        } else {
+                            $('#qty').removeClass('is-invalid')
+                            $('.qtymsg').html('')
+                        }
+                        if (result.error.nilai_tukar) {
+                            $('#nilai_tukar').addClass('is-invalid')
+                            $('.nilai_tukarmsg').html(result.error.nilai_tukar)
+                        } else {
+                            $('#nilai_tukar').removeClass('is-invalid')
+                            $('.nilai_tukarmsg').html('')
+                        }
+                        if (result.error.jenis) {
+                            $('#jenis').addClass('is-invalid')
+                            $('.jenismsg').html(result.error.jenis)
+                        } else {
+                            $('#jenis').removeClass('is-invalid')
+                            $('.jenismsg').html('')
+                        }
+                        if (result.error.berat) {
+                            $('#berat').addClass('is-invalid')
+                            $('.beratmsg').html(result.error.berat)
+                        } else {
+                            $('#berat').removeClass('is-invalid')
+                            $('.beratmsg').html('')
+                        }
+                        if (result.error.harga_beli) {
+                            $('#harga_beli').addClass('is-invalid')
+                            $('.harga_belimsg').html(result.error.harga_beli)
+                        } else {
+                            $('#harga_beli').removeClass('is-invalid')
+                            $('.harga_belimsg').html('')
+                        }
+                    } else {
+                        $('#qty').removeClass('is-invalid')
+                        $('.qtymsg').html('')
+                        $('#nilai_tukar').removeClass('is-invalid')
+                        $('.nilai_tukarmsg').html('')
+                        $('#jenis').removeClass('is-invalid')
+                        $('.jenismsg').html('')
+                        $('#berat').removeClass('is-invalid')
+                        $('.beratmsg').html('')
+                        $('#harga_beli').removeClass('is-invalid')
+                        $('.harga_belimsg').html('')
+                        tampildata()
+                    }
+                },
+                error: function(xhr, ajaxOptions, thrownError) {
+                    alert(xhr.status + "\n" + xhr.responseText + "\n" + thrownError);
+                }
+            })
+        })
     })
+
+    Webcam.set({
+        width: 320,
+        height: 240,
+        image_format: 'jpeg',
+        jpeg_quality: 100,
+        flip_horiz: true,
+    });
+
+    function cameranyala() {
+        if ($(".image-tag").val()) {
+            document.getElementById('my_camera').innerHTML = '<img src="' + data_uri + '">'
+        } else {
+            Webcam.attach('#my_camera');
+        }
+    }
+
+    function Ambil_foto() {
+        Webcam.snap(function(data_uri) {
+            $(".image-tag").val(data_uri);
+            Webcam.reset()
+            // Webcam.attach('#my_camera');
+            document.getElementById('my_camera').innerHTML = '<img src="' + data_uri + '">'
+        })
+    }
+
+    function Foto_ulang() {
+        document.getElementById('my_camera').innerHTML = ''
+        $(".image-tag").val('');
+        Webcam.attach('#my_camera');
+    }
 </script>
 <?= $this->endSection(); ?>
