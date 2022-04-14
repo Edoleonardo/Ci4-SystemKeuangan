@@ -1,4 +1,4 @@
-<script src="/js/html5-qrcode.min_.js"></script>
+<script src="<?php echo base_url('/js/html5-qrcode.min_.js'); ?>"></script>
 <style>
     .result {
         background-color: green;
