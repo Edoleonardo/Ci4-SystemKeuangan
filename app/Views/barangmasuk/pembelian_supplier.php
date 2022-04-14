@@ -819,9 +819,6 @@
         }
     });
 
-
-
-
     function cameranyala() {
         if ($(".image-tag").val()) {
             document.getElementById('my_camera').innerHTML = '<img src="' + data_uri + '">'

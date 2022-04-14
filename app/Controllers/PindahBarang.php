@@ -62,14 +62,14 @@ class PindahBarang extends BaseController
     {
         $session = session();
 
-        $data = $this->modeljualreal->getDataPenjualan();
-        // dd($datapembelianreal);
-        foreach ($data as $row) {
-            $datajual = $this->penjualan->getDataNoTrans($row['No_Nota']);
-            $datakartu = $this->modelkartustock->getKartuStockkode($row['Kode']);
-            if ($datajual && $datakartu) {
-            }
-        }
+        // $data = $this->modeljualreal->getDataPenjualan();
+        // // dd($datapembelianreal);
+        // foreach ($data as $row) {
+        //     $datajual = $this->penjualan->getDataNoTrans($row['No_Nota']);
+        //     $datakartu = $this->modelkartustock->getKartuStockkode($row['Kode']);
+        //     if ($datajual && $datakartu) {
+        //     }
+        // }
 
         return view('pindahindata');
     }
