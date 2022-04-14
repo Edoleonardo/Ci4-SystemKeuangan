@@ -804,19 +804,24 @@
             Webcam.reset('#my_camera')
         });
     })
-    Webcam.set({
+    Webcam.set('constraints', {
         width: 320,
         height: 240,
         image_format: 'jpeg',
         jpeg_quality: 100,
         flip_horiz: true,
+        deviceId: {
+            exact: deviceId
+        }
     });
+
 
     function cameranyala() {
         if ($(".image-tag").val()) {
             document.getElementById('my_camera').innerHTML = '<img src="' + data_uri + '">'
         } else {
             Webcam.attach('#my_camera');
+
         }
     }
 
