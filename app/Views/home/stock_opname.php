@@ -61,6 +61,9 @@
                         <a class="btn btn-app bg-primary" type="button" onclick="SelesaiOpname()">
                             <i class="fas fa-check"></i> Selesai Stock Opname
                         </a>
+                        <a class="btn btn-app bg-primary" type="button" onclick="OpenScanBarcode()">
+                            <i class="fas Example of barcode fa-camera"></i> Scan Barcode
+                        </a>
                     </div>
                 </div>
                 <!-- /.card -->
@@ -114,6 +117,9 @@
 <!-- /.content-wrapper -->
 <!-- Control Sidebar -->
 <!-- /.modal-dialog -->
+
+<div id="openscanbarcode">
+</div>
 <div id="openmodaldetail">
 </div>
 <div id="openmodaledit">
@@ -127,6 +133,22 @@
 
 </footer>
 <script type="text/javascript">
+    function OpenScanBarcode() {
+        $.ajax({
+            type: "GET",
+            dataType: "json",
+            url: "<?php echo base_url('openscanbarcode'); ?>",
+            success: function(result) {
+                $('#openscanbarcode').html(result.openscan)
+                $('#modal-scan').modal('toggle')
+
+            },
+            error: function(xhr, ajaxOptions, thrownError) {
+                alert(xhr.status + "\n" + xhr.responseText + "\n" + thrownError);
+            }
+        })
+    }
+
     function OpenBarcode() {
         $.ajax({
             type: "GET",

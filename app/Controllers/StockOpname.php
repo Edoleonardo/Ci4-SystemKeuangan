@@ -376,4 +376,14 @@ class StockOpname extends BaseController
             echo json_encode($msg);
         }
     }
+    public function OpenScanBarcode()
+    {
+        if ($this->request->isAJAX()) {
+
+            $msg = [
+                'openscan' => view('modaldetail/scanbarcodecam')
+            ];
+            echo json_encode($msg);
+        }
+    }
 }

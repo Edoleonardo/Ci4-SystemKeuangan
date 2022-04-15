@@ -810,13 +810,13 @@
         image_format: 'jpeg',
         jpeg_quality: 100,
         flip_horiz: true,
-        constraints: {
-            width: 320, // { exact: 320 },
-            height: 240, // { exact: 180 },
-            facingMode: 'user',
-            frameRate: 30,
-            facingMode: 'environment'
-        }
+        // constraints: {
+        //     width: 320, // { exact: 320 },
+        //     height: 240, // { exact: 180 },
+        //     facingMode: 'user',
+        //     frameRate: 30,
+        //     facingMode: 'environment'
+        // }
     });
 
     function cameranyala() {

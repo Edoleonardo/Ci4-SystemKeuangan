@@ -70,8 +70,8 @@ class Login extends BaseController
                 $data = $this->multi_array_search($check, array('username' => $username, 'password' =>  $password));
                 if ($data) {
                     if ($this->request->getVar('remember')) {
-                        setcookie("username", $username, time() + (10 * 365 * 24 * 60 * 60));
-                        setcookie("password", $password, time() + (10 * 365 * 24 * 60 * 60));
+                        setcookie("username", $username, time() + (10 * 365 * 24 * 60 * 60), "/");
+                        setcookie("password", $password, time() + (10 * 365 * 24 * 60 * 60), "/");
                     } else {
                         if (isset($_COOKIE['username'])) {
                             setcookie('username', '');
@@ -86,6 +86,12 @@ class Login extends BaseController
                     $session->set('nama_user', $check[$data[0]]['nama_pegawai']);
                     $msg = 'berhasil';
                 } else {
+                    if (isset($_COOKIE['username'])) {
+                        setcookie('username', '');
+                    }
+                    if (isset($_COOKIE['password'])) {
+                        setcookie('password', '');
+                    }
                     $msg = 'gagal';
                 }
                 echo json_encode($msg);

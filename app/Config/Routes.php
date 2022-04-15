@@ -61,6 +61,7 @@ $routes->get('/pilihbarangopname', ($session->get('role')) ? 'StockOpname::Pilih
 $routes->get('/hapusopname', ($session->get('role')) ? 'StockOpname::HapusOpname' : 'Login::Login');
 $routes->POST('/formeditopname', ($session->get('role')) ? 'StockOpname::SelesaiEdit' : 'Login::Login');
 $routes->get('/selesaiopname', ($session->get('role')) ? 'StockOpname::SelesaiOpname' : 'Login::Login');
+$routes->get('/openscanbarcode', ($session->get('role')) ? 'StockOpname::OpenScanBarcode' : 'Login::Login');
 
 
 // --------------------BarangMasuk-----------
