@@ -2,7 +2,7 @@
 <?= $this->section('content') ?>
 <script type="text/javascript" src="/js/jquery.js"></script>
 <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<script src="/js/html5-qrcode.min_.js"></script>
+<!-- <script src="/js/html5-qrcode.min_.js"></script> -->
 
 <style>
     .table>tbody>tr>* {
