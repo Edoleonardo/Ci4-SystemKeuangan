@@ -1,42 +1,42 @@
-asdasd
-<!-- <script src="./js/html5-qrcode.min_.js"></script>
-<style>
-    .result {
-        background-color: green;
-        color: #fff;
-        padding: 20px;
-    }
+<!DOCTYPE html>
+<html>
 
-    .row {
-        display: flex;
-    }
-</style>
+<head>
+    <title>Page Title</title>
+</head>
 
+<body>
+    <div id="coba"></div>
+    <h1>This is a Heading</h1>
+    <p>This is a paragraph.</p>
 
-<div class="row">
-    <div class="col">
-        <div style="width:500px;" id="reader"></div>
-    </div>
-    <div class="col" style="padding:30px;">
-        <h4>SCAN RESULT</h4>
-        <div id="result">Result Here</div>
-    </div>
-</div> -->
+</body>
 
+</html>
+<script src="/js/quagga.min.js"></script>
+<script>
+    Quagga.init({
+        inputStream: {
+            name: "Live",
+            type: "LiveStream",
+            target: document.querySelector('#coba') // Or '#yourElement' (optional)
+        },
+        decoder: {
+            // readers: ["code_128_reader", "ean_reader", "ean_8_reader", "code_39_reader", "code_39_vin_reader", "codabar_reader", "upc_reader", "upc_e_reader", "i2of5_reader", "2of5_reader", "code_93_reader", ]
+            readers: ["code_128_reader", "ean_reader", "ean_8_reader", "code_39_reader", "code_39_vin_reader", "codabar_reader", "upc_reader", "upc_e_reader", "i2of5_reader", "2of5_reader", "code_93_reader", ]
 
-<script type="text/javascript">
-    // function onScanSuccess(qrCodeMessage) {
-    //     document.getElementById('result').innerHTML = '<span class="result">' + qrCodeMessage + '</span>';
-    // }
+        }
+    }, function(err) {
+        if (err) {
+            console.log(err);
+            return
+        }
+        console.log("Initialization finished. Ready to start");
+        Quagga.start();
+    });
 
-    // function onScanError(errorMessage) {
-    //     //handle scan error
-    // }
-
-    // var html5QrcodeScanner = new Html5QrcodeScanner(
-    //     "reader", {
-    //         fps: 10,
-    //         qrbox: 250
-    //     });
-    // html5QrcodeScanner.render(onScanSuccess, onScanError);
+    Quagga.onDetected(function(data) {
+        alert(data.codeResult.code + ' ' + data.codeResult.format)
+        Quagga.stop()
+    })
 </script>

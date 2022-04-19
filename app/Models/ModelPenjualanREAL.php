@@ -35,6 +35,12 @@ class ModelPenjualanREAL extends Model
         $data = $db->query('SELECT Kadar FROM `220331_penjualan` GROUP BY Kadar HAVING COUNT(Kadar) >1;');
         return $data->getResult('array');
     }
+    public function penjualankestock()
+    {
+        $db = db_connect();
+        $data = $db->query('SELECT * from 220331_jualstock WHERE Kode_Brg NOT IN (SELECT barcode FROM tbl_stock)');
+        return $data->getResult('array');
+    }
     public function getNoTransCuci()
     {
         $db = db_connect();
