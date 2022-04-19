@@ -7,7 +7,7 @@ use CodeIgniter\Model;
 class ModelStockREAL extends Model
 {
 
-    protected $table = 'stock_03_22';
+    protected $table = '220331_stock';
     protected $primaryKey = 'id_stockreal';
     protected $useTimestamps = true;
     protected $allowedFields = ['id_date_cuci', 'pembayaran', 'nama_bank', 'id_karyawan', 'nama_tukang', 'no_cuci', 'keterangan', 'total_berat', 'jumlah_barang', 'tanggal_cuci', 'status_dokumen', 'harga_cuci', 'status_proses'];
@@ -32,7 +32,7 @@ class ModelStockREAL extends Model
     public function GetJenisStockReal()
     {
         $db = db_connect();
-        $data = $db->query('SELECT Merk FROM stock_03_22 GROUP BY Merk HAVING COUNT(Merk) > 1;');
+        $data = $db->query('SELECT Merk FROM 220331_stock GROUP BY Merk HAVING COUNT(Merk) > 1;');
         return $data->getResult('array');
     }
 }
