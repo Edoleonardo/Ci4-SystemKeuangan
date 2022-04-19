@@ -51,8 +51,9 @@
                                         <th>No Hp</th>
                                         <th>Alamat</th>
                                         <th>Kota</th>
+                                        <th>No Rek</th>
+                                        <th>Bank</th>
                                         <th>Point</th>
-                                    </tr>
                                 </thead>
                                 <tbody id="tblcustomer">
                                     <?php foreach ($datacust as $row) : ?>
@@ -61,6 +62,8 @@
                                             <td><?= $row['nohp_cust'] ?></td>
                                             <td><?= $row['alamat_cust'] ?></td>
                                             <td><?= $row['kota_cust'] ?></td>
+                                            <td><?= $row['no_rekening'] ?></td>
+                                            <td><?= $row['bank'] ?></td>
                                             <td><?= $row['point'] ?></td>
                                         </tr>
                                     <?php endforeach; ?>
@@ -71,6 +74,8 @@
                                         <th>No Hp</th>
                                         <th>Alamat</th>
                                         <th>Kota</th>
+                                        <th>No Rek</th>
+                                        <th>Bank</th>
                                         <th>Point</th>
                                     </tr>
                                 </tfoot>
@@ -422,23 +427,31 @@
                     <div class="col-12">
                         <div class="form-group">
                             <label>Nama Customer</label>
-                            <input type="text" id="nama_cust" name="nama_cust" class="form-control nama_cust" placeholder="Masukan Nomor Nota Supplier">
+                            <input type="text" id="nama_cust" name="nama_cust" class="form-control nama_cust" placeholder="Masukan Nama">
                             <div id="validationServerUsernameFeedback" class="invalid-feedback nama_custmsg">
                             </div>
                         </div>
                         <div class="form-group">
                             <label>Nomor Hp</label>
-                            <input type="number" id="nohp" name="nohp" class="form-control nohp" placeholder="Masukan Nomor Nota Supplier">
+                            <input type="number" id="nohp" name="nohp" class="form-control nohp" placeholder="Masukan Nomor Hp">
                             <div id="validationServerUsernameFeedback" class="invalid-feedback nohpmsg">
                             </div>
                         </div>
                         <div class="form-group">
                             <label>Alamat</label>
-                            <input type="text" id="alamat" name="alamat" class="form-control" placeholder="Masukan Nomor Nota Supplier">
+                            <input type="text" id="alamat" name="alamat" class="form-control" placeholder="Masukan Alamat">
                         </div>
                         <div class="form-group">
                             <label>Kota</label>
-                            <input type="text" id="kota" name="kota" class="form-control" placeholder="Masukan Nomor Nota Supplier">
+                            <input type="text" id="kota" name="kota" class="form-control" placeholder="Masukan Kota">
+                        </div>
+                        <div class="form-group">
+                            <label>Bank</label>
+                            <input type="text" id="banku" name="banku" class="form-control" placeholder="Masukan bank">
+                        </div>
+                        <div class="form-group">
+                            <label>No Rekening</label>
+                            <input type="text" id="no_rek" name="no_rek" class="form-control" placeholder="Masukan no rekening">
                         </div>
                     </div>
                 </div>
@@ -472,13 +485,13 @@
                         </div>
                         <div class="form-group">
                             <label>Inisial</label>
-                            <input type="text" id="inisial" name="inisial" class="form-control inisial" placeholder="Masukan Nomor Nama Supplier">
+                            <input type="text" id="inisial" name="inisial" class="form-control inisial" placeholder="Masukan Inisial">
                             <div id="validationServerUsernameFeedback" class="invalid-feedback inisialmsg">
                             </div>
                         </div>
                         <div class="form-group">
                             <label>Nama Sales</label>
-                            <input type="text" id="nama_sales" name="nama_sales" class="form-control nama_sales" placeholder="Masukan Nomor Hp">
+                            <input type="text" id="nama_sales" name="nama_sales" class="form-control nama_sales" placeholder="Masukan Nama sales">
                             <div id="validationServerUsernameFeedback" class="invalid-feedback nama_salesmsg">
                             </div>
                         </div>
@@ -600,7 +613,7 @@
                     <div class="col-12">
                         <div class="form-group">
                             <label>Nama Bank</label>
-                            <input type="text" id="nama_bank" name="nama_bank" class="form-control nama_bank" placeholder="Masukan Nama Merek">
+                            <input type="text" id="nama_bank" name="nama_bank" class="form-control nama_bank" placeholder="Masukan Nama Bank">
                             <div id="validationServerUsernameFeedback" class="invalid-feedback nama_bankmsg">
                             </div>
                         </div>
@@ -631,7 +644,7 @@
                     <div class="col-12">
                         <div class="form-group">
                             <label>Nama user</label>
-                            <input type="text" id="nama_user" name="nama_user" class="form-control nama_user" placeholder="Masukan Nomor Nama user">
+                            <input type="text" id="nama_user" name="nama_user" class="form-control nama_user" placeholder="Masukan Nama user">
                             <div id="validationServerusernameFeedback" class="invalid-feedback nama_usermsg">
                             </div>
                         </div>
@@ -643,25 +656,25 @@
                         </div>
                         <div class="form-group">
                             <label>Alamat</label>
-                            <input type="text" id="alamatusr" name="alamatusr" class="form-control alamatusr" placeholder="Masukan Nomor Alamat user">
+                            <input type="text" id="alamatusr" name="alamatusr" class="form-control alamatusr" placeholder="Masukan Alamat user">
                             <div id="validationServerusernameFeedback" class="invalid-feedback alamatusrmsg">
                             </div>
                         </div>
                         <div class="form-group">
                             <label>username</label>
-                            <input type="text" id="username" name="username" class="form-control username" placeholder="Masukan Nomor Kota user">
+                            <input type="text" id="username" name="username" class="form-control username" placeholder="Masukan username">
                             <div id="validationServerusernameFeedback" class="invalid-feedback usernamemsg">
                             </div>
                         </div>
                         <div class="form-group">
                             <label>password</label>
-                            <input type="text" id="password" name="password" class="form-control password" placeholder="Masukan Nomor Kota user">
+                            <input type="text" id="password" name="password" class="form-control password" placeholder="Masukan Password">
                             <div id="validationServerusernameFeedback" class="invalid-feedback passwordmsg">
                             </div>
                         </div>
                         <div class="form-group">
                             <label>role</label>
-                            <select id="role" name="role" class="form-control role" placeholder="Masukan Nomor Kota user">
+                            <select id="role" name="role" class="form-control role" placeholder="Masukan role">
                                 <option value="admin">Admin</option>
                                 <option value="owner">Owner</option>
                             </select>
@@ -694,7 +707,7 @@
                     <div class="col-12">
                         <div class="form-group">
                             <label>Nama jenis</label>
-                            <input type="text" id="nama_jenis" name="nama_jenis" class="form-control nama_jenis" placeholder="Masukan Nama Merek">
+                            <input type="text" id="nama_jenis" name="nama_jenis" class="form-control nama_jenis" placeholder="Masukan Nama Jenis">
                             <div id="validationServerUsernameFeedback" class="invalid-feedback nama_jenismsg">
                             </div>
                         </div>
@@ -737,7 +750,7 @@
                         </div>
                         <div class="form-group">
                             <label>Alamat</label>
-                            <input type="text" id="alamattukng" name="alamattukng" class="form-control alamattukng" placeholder="Masukan Nomor Alamat user">
+                            <input type="text" id="alamattukng" name="alamattukng" class="form-control alamattukng" placeholder="Masukan Nomor Alamat">
                             <div id="validationServerusernameFeedback" class="invalid-feedback alamattukngmsg">
                             </div>
                         </div>
@@ -784,6 +797,14 @@
                         <div class="form-group">
                             <label>Kota</label>
                             <input type="text" id="kotau" name="kotau" class="form-control" placeholder="Masukan Kota">
+                        </div>
+                        <div class="form-group">
+                            <label>Bank</label>
+                            <input type="text" id="banku1" name="banku1" class="form-control" placeholder="Masukan bank">
+                        </div>
+                        <div class="form-group">
+                            <label>No Rekening</label>
+                            <input type="text" id="no_rek1" name="no_rek1" class="form-control" placeholder="Masukan no rekening">
                         </div>
                     </div>
                 </div>
@@ -1402,7 +1423,6 @@
         })
     })
 
-
     function OpenModalData(jenis) {
         if (jenis == 'supplier') {
             $('#titlesupp').html('Tambah Data Supplier')
@@ -1462,6 +1482,8 @@
                     $('#alamatu').val(result.alamat_cust);
                     $('#nohpu').val(result.nohp_cust);
                     $('#kotau').val(result.kota_cust);
+                    $('#no_rek1').val(result.no_rekening);
+                    $('#banku1').val(result.bank);
                     $('#id_cust').val(id);
                     $('#modal-updatelg').modal('toggle');
                 }

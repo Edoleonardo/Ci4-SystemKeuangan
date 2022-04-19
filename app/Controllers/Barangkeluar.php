@@ -120,6 +120,8 @@ class Barangkeluar extends BaseController
                     'alamat_cust' => $this->request->getVar('alamat'),
                     'kota_cust' => $this->request->getVar('kota'),
                     'sales_cust' => '-',
+                    'no_rekening' => $this->request->getVar('no_rek1'),
+                    'bank' => $this->request->getVar('banku1'),
                     'point' => '0',
 
                 ]);
@@ -565,7 +567,7 @@ class Barangkeluar extends BaseController
                     if ($this->request->getVar('pembayaran') == 'Tunai&Debit/CC') {
                         $cas = ($this->request->getVar('charge') != null) ? $this->request->getVar('charge') : 0;
                         $blt = ($this->request->getVar('pembulatan') != null) ? $this->request->getVar('pembulatan') : 0;
-                        $totalbayar = $datapenjualan['total_harga'] + ($cas * ($datapenjualan['total_harga'] / 100));
+                        $totalbayar = round($datapenjualan['total_harga'] + ($cas * ($this->request->getVar('debitcc') / 100)));
                         $hasil = $totalbayar - ($this->request->getVar('debitcc') + $this->request->getVar('tunai') + $blt);
                     }
                     if ($this->request->getVar('pembayaran') == 'Tunai') {
@@ -579,13 +581,13 @@ class Barangkeluar extends BaseController
                     if ($this->request->getVar('pembayaran') == 'Debit/CCTranfer') {
                         $cas = ($this->request->getVar('charge') != null) ? $this->request->getVar('charge') : 0;
                         $blt = ($this->request->getVar('pembulatan') != null) ? $this->request->getVar('pembulatan') : 0;
-                        $totalbayar = $datapenjualan['total_harga'] + ($cas * ($datapenjualan['total_harga'] / 100));
+                        $totalbayar = round($datapenjualan['total_harga'] + ($cas * ($this->request->getVar('debitcc') / 100)));
                         $hasil = $totalbayar - ($this->request->getVar('debitcc') + $this->request->getVar('transfer') + $blt);
                     }
                     if ($this->request->getVar('pembayaran') == 'Debit/CC') {
                         $cas = ($this->request->getVar('charge') != null) ? $this->request->getVar('charge') : 0;
                         $blt = ($this->request->getVar('pembulatan') != null) ? $this->request->getVar('pembulatan') : 0;
-                        $totalbayar = $datapenjualan['total_harga'] + ($cas * ($datapenjualan['total_harga'] / 100));
+                        $totalbayar = round($datapenjualan['total_harga'] + ($cas * ($this->request->getVar('debitcc') / 100)));
                         $hasil = $totalbayar - ($this->request->getVar('debitcc') + $blt);
                     }
                     if ($hasil == 0) {
@@ -616,7 +618,7 @@ class Barangkeluar extends BaseController
                     } else {
                         $msg = [
                             'error' => [
-                                'kurang' => 'Bayar Kurang / lebih'
+                                'kurang' => 'Pembayaran Kurang ' . $hasil
                             ]
                         ];
                         // $msg = $hasil;

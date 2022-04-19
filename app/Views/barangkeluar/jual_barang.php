@@ -2,6 +2,8 @@
 <?= $this->section('content') ?>
 <script type="text/javascript" src="/js/jquery.js"></script>
 <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="/js/html5-qrcode.min_.js"></script>
+
 <style>
     .table>tbody>tr>* {
         vertical-align: middle;
@@ -98,7 +100,7 @@
                         <div class="form-group" style="margin: 1mm;">
                             <label>Kode Barang</label>
                             <div class="input-group input-group-sm">
-                                <input type="text" class="form-control kodebarang" id="kodebarang" onkeyup="ScanBarcode()" name="kodebarang" placeholder="Masukan Nomor Nota Supplier">
+                                <input autocomplete="off" type="text" onfocus="this.select()" class="form-control kodebarang" id="kodebarang" onkeyup="ScanBarcode()" name="kodebarang" placeholder="Masukan Kode">
                                 <span class="input-group-append">
                                     <button type="submit" id="btnsubmitform" class="btn btn-info btn-flat btnsubmitform">Ok</button>
                                 </span>
@@ -117,18 +119,21 @@
                     <a class="btn btn-app tambahcustomer" id="tambahcustomer" data-toggle="modal" data-target="#modal-lg">
                         <i class="fas fa-users"></i> Tambah Customer
                     </a>
-                    <a type="button" onclick="Batal()" class="btn btn-app">
+                    <!-- <a type="button" onclick="Batal()" class="btn btn-app">
                         <i class="fas fa-window-close"></i> Batal Jual
-                    </a>
+                    </a> -->
                     <a class="btn btn-app bg-danger" type="button" data-toggle="modal" data-target="#modal-bayar">
                         <i class="fas fa-money-bill"></i> Bayar
+                    </a>
+                    <a class="btn btn-app bg-primary" type="button" onclick="ScanCamBarcode()">
+                        <i class="fas Example of barcode fa-camera"></i> Scan Barcode
                     </a>
                 </div>
                 <!-- /.card-body -->
             </div>
         </div>
 </div>
-<div class="card ">
+<div class="card">
     <!-- /.card-header -->
     <div class="card-body">
         <br>
@@ -260,8 +265,96 @@
 </div>
 <!-- /.content-wrapper -->
 
+<!-- <div class="modal fade" id="modal-bayarrrrr">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Pembayaran</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form action="/pembayaranform" id="pembayaranform" class="pembayaranform" name="pembayaranform">
+                    <?= csrf_field(); ?>
+                    <div class="card-header mx-auto">
+                        <h3 class="card-title" style=" padding-left: 500px; font-weight: bold;" id="totalbersih"></h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label>Tunai</label><input type="number" onkeyup="byrtunai()" min="0" id="tunai" name="tunai" class="form-control" placeholder="Masukan tunai">
+                            <div id="validationServerUsernameFeedback" class="invalid-feedback tunaimsg"></div>
+                        </div>
+                        <div class="form-group">
+                            <label>Transfer</label><input type="number" onkeyup="byrtransfer()" min="0" id="transfer" name="transfer" class="form-control" placeholder="Masukan transfer">
+                            <div id="validationServerUsernameFeedback" class="invalid-feedback transfermsg"></div>
+                        </div>
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-9">
+                                    <label>Debit/CC</label>
+                                    <input type="number" onkeyup="byrdebitcc()" min="0" id="debitcc" name="debitcc" class="form-control" placeholder="Masukan debit/cc">
+                                    <div id="validationServerUsernameFeedback" class="invalid-feedback debitccmsg"></div>
+                                </div>
+                                <div class="col-3">
+                                    <label>Charge %</label><input type="number" onkeyup="brycas()" step="0.01" id="charge" name="charge" class="form-control" placeholder="Masukan Charge">
+                                    <div id="validationServerUsernameFeedback" class="invalid-feedback chargemsg"></div>
+                                </div>
+                            </div>
+                        </div>
 
-<!-- Control Sidebar -->
+                        <div class="row">
+                            <div class="col-ml-6">
+                                <div class="form-group">
+                                    <?php foreach ($bank as $m) : ?>
+                                        <div class="form-group">
+                                            <input class="form-check-input" type="radio" value="<?= $m['nama_bank'] ?>">
+                                            <labelclass="form-check-label" style="font-weight: bold;"><?= $m['nama_bank'] ?></label>
+                                        </div>
+                                    <?php endforeach; ?>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="card">
+                                    <div class="card-body table-responsive p-0">
+                                        <table class="table table-head-fixed text-nowrap">
+                                            <tbody>
+                                                <tr>
+                                                    <td>Total Berat Kotor</td>
+                                                    <td id="totalberatkotorhtml"></td>
+                                                    <td>Total Berat Bersih</td>
+                                                    <td id="totalberatbersihhtml"></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Total Ongkos</td>
+                                                    <td id="totalongkoshtml"></td>
+                                                    <td>Pembulatan</td>
+                                                    <td id="pembulatanhtml"></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Total Bersih</td>
+                                                    <td id="totalbersih"></td>
+                                                    <td>Harus Bayar</td>
+                                                    <td id="totalbersih1"></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-primary btnbayar">Bayar</button>
+            </div>
+            </form>
+        </div>
+    </div>
+</div> -->
 <div class="modal fade" id="modal-bayar">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
@@ -277,11 +370,10 @@
                     <div class="row">
                         <div class="col-sm-6">
                             <div class="col-sm-12">
-                                <!-- text input -->
                                 <div class="card">
                                     <div class="form-group" style="margin: 1mm;">
                                         <label>Nomor Tlp Customer</label>
-                                        <input autocomplete="off" type="tel" class="form-control inputcustomer" id="inputcustomer" name="inputcustomer" value="<?= (isset($datapenjualan['nohp_cust'])) ? $datapenjualan['nohp_cust'] : '' ?>" placeholder="Masukan data customer">
+                                        <input autocomplete="off" type="tel" class="form-control inputcustomer" id="inputcustomer" name="inputcustomer" value="<?= (isset($datapenjualan['nohp_cust'])) ? $datapenjualan['nohp_cust'] : '' ?>" placeholder="Masukan NOhp customer">
                                         <div id="validationServerUsernameFeedback" class="invalid-feedback inputcustomermsg">
                                         </div>
                                     </div>
@@ -294,9 +386,7 @@
                             </div>
                             <div class="col-sm-12">
                                 <div class="card">
-                                    <!-- ./card-header -->
                                     <div class="p-0">
-                                        <!-- text input -->
                                         <div class="row">
                                             <div class="col-sm-6">
                                                 <div class="form-group">
@@ -324,8 +414,6 @@
                                             </div>
                                             <div class="col-sm-6">
                                                 <div class="form-group metodebayar2">
-                                                    <!-- <label>Debit/CC</label> -->
-                                                    <!-- <input type="number" min="0" id="debitcc" name="debitcc" class="form-control" placeholder="Masukan Debit"> -->
                                                 </div>
                                             </div>
                                             <div class="col-sm-6">
@@ -334,13 +422,11 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <!-- /.card-body -->
                                 </div>
                             </div>
                         </div>
                         <div class="col-sm-6">
                             <div class="card">
-                                <!-- /.card-header -->
                                 <div class="card-body p-0">
                                     <table class="table table-hover text-nowrap">
                                         <tbody>
@@ -379,7 +465,6 @@
                                         </tbody>
                                     </table>
                                 </div>
-                                <!-- /.card-body -->
                             </div>
                         </div>
                     </div>
@@ -390,9 +475,7 @@
             </div>
             </form>
         </div>
-        <!-- /.modal-content -->
     </div>
-    <!-- /.modal-dialog -->
 </div>
 <div class="modal fade" id="modal-lg">
     <div class="modal-dialog modal-lg">
@@ -409,23 +492,31 @@
                     <div class="col-12">
                         <div class="form-group">
                             <label>Nama Customer</label>
-                            <input type="text" id="nama_cust" name="nama_cust" class="form-control nama_cust" placeholder="Masukan Nomor Nota Supplier">
+                            <input autocomplete="off" type="text" id="nama_cust" name="nama_cust" class="form-control nama_cust" placeholder="Masukan Nama">
                             <div id="validationServerUsernameFeedback" class="invalid-feedback nama_custmsg">
                             </div>
                         </div>
                         <div class="form-group">
                             <label>Nomor Hp</label>
-                            <input type="number" id="nohp" name="nohp" class="form-control nohp" placeholder="Masukan Nomor Nota Supplier">
+                            <input autocomplete="off" type="number" id="nohp" name="nohp" class="form-control nohp" placeholder="Masukan Nomor No Hp">
                             <div id="validationServerUsernameFeedback" class="invalid-feedback nohpmsg">
                             </div>
                         </div>
                         <div class="form-group">
                             <label>Alamat</label>
-                            <input type="text" id="alamat" name="alamat" class="form-control" placeholder="Masukan Nomor Nota Supplier">
+                            <input type="text" id="alamat" name="alamat" class="form-control" placeholder="Masukan Alamat">
                         </div>
                         <div class="form-group">
                             <label>Kota</label>
-                            <input type="text" id="kota" name="kota" class="form-control" placeholder="Masukan Nomor Nota Supplier">
+                            <input type="text" id="kota" name="kota" class="form-control" placeholder="Masukan Kota">
+                        </div>
+                        <div class="form-group">
+                            <label>Bank</label>
+                            <input type="text" id="banku1" name="banku1" class="form-control" placeholder="Masukan bank">
+                        </div>
+                        <div class="form-group">
+                            <label>No Rekening</label>
+                            <input autocomplete="off" type="text" id="no_rek1" name="no_rek1" class="form-control" placeholder="Masukan no rekening">
                         </div>
                     </div>
                 </div>
@@ -439,6 +530,28 @@
 </div>
 <!-- /.modal-dialog -->
 </div>
+<div class="modal fade" id="modal-scan">
+    <div class="modal-dialog modal-l">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">ScanBarcode</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div style="width:500px;" id="reader"></div>
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <button type="button" class="btn btn-default" onclick="matiinscan()">Tutup</button>
+                    <button type="button" class="btn btn-primary" onclick="matiinscan()">Selesai</button>
+                </div>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+</div>
 <aside class="control-sidebar control-sidebar-dark">
     <!-- Control sidebar content goes here -->
 </aside>
@@ -448,6 +561,63 @@
 
 </footer>
 <script type="text/javascript">
+    const html5QrCode = new Html5Qrcode("reader");
+
+    function matiinscan() {
+        html5QrCode.stop().then((ignore) => {
+            $('#modal-scan').modal('toggle')
+        }).catch((err) => {
+            // Stop failed, handle it.
+        });
+    }
+
+    function ScanCamBarcode() {
+        $('#modal-scan').modal('toggle')
+        Html5Qrcode.getCameras().then(devices => {
+            /**
+             * devices would be an array of objects of type:
+             * { id: "id", label: "label" }
+             */
+            if (devices && devices.length) {
+                var cameraId = devices[1].id;
+                if (devices[1].id) {
+                    var cameraId = devices[1].id;
+                } else {
+                    var cameraId = devices[0].id;
+                }
+                // .. use this to start scanning.
+                html5QrCode.start(
+                        cameraId, {
+                            fps: 10, // Optional, frame per seconds for qr code scanning
+                            qrbox: {
+                                width: 250,
+                                height: 250,
+                            }, // Optional, if you want bounded box UI
+                        },
+                        (decodedText, decodedResult) => {
+                            $('#kodebarang').val(decodedText)
+                            ScanBarcode()
+                            html5QrCode.stop().then((ignore) => {
+                                $('#modal-scan').modal('toggle')
+                            }).catch((err) => {
+                                // Stop failed, handle it.
+                            });
+
+
+                        },
+                        (errorMessage) => {
+                            // parse error, ignore it.
+                        })
+                    .catch((err) => {
+                        // Start failed, handle it.
+                    });
+
+            }
+        }).catch(err => {
+            // handle err
+        });
+    }
+
     function UbahKet(id, value) {
         $.ajax({
             type: "get",
@@ -586,7 +756,6 @@
             $('#debitcc').val(harusbayar);
             byrdebitcc()
         }
-        console.log(harusbayar)
     }
 
     function tampilcustomer() {
@@ -736,7 +905,6 @@
                                     $('.btnbayar').attr('type', 'submit')
                                 },
                                 success: function(result) {
-                                    console.log(result)
                                     if (result != 'error') {
                                         if (result.error) {
                                             if (result.error.debitcc) {
@@ -800,7 +968,6 @@
                                                 allowOutsideClick: false
                                             }).then((choose) => {
                                                 if (choose.isConfirmed) {
-                                                    // console.log(result)
                                                     // $('#modal-bayar').modal('toggle');
                                                     // $("#refreshpembayaran").load("/draftpenjualan/" + document.getElementById('dateid').value + " #refreshpembayaran");
                                                     // $("#refreshtombol").load("/draftpenjualan/" + document.getElementById('dateid').value + " #refreshtombol");
@@ -853,7 +1020,7 @@
 
         var DebitCC = '<label>Debit/CC</label><input type="number" onkeyup = "byrdebitcc()" min="0" id="debitcc" name="debitcc" class="form-control" placeholder="Masukan debit/cc"><div id="validationServerUsernameFeedback" class="invalid-feedback debitccmsg"></div>'
         var NamaBank = '<label>Nama Bank Debit/CC</label><select onchange = "byrnamabank()" type="text" id="namabank" name="namabank" class="form-control" placeholder="Masukan Nama Bank"><?php foreach ($bank as $m) : ?><option value="<?= $m['nama_bank'] ?>"><?= $m['nama_bank'] ?> </option><?php endforeach; ?></select><div id="validationServerUsernameFeedback" class="invalid-feedback namabankmsg"></div>'
-        var Charge = '<label>Charge %</label><input type="number" onkeyup = "brycas()" step="0.01" id="charge" name="charge" class="form-control" placeholder="Masukan Charge"><div id="validationServerUsernameFeedback" class="invalid-feedback chargemsg"></div>'
+        var Charge = '<label>Charge %</label><input type="number" onkeyup = "byrdebitcc()" step="0.01" id="charge" name="charge" class="form-control" placeholder="Masukan Charge"><div id="validationServerUsernameFeedback" class="invalid-feedback chargemsg"></div>'
         var Transfer = '<label>Transfer</label><input type="number" onkeyup = "byrtransfer()" min="0" id="transfer" name="transfer" class="form-control" placeholder="Masukan transfer"><div id="validationServerUsernameFeedback" class="invalid-feedback transfermsg"></div>'
         var Tunai = '<label>Tunai</label><input type="number" onkeyup = "byrtunai()" min="0" id="tunai" name="tunai" class="form-control" placeholder="Masukan tunai"><div id="validationServerUsernameFeedback" class="invalid-feedback tunaimsg"></div>'
 
@@ -958,24 +1125,25 @@
         const totalbersih = document.getElementById('totalbersih').innerHTML
         totalbersihval = parseFloat(totalbersih.replaceAll('.', ''))
         var hasil = totalbersihval - (bulat + debitcc + transfer + tunai)
-        document.getElementById('totalbersih1').innerHTML = hasil.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
+        document.getElementById('totalbersih1').innerHTML = Math.round(hasil).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
         document.getElementById('pembulatanhtml').innerHTML = bulat.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
         isivalue()
     }
 
-    function brycas() {
-        var val = document.getElementById('charge').value
-        const totalbersih = document.getElementById('totalbersih01').innerHTML
-        totalbersihval = parseFloat(totalbersih.replaceAll('.', ''))
-        hasil = totalbersihval + (val * (totalbersihval / 100))
-        document.getElementById('totalbersih').innerHTML = hasil.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
-        document.getElementById('totalbersih1').innerHTML = hasil.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
-        document.getElementById('chargebyr').innerHTML = val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".") + '%'
-        // myPembulatan()
-        byrdebitcc()
-        byrtransfer()
-        byrtunai()
-    }
+    // function brycas() {
+    //     var val = document.getElementById('charge').value
+    //     var debitcc = document.getElementById('debitcc').value
+    //     const totalbersih = document.getElementById('totalbersih01').innerHTML
+    //     totalbersihval = parseFloat(totalbersih.replaceAll('.', ''))
+    //     hasil = totalbersihval + (val * (debitcc / 100))
+    //     document.getElementById('totalbersih').innerHTML = Math.round(hasil).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
+    //     document.getElementById('totalbersih1').innerHTML = Math.round(hasil).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
+    //     document.getElementById('chargebyr').innerHTML = val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".") + '%'
+    //     // myPembulatan()
+    //     byrdebitcc()
+    //     byrtransfer()
+    //     byrtunai()
+    // }
 
     function byrdebitcc() {
         if (document.getElementById('pembulatan')) {
@@ -998,11 +1166,17 @@
         } else {
             tunai = 0
         }
-        const totalbersih = document.getElementById('totalbersih').innerHTML
+        charge = (isNaN(parseFloat(document.getElementById('charge').value))) ? 0 : parseFloat(document.getElementById('charge').value)
+        var val = charge
+        var debitcc = parseFloat(document.getElementById('debitcc').value)
+        const totalbersih = document.getElementById('totalbersih01').innerHTML
         totalbersihval = parseFloat(totalbersih.replaceAll('.', ''))
-        hasil = totalbersihval - (debitcc + bulat + tunai + transfer)
-        document.getElementById('debitccbyr').innerHTML = Math.round(debitcc).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
+        hasilcas = totalbersihval + (val * (debitcc / 100))
+        hasil = hasilcas - (debitcc + bulat + tunai + transfer)
+        document.getElementById('totalbersih').innerHTML = Math.round(hasilcas).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
         document.getElementById('totalbersih1').innerHTML = Math.round(hasil).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
+        document.getElementById('chargebyr').innerHTML = val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".") + '%'
+
 
     }
 
@@ -1063,22 +1237,22 @@
 
     }
 
-    function Batal() {
-        Swal.fire({
-            title: 'Batal Penjualan ',
-            text: "Apakah Ingin Batal Penjualan ?",
-            icon: 'info',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Batal',
-        }).then((result) => {
-            if (result.isConfirmed) {
-                window.location.href = "<?php echo base_url('batalpenjualan'); ?>"
-            }
-        })
+    // function Batal() {
+    //     Swal.fire({
+    //         title: 'Batal Penjualan ',
+    //         text: "Apakah Ingin Batal Penjualan ?",
+    //         icon: 'info',
+    //         showCancelButton: true,
+    //         confirmButtonColor: '#3085d6',
+    //         cancelButtonColor: '#d33',
+    //         confirmButtonText: 'Batal',
+    //     }).then((result) => {
+    //         if (result.isConfirmed) {
+    //             window.location.href = "<?php echo base_url('batalpenjualan'); ?>"
+    //         }
+    //     })
 
-    };
+    // };
 
     function ScanBarcode() {
         // checkcust()
@@ -1186,6 +1360,10 @@
                         $('.nama_custmsg').html('')
                         tampilcustomer()
                         $('#modal-lg').modal('toggle');
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Berhasil Tambah',
+                        })
                     }
 
                 },

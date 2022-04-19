@@ -348,7 +348,7 @@
                         <div class="col-4">
                             <div class="form-group" style="margin: 1mm;">
                                 <label>Harga Berat Murni</label>
-                                <input type="number" class="form-control harga_murni" id="harga_murni" name="harga_murni" placeholder="Masukan harga_murni">
+                                <input type="number" class="form-control harga_murni" id="harga_murni" name="harga_murni" placeholder="Masukan harga murni">
                                 <div id="validationServerUsernameFeedback" class="invalid-feedback harga_murnimsg">
                                 </div>
                             </div>

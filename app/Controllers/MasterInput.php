@@ -535,6 +535,8 @@ class MasterInput extends BaseController
                     'nama' => $this->request->getVar('nama_custu'),
                     'alamat_cust' => $this->request->getVar('alamatu'),
                     'kota_cust' => $this->request->getVar('kotau'),
+                    'bank' => $this->request->getVar('banku1'),
+                    'no_rekening' => $this->request->getVar('no_rek1'),
                 ]);
                 $msg = [
                     'pesan' => 'Berahasil'

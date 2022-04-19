@@ -369,10 +369,10 @@ class BuybackCust extends BaseController
                 if ($saldobiaya['total_akhir_tunai'] >= $this->request->getVar('tunai') && $this->request->getVar('pembayaran') == 'Tunai') {
                     $sukses = true;
                 }
-                if ($saldobiaya['total_akhir_transfer'] >= $this->request->getVar('transfer') && $this->request->getVar('pembayaran') == 'Transfer') {
+                if ($this->request->getVar('pembayaran') == 'Transfer') {
                     $sukses = true;
                 }
-                if ($saldobiaya['total_akhir_transfer'] >= $this->request->getVar('transfer') && $saldobiaya['total_akhir_tunai'] >= $this->request->getVar('tunai') && $this->request->getVar('pembayaran') == 'Tunai&Transfer') {
+                if ($saldobiaya['total_akhir_tunai'] >= $this->request->getVar('tunai') && $this->request->getVar('pembayaran') == 'Tunai&Transfer') {
                     $sukses = true;
                 }
                 if (isset($sukses)) {

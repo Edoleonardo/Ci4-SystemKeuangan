@@ -2,6 +2,7 @@
 <?= $this->section('content') ?>
 <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/webcamjs/1.0.26/webcam.min.js"></script>
+<script src="/js/html5-qrcode.min_.js"></script>
 <style>
     .table>tbody>tr>* {
         vertical-align: middle;
@@ -10,6 +11,10 @@
 
     .imgg {
         width: 100px;
+    }
+
+    .row {
+        display: flex;
     }
 </style>
 <!-- Content Wrapper. Contains page content -->
@@ -61,7 +66,7 @@
                         <a class="btn btn-app bg-primary" type="button" onclick="SelesaiOpname()">
                             <i class="fas fa-check"></i> Selesai Stock Opname
                         </a>
-                        <a class="btn btn-app bg-primary" type="button" onclick="OpenScanBarcode()">
+                        <a class="btn btn-app bg-primary" type="button" onclick="ScanBarcode()">
                             <i class="fas Example of barcode fa-camera"></i> Scan Barcode
                         </a>
                     </div>
@@ -118,12 +123,210 @@
 <!-- Control Sidebar -->
 <!-- /.modal-dialog -->
 
-<div id="openscanbarcode">
+<div class="modal fade" id="modal-scan">
+    <div class="modal-dialog modal-l">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">ScanBarcode</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div style="width:500px;" id="reader"></div>
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <button type="button" class="btn btn-default" onclick="matiinscan()">Tutup</button>
+                    <button type="button" class="btn btn-primary" onclick="matiinscan()">Selesai</button>
+                </div>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
 </div>
 <div id="openmodaldetail">
 </div>
-<div id="openmodaledit">
+<div class="modal fade" id="modal-edit">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Modal Edit Opname</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form action="/formeditopname" name="formeditopname" id="formeditopname" class="formeditopname" method="post" enctype="multipart/form-data">
+                <?= csrf_field(); ?>
+                <input type="hidden" name="iddetail" id="iddetail" value="">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-sm-2">
+                            <!-- text input -->
+                            <div class="form-group merek">
+                                <label>Merek</label>
+                                <select name="merek" class="form-control" id="merek">
+                                    <?php foreach ($merek as $m) : ?>
+                                        <option value="<?= $m['nama_merek'] ?>"><?= $m['nama_merek'] ?></option>
+                                    <?php endforeach; ?>
+                                    <option value="-">-</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-sm-2">
+                            <!-- text input -->
+                            <div class="form-group">
+                                <label>Kadar</label>
+                                <select name="kadar" class="form-control" id="kadar">
+                                    <?php foreach ($kadar as $m) : ?>
+                                        <option value="<?= $m['nama_kadar'] ?>"><?= $m['nama_kadar'] ?></option>
+                                    <?php endforeach; ?>
+                                    <option value="-">-</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-sm-2">
+                            <!-- text input -->
+                            <div class="form-group">
+                                <label>Jenis</label>
+                                <select name="jenis" class="form-control" id="jenis">
+                                    <?php foreach ($jenis as $m) : ?>
+                                        <option value="<?= $m['nama'] ?>"><?= $m['nama'] ?></option>
+                                    <?php endforeach; ?>
+                                    <option value="-">-</option>
+                                </select>
+                                <!-- <input type="text" name="jenis" id="jenis" class="form-control" placeholder="Masukan Jenis"> -->
+                                <div id="validationServerUsernameFeedback" class="invalid-feedback jenismsg">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-2">
+                            <!-- text input -->
+                            <div class="form-group">
+                                <label>Berat</label>
+                                <input type="number" step="0.01" id="berat" name="berat" class="form-control" placeholder="Masukan Berat Bersih">
+                                <div id="validationServerUsernameFeedback" class="invalid-feedback beratmsg">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <!-- text input -->
+                            <div class="form-group">
+                                <label>Model</label>
+                                <input type="text" name="model" id="model" class="form-control" placeholder="Masukan Model Barang">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <!-- text input -->
+                            <div class="form-group">
+                                <label>Keterangan</label>
+                                <input type="text" name="keterangan" id="keterangan" class="form-control" placeholder="Masukan Keterangan">
+                            </div>
+                        </div>
+                        <div class="col-sm-3">
+                            <!-- text input -->
+                            <div class="form-group">
+                                <label>Qty</label>
+                                <input type="Number" id="qty" name="qty" class="form-control" placeholder="Masukan jumlah">
+                                <div id="validationServerUsernameFeedback" class="invalid-feedback qtymsg">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-3">
+                            <!-- text input -->
+                            <div class="form-group">
+                                <label>Nilai Tukar</label>
+                                <input type="number" id="nilai_tukar" name="nilai_tukar" class="form-control" placeholder="Masukan Nilai Tukar">
+                                <div id="validationServerUsernameFeedback" class="invalid-feedback nilai_tukarmsg">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-2">
+                            <!-- text input -->
+                            <div class="form-group">
+                                <label>Ongkos</label>
+                                <input type="number" value="0" name="ongkos" id="ongkos" class="form-control ongkos" placeholder="Masukan Ongkos">
+                                <div id="validationServerUsernameFeedback" class="invalid-feedback ongkosmsg">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-3">
+                            <!-- text input -->
+                            <div class="form-group">
+                                <label>Harga Beli</label>
+                                <input type="number" name="harga_beli" id="harga_beli" class="form-control harga_beli" placeholder="Masukan Harga Beli">
+                                <div id="validationServerUsernameFeedback" class="invalid-feedback harga_belimsg">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-3">
+                            <!-- text input -->
+                            <div class="form-group">
+                                <label>Foto</label><br>
+                                <button type="button" id="ambilgbr" class="btn btn-primary" data-toggle="modal" data-target="#modal-foto" onclick="cameranyala()">
+                                    <i class="fa fa-camera"></i>
+                                </button>
+                                <div id="validationServerUsernameFeedback" class="invalid-feedback ambilgbrmsg"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal fade" id="modal-foto">
+                    <div class="modal-dialog modal-default">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h4 class="modal-title">Ambil Foto</h4>
+                                <button type="button" class="close" onclick="$('#modal-foto').modal('toggle')" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <div class="form-group">
+                                            <div class="form-group"><label>Gambar</label>
+                                                <div class="custom-file">
+                                                    <input type="file" name="gambar" class="custom-file-input browse" id="gambar" accept="image/*">
+                                                    <label style="text-align: left" class="custom-file-label" for="gambar">Pilih Gambar</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group">
+                                        <div class="col-sm-12">
+                                            <div id='my_camera'>
+                                            </div>
+                                            <button style="text-align: center;" type='button' id='ambilfoto' class='btn btn-info ambilfoto' onclick='Foto_ulang()'>
+                                                <i class='fa fa-trash'></i></button>
+                                            <button type='button' id='ambilfoto' class='btn btn-info ambilfoto' onclick='Ambil_foto()'>Foto <i class='fa fa-camera'></i>
+                                            </button>
+                                            <input type='hidden' name='gambar' id='gambar' class='image-tag'>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer justify-content-between">
+                                    <button type="button" class="btn btn-default" onclick="$('#modal-foto').modal('toggle')">Close</button>
+                                    <button type="button" class="btn btn-primary" onclick="$('#modal-foto').modal('toggle')">Done</button>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- /.modal-content -->
+                    </div>
+                    <!-- /.modal-dialog -->
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Tutup</button>
+                    <button type="submit" class="btn btn-primary btntambah">Selesai Edit</button>
+            </form>
+        </div>
+    </div>
 </div>
+</div>
+
 <aside class="control-sidebar control-sidebar-dark">
     <!-- Control sidebar content goes here -->
 </aside>
@@ -133,23 +336,158 @@
 
 </footer>
 <script type="text/javascript">
-    function OpenScanBarcode() {
-        $.ajax({
-            type: "GET",
-            dataType: "json",
-            url: "<?php echo base_url('openscanbarcode'); ?>",
-            success: function(result) {
-                $('#openscanbarcode').html(result.openscan)
-                $('#modal-scan').modal('toggle')
+    const html5QrCode = new Html5Qrcode("reader");
 
+    function matiinscan() {
+        html5QrCode.stop().then((ignore) => {
+            $('#modal-scan').modal('toggle')
+        }).catch((err) => {
+            // Stop failed, handle it.
+        });
+    }
+
+    function ScanBarcode() {
+        $('#modal-scan').modal('toggle')
+        Html5Qrcode.getCameras().then(devices => {
+            /**
+             * devices would be an array of objects of type:
+             * { id: "id", label: "label" }
+             */
+            if (devices && devices.length) {
+                var cameraId = devices[1].id;
+                if (devices[1].id) {
+                    var cameraId = devices[1].id;
+                } else {
+                    var cameraId = devices[0].id;
+                }
+                // .. use this to start scanning.
+                html5QrCode.start(
+                        cameraId, {
+                            fps: 10, // Optional, frame per seconds for qr code scanning
+                            qrbox: {
+                                width: 250,
+                                height: 250,
+                            }, // Optional, if you want bounded box UI
+                        },
+                        (decodedText, decodedResult) => {
+                            console.log(decodedText)
+                            $('#kodebarang').val(decodedText)
+                            var nyala = true
+                            OpenBarcode(nyala)
+                            html5QrCode.stop().then((ignore) => {
+                                $('#modal-scan').modal('toggle')
+                            }).catch((err) => {
+                                // Stop failed, handle it.
+                            });
+
+
+                        },
+                        (errorMessage) => {
+                            // parse error, ignore it.
+                        })
+                    .catch((err) => {
+                        // Start failed, handle it.
+                    });
+
+            }
+        }).catch(err => {
+            // handle err
+        });
+    }
+    $('.formeditopname').submit(function(e) {
+        console.log('masuksubmit')
+        e.preventDefault()
+        let form = $('.formeditopname')[0];
+        let data = new FormData(form)
+        $.ajax({
+            type: "POST",
+            data: data,
+            url: $(this).attr('action'),
+            dataType: "json",
+            enctype: 'multipart/form-data',
+            contentType: false,
+            processData: false,
+            cache: false,
+            beforeSend: function() {
+                $('.btntambah').html('<i class="fa fa-spin fa-spinner">')
+            },
+            complete: function() {
+                $('.btntambah').html('Tambah')
+            },
+            success: function(result) {
+                console.log(result)
+                if (result.error) {
+                    if (result.error.qty) {
+                        $('#qty').addClass('is-invalid')
+                        $('.qtymsg').html(result.error.qty)
+                    } else {
+                        $('#qty').removeClass('is-invalid')
+                        $('.qtymsg').html('')
+                    }
+                    if (result.error.nilai_tukar) {
+                        $('#nilai_tukar').addClass('is-invalid')
+                        $('.nilai_tukarmsg').html(result.error.nilai_tukar)
+                    } else {
+                        $('#nilai_tukar').removeClass('is-invalid')
+                        $('.nilai_tukarmsg').html('')
+                    }
+                    if (result.error.jenis) {
+                        $('#jenis').addClass('is-invalid')
+                        $('.jenismsg').html(result.error.jenis)
+                    } else {
+                        $('#jenis').removeClass('is-invalid')
+                        $('.jenismsg').html('')
+                    }
+                    if (result.error.berat) {
+                        $('#berat').addClass('is-invalid')
+                        $('.beratmsg').html(result.error.berat)
+                    } else {
+                        $('#berat').removeClass('is-invalid')
+                        $('.beratmsg').html('')
+                    }
+                    if (result.error.harga_beli) {
+                        $('#harga_beli').addClass('is-invalid')
+                        $('.harga_belimsg').html(result.error.harga_beli)
+                    } else {
+                        $('#harga_beli').removeClass('is-invalid')
+                        $('.harga_belimsg').html('')
+                    }
+                    if (result.error.error) {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: result.error.error,
+                        })
+                    }
+                } else {
+                    $('#qty').removeClass('is-invalid')
+                    $('.qtymsg').html('')
+                    $('#nilai_tukar').removeClass('is-invalid')
+                    $('.nilai_tukarmsg').html('')
+                    $('#jenis').removeClass('is-invalid')
+                    $('.jenismsg').html('')
+                    $('#berat').removeClass('is-invalid')
+                    $('.beratmsg').html('')
+                    $('#harga_beli').removeClass('is-invalid')
+                    $('.harga_belimsg').html('')
+                    $('#modal-edit').modal('toggle')
+                    $('#modal-modal').modal('toggle')
+                    $(".image-tag").val('');
+                    $(".browse").val('');
+                    tampildata()
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Berhasil',
+                    })
+
+                }
             },
             error: function(xhr, ajaxOptions, thrownError) {
                 alert(xhr.status + "\n" + xhr.responseText + "\n" + thrownError);
             }
         })
-    }
+    })
 
-    function OpenBarcode() {
+    function OpenBarcode(nyala) {
         $.ajax({
             type: "GET",
             dataType: "json",
@@ -161,11 +499,21 @@
                 if (result.error) {
                     $('#kodebarang').addClass('is-invalid')
                     $('.kodebarangmsg').html(result.error)
+                    if (nyala) {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: result.error,
+                        })
+                    }
                 } else {
+                    console.log(result)
                     $('#kodebarang').removeClass('is-invalid')
                     $('.kodebarangmsg').html('')
-                    OpenModal(result.id)
                     $('#kodebarang').val('')
+                    // ModalEdit(result.id, nyala)
+                    $('#openmodaldetail').html(result.tampildetail)
+                    $('#modal-modal').modal('toggle')
+
                 }
 
             },
@@ -272,8 +620,20 @@
             },
             url: "<?php echo base_url('editopname'); ?>",
             success: function(result) {
-                $('#openmodaledit').html(result.tampilmodaledit)
+                // $('#openmodaledit').html(result.tampilmodaledit) 
                 $('#modal-edit').modal('toggle')
+                $('#iddetail').val(result.barang.id_stock)
+                $('#merek').val(result.barang.merek)
+                $('#kadar').val(result.barang.kadar)
+                $('#jenis').val(result.barang.jenis)
+                $('#berat').val(result.barang.berat)
+                $('#model').val(result.barang.model)
+                $('#keterangan').val(result.barang.keterangan)
+                $('#qty').val(result.barang.qty)
+                $('#nilai_tukar').val(result.barang.nilai_tukar)
+                $('#ongkos').val(result.barang.ongkos)
+                $('#harga_beli').val(result.barang.harga_beli)
+
             },
             error: function(xhr, ajaxOptions, thrownError) {
                 alert(xhr.status + "\n" + xhr.responseText + "\n" + thrownError);
@@ -281,83 +641,12 @@
         })
     }
     $(document).ready(function() {
+        $("#modal-foto").on("hidden.bs.modal", function() {
+            if (!$(".image-tag").val()) {
+                Webcam.reset('#my_camera')
+            }
+        });
         tampildata()
-
-        $('.formeditopname').submit(function(e) {
-            e.preventDefault()
-            let form = $('.formeditopname')[0];
-            let data = new FormData(form)
-            $.ajax({
-                type: "POST",
-                data: data,
-                url: "<?php echo base_url('formeditopname'); ?>",
-                dataType: "json",
-                enctype: 'multipart/form-data',
-                contentType: false,
-                processData: false,
-                cache: false,
-                beforeSend: function() {
-                    $('.btntambah').html('<i class="fa fa-spin fa-spinner">')
-                },
-                complete: function() {
-                    $('.btntambah').html('Tambah')
-                },
-                success: function(result) {
-                    if (result.error) {
-                        if (result.error.qty) {
-                            $('#qty').addClass('is-invalid')
-                            $('.qtymsg').html(result.error.qty)
-                        } else {
-                            $('#qty').removeClass('is-invalid')
-                            $('.qtymsg').html('')
-                        }
-                        if (result.error.nilai_tukar) {
-                            $('#nilai_tukar').addClass('is-invalid')
-                            $('.nilai_tukarmsg').html(result.error.nilai_tukar)
-                        } else {
-                            $('#nilai_tukar').removeClass('is-invalid')
-                            $('.nilai_tukarmsg').html('')
-                        }
-                        if (result.error.jenis) {
-                            $('#jenis').addClass('is-invalid')
-                            $('.jenismsg').html(result.error.jenis)
-                        } else {
-                            $('#jenis').removeClass('is-invalid')
-                            $('.jenismsg').html('')
-                        }
-                        if (result.error.berat) {
-                            $('#berat').addClass('is-invalid')
-                            $('.beratmsg').html(result.error.berat)
-                        } else {
-                            $('#berat').removeClass('is-invalid')
-                            $('.beratmsg').html('')
-                        }
-                        if (result.error.harga_beli) {
-                            $('#harga_beli').addClass('is-invalid')
-                            $('.harga_belimsg').html(result.error.harga_beli)
-                        } else {
-                            $('#harga_beli').removeClass('is-invalid')
-                            $('.harga_belimsg').html('')
-                        }
-                    } else {
-                        $('#qty').removeClass('is-invalid')
-                        $('.qtymsg').html('')
-                        $('#nilai_tukar').removeClass('is-invalid')
-                        $('.nilai_tukarmsg').html('')
-                        $('#jenis').removeClass('is-invalid')
-                        $('.jenismsg').html('')
-                        $('#berat').removeClass('is-invalid')
-                        $('.beratmsg').html('')
-                        $('#harga_beli').removeClass('is-invalid')
-                        $('.harga_belimsg').html('')
-                        tampildata()
-                    }
-                },
-                error: function(xhr, ajaxOptions, thrownError) {
-                    alert(xhr.status + "\n" + xhr.responseText + "\n" + thrownError);
-                }
-            })
-        })
     })
 
     Webcam.set({

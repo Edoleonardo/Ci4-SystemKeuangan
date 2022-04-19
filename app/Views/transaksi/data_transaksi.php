@@ -176,7 +176,7 @@
                             <!-- text input -->
                             <div class="form-group">
                                 <label>Kategori</label>
-                                <select name="kategori" id="kategori" class="form-control kategori" placeholder="Masukan Harga Beli">
+                                <select name="kategori" id="kategori" class="form-control kategori" placeholder="Masukan Kategori">
                                     <option value="masuk">Masuk</option>
                                     <option value="keluar">Keluar</option>
                                 </select>
@@ -188,7 +188,7 @@
                             <!-- text input -->
                             <div class="form-group">
                                 <label>Akun Biaya</label>
-                                <select name="nama_akun" id="nama_akun" class="form-control nama_akun" placeholder="Masukan Harga Beli">
+                                <select name="nama_akun" id="nama_akun" class="form-control nama_akun" placeholder="Masukan Akun biaya">
                                     <?php foreach ($dataakun as $row) : ?>
                                         <option value="<?= $row['id_akun_biaya'] ?>"><?= $row['nama_akun'] ?></option>
                                     <?php endforeach; ?>
@@ -210,7 +210,7 @@
                             <!-- text input -->
                             <div class="form-group">
                                 <label>Pembayaran</label>
-                                <select onchange=" myPembayaran()" name="pembayaran" id="pembayaran" class="form-control pembayaran" placeholder="Masukan Harga Beli">
+                                <select onchange=" myPembayaran()" name="pembayaran" id="pembayaran" class="form-control pembayaran" placeholder="Masukan Pembayaran">
                                     <option value="Tunai">Tunai</option>
                                     <option value="Transfer">Transfer</option>
                                     <option value="Debitcc">Debit/CC</option>

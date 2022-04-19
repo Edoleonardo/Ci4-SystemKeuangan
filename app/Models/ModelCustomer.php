@@ -10,7 +10,7 @@ class ModelCustomer extends Model
     protected $table = 'tbl_customer';
     protected $primaryKey = 'id_customer';
     protected $useTimestamps = true;
-    protected $allowedFields = ['nama', 'id_karyawan', 'nohp_cust', 'alamat_cust', 'kota_cust', 'sales_cust', 'point'];
+    protected $allowedFields = ['nama', 'id_karyawan', 'nohp_cust', 'alamat_cust', 'kota_cust', 'sales_cust', 'no_rekening', 'bank', 'point'];
 
     public function getDataCustomer($id = false)
     {

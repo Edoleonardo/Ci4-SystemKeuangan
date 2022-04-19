@@ -81,7 +81,7 @@
                                                             <div id="validationServerUsernameFeedback" class="invalid-feedback tanggal_nota_supmsg">
                                                             </div>
                                                         </div>
-                                                        <!-- <input type="text" name="kelompok" class="form-control" placeholder="Masukan Kelompok"> -->
+                                                        <!-- <input type="text" onfocus="this.select()" name="kelompok" class="form-control" placeholder="Masukan Kelompok"> -->
                                                     </div>
                                                     <div class="col-sm-2">
                                                         <!-- text input -->
@@ -94,7 +94,7 @@
                                                         <!-- text input -->
                                                         <div class="form-group">
                                                             <label>No Nota Supplier</label>
-                                                            <input type="text" id="no_nota_supp" name="no_nota_supp" value="<?= (isset($datapembelian['no_faktur_supp'])) ? $datapembelian['no_faktur_supp'] : ''; ?>" class="form-control" placeholder="Masukan Nomor Nota Supplier">
+                                                            <input type="text" onfocus="this.select()" id="no_nota_supp" name="no_nota_supp" value="<?= (isset($datapembelian['no_faktur_supp'])) ? $datapembelian['no_faktur_supp'] : ''; ?>" class="form-control" placeholder="Masukan Nomor Nota Supplier">
                                                             <div id="validationServerUsernameFeedback" class="invalid-feedback no_nota_suppmsg"></div>
                                                         </div>
                                                     </div>
@@ -113,7 +113,7 @@
                                                         <!-- text input -->
                                                         <div class="form-group">
                                                             <label>Total Berat Murni (Gr)</label>
-                                                            <input type="number" step="0.01" min="0" id="total_berat_m" name="total_berat_m" class="form-control" placeholder="Masukan Total Berat Murni" value="<?= (isset($datapembelian['total_berat_murni'])) ? $datapembelian['total_berat_murni'] : ''; ?>">
+                                                            <input type="number" onfocus="this.select()" step="0.01" min="0" id="total_berat_m" name="total_berat_m" class="form-control" placeholder="Masukan Total Berat Murni" value="<?= (isset($datapembelian['total_berat_murni'])) ? $datapembelian['total_berat_murni'] : ''; ?>">
                                                             <div id="validationServerUsernameFeedback" class="invalid-feedback total_berat_mmsg">
                                                             </div>
                                                         </div>
@@ -148,7 +148,7 @@
                                                 <div class="col-sm-2">
                                                     <div class="form-group">
                                                         <a href="#" data-toggle="modal" data-target="#modal-xl"><label>Barcode</label></a>
-                                                        <input type="text" onkeyup="PilihBarcode($('#barcode').val())" id="barcode" name="barcode" class="form-control" placeholder="Masukan barcode">
+                                                        <input type="text" onfocus="this.select()" onkeyup="PilihBarcode($('#barcode').val())" id="barcode" name="barcode" class="form-control" placeholder="Masukan barcode">
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-2">
@@ -185,7 +185,7 @@
                                                             <?php endforeach; ?>
                                                             <option value="-">-</option>
                                                         </select>
-                                                        <!-- <input type="text" name="jenis" id="jenis" class="form-control" placeholder="Masukan Jenis"> -->
+                                                        <!-- <input type="text" onfocus="this.select()" name="jenis" id="jenis" class="form-control" placeholder="Masukan Jenis"> -->
                                                         <div id="validationServerUsernameFeedback" class="invalid-feedback jenismsg">
                                                         </div>
                                                     </div>
@@ -194,7 +194,7 @@
                                                     <!-- text input -->
                                                     <div class="form-group">
                                                         <label>Berat</label>
-                                                        <input type="number" step="0.01" id="berat" name="berat" class="form-control" placeholder="Masukan Berat Bersih">
+                                                        <input type="number" onfocus="this.select()" step="0.01" id="berat" name="berat" class="form-control" placeholder="Masukan Berat">
                                                         <div id="validationServerUsernameFeedback" class="invalid-feedback beratmsg">
                                                         </div>
                                                     </div>
@@ -205,21 +205,21 @@
                                                     <!-- text input -->
                                                     <div class="form-group">
                                                         <label>Model</label>
-                                                        <input type="text" name="model" id="model" class="form-control" placeholder="Masukan Model Barang">
+                                                        <input type="text" onfocus="this.select()" name="model" id="model" class="form-control" placeholder="Masukan Model Barang">
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-3">
                                                     <!-- text input -->
                                                     <div class="form-group">
                                                         <label>Keterangan</label>
-                                                        <input type="text" name="keterangan" id="keterangan" class="form-control" placeholder="Masukan Keterangan">
+                                                        <input type="text" onfocus="this.select()" name="keterangan" id="keterangan" class="form-control" placeholder="Masukan Keterangan">
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-1">
                                                     <!-- text input -->
                                                     <div class="form-group">
                                                         <label>Qty</label>
-                                                        <input type="Number" id="qty" name="qty" min="1" class="form-control" placeholder="Masukan jumlah">
+                                                        <input type="Number" onfocus="this.select()" id="qty" name="qty" min="1" class="form-control" placeholder="Masukan jumlah">
                                                         <div id="validationServerUsernameFeedback" class="invalid-feedback qtymsg">
                                                         </div>
                                                     </div>
@@ -228,7 +228,7 @@
                                                     <!-- text input -->
                                                     <div class="form-group">
                                                         <label>Nilai Tukar</label>
-                                                        <input type="number" id="nilai_tukar" name="nilai_tukar" class="form-control" placeholder="Masukan Nilai Tukar">
+                                                        <input type="number" onfocus="this.select()" id="nilai_tukar" name="nilai_tukar" class="form-control" placeholder="Masukan Nilai Tukar">
                                                         <div id="validationServerUsernameFeedback" class="invalid-feedback nilai_tukarmsg">
                                                         </div>
                                                     </div>
@@ -237,7 +237,7 @@
                                                     <!-- text input -->
                                                     <div class="form-group">
                                                         <label>Harga Beli</label>
-                                                        <input type="number" name="harga_beli" id="harga_beli" class="form-control harga_beli" placeholder="Masukan Harga Beli">
+                                                        <input type="number" onfocus="this.select()" name="harga_beli" id="harga_beli" class="form-control harga_beli" placeholder="Masukan Harga Beli">
                                                         <div id="validationServerUsernameFeedback" class="invalid-feedback harga_belimsg">
                                                         </div>
                                                     </div>
@@ -246,7 +246,7 @@
                                                     <!-- text input -->
                                                     <div class="form-group">
                                                         <label>Ongkos</label>
-                                                        <input type="number" value="0" name="ongkos" id="ongkos" class="form-control ongkos" placeholder="Masukan Ongkos">
+                                                        <input type="number" onfocus="this.select()" value="0" name="ongkos" id="ongkos" class="form-control ongkos" placeholder="Masukan Ongkos">
                                                         <div id="validationServerUsernameFeedback" class="invalid-feedback ongkosmsg">
                                                         </div>
                                                     </div>

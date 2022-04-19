@@ -304,9 +304,9 @@
                         <form action="/scanbarcode" name="scanbarcode" id="scanbarcode" class="scanbarcode" method="post">
                             <?= csrf_field(); ?>
                             <div class="form-group" style="margin: 1mm;">
-                                <label>Masukan Barcode (Nota)</label>
+                                <label>Masukan Barcode</label>
                                 <div class="input-group input-group-sm">
-                                    <input type="text" class="form-control nobarcode" id="nobarcode" onkeyup="Scanbarcode()" name="nobarcode" placeholder="Masukan Nomor Nota">
+                                    <input type="text" class="form-control nobarcode" id="nobarcode" onkeyup="Scanbarcode()" name="nobarcode" placeholder="Masukan Barcode">
                                     <span class="input-group-append">
                                         <button type="submit" id="scanbarcodebtn" class="btn btn-info btn-flat scanbarcodebtn">Ok</button>
                                     </span>
@@ -388,7 +388,7 @@
                             <!-- text input -->
                             <div class="form-group">
                                 <label>Berat</label>
-                                <input type="number" step="0.01" id="berat1" onkeyup="HarusBayar()" name="berat1" class="form-control" placeholder="Masukan Berat Bersih">
+                                <input type="number" step="0.01" id="berat1" onkeyup="HarusBayar()" name="berat1" class="form-control" placeholder="Masukan Berat">
                                 <div id="validationServerUsernameFeedback" class="invalid-feedback berat1msg">
                                 </div>
                             </div>
@@ -553,7 +553,7 @@
                             <!-- text input -->
                             <div class="form-group">
                                 <label>Qty</label>
-                                <input type="Number" id="qty" onkeyup="totalharga()" name="qty" min="1" class="form-control" placeholder="Masukan jumlah">
+                                <input type="Number" id="qty" onkeyup="totalharga()" name="qty" min="1" class="form-control" placeholder="Masukan qty">
                                 <div id="validationServerUsernameFeedback" class="invalid-feedback qtymsg">
                                 </div>
                             </div>
@@ -781,23 +781,31 @@
                     <div class="col-12">
                         <div class="form-group">
                             <label>Nama Customer</label>
-                            <input type="text" id="nama_cust" name="nama_cust" class="form-control nama_cust" placeholder="Masukan Nomor Nota Supplier">
+                            <input autocomplete="off" type="text" id="nama_cust" name="nama_cust" class="form-control nama_cust" placeholder="Masukan Nama">
                             <div id="validationServerUsernameFeedback" class="invalid-feedback nama_custmsg">
                             </div>
                         </div>
                         <div class="form-group">
                             <label>Nomor Hp</label>
-                            <input type="number" id="nohp" name="nohp" class="form-control nohp" placeholder="Masukan Nomor Nota Supplier">
+                            <input autocomplete="off" type="number" id="nohp" name="nohp" class="form-control nohp" placeholder="Masukan No Hp">
                             <div id="validationServerUsernameFeedback" class="invalid-feedback nohpmsg">
                             </div>
                         </div>
                         <div class="form-group">
                             <label>Alamat</label>
-                            <input type="text" id="alamat" name="alamat" class="form-control" placeholder="Masukan Nomor Nota Supplier">
+                            <input type="text" id="alamat" name="alamat" class="form-control" placeholder="Masukan Alamat">
                         </div>
                         <div class="form-group">
                             <label>Kota</label>
-                            <input type="text" id="kota" name="kota" class="form-control" placeholder="Masukan Nomor Nota Supplier">
+                            <input type="text" id="kota" name="kota" class="form-control" placeholder="Masukan Kota">
+                        </div>
+                        <div class="form-group">
+                            <label>Bank</label>
+                            <input type="text" id="banku1" name="banku1" class="form-control" placeholder="Masukan bank">
+                        </div>
+                        <div class="form-group">
+                            <label>No Rekening</label>
+                            <input autocomplete="off" type="text" id="no_rek1" name="no_rek1" class="form-control" placeholder="Masukan no rekening">
                         </div>
                     </div>
                 </div>
@@ -1724,6 +1732,10 @@
                         $('.nama_custmsg').html('')
                         tampilcustomer()
                         $('#modal-cust').modal('toggle');
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Berhasil Tambah',
+                        })
                     }
 
                 },

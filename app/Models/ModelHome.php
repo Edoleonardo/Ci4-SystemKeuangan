@@ -30,7 +30,7 @@ class ModelHome extends Model
     public function getBarangOpname($id)
     {
         $db = db_connect();
-        $data = $db->query('SELECT * FROM `tbl_stock` WHERE barcode in (SELECT kode from tbl_kartustock) AND barcode = ' . $id . ';');
+        $data = $db->query('SELECT * FROM `tbl_stock` WHERE barcode not in (SELECT barcode from tbl_stock_opname) AND barcode = ' . $id . ';');
         if ($data->getResult('array')) {
             return $data->getResult('array')[0];
         } else {
@@ -40,7 +40,7 @@ class ModelHome extends Model
     public function getBarangOpnameId($id)
     {
         $db = db_connect();
-        $data = $db->query('SELECT * FROM `tbl_stock` WHERE barcode in (SELECT kode from tbl_kartustock) AND id_stock = ' . $id . ';');
+        $data = $db->query('SELECT * FROM `tbl_stock` WHERE barcode not in (SELECT barcode from tbl_stock_opname) AND id_stock = ' . $id . ';');
         if ($data->getResult('array')) {
             return $data->getResult('array')[0];
         } else {

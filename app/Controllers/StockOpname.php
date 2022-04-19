@@ -37,8 +37,12 @@ class StockOpname extends BaseController
 
     public function HomeOpname()
     {
-
-        return view('home/stock_opname');
+        $data = [
+            'merek' => $this->datamerek->getMerek(),
+            'jenis' => $this->datajenis->getJenis(),
+            'kadar' => $this->datakadar->getKadar(),
+        ];
+        return view('home/stock_opname', $data);
     }
     public function TampilOpname()
     {
@@ -78,14 +82,14 @@ class StockOpname extends BaseController
     public function EditOpname()
     {
         if ($this->request->isAJAX()) {
-            $data = [
-                'barang' => $this->modelhome->getBarang($this->request->getVar('iddetail')),
-                'merek' => $this->datamerek->getMerek(),
-                'jenis' => $this->datajenis->getJenis(),
-                'kadar' => $this->datakadar->getKadar(),
-            ];
+            // $data = [
+            //     'barang' => $this->modelhome->getBarang($this->request->getVar('iddetail')),
+            //     'merek' => $this->datamerek->getMerek(),
+            //     'jenis' => $this->datajenis->getJenis(),
+            //     'kadar' => $this->datakadar->getKadar(),
+            // ];
             $msg = [
-                'tampilmodaledit' => view('home/modaleditopname', $data),
+                'barang' => $this->modelhome->getBarang($this->request->getVar('iddetail')),
             ];
             echo json_encode($msg);
         }
@@ -99,9 +103,10 @@ class StockOpname extends BaseController
                 $data = null;
             }
             if ($data) {
-                $msg = ['id' => $data['id_stock']];
+                $data1 = ['barang' => $data];
+                $msg = ['tampildetail' => view('home/modaldetailopname', $data1)];
             } else {
-                $msg = ['error' => 'Data Tidak Ada'];
+                $msg = ['error' => 'Data Tidak Ada / Sudah Masuk'];
             }
             echo json_encode($msg);
         }
@@ -159,7 +164,6 @@ class StockOpname extends BaseController
         if ($this->request->isAJAX()) {
             date_default_timezone_set('Asia/Jakarta');
             $validation = \Config\Services::validation();
-            $filesampul = $this->request->getFile('gambar');
             // if ($filesampul->getError() != 4 || $this->request->getPost('gambar')) {
             $valid = $this->validate([
                 'nilai_tukar' => [
@@ -211,7 +215,8 @@ class StockOpname extends BaseController
                 $datastock = $this->modelhome->getBarang($this->request->getVar('iddetail'));
                 $check = $this->modelstockopname->getBarcodeData($datastock['barcode']);
                 if (!$check) {
-                    if ($this->request->getPost('gambar') && $filesampul->getError() == 4) {
+                    $filesampul = $this->request->getFile('gambar');
+                    if ($this->request->getPost('gambar') || $filesampul->getError() != 4) {
                         if (file_exists('img/' . $datastock['gambar'])) {
                             if ($datastock['gambar'] == 'default.jpg') {
                                 $micro_date = microtime();
@@ -235,12 +240,11 @@ class StockOpname extends BaseController
                             if ($filesampul->getError() == 4) {
                                 $namafile = 'default.jpg';
                             } else {
-                                $namafile = $filesampul->getRandomName(); // pake nama random
+                                // $namafile = $filesampul->getRandomName(); // pake nama random
                                 // $namafile = $filesampul->getName(); // ini pake nama asli di foto
                                 $filesampul->move('img', $namafile);
                             }
                         }
-
                         $this->modelhome->save([
                             'id_stock' => $datastock['id_stock'],
                             'id_karyawan' => $session->get('id_user'),
@@ -373,16 +377,6 @@ class StockOpname extends BaseController
             }
 
 
-            echo json_encode($msg);
-        }
-    }
-    public function OpenScanBarcode()
-    {
-        if ($this->request->isAJAX()) {
-
-            $msg = [
-                'openscan' => view('modaldetail/scanbarcodecam')
-            ];
             echo json_encode($msg);
         }
     }
