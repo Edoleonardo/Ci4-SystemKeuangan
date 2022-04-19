@@ -116,32 +116,36 @@ class StockOpname extends BaseController
         if ($this->request->isAJAX()) {
             $session = session();
             $data = $this->modelhome->getBarangOpnameId($this->request->getVar('iddetail'));
-            $check = $this->modelstockopname->getBarcodeData($data['barcode']);
-            if (!$check) {
-                $this->modelstockopname->save([
-                    'barcode' => $data['barcode'],
-                    'id_karyawan' => $session->get('id_user'),
-                    'status' => $data['status'],
-                    'tgl_faktur' => $data['tgl_faktur'],
-                    'no_faktur' => $data['no_faktur'],
-                    'tgl_faktur' => $data['tgl_faktur'],
-                    'nama_supplier' => $data['nama_supplier'],
-                    'qty' => $data['qty'],
-                    'jenis' => $data['jenis'],
-                    'model' => $data['model'],
-                    'keterangan' => $data['keterangan'],
-                    'merek' => $data['merek'],
-                    'kadar' => $data['kadar'],
-                    'berat_murni' => $data['berat_murni'],
-                    'berat' => $data['berat'],
-                    'nilai_tukar' =>  $data['nilai_tukar'],
-                    'ongkos' => $data['ongkos'],
-                    'kode_beli' => $data['kode_beli'],
-                    'harga_beli' => $data['harga_beli'],
-                    'total_harga' => $data['total_harga'],
-                    'gambar' =>  $data['gambar'],
-                ]);
-                $msg = 'sukses';
+            if ($data) {
+                $check = $this->modelstockopname->getBarcodeData($data['barcode']);
+                if (!$check) {
+                    $this->modelstockopname->save([
+                        'barcode' => $data['barcode'],
+                        'id_karyawan' => $session->get('id_user'),
+                        'status' => $data['status'],
+                        'tgl_faktur' => $data['tgl_faktur'],
+                        'no_faktur' => $data['no_faktur'],
+                        'tgl_faktur' => $data['tgl_faktur'],
+                        'nama_supplier' => $data['nama_supplier'],
+                        'qty' => $data['qty'],
+                        'jenis' => $data['jenis'],
+                        'model' => $data['model'],
+                        'keterangan' => $data['keterangan'],
+                        'merek' => $data['merek'],
+                        'kadar' => $data['kadar'],
+                        'berat_murni' => $data['berat_murni'],
+                        'berat' => $data['berat'],
+                        'nilai_tukar' =>  $data['nilai_tukar'],
+                        'ongkos' => $data['ongkos'],
+                        'kode_beli' => $data['kode_beli'],
+                        'harga_beli' => $data['harga_beli'],
+                        'total_harga' => $data['total_harga'],
+                        'gambar' =>  $data['gambar'],
+                    ]);
+                    $msg = 'sukses';
+                } else {
+                    $msg = ['error' => 'Data Tidak Ada'];
+                }
             } else {
                 $msg = ['error' => 'Data Tidak Ada'];
             }
