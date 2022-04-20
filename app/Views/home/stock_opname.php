@@ -67,7 +67,10 @@
                             <i class="fas fa-check"></i> Selesai Stock Opname
                         </a>
                         <a class="btn btn-app bg-primary" type="button" onclick="ScanBarcode()">
-                            <i class="fas Example of barcode fa-camera"></i> Scan Barcode
+                            <i class="fas Example of barcode fa-camera"></i> Scan Barcode1
+                        </a>
+                        <a class="btn btn-app bg-primary" type="button" onclick="ScanBarcode2()">
+                            <i class="fas Example of barcode fa-camera"></i> Scan Barcode2
                         </a>
                     </div>
                 </div>
@@ -139,6 +142,26 @@
                 <div class="modal-footer justify-content-between">
                     <button type="button" class="btn btn-default" onclick="matiinscan()">Tutup</button>
                     <button type="button" class="btn btn-primary" onclick="matiinscan()">Selesai</button>
+                </div>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+</div>
+<div class="modal fade" id="modal-scan2">
+    <div class="modal-dialog modal-l">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">ScanBarcode2</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div style="max-height: 500px;" id="reader2"></div>
+                <div class="modal-footer justify-content-between">
+                    <button type="button" class="btn btn-default" onclick="matiinscan2()">Tutup</button>
+                    <button type="button" class="btn btn-primary" onclick="matiinscan2()">Selesai</button>
                 </div>
             </div>
         </div>
@@ -335,7 +358,51 @@
 <footer class="main-footer">
 
 </footer>
+<script src="/js/quagga.min.js"></script>
 <script type="text/javascript">
+    //----------------------------------------------------------------------------------------
+    function ScanBarcode2() {
+        $('#modal-scan2').modal('toggle')
+        Quagga.init({
+                inputStream: {
+                    name: "Live",
+                    type: "LiveStream",
+                    constraints: {
+                        width: 450,
+                        height: 450,
+                        facingMode: "environment",
+                    },
+                    target: document.querySelector('#reader2') // Or '#yourElement' (optional)
+                },
+                decoder: {
+                    // readers: ["code_128_reader", "ean_reader", "ean_8_reader", "code_39_reader", "code_39_vin_reader", "codabar_reader", "upc_reader", "upc_e_reader", "i2of5_reader", "2of5_reader", "code_93_reader", ]
+                    readers: ["code_128_reader", "ean_reader", "ean_8_reader", "code_39_reader", "code_39_vin_reader", "codabar_reader", "upc_reader", "upc_e_reader", "i2of5_reader", "2of5_reader", "code_93_reader", ]
+
+                }
+            },
+            function(err) {
+                if (err) {
+                    console.log(err);
+                    return
+                }
+                console.log("Initialization finished. Ready to start");
+                Quagga.start();
+            });
+    }
+    Quagga.onDetected(function(data) {
+        // alert(data.codeResult.code + ' ' + data.codeResult.format)
+        $('#kodebarang').val(data.codeResult.code)
+        var nyala = false
+        OpenBarcode(nyala)
+        Quagga.stop()
+        $('#modal-scan2').modal('toggle')
+    })
+
+    function matiinscan2() {
+        Quagga.stop()
+        $('#modal-scan2').modal('toggle')
+    }
+    //----------------------------------------------------------------------------------------
     var html5QrcodeScanner = new Html5QrcodeScanner(
         "reader", {
             fps: 10,

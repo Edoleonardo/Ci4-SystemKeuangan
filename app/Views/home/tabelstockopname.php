@@ -8,26 +8,24 @@
             <th>qty</th>
             <th>Berat</th>
             <th>kadar</th>
-            <th>Aksi</th>
         </tr>
     </thead>
     <tbody>
         <?php foreach ($dataopname as $r) : ?>
             <tr>
-                <td><?= $r['barcode'] ?></td>
+                <td>
+                    <?php if (isset($r['id_stock'])) : ?>
+                        <a type="button" class="btn btn-block btn-outline-info btn-sm" href="#" onclick="OpenModal(<?= (isset($r['id_stock'])) ? $r['id_stock'] : '' ?>)"><?= $r['barcode'] ?></a>
+                    <?php else : ?>
+                        <a type="button" class="btn btn-block btn-outline-danger btn-sm" href="#" onclick="DeleteOpname(<?= (isset($r['id_stock_opname'])) ? $r['id_stock_opname'] : '' ?>)"><?= $r['barcode'] ?></a>
+                    <?php endif; ?>
+                </td>
                 <td><?= $r['jenis'] ?></td>
                 <td><?= $r['keterangan'] ?></td>
                 <td><?= $r['model'] ?></td>
                 <td><?= $r['qty'] ?></td>
                 <td><?= $r['berat'] ?></td>
                 <td><?= $r['kadar'] ?></td>
-                <td>
-                    <?php if (isset($r['id_stock'])) : ?>
-                        <a type="button" class="btn btn-block btn-outline-info btn-sm" href="#" onclick="OpenModal(<?= (isset($r['id_stock'])) ? $r['id_stock'] : '' ?>)">Detail</a>
-                    <?php else : ?>
-                        <a type="button" class="btn btn-block btn-outline-danger btn-sm" href="#" onclick="DeleteOpname(<?= (isset($r['id_stock_opname'])) ? $r['id_stock_opname'] : '' ?>)">Delete</a>
-                    <?php endif; ?>
-                </td>
             </tr>
         <?php endforeach; ?>
     </tbody>
@@ -40,7 +38,6 @@
             <th>qty</th>
             <th>Berat</th>
             <th>kadar</th>
-            <th>Aksi</th>
         </tr>
     </tfoot>
 </table>

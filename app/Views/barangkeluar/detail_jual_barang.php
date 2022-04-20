@@ -47,12 +47,12 @@
                             </tr>
                             <tr>
                                 <td>
-                                    Nama Customer : <?= $datacust['nama'] ?>
+                                    Nama Customer : <?= (isset($datacust['nama'])) ? $datacust['nama'] : ' ' ?>
                                 </td>
                             </tr>
                             <tr>
                                 <td>
-                                    No Hp : <?= $datacust['nohp_cust'] ?>
+                                    No Hp : <?= (isset($datacust['nohp_cust'])) ? $datacust['nohp_cust'] : '' ?>
                                 </td>
                             </tr>
                             <tr>
