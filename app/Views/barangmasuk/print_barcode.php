@@ -2,7 +2,7 @@
 
 use CodeItNow\BarcodeBundle\Utils\BarcodeGenerator;
 
-function barcodegenerate($kode)
+function barcodegenerate($kode, $wrn)
 {
   $barcodeG =  new BarcodeGenerator();
   $barcode = $barcodeG;
@@ -16,22 +16,17 @@ function barcodegenerate($kode)
   return '<img src="data:image/png;base64,' . $code . '" />';
 }
 ?>
-<style>
-  table,
-  td {
-    border: 1px solid;
-    padding-left: 10px;
-    padding-right: 10px;
-    padding-top: 10px;
-
-  }
-</style>
 <table>
   <tbody>
 
     <?php $i = 0;
     foreach ($databarcode as $row) :
-      if ($i == 12) {
+      if (substr($row['kode'], 0, 1) == '1') {
+        $wrn = 'yellow';
+      } else {
+        $wrn = '#FFB6C1';
+      }
+      if ($i == 3) {
         $tr1 = '<tr>';
         $tr2 = '</tr>';
         $i = 0;
@@ -41,7 +36,8 @@ function barcodegenerate($kode)
       }
       echo $tr1;
     ?>
-      <td> <?= barcodegenerate($row['barcode']) ?> </td>
+      <td style=" background-color: <?= $wrn ?> !important;  -webkit-print-color-adjust: exact;"><?= barcodegenerate($row['kode'], $wrn) ?> <br> <?= $row['merek'] ?></td>
+      <td style=" background-color: <?= $wrn ?> !important;  -webkit-print-color-adjust: exact;"><?= $row['kode'] ?> <?= $row['kadar'] ?><br><?= $row['jenis'] ?>, <?= $row['model'] ?><br><?= $row['berat'] ?></td>
     <?php $i++;
     endforeach;
     echo $tr2; ?>
@@ -50,7 +46,7 @@ function barcodegenerate($kode)
 </table>
 <style>
   @page {
-    size: A3;
+    size: A4;
     /* auto is the initial value */
     margin: 0mm;
     /* this affects the margin in the printer settings */

@@ -1,6 +1,5 @@
 {
   "dependencies": {
-    "quagga": "^0.12.1",
     "sweetalert2": "^11.3.6"
   }
 }
