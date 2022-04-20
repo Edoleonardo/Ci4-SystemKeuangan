@@ -540,6 +540,10 @@
                 if (result.error) {
                     $('#kodebarang').addClass('is-invalid')
                     $('.kodebarangmsg').html(result.error)
+                    Swal.fire({
+                        icon: 'warning',
+                        title: result.error,
+                    })
                 } else {
                     console.log(result)
                     $('#kodebarang').removeClass('is-invalid')
