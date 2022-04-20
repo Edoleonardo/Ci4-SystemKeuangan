@@ -131,7 +131,7 @@ class Home extends BaseController
         $barcode = $this->barcodeG;
         $barcode->setText($data['barcode']);
         $barcode->setType(BarcodeGenerator::Code128);
-        $barcode->setScale(2);
+        $barcode->setScale(1);
         $barcode->setThickness(25);
         $barcode->setFontSize(10);
         $code = $barcode->generate();
