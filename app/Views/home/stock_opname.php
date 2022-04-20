@@ -420,11 +420,11 @@
         function onScanSuccess(decodedText, decodedResult) {
             // handle the scanned code as you like, for example:
             console.log(decodedText)
+            $('#modal-scan').modal('toggle')
+            html5QrcodeScanner.clear();
             $('#kodebarang').val(decodedText)
             var nyala = true
             OpenBarcode(nyala)
-            $('#modal-scan').modal('toggle')
-            html5QrcodeScanner.clear();
 
         }
 
