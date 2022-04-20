@@ -61,8 +61,11 @@ class PindahBarang extends BaseController
     public function HomePindah()
     {
         $session = session();
-        // $data = $this->modeljualreal->getDataPenjualan();
-        // dd($data);
+        $data1 = $this->modeljualreal->Prinbarcode();
+        $data1 = [
+            'databarcode' => $data1
+        ];
+        // dd($data1);
         // $data = $this->modeljualreal->getDataPenjualan();
         // // dd($datapembelianreal);
         // foreach ($data as $row) {
@@ -94,7 +97,7 @@ class PindahBarang extends BaseController
         //         ]);
         //     }
         // }
-        return view('pindahindata');
+        return view('barangmasuk/print_barcode', $data1);
     }
 
     public  function inisial($nama)

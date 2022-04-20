@@ -392,8 +392,7 @@
     Quagga.onDetected(function(data) {
         // alert(data.codeResult.code + ' ' + data.codeResult.format)
         $('#kodebarang').val(data.codeResult.code)
-        var nyala = false
-        OpenBarcode(nyala)
+        OpenBarcode()
         Quagga.stop()
         $('#modal-scan2').modal('toggle')
     })
@@ -423,8 +422,7 @@
             $('#modal-scan').modal('toggle')
             html5QrcodeScanner.clear();
             $('#kodebarang').val(decodedText)
-            var nyala = true
-            OpenBarcode(nyala)
+            OpenBarcode()
 
         }
 
@@ -530,7 +528,7 @@
         })
     })
 
-    function OpenBarcode(nyala) {
+    function OpenBarcode() {
         $.ajax({
             type: "GET",
             dataType: "json",
@@ -542,12 +540,6 @@
                 if (result.error) {
                     $('#kodebarang').addClass('is-invalid')
                     $('.kodebarangmsg').html(result.error)
-                    if (nyala) {
-                        Swal.fire({
-                            icon: 'warning',
-                            title: result.error,
-                        })
-                    }
                 } else {
                     console.log(result)
                     $('#kodebarang').removeClass('is-invalid')

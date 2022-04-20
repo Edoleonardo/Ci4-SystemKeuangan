@@ -47,4 +47,10 @@ class ModelPenjualanREAL extends Model
         $data = $db->query('select max(substr(no_cuci,3,10)) no_cuci from tbl_cuci where substr(no_cuci,1,2) = "S-" limit 1');
         return $data->getResult('array')[0];
     }
+    public function Prinbarcode()
+    {
+        $db = db_connect();
+        $data = $db->query('SELECT * FROM `tbl_stock` WHERE qty != 0 ORDER BY `tbl_stock`.`barcode` ASC');
+        return $data->getResult('array');
+    }
 }
