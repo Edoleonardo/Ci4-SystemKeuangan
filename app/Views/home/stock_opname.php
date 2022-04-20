@@ -368,15 +368,15 @@
                     name: "Live",
                     type: "LiveStream",
                     constraints: {
-                        width: 450,
-                        height: 450,
+                        width: 350,
+                        height: 350,
                         facingMode: "environment",
                     },
                     target: document.querySelector('#reader2') // Or '#yourElement' (optional)
                 },
                 decoder: {
-                    // readers: ["code_128_reader", "ean_reader", "ean_8_reader", "code_39_reader", "code_39_vin_reader", "codabar_reader", "upc_reader", "upc_e_reader", "i2of5_reader", "2of5_reader", "code_93_reader", ]
-                    readers: ["code_128_reader", "code_39_reader", "code_39_vin_reader"]
+                    readers: ["code_128_reader", "ean_reader", "ean_8_reader", "code_39_reader", "code_39_vin_reader", "codabar_reader", "upc_reader", "upc_e_reader", "i2of5_reader", "2of5_reader", "code_93_reader", ]
+                    // readers: ["code_128_reader", "code_39_reader", "code_39_vin_reader"]
 
                 }
             },
