@@ -4,10 +4,10 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/webcamjs/1.0.26/webcam.min.js"></script>
 <!-- <script src="/js/html5-qrcode.min_.js"></script> -->
 <style>
-    .table>tbody>tr>* {
+    /* .table>tbody>tr>* {
         vertical-align: middle;
         text-align: center;
-    }
+    } */
 
     .imgg {
         width: 100px;
@@ -69,9 +69,9 @@
                         <a class="btn btn-app bg-primary" type="button" onclick="ScanBarcode()">
                             <i class="fas Example of barcode fa-camera"></i> Scan Barcode1
                         </a>
-                        <a class="btn btn-app bg-primary" type="button" onclick="ScanBarcode2()">
+                        <!-- <a class="btn btn-app bg-primary" type="button" onclick="ScanBarcode2()">
                             <i class="fas Example of barcode fa-camera"></i> Scan Barcode2
-                        </a>
+                        </a> -->
                     </div>
                 </div>
                 <!-- /.card -->
@@ -148,7 +148,7 @@
         <!-- /.modal-content -->
     </div>
 </div>
-<div class="modal fade" id="modal-scan2">
+<!-- <div class="modal fade" id="modal-scan2">
     <div class="modal-dialog modal-l">
         <div class="modal-content">
             <div class="modal-header">
@@ -165,9 +165,8 @@
                 </div>
             </div>
         </div>
-        <!-- /.modal-content -->
     </div>
-</div>
+</div> -->
 <div id="openmodaldetail">
 </div>
 <div class="modal fade" id="modal-edit">
@@ -361,46 +360,46 @@
 <script src="/js/quagga.min.js"></script>
 <script type="text/javascript">
     //----------------------------------------------------------------------------------------
-    function ScanBarcode2() {
-        $('#modal-scan2').modal('toggle')
-        Quagga.init({
-                inputStream: {
-                    name: "Live",
-                    type: "LiveStream",
-                    constraints: {
-                        width: 350,
-                        height: 350,
-                        facingMode: "environment",
-                    },
-                    target: document.querySelector('#reader2') // Or '#yourElement' (optional)
-                },
-                decoder: {
-                    // readers: ["code_128_reader", "ean_reader", "ean_8_reader", "code_39_reader", "code_39_vin_reader", "codabar_reader", "upc_reader", "upc_e_reader", "i2of5_reader", "2of5_reader", "code_93_reader", ]
-                    readers: ["code_128_reader", "code_39_reader"]
+    // function ScanBarcode2() {
+    //     $('#modal-scan2').modal('toggle')
+    //     Quagga.init({
+    //             inputStream: {
+    //                 name: "Live",
+    //                 type: "LiveStream",
+    //                 constraints: {
+    //                     width: 350,
+    //                     height: 350,
+    //                     facingMode: "environment",
+    //                 },
+    //                 target: document.querySelector('#reader2') // Or '#yourElement' (optional)
+    //             },
+    //             decoder: {
+    //                 // readers: ["code_128_reader", "ean_reader", "ean_8_reader", "code_39_reader", "code_39_vin_reader", "codabar_reader", "upc_reader", "upc_e_reader", "i2of5_reader", "2of5_reader", "code_93_reader", ]
+    //                 readers: ["code_128_reader", "code_39_reader"]
 
-                }
-            },
-            function(err) {
-                if (err) {
-                    console.log(err);
-                    return
-                }
-                console.log("Initialization finished. Ready to start");
-                Quagga.start();
-            });
-    }
-    Quagga.onDetected(function(data) {
-        // alert(data.codeResult.code + ' ' + data.codeResult.format)
-        $('#kodebarang').val(data.codeResult.code)
-        OpenBarcode()
-        Quagga.stop()
-        $('#modal-scan2').modal('toggle')
-    })
+    //             }
+    //         },
+    //         function(err) {
+    //             if (err) {
+    //                 console.log(err);
+    //                 return
+    //             }
+    //             console.log("Initialization finished. Ready to start");
+    //             Quagga.start();
+    //         });
+    // }
+    // Quagga.onDetected(function(data) {
+    //     // alert(data.codeResult.code + ' ' + data.codeResult.format)
+    //     $('#kodebarang').val(data.codeResult.code)
+    //     OpenBarcode()
+    //     Quagga.stop()
+    //     $('#modal-scan2').modal('toggle')
+    // })
 
-    function matiinscan2() {
-        Quagga.stop()
-        $('#modal-scan2').modal('toggle')
-    }
+    // function matiinscan2() {
+    //     Quagga.stop()
+    //     $('#modal-scan2').modal('toggle')
+    // }
     //----------------------------------------------------------------------------------------
     var html5QrcodeScanner = new Html5QrcodeScanner(
         "reader", {
@@ -422,7 +421,7 @@
             $('#modal-scan').modal('toggle')
             html5QrcodeScanner.clear();
             $('#kodebarang').val(decodedText)
-            OpenBarcode()
+            // OpenBarcode()
 
         }
 
