@@ -77,13 +77,13 @@ class ModelHome extends Model
     public function getBarcode($id)
     {
         $db = db_connect();
-        $data = $db->query('select * from tbl_stock where substr(barcode,1,1) = ' . $id . ' order by created_at DESC limit 10');
+        $data = $db->query('select * from tbl_stock where substr(barcode,1,1) = ' . $id . ' order by created_at DESC');
         return $data->getResult('array');
     }
     public function CheckData($id)
     {
         $db = db_connect();
-        $data = $db->query('select * from tbl_stock where barcode = ' . $id . ' and substr(barcode,1,1) = 4 ');
+        $data = $db->query('select * from tbl_stock where barcode = ' . $id . ' and substr(barcode,1,1) = 4  and substr(barcode,1,1) = 3');
         if ($data->getResult('array')) {
             $data = $data->getResult('array')[0];
         } else {

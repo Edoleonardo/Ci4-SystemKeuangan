@@ -88,7 +88,8 @@ $routes->get('/selesaipembayaran', ($session->get('role')) ? 'Barangmasuk::Seles
 $routes->get('/deletepembayaran', ($session->get('role')) ? 'Barangmasuk::DeletePembayaran' : 'Login::Login');
 $routes->get('/modalbarcode', ($session->get('role')) ? 'Barangmasuk::ModalBarcode' : 'Login::Login');
 $routes->get('/detailbarcode', ($session->get('role')) ? 'Barangmasuk::DetailBarcode' : 'Login::Login');
-
+$routes->POST('/pilihkelompok', ($session->get('role')) ? 'Barangmasuk::PilihKelompok' : 'Login::Login');
+$routes->get('/tampilform', ($session->get('role')) ? 'Barangmasuk::TampilForm' : 'Login::Login');
 
 $routes->get('/pindahindata', ($session->get('role')) ? 'PindahBarang::HomePindah' : 'Login::Login');
 

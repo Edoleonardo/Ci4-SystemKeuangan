@@ -36,6 +36,7 @@
                 <thead>
                   <tr>
                     <th>Tanggal Faktur</th>
+                    <th>Kelompok</th>
                     <th>Nomor Transaksi</th>
                     <th>Tanggal Jatuh Tempo</th>
                     <th>Nomor Faktur</th>
@@ -48,6 +49,7 @@
                   <?php foreach ($datapembelian as $row) : ?>
                     <tr>
                       <td><?= date("d-m-Y", strtotime($row['tgl_faktur'])); ?></td>
+                      <td><?= $row['kelompok'] ?></td>
                       <td><?= $row['no_transaksi'] ?></td>
                       <td><?= date("d-m-Y", strtotime($row['tgl_jatuh_tempo'])) ?></td>
                       <td><?= $row['no_faktur_supp'] ?></td>
@@ -77,6 +79,7 @@
                 <tfoot>
                   <tr>
                     <th>Tanggal Faktur</th>
+                    <th>Kelompok</th>
                     <th>Nomor Transaksi</th>
                     <th>Tanggal Jatuh Tempo</th>
                     <th>Nomor Faktur</th>

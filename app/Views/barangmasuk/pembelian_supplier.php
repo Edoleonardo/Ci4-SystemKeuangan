@@ -47,237 +47,55 @@
     </div>
     <!-- Main content -->
     <section class="content">
-        <div class="row">
-            <div class="col-12">
-                <div class="card">
-                    <!-- ./card-header -->
-                    <div class="card-body p-0">
-                        <table class="table table-hover">
-                            <tbody>
-                                <tr data-widget="expandable-table" aria-expanded="true">
-                                    <td>
-                                        Input Data Master
-                                    </td>
-                                </tr>
-                                <tr class="expandable-body">
-                                    <td>
-                                        <div class="p-0" style="margin: 10px;">
-                                            <form action="/ajaxinsert" name="ajaxform" id="ajaxform" class="ajaxform" method="post" enctype="multipart/form-data">
-                                                <?= csrf_field(); ?>
-                                                <div class="row">
-                                                    <div class="col-sm-2">
-                                                        <!-- text input -->
-                                                        <div class="form-group">
-                                                            <label>Tanggal Input Barang</label>
-                                                            <input type="date" id="tanggal_input" name="tanggal_input" class="form-control" value="<?php echo date('Y-m-d') ?>">
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-sm-2">
-                                                        <!-- text input -->
-                                                        <div class="form-group">
-                                                            <label>Tanggal Nota Supplier</label>
-                                                            <input type="date" name="tanggal_nota_sup" id="tanggal_nota_sup" class="form-control" value="<?= (isset($datapembelian['tgl_faktur'])) ? date_format(date_create(substr($datapembelian['tgl_faktur'], 0, 10)), "Y-m-d") : date('Y-m-d'); ?>">
-                                                            <input type="hidden" name="dateid" id="dateid" value="<?= $datapembelian['id_date_pembelian'] ?>">
-                                                            <div id="validationServerUsernameFeedback" class="invalid-feedback tanggal_nota_supmsg">
-                                                            </div>
-                                                        </div>
-                                                        <!-- <input type="text" onfocus="this.select()" name="kelompok" class="form-control" placeholder="Masukan Kelompok"> -->
-                                                    </div>
-                                                    <div class="col-sm-2">
-                                                        <!-- text input -->
-                                                        <div class="form-group">
-                                                            <label>Tanggal Jatuh Tempo </label>
-                                                            <input type="date" id="tanggal_tempo" name="tanggal_tempo" class="form-control" value="<?= (isset($datapembelian['tgl_jatuh_tempo'])) ? date_format(date_create(substr($datapembelian['tgl_jatuh_tempo'], 0, 10)), "Y-m-d") : date('Y-m-d'); ?>">
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-sm-2">
-                                                        <!-- text input -->
-                                                        <div class="form-group">
-                                                            <label>No Nota Supplier</label>
-                                                            <input type="text" onfocus="this.select()" id="no_nota_supp" name="no_nota_supp" value="<?= (isset($datapembelian['no_faktur_supp'])) ? $datapembelian['no_faktur_supp'] : ''; ?>" class="form-control" placeholder="Masukan Nomor Nota Supplier">
-                                                            <div id="validationServerUsernameFeedback" class="invalid-feedback no_nota_suppmsg"></div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-sm-2">
-                                                        <!-- text input -->
-                                                        <div class="form-group">
-                                                            <label>Nama Supplier</label>
-                                                            <select name="supplier" class="form-control" id="supplier" name="supplier">
-                                                                <?php foreach ($supplier as $m) : ?>
-                                                                    <option value="<?= $m['id_supplier'] ?>" <?= (isset($datapembelian['id_supplier']) == $m['nama_supp']) ? ($datapembelian['id_supplier'] == $m['nama_supp']) ? 'selected' : '' : ''; ?>><?= $m['nama_supp'] ?> </option>
-                                                                <?php endforeach; ?>
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-sm-2">
-                                                        <!-- text input -->
-                                                        <div class="form-group">
-                                                            <label>Total Berat Murni (Gr)</label>
-                                                            <input type="number" onfocus="this.select()" step="0.01" min="0" id="total_berat_m" name="total_berat_m" class="form-control" placeholder="Masukan Total Berat Murni" value="<?= (isset($datapembelian['total_berat_murni'])) ? $datapembelian['total_berat_murni'] : ''; ?>">
-                                                            <div id="validationServerUsernameFeedback" class="invalid-feedback total_berat_mmsg">
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr data-widget="expandable-table" aria-expanded="true">
-                                    <td>
-                                        Input Data Berulang
-                                    </td>
-                                </tr>
-                                <tr class="expandable-body">
-                                    <td>
-                                        <div class="p-0" style="margin: 10px;">
-                                            <div class="row">
-                                                <div class="col-sm-2">
-                                                    <!-- text input -->
-                                                    <div class="form-group">
-                                                        <label>Kelompok</label>
-                                                        <select name="kelompok" onchange="ModalBarcode()" class="form-control" id="kelompok" name="kelompok">
-                                                            <option value="1">Perhiasan Mas</option>
-                                                            <option value="2">Perhiasan Berlian</option>
-                                                            <option value="3">Logam Mulia (Antam, UBS, HWT)</option>
-                                                            <option value="4">Bahan Murni</option>
-                                                            <option value="5">Loose Diamond</option>
-                                                            <option value="6">Barang Dagang</option>
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                                <div class="col-sm-2">
-                                                    <div class="form-group">
-                                                        <a href="#" data-toggle="modal" data-target="#modal-xl"><label>Barcode</label></a>
-                                                        <input type="text" onfocus="this.select()" onkeyup="PilihBarcode($('#barcode').val())" id="barcode" name="barcode" class="form-control" placeholder="Masukan barcode">
-                                                    </div>
-                                                </div>
-                                                <div class="col-sm-2">
-                                                    <!-- text input -->
-                                                    <div class="form-group merek">
-                                                        <label>Merek</label>
-                                                        <select name="merek" class="form-control" id="merek">
-                                                            <?php foreach ($merek as $m) : ?>
-                                                                <option value="<?= $m['nama_merek'] ?>"><?= $m['nama_merek'] ?> </option>
-                                                            <?php endforeach; ?>
-                                                            <option value="-">-</option>
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                                <div class="col-sm-2">
-                                                    <!-- text input -->
-                                                    <div class="form-group">
-                                                        <label>Kadar</label>
-                                                        <select name="kadar" class="form-control" id="kadar">
-                                                            <?php foreach ($kadar as $m) : ?>
-                                                                <option value="<?= $m['nama_kadar'] ?>"><?= $m['nama_kadar'] ?> </option>
-                                                            <?php endforeach; ?>
-                                                            <option value="-">-</option>
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                                <div class="col-sm-2">
-                                                    <!-- text input -->
-                                                    <div class="form-group">
-                                                        <label>Jenis</label>
-                                                        <select name="jenis" class="form-control" id="jenis">
-                                                            <?php foreach ($jenis as $m) : ?>
-                                                                <option value="<?= $m['nama'] ?>"><?= $m['nama'] ?> </option>
-                                                            <?php endforeach; ?>
-                                                            <option value="-">-</option>
-                                                        </select>
-                                                        <!-- <input type="text" onfocus="this.select()" name="jenis" id="jenis" class="form-control" placeholder="Masukan Jenis"> -->
-                                                        <div id="validationServerUsernameFeedback" class="invalid-feedback jenismsg">
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="col-sm-2">
-                                                    <!-- text input -->
-                                                    <div class="form-group">
-                                                        <label>Berat</label>
-                                                        <input type="number" onfocus="this.select()" step="0.01" id="berat" name="berat" class="form-control" placeholder="Masukan Berat">
-                                                        <div id="validationServerUsernameFeedback" class="invalid-feedback beratmsg">
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="row">
-                                                <div class="col-sm-2">
-                                                    <!-- text input -->
-                                                    <div class="form-group">
-                                                        <label>Model</label>
-                                                        <input type="text" onfocus="this.select()" name="model" id="model" class="form-control" placeholder="Masukan Model Barang">
-                                                    </div>
-                                                </div>
-                                                <div class="col-sm-3">
-                                                    <!-- text input -->
-                                                    <div class="form-group">
-                                                        <label>Keterangan</label>
-                                                        <input type="text" onfocus="this.select()" name="keterangan" id="keterangan" class="form-control" placeholder="Masukan Keterangan">
-                                                    </div>
-                                                </div>
-                                                <div class="col-sm-1">
-                                                    <!-- text input -->
-                                                    <div class="form-group">
-                                                        <label>Qty</label>
-                                                        <input type="Number" onfocus="this.select()" id="qty" name="qty" min="1" class="form-control" placeholder="Masukan jumlah">
-                                                        <div id="validationServerUsernameFeedback" class="invalid-feedback qtymsg">
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="col-sm-1">
-                                                    <!-- text input -->
-                                                    <div class="form-group">
-                                                        <label>Nilai Tukar</label>
-                                                        <input type="number" onfocus="this.select()" id="nilai_tukar" name="nilai_tukar" class="form-control" placeholder="Masukan Nilai Tukar">
-                                                        <div id="validationServerUsernameFeedback" class="invalid-feedback nilai_tukarmsg">
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="col-sm-2">
-                                                    <!-- text input -->
-                                                    <div class="form-group">
-                                                        <label>Harga Beli</label>
-                                                        <input type="number" onfocus="this.select()" name="harga_beli" id="harga_beli" class="form-control harga_beli" placeholder="Masukan Harga Beli">
-                                                        <div id="validationServerUsernameFeedback" class="invalid-feedback harga_belimsg">
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="col-sm-2">
-                                                    <!-- text input -->
-                                                    <div class="form-group">
-                                                        <label>Ongkos</label>
-                                                        <input type="number" onfocus="this.select()" value="0" name="ongkos" id="ongkos" class="form-control ongkos" placeholder="Masukan Ongkos">
-                                                        <div id="validationServerUsernameFeedback" class="invalid-feedback ongkosmsg">
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="col-sm-1">
-                                                    <!-- text input -->
-                                                    <div class="form-group">
-                                                        <label>Foto</label><br>
-                                                        <button type="button" id="ambilgbr" class="btn btn-primary" data-toggle="modal" data-target="#modal-foto" onclick="cameranyala()">
-                                                            <i class="fa fa-camera"></i>
-                                                        </button>
-                                                        <div id="validationServerUsernameFeedback" class="invalid-feedback ambilgbrmsg"></div>
-                                                    </div>
-                                                </div>
+        <input type="hidden" name="date_id" id="date_id" value="<?= $dateid ?>">
+        <form action="/ajaxinsert" name="ajaxform" id="ajaxform" class="ajaxform" method="post" enctype="multipart/form-data">
+            <div id="forminput"></div>
+            <div class="modal fade" id="modal-foto">
+                <div class="modal-dialog modal-default">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title">Ambil Foto</h4>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <div class="form-group">
+                                        <div class="form-group"><label>Gambar</label>
+                                            <div class="custom-file">
+                                                <input type="file" name="gambar" class="custom-file-input" id="gambar" accept="image/*">
+                                                <label style="text-align: left" class="custom-file-label" for="gambar">Pilih Gambar</label>
                                             </div>
                                         </div>
-                                        <div>
-                                            <button type="button" class="btn btn-danger" onclick="hapussemua()">Hapus Semua</button>
-                                            <button type="submit" id="send_form" class="btn btn-info btntambah">Tambah</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group">
+                                    <div class="col-sm-12">
+                                        <div id='my_camera'>
                                         </div>
-                                        <!-- </form> -->
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
+                                        <button style="text-align: center;" type='button' id='ambilfoto' class='btn btn-info ambilfoto' onclick='Foto_ulang()'>
+                                            <i class='fa fa-trash'></i></button>
+                                        <button type='button' id='ambilfoto' class='btn btn-info ambilfoto' onclick='Ambil_foto()'>Foto <i class='fa fa-camera'></i>
+                                        </button>
+                                        <input type='hidden' name='gambar' id='gambar' class='image-tag'>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer justify-content-between">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                <button type="button" class="btn btn-primary" data-dismiss="modal">Done</button>
+                            </div>
+                        </div>
                     </div>
-                    <!-- /.card-body -->
+                    <!-- /.modal-content -->
                 </div>
-                <!-- /.card -->
+                <!-- /.modal-dialog -->
             </div>
-        </div>
+        </form>
         <div class="card ">
             <!-- /.card-header -->
             <div class="card-body">
@@ -313,7 +131,7 @@
                                             <th>Jenis</th>
                                             <th>Model</th>
                                             <th>Keterangan</th>
-                                            <th>Berat</th>
+                                            <th>Berat/Carat</th>
                                             <th>Berat Murni</th>
                                             <th>Harga Beli</th>
                                             <th>Ongkos</th>
@@ -334,54 +152,6 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-sm-6">
-                        <div class="modal fade" id="modal-foto">
-                            <div class="modal-dialog modal-default">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h4 class="modal-title">Ambil Foto</h4>
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
-                                        </button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <div class="row">
-                                            <div class="col-sm-12">
-                                                <div class="form-group">
-                                                    <div class="form-group"><label>Gambar</label>
-                                                        <div class="custom-file">
-                                                            <input type="file" name="gambar" class="custom-file-input" id="gambar" accept="image/*">
-                                                            <label style="text-align: left" class="custom-file-label" for="gambar">Pilih Gambar</label>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="form-group">
-                                                <div class="col-sm-12">
-                                                    <div id='my_camera'>
-                                                    </div>
-                                                    <button style="text-align: center;" type='button' id='ambilfoto' class='btn btn-info ambilfoto' onclick='Foto_ulang()'>
-                                                        <i class='fa fa-trash'></i></button>
-                                                    <button type='button' id='ambilfoto' class='btn btn-info ambilfoto' onclick='Ambil_foto()'>Foto <i class='fa fa-camera'></i>
-                                                    </button>
-                                                    <input type='hidden' name='gambar' id='gambar' class='image-tag'>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="modal-footer justify-content-between">
-                                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                                            <button type="button" class="btn btn-primary" onclick="Webcam.reset()" data-dismiss="modal">Done</button>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!-- /.modal-content -->
-                            </div>
-                            <!-- /.modal-dialog -->
-                        </div>
-                        </form>
-                    </div>
                     <div class="col-sm-6">
                         <div class="card">
                             <!-- /.card-header -->
@@ -448,7 +218,6 @@
             },
             url: "<?php echo base_url('detailbarcode') ?>",
             success: function(result) {
-                console.log(result.datadetail.merek)
                 $('#merek').val(result.datadetail.merek)
                 $('#kadar').val(result.datadetail.kadar)
                 $('#jenis').val(result.datadetail.jenis)
@@ -470,9 +239,9 @@
         $('#modal-xl').modal('hide');
     }
 
-    function ModalBarcode() {
+    function ModalBarcode(kel) {
         document.getElementById('barcode').value = ''
-        var kel = document.getElementById('kelompok').value
+        // var kel = document.getElementById('kelompok').value
         $.ajax({
             type: "GET",
             dataType: "json",
@@ -482,8 +251,7 @@
             url: "<?php echo base_url('modalbarcode') ?>",
             success: function(result) {
                 $('#barcodeview').html(result.modalbarcode)
-                // $('#modal-xl').modal('toggle');
-                // console.log(result)
+                $('#modal-xl').modal('toggle');
             },
             error: function(xhr, ajaxOptions, thrownError) {
                 alert(xhr.status + "\n" + xhr.responseText + "\n" + thrownError);
@@ -524,6 +292,7 @@
     };
 
     function Selesai() {
+
         var tanggal_input = document.getElementById('tanggal_input').value
         var supplier = document.getElementById('supplier').value
         var no_nota_supp = document.getElementById('no_nota_supp').value
@@ -531,7 +300,6 @@
         var total_berat_m = document.getElementById('total_berat_m').value
         var tanggal_tempo = document.getElementById('tanggal_tempo').value
         var dateid = document.getElementById('dateid').value
-
         Swal.fire({
             title: 'Sudah Selesai ',
             text: "Apakah sudah selesai ?",
@@ -624,6 +392,9 @@
                     type: "GET",
                     dataType: "json",
                     url: "<?php echo base_url('deletedetailsemua'); ?>",
+                    data: {
+                        date_id: $('#date_id').val()
+                    },
                     success: function(result) {
                         tampildata()
                         Swal.fire({
@@ -652,21 +423,44 @@
         return rounded
     }
 
+    function tampilform() {
+        $.ajax({
+            type: "GET",
+            dataType: "json",
+            url: "<?php echo base_url('tampilform'); ?>",
+            data: {
+                date_id: $('#date_id').val()
+            },
+            success: function(result) {
+                $('#forminput').html(result.form)
+            },
+            error: function(xhr, ajaxOptions, thrownError) {
+                alert(xhr.status + "\n" + xhr.responseText + "\n" + thrownError);
+            }
+        })
+    }
+
     function tampildata() {
         $.ajax({
             type: "GET",
             dataType: "json",
             url: "<?php echo base_url('ajaxpembelian'); ?>",
+            data: {
+                date_id: $('#date_id').val()
+            },
             success: function(result) {
+
+                $('#forminput').html(result.form)
                 $('#databeli').html(result.data)
-                $('#totalbersih').html(result.totalbersih.total_harga.toString().replace(/\B(?=(\d{3})+(?!\d))/g, "."))
+                if (result.totalbersih.total_harga) {
+                    $('#totalbersih').html(result.totalbersih.total_harga.toString().replace(/\B(?=(\d{3})+(?!\d))/g, "."))
+                    $('#theadtotalharga').html(result.totalbersih.total_harga.toString().replace(/\B(?=(\d{3})+(?!\d))/g, "."))
+                }
                 $('#totalberatmurnihtml').html(pembulatankoma(result.totalberatmurni.berat_murni))
                 $('#totalberathtml').html(pembulatankoma(result.totalberat.berat))
                 $('#theadmurni').html(pembulatankoma(result.totalberatmurni.berat_murni))
                 $('#theadberat').html(pembulatankoma(result.totalberat.berat))
                 $('#theadqty').html(result.totalqty.qty)
-                $('#theadtotalharga').html(result.totalbersih.total_harga.toString().replace(/\B(?=(\d{3})+(?!\d))/g, "."))
-
 
 
             },
@@ -676,8 +470,10 @@
         })
     }
 
+
     $(document).ready(function() {
-        ModalBarcode()
+        tampilform()
+        // ModalBarcode()
         tampildata()
         $('.ajaxform').submit(function(e) {
             e.preventDefault()
@@ -699,6 +495,7 @@
                     $('.btntambah').html('Tambah')
                 },
                 success: function(result) {
+                    console.log(result)
                     if (result.error) {
                         if (result.error.qty) {
                             $('#qty').addClass('is-invalid')
@@ -770,6 +567,13 @@
                             $('#ongkos').removeClass('is-invalid')
                             $('.ongkosmsg').html('')
                         }
+                        if (result.error.merek) {
+                            $('#merek').addClass('is-invalid')
+                            $('.merekmsg').html(result.error.merek)
+                        } else {
+                            $('#merek').removeClass('is-invalid')
+                            $('.merekmsg').html('')
+                        }
                     } else {
                         $('#qty').removeClass('is-invalid')
                         $('.qtymsg').html('')
@@ -791,6 +595,8 @@
                         $('.harga_belimsg').html('')
                         $('#ongkos').removeClass('is-invalid')
                         $('.ongkosmsg').html('')
+                        $('#merek').removeClass('is-invalid')
+                        $('.merekmsg').html('')
                         tampildata()
                     }
                 },
@@ -799,7 +605,6 @@
                 }
             })
         })
-
         $(".modal").on("hidden.bs.modal", function() {
             Webcam.reset('#my_camera')
         });
@@ -833,7 +638,6 @@
             $(".image-tag").val(data_uri);
             Webcam.reset()
             // Webcam.attach('#my_camera');
-            // console.log($(".image-tag").val())
             document.getElementById('my_camera').innerHTML = '<img src="' + data_uri + '">'
         })
     }

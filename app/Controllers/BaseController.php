@@ -125,4 +125,11 @@ class BaseController extends Controller
             ]);
         }
     }
+    public function SaldoBerat5($kode)
+    {
+        $beratkeluar = round($this->modeldetailkartustock->SumKeluarBerat($kode)['berat'], 2);
+        $beratmasuk = round($this->modeldetailkartustock->SumMasukBerat($kode)['berat'], 2);
+        $totalberat = $beratmasuk - $beratkeluar;
+        return $totalberat;
+    }
 }

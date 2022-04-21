@@ -39,7 +39,8 @@
                     dataType: "json",
                     url: "<?php echo base_url('deletedetail'); ?>",
                     data: {
-                        id: id
+                        id: id,
+                        date_id: $('#date_id').val()
                     },
                     success: function(result) {
 

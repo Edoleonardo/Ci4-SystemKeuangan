@@ -57,6 +57,22 @@ class ModelDetailKartuStock extends Model
         $query = $this->get();
         return $query->getResult('array')[0];
     }
+    public function SumKeluarBerat($id = false)
+    {
+        $this->selectSum('berat');
+        $this->where('barcode', $id);
+        $this->where('keluar !=', 0);
+        $query = $this->get();
+        return $query->getResult('array')[0];
+    }
+    public function SumMasukBerat($id = false)
+    {
+        $this->selectSum('berat');
+        $this->where('barcode', $id);
+        $this->where('masuk !=', 0);
+        $query = $this->get();
+        return $query->getResult('array')[0];
+    }
     public function GetDataDelete($id, $nofaktur)
     {
         $this->selectSum('id_detail_kartustock');
