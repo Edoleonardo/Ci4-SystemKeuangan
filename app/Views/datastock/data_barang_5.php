@@ -39,15 +39,12 @@
               <div class="row">
                 <div class="col-3">
                   <div class="form-group">
-                    <label>Filter Kode</label>
-                    <select name="kode" onchange="TampilBarang()" class="form-control" id="kode" name="kode">
-                      <option value="0" selected>Terbaru</option>
-                      <option value="1">Perhiasan Mas</option>
-                      <option value="2">Perhiasan Berlian</option>
-                      <option value="3">Logam Mulia (Antam, UBS, HWT)</option>
-                      <option value="4">Bahan Murni</option>
-                      <option value="5">Loose Diamond</option>
-                      <option value="6">Barang Dagang</option>
+                    <label>Tampil Data</label>
+                    <select name="tmpildata" onchange="TampilBarang()" class="form-control" id="tmpildata" name="tmpildata">
+                      <option value="10" selected>10</option>
+                      <option value="100">100</option>
+                      <option value="1000">1000</option>
+                      <option value="semua">Semua</option>
                     </select>
                   </div>
                 </div>
@@ -59,6 +56,19 @@
                       <option value="1">Belum Jual</option>
                       <option value="2">Terjual</option>
                     </select>
+                  </div>
+                </div>
+                <div class="col-3">
+                  <div class="form-group">
+                    <label>Search Kode</label>
+                    <input name="searchkode" onfocus="this.select()" oninput="TampilBarang()" class="form-control" id="searchkode" name="searchkode" placeholder="Masukan Kode Barang">
+                    <div id="validationServerUsernameFeedback" class="invalid-feedback searchkodemsg">
+                    </div>
+                  </div>
+                </div>
+                <div class="col-3">
+                  <div class="form-group">
+                    <a type="button" href="#" onclick="TampilBarang()"><i class="fa fa-undo"></i></a>
                   </div>
                 </div>
               </div>
@@ -101,8 +111,10 @@
       dataType: "json",
       url: "<?php echo base_url('tampildatabarang'); ?>",
       data: {
-        kode: $('#kode').val(),
+        tmpildata: $('#tmpildata').val(),
         stock: $('#stock').val(),
+        searchkode: $('#searchkode').val(),
+        kel: 5
       },
       success: function(result) {
         $('#datatable').html(result.databarang)

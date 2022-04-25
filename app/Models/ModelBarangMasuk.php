@@ -23,7 +23,7 @@ class ModelBarangMasuk extends Model
             return $data;
             //return $this->findAll();
         }
-        return $this->where(['id_stock' => $id])->first();
+        return $this->where(['id_stock_1' => $id])->first();
     }
     // public function getImg($id)
     // {

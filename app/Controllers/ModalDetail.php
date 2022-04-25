@@ -3,7 +3,7 @@
 namespace App\Controllers;
 
 use CodeItNow\BarcodeBundle\Utils\BarcodeGenerator;
-use App\Models\ModelHome;
+use App\Models\ModelStock1;
 use App\Models\ModelBuyback;
 use App\Models\ModelDetailBuyback;
 use App\Models\ModelDetailPenjualan;
@@ -27,7 +27,7 @@ class ModalDetail extends BaseController
     {
 
         $this->barcodeG =  new BarcodeGenerator();
-        $this->barangmodel = new ModelHome();
+        $this->barangmodel = new ModelStock1();
         $this->modelbuyback = new ModelBuyback();
         $this->modeldetailbuyback = new ModelDetailBuyback();
         $this->modelpenjualan = new ModelPenjualan();

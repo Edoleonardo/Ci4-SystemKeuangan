@@ -9,7 +9,7 @@ use App\Models\ModelDetailPenjualan;
 use App\Models\ModelKadar;
 use App\Models\ModelMerek;
 use App\Models\ModelSupplier;
-use App\Models\ModelHome;
+use App\Models\ModelStock1;
 use App\Models\ModelBuyback;
 use App\Models\ModelKartuStock;
 use App\Models\ModelDetailKartuStock;
@@ -42,7 +42,7 @@ class PindahBarang extends BaseController
         $this->datasupplier = new ModelSupplier();
         $this->datakadar = new ModelKadar();
         $this->datamerek = new ModelMerek();
-        $this->datastock = new ModelHome();
+        $this->datastock = new ModelStock1();
         $this->modelbuyback = new ModelBuyback();
         $this->modelkartustock = new ModelKartuStock();
         $this->modeldetailkartustock = new ModelDetailKartuStock();
@@ -61,10 +61,6 @@ class PindahBarang extends BaseController
     public function HomePindah()
     {
         $session = session();
-        $data1 = $this->modeljualreal->Prinbarcode();
-        $data1 = [
-            'databarcode' => $data1
-        ];
         // dd($data1);
         // $data = $this->modeljualreal->getDataPenjualan();
         // // dd($datapembelianreal);
@@ -97,7 +93,7 @@ class PindahBarang extends BaseController
         //         ]);
         //     }
         // }
-        return view('barangmasuk/print_barcode', $data1);
+        return view('home/pindahindata');
     }
 
     public  function inisial($nama)
@@ -137,7 +133,7 @@ class PindahBarang extends BaseController
 
         //////////////////////////////////////////DIPAKE//////////////////////////////////////////////////////
    
-        ////////////////////Tbl_stock///////////////////////////// urut 1
+        ////////////////////Tbl_stock_1///////////////////////////// urut 1
         // foreach ($data as $row) {
         //     $kode = substr($row['Kode_Brg'], 0, 1);
         //     $beratmurni = round($row['Berat'] * ($row['N_Tukar'] / 100), 2);
@@ -179,7 +175,7 @@ class PindahBarang extends BaseController
         // }
 
 
-        //////////////////////////////////penjualan -> tbl_stock//////////////////////////////////////
+        //////////////////////////////////penjualan -> tbl_stock_1//////////////////////////////////////
          // foreach ($data as $row) {
         //     $kode = substr($row['Kode_Brg'], 0, 1);
         //     $beratmurni = round($row['Berat'] * ($row['N_Tukar'] / 100), 2);
@@ -242,7 +238,7 @@ class PindahBarang extends BaseController
 
 
 
-///////////////////////Tbl_Kartu,Tbl_detailkart,Tbl_stock,tbl_detailbeli/////////////////////////// urut 3
+///////////////////////Tbl_Kartu,Tbl_detailkart,Tbl_stock_1,tbl_detailbeli/////////////////////////// urut 3
         // $data = $this->modelbelireal->getDataBeliREAL();
         // // dd($datapembelianreal);
         // foreach ($data as $row) {
@@ -285,7 +281,7 @@ class PindahBarang extends BaseController
 
         //     $datastock = $this->datastock->getBarangkode($row['Kode']);
         //     if ($datastock) {
-        //         $this->datastock->delete($datastock['id_stock']);
+        //         $this->datastock->delete($datastock['id_stock_1']);
         //         $bikinbaru = true;
         //     } else {
         //         $bikinbaru = true;

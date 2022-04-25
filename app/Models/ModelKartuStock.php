@@ -26,7 +26,7 @@ class ModelKartuStock extends Model
             return $data->getResult('array');
             //return $this->findAll();
         }
-        return $this->where(['id_stock' => $id])->first();
+        return $this->where(['id_stock_1' => $id])->first();
     }
     public function getKartuFilter($id, $stock)
     {
@@ -49,13 +49,13 @@ class ModelKartuStock extends Model
     public function CheckData($id)
     {
         // $db = db_connect();
-        // $data = $db->query('select * from tbl_stock where barcode = ' . $id . ' ');
+        // $data = $db->query('select * from tbl_stock_1 where barcode = ' . $id . ' ');
         return $this->where(['barcode' => $id])->first();
     }
     public function getKodeStock($id)
     {
         $db = db_connect();
-        $data = $db->query('select max(substr(barcode,2,7)) kode from tbl_stock where substr(barcode,1,1) = ' . $id . ' limit 1');
+        $data = $db->query('select max(substr(barcode,2,7)) kode from tbl_stock_1 where substr(barcode,1,1) = ' . $id . ' limit 1');
         return $data->getResult('array')[0];
         //  $this->get();
         // return $query;
@@ -63,7 +63,7 @@ class ModelKartuStock extends Model
     public function getKodeBahan24k()
     {
         $db = db_connect();
-        $data = $db->query('select * from tbl_stock where substr(barcode,1,1) = 3 or substr(barcode,1,1) = 4 ');
+        $data = $db->query('select * from tbl_stock_1 where substr(barcode,1,1) = 3 or substr(barcode,1,1) = 4 ');
         return $data->getResult('array');
         //  $this->get();
         // return $query;
@@ -71,7 +71,7 @@ class ModelKartuStock extends Model
     public function returdelete($id)
     {
         $db = db_connect();
-        $data = $db->query('DELETE FROM tbl_stock WHERE barcode = ' . $id . '');
+        $data = $db->query('DELETE FROM tbl_stock_1 WHERE barcode = ' . $id . '');
         return 0;
         //  $this->get();
         // return $query;

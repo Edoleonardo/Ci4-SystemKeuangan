@@ -41,17 +41,15 @@ $routes->POST('/masuklogin', 'Login::MasukLogin');
 
 
 // if ($session->get('role')) {
+
+
 // ---------------Home-------------------
 
 $routes->get('/', ($session->get('role')) ? 'Home::index' : 'Login::Login');
-$routes->get('/databarang', ($session->get('role')) ? 'Home::databarang' : 'Login::Login');
-$routes->get('/detail/(:any)', ($session->get('role')) ? 'Home::detail/$1' : 'Login::Login');
-$routes->get('/print/(:any)', ($session->get('role')) ? 'Home::print/$1' : 'Login::Login');
 $routes->get('/kartustock', ($session->get('role')) ? 'Home::KatruStock' : 'Login::Login');
 $routes->get('/modaldetailkartustock', ($session->get('role')) ? 'Home::DetailKartuStock' : 'Login::Login');
 $routes->get('/tampildatakartu', ($session->get('role')) ? 'Home::TampilDataKartu' : 'Login::Login');
 $routes->get('/detailbarang/(:any)', ($session->get('role')) ? 'Home::DetailBarangKode/$1' : 'Login::Login');
-$routes->get('/tampildatabarang', ($session->get('role')) ? 'Home::TampilDataBarang' : 'Login::Login');
 $routes->get('/stockopname', ($session->get('role')) ? 'StockOpname::HomeOpname' : 'Login::Login');
 $routes->get('/tampilopname', ($session->get('role')) ? 'StockOpname::TampilOpname' : 'Login::Login');
 $routes->get('/modaldetailopname', ($session->get('role')) ? 'StockOpname::TampilModalDetail' : 'Login::Login');
@@ -62,6 +60,16 @@ $routes->get('/hapusopname', ($session->get('role')) ? 'StockOpname::HapusOpname
 $routes->POST('/formeditopname', ($session->get('role')) ? 'StockOpname::SelesaiEdit' : 'Login::Login');
 $routes->get('/selesaiopname', ($session->get('role')) ? 'StockOpname::SelesaiOpname' : 'Login::Login');
 $routes->get('/openscanbarcode', ($session->get('role')) ? 'StockOpname::OpenScanBarcode' : 'Login::Login');
+
+//---------------------MasterStock---------------------
+$routes->get('/databarang/(:any)', ($session->get('role')) ? 'DataStock::databarang/$1' : 'Login::Login');
+$routes->get('/tampildatabarang', ($session->get('role')) ? 'DataStock::TampilDataBarang' : 'Login::Login');
+$routes->get('/detail/(:any)/(:any)', ($session->get('role')) ? 'DataStock::detail/$1/$2' : 'Login::Login');
+$routes->get('/print/(:any)', ($session->get('role')) ? 'DataStock::print/$1' : 'Login::Login');
+
+
+
+
 
 
 // --------------------BarangMasuk-----------

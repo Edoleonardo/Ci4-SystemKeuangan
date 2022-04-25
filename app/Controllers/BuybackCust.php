@@ -9,7 +9,7 @@ use App\Models\ModelDetailPenjualan;
 use App\Models\ModelKadar;
 use App\Models\ModelMerek;
 use App\Models\ModelSupplier;
-use App\Models\ModelHome;
+use App\Models\ModelStock1;
 use App\Models\ModelBuyback;
 use App\Models\ModelKartuStock;
 use App\Models\ModelDetailKartuStock;
@@ -38,7 +38,7 @@ class BuybackCust extends BaseController
         $this->datasupplier = new ModelSupplier();
         $this->datakadar = new ModelKadar();
         $this->datamerek = new ModelMerek();
-        $this->datastock = new ModelHome();
+        $this->datastock = new ModelStock1();
         $this->modelbuyback = new ModelBuyback();
         $this->modelkartustock = new ModelKartuStock();
         $this->modeldetailkartustock = new ModelDetailKartuStock();
@@ -401,7 +401,7 @@ class BuybackCust extends BaseController
                                 }
                                 if (substr($row['kode'], 0, 1) == 4) {
                                     $this->datastock->save([
-                                        'id_stock' => $datamasterstock['id_stock'],
+                                        'id_stock_1' => $datamasterstock['id_stock_1'],
                                         'id_karyawan' => $session->get('id_user'),
                                         'status' => $row['status'],
                                         'no_faktur' => $databuyback['no_transaksi_buyback'],
@@ -424,7 +424,7 @@ class BuybackCust extends BaseController
                                 }
                                 if (substr($row['kode'], 0, 1) == 3) {
                                     $this->datastock->save([
-                                        'id_stock' => $datamasterstock['id_stock'],
+                                        'id_stock_1' => $datamasterstock['id_stock_1'],
                                         'id_karyawan' => $session->get('id_user'),
                                         'status' => $row['status'],
                                         'no_faktur' => $databuyback['no_transaksi_buyback'],
@@ -447,7 +447,7 @@ class BuybackCust extends BaseController
                                 }
                                 if ($row['status_proses'] == 'CancelBeli' && substr($row['kode'], 0, 1) != 3 && substr($row['kode'], 0, 1) != 4) {
                                     $this->datastock->save([
-                                        'id_stock' => $datamasterstock['id_stock'],
+                                        'id_stock_1' => $datamasterstock['id_stock_1'],
                                         'id_karyawan' => $session->get('id_user'),
                                         'status' => $row['status'],
                                         'no_faktur' => $databuyback['no_transaksi_buyback'],
@@ -497,7 +497,7 @@ class BuybackCust extends BaseController
                                 if (substr($row['kode'], 0, 1) == 4) {
                                     $datamasterstock = $this->datastock->getBarangkode($row['kode']);
                                     $this->datastock->save([
-                                        'id_stock' => $datamasterstock['id_stock'],
+                                        'id_stock_1' => $datamasterstock['id_stock_1'],
                                         'id_karyawan' => $session->get('id_user'),
                                         // 'barcode' => $row['kode'],
                                         'status' => $row['status'],
@@ -522,7 +522,7 @@ class BuybackCust extends BaseController
                                 if (substr($row['kode'], 0, 1) == 3) {
                                     $datamasterstock = $this->datastock->getBarangkode($row['kode']);
                                     $this->datastock->save([
-                                        'id_stock' => $datamasterstock['id_stock'],
+                                        'id_stock_1' => $datamasterstock['id_stock_1'],
                                         'id_karyawan' => $session->get('id_user'),
                                         'status' => $row['status'],
                                         'no_faktur' => $databuyback['no_transaksi_buyback'],
@@ -546,7 +546,7 @@ class BuybackCust extends BaseController
                                 if ($row['status_proses'] == 'CancelBeli' && substr($row['kode'], 0, 1) != 3 && substr($row['kode'], 0, 1) != 4) {
                                     $datamasterstock = $this->datastock->getBarangkode($row['kode']);
                                     $this->datastock->save([
-                                        'id_stock' => $datamasterstock['id_stock'],
+                                        'id_stock_1' => $datamasterstock['id_stock_1'],
                                         'id_karyawan' => $session->get('id_user'),
                                         'status' =>  $row['status'],
                                         'no_faktur' => $databuyback['no_transaksi_buyback'],
@@ -832,7 +832,6 @@ class BuybackCust extends BaseController
                             'ongkos' => 0,
                             'harga_beli' =>  $this->request->getVar('harga_beli'),
                             'total_harga' => $totalharga,
-                            'kode_beli' =>  'JN',
                             'gambar' =>  $namafile,
                         ]);
                         $msg = [
@@ -883,7 +882,6 @@ class BuybackCust extends BaseController
                         'ongkos' => 0,
                         'harga_beli' =>  $this->request->getVar('harga_beli'),
                         'total_harga' => $totalharga,
-                        'kode_beli' =>  'JN',
                         'gambar' =>  $namafile,
                     ]);
                     $msg = 'sukses';
@@ -913,7 +911,7 @@ class BuybackCust extends BaseController
                     $this->modeldetailbuyback->delete($id);
                 } else {
                     $datastock = $this->datastock->getBarangkode($data['kode']);
-                    $this->datastock->delete($datastock['id_stock']);
+                    $this->datastock->delete($datastock['id_stock_1']);
                     if ($data['nama_img'] != 'default.jpg') { //buyback dengan nota, foto ikut terhapus
                         unlink('img/' . $data['nama_img']); //untuk hapus file
                     }
@@ -945,7 +943,7 @@ class BuybackCust extends BaseController
             // $data = $this->modeldetailbuyback->getDataDetailKode($row['id_detail_buyback']);
             if ($row['no_nota'] == 'NoNota') {
                 $datastock = $this->datastock->getBarangkode($row['kode']);
-                $this->datastock->delete($datastock['id_stock']);
+                $this->datastock->delete($datastock['id_stock_1']);
                 if ($row['nama_img'] != 'default.jpg') { //buyback dengan nota, foto ikut terhapus
                     unlink('img/' . $row['nama_img']); //untuk hapus file
                 }

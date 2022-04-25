@@ -3,7 +3,7 @@
 namespace App\Controllers;
 
 use CodeItNow\BarcodeBundle\Utils\BarcodeGenerator;
-use App\Models\ModelHome;
+use App\Models\ModelStock1;
 use App\Models\ModelKartuStock;
 use App\Models\ModelDetailKartuStock;
 use App\Models\ModelStockOpname;
@@ -23,7 +23,7 @@ class StockOpname extends BaseController
     {
 
         $this->barcodeG =  new BarcodeGenerator();
-        $this->modelhome = new ModelHome();
+        $this->modelhome = new ModelStock1();
         $this->modelkartustock = new ModelKartuStock();
         $this->modeldetailkartustock = new ModelDetailKartuStock();
         $this->modelstockopname = new ModelStockOpname();
@@ -137,7 +137,6 @@ class StockOpname extends BaseController
                         'berat' => $data['berat'],
                         'nilai_tukar' =>  $data['nilai_tukar'],
                         'ongkos' => $data['ongkos'],
-                        'kode_beli' => $data['kode_beli'],
                         'harga_beli' => $data['harga_beli'],
                         'total_harga' => $data['total_harga'],
                         'gambar' =>  $data['gambar'],
@@ -250,7 +249,7 @@ class StockOpname extends BaseController
                             }
                         }
                         $this->modelhome->save([
-                            'id_stock' => $datastock['id_stock'],
+                            'id_stock_1' => $datastock['id_stock_1'],
                             'id_karyawan' => $session->get('id_user'),
                             'gambar' =>  $namafile,
                         ]);
@@ -293,7 +292,6 @@ class StockOpname extends BaseController
                         'berat' => $this->request->getVar('berat'),
                         'nilai_tukar' =>  $this->request->getVar('nilai_tukar'),
                         'ongkos' => $this->request->getVar('ongkos'),
-                        'kode_beli' => $datastock['kode_beli'],
                         'harga_beli' =>  $this->request->getVar('harga_beli'),
                         'total_harga' => $totalharga + $this->request->getVar('ongkos'),
                         'gambar' =>  $namafile,
@@ -334,7 +332,7 @@ class StockOpname extends BaseController
                     }
 
                     $this->modelhome->save([
-                        'id_stock' => $datastock['id_stock'],
+                        'id_stock_1' => $datastock['id_stock_1'],
                         'id_karyawan' => $session->get('id_user'),
                         'qty' => $row['qty'],
                         'jenis' =>  $row['jenis'],
@@ -371,7 +369,7 @@ class StockOpname extends BaseController
                         'gambar' =>  $row['gambar'],
                     ]);
                     $this->KartuStockMaster($row['barcode'], $session);
-                    $this->modelstockopname->delete($row['id_stock_opname']);
+                    $this->modelstockopname->delete($row['id_stock_1_opname']);
                     $msg = 'berhasil';
                 }
             } else {

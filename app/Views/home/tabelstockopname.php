@@ -14,10 +14,10 @@
         <?php foreach ($dataopname as $r) : ?>
             <tr>
                 <td>
-                    <?php if (isset($r['id_stock'])) : ?>
-                        <a type="button" class="btn btn-block btn-outline-info btn-sm" href="#" onclick="OpenModal(<?= (isset($r['id_stock'])) ? $r['id_stock'] : '' ?>)"><?= $r['barcode'] ?></a>
+                    <?php if (isset($r['id_stock_1'])) : ?>
+                        <a type="button" class="btn btn-block btn-outline-info btn-sm" href="#" onclick="OpenModal(<?= (isset($r['id_stock_1'])) ? $r['id_stock_1'] : '' ?>)"><?= $r['barcode'] ?></a>
                     <?php else : ?>
-                        <a type="button" class="btn btn-block btn-outline-danger btn-sm" href="#" onclick="DeleteOpname(<?= (isset($r['id_stock_opname'])) ? $r['id_stock_opname'] : '' ?>)"><?= $r['barcode'] ?></a>
+                        <a type="button" class="btn btn-block btn-outline-danger btn-sm" href="#" onclick="DeleteOpname(<?= (isset($r['id_stock_1_opname'])) ? $r['id_stock_1_opname'] : '' ?>)"><?= $r['barcode'] ?></a>
                     <?php endif; ?>
                 </td>
                 <td><?= $r['jenis'] ?></td>

@@ -3,7 +3,7 @@
 namespace App\Controllers;
 
 use CodeItNow\BarcodeBundle\Utils\BarcodeGenerator;
-use App\Models\ModelHome;
+use App\Models\ModelStock1;
 use App\Models\ModelKartuStock;
 use App\Models\ModelDetailKartuStock;
 use App\Models\ModelLogin;
@@ -21,7 +21,7 @@ class Login extends BaseController
     {
 
         $this->barcodeG =  new BarcodeGenerator();
-        $this->barangmodel = new ModelHome();
+        $this->barangmodel = new ModelStock1();
         $this->modelkartustock = new ModelKartuStock();
         $this->modeldetailkartustock = new ModelDetailKartuStock();
         $this->modellogin = new ModelLogin();

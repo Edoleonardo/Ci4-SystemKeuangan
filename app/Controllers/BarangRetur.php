@@ -8,7 +8,7 @@ use App\Models\ModelPenjualan;
 use App\Models\ModelDetailPenjualan;
 use App\Models\ModelKadar;
 use App\Models\ModelMerek;
-use App\Models\ModelHome;
+use App\Models\ModelStock1;
 use App\Models\ModelKartuStock;
 use App\Models\ModelDetailKartuStock;
 use App\Models\ModelRetur;
@@ -35,7 +35,7 @@ class BarangRetur extends BaseController
         $this->modeldetailbuyback = new ModelDetailBuyback();
         $this->datakadar = new ModelKadar();
         $this->datamerek = new ModelMerek();
-        $this->datastock = new ModelHome();
+        $this->datastock = new ModelStock1();
         $this->modelkartustock = new ModelKartuStock();
         $this->modeldetailkartustock = new ModelDetailKartuStock();
         $this->modelretur = new ModelRetur();

@@ -660,7 +660,7 @@
             success: function(result) {
                 // $('#openmodaledit').html(result.tampilmodaledit) 
                 $('#modal-edit').modal('toggle')
-                $('#iddetail').val(result.barang.id_stock)
+                $('#iddetail').val(result.barang.id_stock_1)
                 $('#merek').val(result.barang.merek)
                 $('#kadar').val(result.barang.kadar)
                 $('#jenis').val(result.barang.jenis)

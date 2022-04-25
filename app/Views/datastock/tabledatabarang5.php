@@ -4,9 +4,10 @@
             <th>Gambar</th>
             <th>Id Barcode</th>
             <th>Jenis</th>
-            <th>model</th>
-            <th>qty</th>
-            <th>kadar</th>
+            <th>Model</th>
+            <th>Qty</th>
+            <th>Carat</th>
+            <th>Kadar</th>
             <th>Aksi</th>
         </tr>
     </thead>
@@ -18,9 +19,10 @@
                 <td><?= $r['jenis'] ?></td>
                 <td><?= $r['model'] ?></td>
                 <td><?= $r['qty'] ?></td>
+                <td><?= $r['carat'] ?></td>
                 <td><?= $r['kadar'] ?></td>
                 <td>
-                    <a type="button" href="detail/<?= $r['id_stock'] ?>" class="btn btn-block btn-outline-info btn-sm">Detail</a>
+                    <a type="button" href="/detail/<?= $r['id_stock_5'] ?>/5" class="btn btn-block btn-outline-info btn-sm">Detail</a>
                 </td>
             </tr>
         <?php endforeach; ?>
@@ -30,9 +32,10 @@
             <th>Gambar</th>
             <th>Id Barcode</th>
             <th>Jenis</th>
-            <th>model</th>
-            <th>qty</th>
-            <th>kadar</th>
+            <th>Model</th>
+            <th>Qty</th>
+            <th>Carat</th>
+            <th>Kadar</th>
             <th>Aksi</th>
         </tr>
     </tfoot>

@@ -28,6 +28,7 @@
     <script src="<?php echo base_url(); ?>/plugins/datatables-buttons/js/buttons.print.min.js"></script>
     <script src="<?php echo base_url(); ?>/plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
 
+
 </head>
 <style>
     .tableasd>tbody>tr>* {

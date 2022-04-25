@@ -1,19 +1,3 @@
-<!DOCTYPE html>
-<html>
-
-<head>
-    <title>Page Title</title>
-</head>
-
-<body>
-    <!-- <div id="coba"></div> -->
-    <h1>This is a Heading</h1>
-    <p>This is a paragraph.</p>
-
-</body>
-
-</html>
-<script src="/js/quagga.min.js"></script>
 <script>
     // Quagga.init({
     //     inputStream: {
@@ -40,3 +24,7 @@
     //     Quagga.stop()
     // })
 </script>
+<script>
+    $.widget.bridge('uibutton', $.ui.button)
+</script>
+<?= $this->endSection(); ?>

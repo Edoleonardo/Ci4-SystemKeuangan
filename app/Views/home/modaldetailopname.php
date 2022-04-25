@@ -114,11 +114,11 @@
                                         <!-- /.card-body -->
                                     </div>
                                     <div class="mt-4">
-                                        <a href="#" class="btn btn-primary btn-lg btn-flat" onclick="ModalEdit(<?= $barang['id_stock'] ?>)">
+                                        <a href="#" class="btn btn-primary btn-lg btn-flat" onclick="ModalEdit(<?= $barang['id_stock_1'] ?>)">
                                             <i class="fas fa-edit fa-lg mr-2"></i>
                                             Edit Barang
                                         </a>
-                                        <a href="#" onclick="PilihBarang(<?= $barang['id_stock'] ?>)" class="btn btn-default btn-lg btn-flat">
+                                        <a href="#" onclick="PilihBarang(<?= $barang['id_stock_1'] ?>)" class="btn btn-default btn-lg btn-flat">
                                             <i class="fas fa-check fa-lg mr-2"></i>
                                             Pilih Barang
                                         </a>

@@ -123,17 +123,17 @@
   <!-- /.content -->
 </div>
 <!-- /.content-wrapper -->
+<!-- Main Footer -->
+<footer class="main-footer">
 
+</footer>
 <!-- Control Sidebar -->
 <aside class="control-sidebar control-sidebar-dark">
   <!-- Control sidebar content goes here -->
 </aside>
 <!-- /.control-sidebar -->
 
-<!-- Main Footer -->
-<footer class="main-footer">
 
-</footer>
 <script src="https://harga-emas.org/widget/widget.js"></script>
 <script src="/plugins/chart.js/Chart.min.js"></script>
 <script src="/dist/js/pages/dashboard3.js"></script>

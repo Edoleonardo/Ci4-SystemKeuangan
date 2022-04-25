@@ -105,9 +105,9 @@
                                     <i class="fas fa-check"></i> Lunas
                                 </a>
                             <?php else : ?>
-                                <a class="btn btn-app" type="button" data-toggle="modal" data-target="#modal-xl">
+                                <!-- <a class="btn btn-app" type="button" data-toggle="modal" data-target="#modal-xl">
                                     <i class="fas fa-redo"></i> Retur Barang
-                                </a>
+                                </a> -->
                                 <a class="btn btn-app bg-danger" type="button" data-toggle="modal" data-target="#modal-bayar">
                                     <i class="fas fa-money-bill"></i> Bayar
                                 </a>
@@ -335,253 +335,344 @@
                     <div class="modal-body">
                         <form action="/pembayaranform" id="pembayaranform" class="pembayaranform" name="pembayaranform">
                             <?= csrf_field(); ?>
-                            <div class="row">
-                                <div class="col-sm-5">
-                                    <div class="col-sm-12">
-                                        <!-- text input -->
-                                        <div class="form-group">
-                                            <label>Harga Murni Saat Ini </label>
-                                            <input type="number" onchange="UbahHargaMurni(this)" min="0" value="<?= $datapembelian['harga_murni'] ?>" id="harga_murni" name="harga_murni" onkeyup="Harganow()" class="form-control harga_murni" placeholder="Masukan harga murni">
-                                            <div id="validationServerUsernameFeedback" class="invalid-feedback harga_murnimsg">
+                            <input type="hidden" name="kelompok" id="kelompok" value="<?= $datapembelian['kelompok'] ?>">
+                            <?php if (($datapembelian['kelompok'] == 6)) : ?>
+                                <div class="row">
+                                    <div class="col-sm-5">
+                                        <input type="hidden" value="<?= $datapembelian['total_bayar'] ?>" id="harga_murni" name="harga_murni">
+                                        <input type="hidden" id="dateid" name="dateid" value="<?= $datapembelian['id_date_pembelian'] ?>">
+                                        <div class="col-sm-12">
+                                            <div class="card">
+                                                <div class="p-0">
+                                                    <div class="row">
+                                                        <div class="col-sm-6">
+                                                            <div class="form-group">
+                                                                <label>Cara Pembayaran</label>
+                                                                <select onclick="myPembayaran()" onchange="myPembayaran()" name="pembayaran" class="form-control" id="pembayaran" name="pembayaran">
+                                                                    <option value="Tunai">Tunai</option>
+                                                                    <option value="Transfer">Transfer</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-sm-6">
+                                                            <div class="form-group metodebayar">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-sm-6">
+                                                            <div class="form-group namabankhtml">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-sm-6">
+                                                            <div class="form-group metodebayar2">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-sm-6">
+                                                            <div class="form-group returhtml">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <button type="submit" class="btn btn-primary btnadd">Add</button>
                                             </div>
-                                            <input type="hidden" id="dateid" name="dateid" value="<?= $datapembelian['id_date_pembelian'] ?>">
                                         </div>
                                     </div>
-                                    <div class="col-sm-12">
+                                    <div class="col-sm-7">
                                         <div class="card">
-                                            <!-- ./card-header -->
-                                            <div class="p-0">
-                                                <!-- text input -->
-                                                <div class="row">
-                                                    <div class="col-sm-6">
-                                                        <div class="form-group">
-                                                            <label>Cara Pembayaran</label>
-                                                            <select onclick="myPembayaran()" onchange="myPembayaran()" name="pembayaran" class="form-control" id="pembayaran" name="pembayaran">
-                                                                <option value="Tunai">Tunai</option>
-                                                                <option value="Transfer">Transfer</option>
-                                                                <option value="Bahan24K">Bahan 24K</option>
-                                                                <option value="ReturSales">Retur Sales</option>
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-sm-6">
-                                                        <div class="form-group metodebayar">
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="row">
-                                                    <div class="col-sm-6">
-                                                        <div class="form-group namabankhtml">
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-sm-6">
-                                                        <div class="form-group metodebayar2">
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-sm-6">
-                                                        <div class="form-group returhtml">
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <!-- /.card-body -->
-                                            <button type="submit" class="btn btn-primary btnadd">Add</button>
-
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-sm-7">
-                                    <div class="card">
-                                        <!-- /.card-header -->
-                                        <div class="card-body table-responsive p-0" id="refresbayartbl">
-                                            <table class="table table-hover text-nowrap">
-                                                <thead>
-                                                    <tr>
-                                                        <th>Cara Pembayaran</th>
-                                                        <th>Jumlah Bayar</th>
-                                                        <th style="text-align: center;">Kode</th>
-                                                        <th>Berat Murni</th>
-                                                        <th>Hapus</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <?php foreach ($databayar as $byr) : ?>
-                                                        <tr>
-                                                            <td> <?= $byr['cara_pembayaran'] ?> </td>
-                                                            <td><?= number_format($byr['jumlah_pembayaran'], 2, ',', '.') ?></td>
-                                                            <td><?= ($byr['no_retur']) ? $byr['no_retur'] : $byr['kode_24k'] ?></td>
-                                                            <td><?= $byr['berat_murni'] ?></td>
-                                                            <?php if ($byr['cara_pembayaran'] != 'ReturSales') : ?>
-                                                                <td><button type='button' class='btn btn-block bg-gradient-danger' onclick="hapus(<?= $byr['id_pembayaran'] ?>)"><i class='fas fa-trash'></i></button></td>
-                                                            <?php else : ?>
-                                                                <td><i class='fa fa-check'></i></td>
-                                                            <?php endif; ?>
-                                                        </tr>
-                                                    <?php endforeach; ?>
-                                                    <tr>
-                                                        <td style="background-color: lightblue;">Harga Saat ini</td>
-                                                        <td style="background-color: lightblue;" id="harga_murnihtml"></td>
-                                                        <td style="background-color: lightblue;">Bayar Berat Murni</td>
-                                                        <td style="background-color: lightblue;" id="totalberatmurnihtml1"></td>
-                                                        <td style="background-color: lightblue;"></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td style="background-color: lightblue;">Berat Murni</td>
-                                                        <td style="background-color: lightblue;" id="totalberatmurnihtml"></td>
-                                                        <td style="background-color: lightblue;">Harga Bayar</td>
-                                                        <td style="background-color: lightblue;" id="totalbersih1"></td>
-                                                        <td style="background-color: lightblue;"></td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-                                            <div class="card-body p-0">
+                                            <div class="card-body table-responsive p-0" id="refresbayartbl">
                                                 <table class="table table-hover text-nowrap">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Cara Pembayaran</th>
+                                                            <th>Jumlah Bayar</th>
+                                                            <th style="text-align: center;">Kode</th>
+                                                            <th><?= ($datapembelian['kelompok'] == 5) ? 'Carat' : 'Berat Murni' ?> </th>
+                                                            <th>Hapus</th>
+                                                        </tr>
+                                                    </thead>
                                                     <tbody>
-                                                        <tr id="tabelbank">
-                                                        </tr>
-                                                        <tr id="tabelbayar1">
-                                                        </tr>
-                                                        <tr id="tabelbayar2">
-                                                        </tr>
-                                                        <tr id="tabelbayar3">
+                                                        <?php foreach ($databayar as $byr) : ?>
+                                                            <tr>
+                                                                <td> <?= $byr['cara_pembayaran'] ?> </td>
+                                                                <td><?= number_format($byr['jumlah_pembayaran'], 2, ',', '.') ?></td>
+                                                                <td><?= ($byr['no_retur']) ? $byr['no_retur'] : $byr['kode_24k'] ?></td>
+                                                                <td><?= $byr['berat_murni'] ?></td>
+                                                                <?php if ($byr['cara_pembayaran'] != 'ReturSales') : ?>
+                                                                    <td><button type='button' class='btn btn-block bg-gradient-danger' onclick="hapus(<?= $byr['id_pembayaran'] ?>)"><i class='fas fa-trash'></i></button></td>
+                                                                <?php else : ?>
+                                                                    <td><i class='fa fa-check'></i></td>
+                                                                <?php endif; ?>
+                                                            </tr>
+                                                        <?php endforeach; ?>
+                                                        <tr>
+                                                            <td style="background-color: lightblue;">Total Harga</td>
+                                                            <td style="background-color: lightblue;" id="harga_murnihtml"></td>
+                                                            <td style="background-color: lightblue;">Harga Bayar</td>
+                                                            <td style="background-color: lightblue;" id="totalbersih1"></td>
+                                                            <td style="background-color: lightblue;"></td>
                                                         </tr>
                                                     </tbody>
                                                 </table>
+                                                <div class="card-body p-0">
+                                                    <table class="table table-hover text-nowrap">
+                                                        <tbody>
+                                                            <tr id="tabelbank">
+                                                            </tr>
+                                                            <tr id="tabelbayar1">
+                                                            </tr>
+                                                            <tr id="tabelbayar2">
+                                                            </tr>
+                                                            <tr id="tabelbayar3">
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
                                             </div>
-                                            <!-- /.card-body -->
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            <?php else : ?>
+                                <div class="row">
+                                    <div class="col-sm-5">
+                                        <div class="col-sm-12">
+                                            <div class="form-group">
+                                                <label><?= ($datapembelian['kelompok'] == 5) ? 'Harga Carat Saat Ini' : 'Harga Murni Saat Ini' ?> </label>
+                                                <input type="number" onchange="UbahHargaMurni(this)" min="0" value="<?= $datapembelian['harga_murni'] ?>" id="harga_murni" name="harga_murni" onkeyup="Harganow()" class="form-control harga_murni" placeholder="Masukan harga">
+                                                <div id="validationServerUsernameFeedback" class="invalid-feedback harga_murnimsg">
+                                                </div>
+                                                <input type="hidden" id="dateid" name="dateid" value="<?= $datapembelian['id_date_pembelian'] ?>">
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-12">
+                                            <div class="card">
+                                                <div class="p-0">
+                                                    <div class="row">
+                                                        <div class="col-sm-6">
+                                                            <div class="form-group">
+                                                                <label>Cara Pembayaran</label>
+                                                                <select onclick="myPembayaran()" onchange="myPembayaran()" name="pembayaran" class="form-control" id="pembayaran" name="pembayaran">
+                                                                    <option value="Tunai">Tunai</option>
+                                                                    <option value="Transfer">Transfer</option>
+                                                                    <option value="Bahan24K">Bahan 24K</option>
+                                                                    <option value="ReturSales">Retur Sales</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-sm-6">
+                                                            <div class="form-group metodebayar">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-sm-6">
+                                                            <div class="form-group namabankhtml">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-sm-6">
+                                                            <div class="form-group metodebayar2">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-sm-6">
+                                                            <div class="form-group returhtml">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <button type="submit" class="btn btn-primary btnadd">Add</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-7">
+                                        <div class="card">
+                                            <div class="card-body table-responsive p-0" id="refresbayartbl">
+                                                <table class="table table-hover text-nowrap">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Cara Pembayaran</th>
+                                                            <th>Jumlah Bayar</th>
+                                                            <th style="text-align: center;">Kode</th>
+                                                            <th><?= ($datapembelian['kelompok'] == 5) ? 'Carat' : 'Berat Murni' ?> </th>
+                                                            <th>Hapus</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <?php foreach ($databayar as $byr) : ?>
+                                                            <tr>
+                                                                <td> <?= $byr['cara_pembayaran'] ?> </td>
+                                                                <td><?= number_format($byr['jumlah_pembayaran'], 2, ',', '.') ?></td>
+                                                                <td><?= ($byr['no_retur']) ? $byr['no_retur'] : $byr['kode_24k'] ?></td>
+                                                                <td><?= $byr['berat_murni'] ?></td>
+                                                                <?php if ($byr['cara_pembayaran'] != 'ReturSales') : ?>
+                                                                    <td><button type='button' class='btn btn-block bg-gradient-danger' onclick="hapus(<?= $byr['id_pembayaran'] ?>)"><i class='fas fa-trash'></i></button></td>
+                                                                <?php else : ?>
+                                                                    <td><i class='fa fa-check'></i></td>
+                                                                <?php endif; ?>
+                                                            </tr>
+                                                        <?php endforeach; ?>
+                                                        <tr>
+                                                            <td style="background-color: lightblue;">Harga Saat ini</td>
+                                                            <td style="background-color: lightblue;" id="harga_murnihtml"></td>
+                                                            <td style="background-color: lightblue;"><?= ($datapembelian['kelompok'] == 5) ? 'Bayar Carat' : 'Berat Murni' ?> </td>
+                                                            <td style="background-color: lightblue;" id="totalberatmurnihtml1"></td>
+                                                            <td style="background-color: lightblue;"></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td style="background-color: lightblue;"><?= ($datapembelian['kelompok'] == 5) ? 'Carat' : 'Berat Murni' ?> </td>
+                                                            <td style="background-color: lightblue;" id="totalberatmurnihtml"></td>
+                                                            <td style="background-color: lightblue;">Harga Bayar</td>
+                                                            <td style="background-color: lightblue;" id="totalbersih1"></td>
+                                                            <td style="background-color: lightblue;"></td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                                <div class="card-body p-0">
+                                                    <table class="table table-hover text-nowrap">
+                                                        <tbody>
+                                                            <tr id="tabelbank">
+                                                            </tr>
+                                                            <tr id="tabelbayar1">
+                                                            </tr>
+                                                            <tr id="tabelbayar2">
+                                                            </tr>
+                                                            <tr id="tabelbayar3">
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            <?php endif; ?>
                             <div class="modal-footer justify-content-between">
                                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                                 <button type="button" class="btn btn-primary" onclick="SelesaiBayar()">Selesai</button>
                             </div>
                         </form>
                     </div>
-                    <!-- /.modal-content -->
                 </div>
-                <!-- /.modal-dialog -->
             </div>
+        </div>
+        <div class="modal fade" id="modal-bahan24k">
+            <div class="modal-dialog modal-xl">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Pilih Barang Bahan 24K</h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="card">
+                            <!-- /.card-header -->
+                            <div class="card-header">
+                                <h3 class="card-title" id="titletable"></h3>
+                            </div>
+                            <div class="card-body table-responsive p-0">
+                                <table id="bahan24k" class="table table-bordered table-hover table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>Gambar</th>
+                                            <th>Kode</th>
+                                            <th>Qty</th>
+                                            <th>Jenis</th>
+                                            <th>Model</th>
+                                            <th>Keterangan</th>
+                                            <th>Berat</th>
+                                            <th>Berat Murni</th>
+                                            <th>Harga Beli</th>
+                                            <th>ongkos</th>
+                                            <th>Kadar</th>
+                                            <th>Nilai Tukar</th>
+                                            <th>Merek</th>
+                                            <th>Total Harga</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php foreach ($tampil24k as $row) : ?>
+                                            <tr onclick="DataBahan24k(<?= $row['barcode'] ?>)">
+                                                <td><img src='/img/<?= $row['gambar'] ?>' class='imgg'></td>
+                                                <td><?= $row['barcode'] ?></td>
+                                                <td><?= $row['qty'] ?></td>
+                                                <td><?= $row['jenis'] ?></td>
+                                                <td><?= $row['model'] ?></td>
+                                                <td><?= $row['keterangan'] ?></td>
+                                                <td><?= $row['berat'] ?></td>
+                                                <td><?= $row['berat_murni'] ?></td>
+                                                <td><?= number_format($row['harga_beli'], 2, ",", ".") ?></td>
+                                                <td><?= number_format($row['ongkos'], 2, ",", ".") ?></td>
+                                                <td><?= $row['kadar'] ?></td>
+                                                <td><?= $row['nilai_tukar'] ?></td>
+                                                <td><?= $row['merek'] ?></td>
+                                                <td><?= number_format($row['total_harga'], 2, ",", ".") ?></td>
+                                            </tr>
+                                        <?php endforeach; ?>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <!-- /.card-body -->
+                        </div>
+                    </div>
+                    <div class="modal-footer justify-content-between">
+                        <button type="button" class="btn btn-default" onclick=" $('#modal-bahan24k').modal('toggle');">Close</button>
+                    </div>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
+        <div class="modal fade" id="modal-retur">
+            <div class="modal-dialog modal-xl">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Pilih Barang Retur Sales</h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="card">
+                            <!-- /.card-header -->
+                            <div class="card-header">
+                                <h3 class="card-title" id="titletable"></h3>
+                            </div>
+                            <div class="card-body table-responsive p-0" id="tblretur">
+                                <table id="retursales" class="table table-bordered table-hover table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>Nomor Retur</th>
+                                            <th>keterangan</th>
+                                            <th>total_berat_murni</th>
+                                            <th>tanggal_retur</th>
+                                            <th>jumlah_barang</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php foreach ($tampilretur as $row) : ?>
+                                            <tr onclick="DataReturSales('<?= $row['no_retur'] ?>')">
+                                                <td><?= $row['no_retur'] ?></td>
+                                                <td><?= $row['keterangan'] ?></td>
+                                                <td><?= $row['total_berat_murni'] ?></td>
+                                                <td><?= $row['tanggal_retur'] ?></td>
+                                                <td><?= $row['jumlah_barang'] ?></td>
+                                            </tr>
+                                        <?php endforeach; ?>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <!-- /.card-body -->
+                        </div>
+                    </div>
+                    <div class="modal-footer justify-content-between">
+                        <button type="button" class="btn btn-default" onclick=" $('#modal-retur').modal('toggle');">Close</button>
+                    </div>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
 
-            <div class="modal fade" id="modal-bahan24k">
-                <div class="modal-dialog modal-xl">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h4 class="modal-title">Pilih Barang Bahan 24K</h4>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            <div class="card">
-                                <!-- /.card-header -->
-                                <div class="card-header">
-                                    <h3 class="card-title" id="titletable"></h3>
-                                </div>
-                                <div class="card-body table-responsive p-0">
-                                    <table id="bahan24k" class="table table-bordered table-hover table-striped">
-                                        <thead>
-                                            <tr>
-                                                <th>Gambar</th>
-                                                <th>Kode</th>
-                                                <th>Qty</th>
-                                                <th>Jenis</th>
-                                                <th>Model</th>
-                                                <th>Keterangan</th>
-                                                <th>Berat</th>
-                                                <th>Berat Murni</th>
-                                                <th>Harga Beli</th>
-                                                <th>ongkos</th>
-                                                <th>Kadar</th>
-                                                <th>Nilai Tukar</th>
-                                                <th>Merek</th>
-                                                <th>Total Harga</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <?php foreach ($tampil24k as $row) : ?>
-                                                <tr onclick="DataBahan24k(<?= $row['barcode'] ?>)">
-                                                    <td><img src='/img/<?= $row['gambar'] ?>' class='imgg'></td>
-                                                    <td><?= $row['barcode'] ?></td>
-                                                    <td><?= $row['qty'] ?></td>
-                                                    <td><?= $row['jenis'] ?></td>
-                                                    <td><?= $row['model'] ?></td>
-                                                    <td><?= $row['keterangan'] ?></td>
-                                                    <td><?= $row['berat'] ?></td>
-                                                    <td><?= $row['berat_murni'] ?></td>
-                                                    <td><?= number_format($row['harga_beli'], 2, ",", ".") ?></td>
-                                                    <td><?= number_format($row['ongkos'], 2, ",", ".") ?></td>
-                                                    <td><?= $row['kadar'] ?></td>
-                                                    <td><?= $row['nilai_tukar'] ?></td>
-                                                    <td><?= $row['merek'] ?></td>
-                                                    <td><?= number_format($row['total_harga'], 2, ",", ".") ?></td>
-                                                </tr>
-                                            <?php endforeach; ?>
-                                        </tbody>
-                                    </table>
-                                </div>
-                                <!-- /.card-body -->
-                            </div>
-                        </div>
-                        <div class="modal-footer justify-content-between">
-                            <button type="button" class="btn btn-default" onclick=" $('#modal-bahan24k').modal('toggle');">Close</button>
-                        </div>
-                    </div>
-                    <!-- /.modal-content -->
-                </div>
-                <!-- /.modal-dialog -->
-            </div>
-            <div class="modal fade" id="modal-retur">
-                <div class="modal-dialog modal-xl">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h4 class="modal-title">Pilih Barang Retur Sales</h4>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            <div class="card">
-                                <!-- /.card-header -->
-                                <div class="card-header">
-                                    <h3 class="card-title" id="titletable"></h3>
-                                </div>
-                                <div class="card-body table-responsive p-0" id="tblretur">
-                                    <table id="retursales" class="table table-bordered table-hover table-striped">
-                                        <thead>
-                                            <tr>
-                                                <th>Nomor Retur</th>
-                                                <th>keterangan</th>
-                                                <th>total_berat_murni</th>
-                                                <th>tanggal_retur</th>
-                                                <th>jumlah_barang</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <?php foreach ($tampilretur as $row) : ?>
-                                                <tr onclick="DataReturSales('<?= $row['no_retur'] ?>')">
-                                                    <td><?= $row['no_retur'] ?></td>
-                                                    <td><?= $row['keterangan'] ?></td>
-                                                    <td><?= $row['total_berat_murni'] ?></td>
-                                                    <td><?= $row['tanggal_retur'] ?></td>
-                                                    <td><?= $row['jumlah_barang'] ?></td>
-                                                </tr>
-                                            <?php endforeach; ?>
-                                        </tbody>
-                                    </table>
-                                </div>
-                                <!-- /.card-body -->
-                            </div>
-                        </div>
-                        <div class="modal-footer justify-content-between">
-                            <button type="button" class="btn btn-default" onclick=" $('#modal-retur').modal('toggle');">Close</button>
-                        </div>
-                    </div>
-                    <!-- /.modal-content -->
-                </div>
-                <!-- /.modal-dialog -->
-            </div>
     </section>
     <!-- /.content -->
 </div>
@@ -975,6 +1066,7 @@
         } else {
             tunai = 0
         }
+
 
         const beratmurni = document.getElementById('totalberatmurnihtml1').innerHTML
         beratmurnival = parseFloat(beratmurni)

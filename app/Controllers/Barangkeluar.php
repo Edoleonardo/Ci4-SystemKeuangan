@@ -4,7 +4,7 @@ namespace App\Controllers;
 
 use CodeItNow\BarcodeBundle\Utils\BarcodeGenerator;
 use App\Models\ModelPembelian;
-use App\Models\ModelHome;
+use App\Models\ModelStock1;
 use App\Models\ModelPenjualan;
 use App\Models\ModelCustomer;
 use App\Models\ModelDetailPenjualan;
@@ -38,7 +38,7 @@ class Barangkeluar extends BaseController
         $this->modeldetailpenjualan =  new ModelDetailPenjualan();
         $this->barcodeG =  new BarcodeGenerator();
         $this->datapembelian = new ModelPembelian();
-        $this->datastock = new ModelHome();
+        $this->datastock = new ModelStock1();
         $this->datacust = new ModelCustomer();
         $this->barcodeG =  new BarcodeGenerator();
         $this->penjualan =  new ModelPenjualan();
@@ -205,7 +205,7 @@ class Barangkeluar extends BaseController
                             'total_harga' => $databarang['total_harga'],
                         ]);
                         $this->datastock->save([
-                            'id_stock' => $databarang['id_stock'],
+                            'id_stock_1' => $databarang['id_stock_1'],
                             'id_karyawan' => $session->get('id_user'),
                             'qty' => '0'
                         ]);
@@ -254,7 +254,7 @@ class Barangkeluar extends BaseController
                         $selisihqty = $datakartu['saldo_akhir'] - $this->request->getVar('qty');
                         $totalharga = $this->request->getVar('hargabaru') * $data['berat'] * $this->request->getVar('qty');
                         $this->datastock->save([
-                            'id_stock' => $databarang['id_stock'],
+                            'id_stock_1' => $databarang['id_stock_1'],
                             'id_karyawan' => $session->get('id_user'),
                             'qty' => $selisihqty
                         ]);
@@ -268,7 +268,7 @@ class Barangkeluar extends BaseController
                             $qty = 1;
                         }
                         $this->datastock->save([
-                            'id_stock' => $databarang['id_stock'],
+                            'id_stock_1' => $databarang['id_stock_1'],
                             'id_karyawan' => $session->get('id_user'),
                             'berat' => $selisihberat,
                             'qty' => $qty
@@ -315,14 +315,14 @@ class Barangkeluar extends BaseController
             $datakartu = $this->modelkartustock->getKartuStockkode($data['kode']);
             if (substr($data['kode'], 0, 1) == 4) {
                 $this->datastock->save([
-                    'id_stock' => $databarang['id_stock'],
+                    'id_stock_1' => $databarang['id_stock_1'],
                     'id_karyawan' => $session->get('id_user'),
                     'berat' => $datakartu['saldo_akhir'],
                     'qty' => '1'
                 ]);
             } else {
                 $this->datastock->save([
-                    'id_stock' => $databarang['id_stock'],
+                    'id_stock_1' => $databarang['id_stock_1'],
                     'id_karyawan' => $session->get('id_user'),
                     'qty' => $datakartu['saldo_akhir']
                 ]);
@@ -1017,7 +1017,7 @@ class Barangkeluar extends BaseController
                                 $qty = 1;
                             }
                             $this->datastock->save([
-                                'id_stock' => $databarang['id_stock'],
+                                'id_stock_1' => $databarang['id_stock_1'],
                                 'id_karyawan' => $session->get('id_user'),
                                 'berat' => $selisihberat,
                                 'qty' => $qty
@@ -1047,7 +1047,7 @@ class Barangkeluar extends BaseController
                         } else {
                             $selisihqty = $datakartu['saldo_akhir'] - $dataretur['qty'];
                             $this->datastock->save([
-                                'id_stock' => $databarang['id_stock'],
+                                'id_stock_1' => $databarang['id_stock_1'],
                                 'id_karyawan' => $session->get('id_user'),
                                 'qty' => $selisihqty
                             ]);
@@ -1103,13 +1103,13 @@ class Barangkeluar extends BaseController
 
                         if (substr($datadetailpenjualan['kode'], 0, 1) == 4) {
                             $this->datastock->save([
-                                'id_stock' => $databarangnew['id_stock'],
+                                'id_stock_1' => $databarangnew['id_stock_1'],
                                 'id_karyawan' => $session->get('id_user'),
                                 'berat' => $saldoakhirnew
                             ]);
                         } else {
                             $this->datastock->save([
-                                'id_stock' => $databarangnew['id_stock'],
+                                'id_stock_1' => $databarangnew['id_stock_1'],
                                 'id_karyawan' => $session->get('id_user'),
                                 'qty' => $saldoakhirnew
                             ]);
@@ -1194,7 +1194,7 @@ class Barangkeluar extends BaseController
                         $selisihqty = $datakartu['saldo_akhir'] - $this->request->getVar('qty');
                         $totalharga = $this->request->getVar('hargabaru') * $data['berat'] * $this->request->getVar('qty');
                         // $this->datastock->save([
-                        //     'id_stock' => $databarang['id_stock'],
+                        //     'id_stock_1' => $databarang['id_stock_1'],
                         //     'id_karyawan' => $session->get('id_user'),
                         //     'qty' => $selisihqty
                         // ]);
@@ -1208,7 +1208,7 @@ class Barangkeluar extends BaseController
                             $qty = 1;
                         }
                         // $this->datastock->save([
-                        //     'id_stock' => $databarang['id_stock'],
+                        //     'id_stock_1' => $databarang['id_stock_1'],
                         //     'id_karyawan' => $session->get('id_user'),
                         //     'berat' => $selisihberat,
                         //     'qty' => $qty
@@ -1367,7 +1367,7 @@ class Barangkeluar extends BaseController
                 $databarang = $this->datastock->getBarangkode($row['kode']);
                 $datakartu = $this->modelkartustock->getKartuStockkode($row['kode']);
                 $this->datastock->save([
-                    'id_stock' => $databarang['id_stock'],
+                    'id_stock_1' => $databarang['id_stock_1'],
                     'id_karyawan' => $session->get('id_user'),
                     'qty' => $datakartu['saldo_akhir']
                 ]);

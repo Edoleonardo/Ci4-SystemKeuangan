@@ -3,7 +3,7 @@
 namespace App\Controllers;
 
 use CodeItNow\BarcodeBundle\Utils\BarcodeGenerator;
-use App\Models\ModelHome;
+use App\Models\ModelStock1;
 use App\Models\ModelKartuStock;
 use App\Models\ModelDetailKartuStock;
 use App\Models\ModelCustomer;
@@ -25,7 +25,7 @@ class MasterInput extends BaseController
     public function __construct()
     {
 
-        $this->datastock = new ModelHome();
+        $this->datastock = new ModelStock1();
         $this->modelkartustock = new ModelKartuStock();
         $this->modeldetailkartustock = new ModelDetailKartuStock();
         $this->modelcust = new ModelCustomer();

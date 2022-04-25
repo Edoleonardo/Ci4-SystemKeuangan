@@ -9,7 +9,7 @@ use App\Models\ModelDetailPenjualan;
 use App\Models\ModelKadar;
 use App\Models\ModelMerek;
 use App\Models\ModelSupplier;
-use App\Models\ModelHome;
+use App\Models\ModelStock1;
 use App\Models\ModelCuci;
 use App\Models\ModelDetailCuci;
 use App\Models\ModelTukang;
@@ -32,7 +32,7 @@ class BarangCuci extends BaseController
         $this->datasupplier = new ModelSupplier();
         $this->datakadar = new ModelKadar();
         $this->datamerek = new ModelMerek();
-        $this->datastock = new ModelHome();
+        $this->datastock = new ModelStock1();
         $this->modelcuci = new ModelCuci();
         $this->modeldetailcuci = new ModelDetailCuci();
         $this->modeltukang = new ModelTukang();
@@ -279,7 +279,7 @@ class BarangCuci extends BaseController
             }
             $this->datastock->save([
                 'id_karyawan' => $session->get('id_user'),
-                'id_stock' => $datastock['id_stock'],
+                'id_stock_1' => $datastock['id_stock_1'],
                 'qty' => $datadetailcuci['qty'],
                 'berat' => $this->request->getVar('berat'),
                 'harga_beli' => $harga_beli,

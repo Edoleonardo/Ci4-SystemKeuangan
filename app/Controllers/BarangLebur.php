@@ -9,7 +9,7 @@ use App\Models\ModelDetailPenjualan;
 use App\Models\ModelKadar;
 use App\Models\ModelMerek;
 use App\Models\ModelSupplier;
-use App\Models\ModelHome;
+use App\Models\ModelStock1;
 use App\Models\ModelKartuStock;
 use App\Models\ModelDetailKartuStock;
 use App\Models\ModelLebur;
@@ -37,7 +37,7 @@ class BarangLebur extends BaseController
         $this->datasupplier = new ModelSupplier();
         $this->datakadar = new ModelKadar();
         $this->datamerek = new ModelMerek();
-        $this->datastock = new ModelHome();
+        $this->datastock = new ModelStock1();
         $this->modelkartustock = new ModelKartuStock();
         $this->modeldetailkartustock = new ModelDetailKartuStock();
         $this->modellebur = new ModelLebur();
@@ -214,7 +214,7 @@ class BarangLebur extends BaseController
                         ]);
 
                         $this->datastock->save([
-                            'id_stock' => $checkkode['id_stock'],
+                            'id_stock_1' => $checkkode['id_stock_1'],
                             'id_karyawan' => $session->get('id_user'),
                             'status' => '24K',
                             'no_faktur' => $datalebur['no_lebur'],
@@ -291,7 +291,6 @@ class BarangLebur extends BaseController
                             'ongkos' => 0,
                             'harga_beli' => round($datalebur['total_harga_bahan'] / $this->request->getVar('berat'), 2),
                             'total_harga' => round($datalebur['total_harga_bahan'] / $this->request->getVar('berat'), 2) * $this->request->getVar('berat'),
-                            'kode_beli' =>  'JN',
                             'gambar' =>  $namafile,
                         ]);
                         $this->modelkartustock->save([

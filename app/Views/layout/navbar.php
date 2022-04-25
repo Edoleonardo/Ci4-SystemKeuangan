@@ -167,12 +167,6 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="/databarang" class="nav-link ">
-                                <i class="far fa-circle nav-icon"></i>
-                                <p>Data Stock</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
                             <a href="/kartustock" class="nav-link ">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>Kartu Stock</p>
@@ -182,6 +176,53 @@
                             <a href="/transaksiharian" class="nav-link ">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>Transaksi Harian</p>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="nav-item menu-open">
+                    <a href="#" class="nav-link">
+                        <i class="nav-icon fas fa-archive"></i>
+                        <p>
+                            Master Stock
+                            <i class=" right fas fa-angle-left"></i>
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="/databarang/1" class="nav-link ">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Data Perhiasan Emas</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/databarang/2" class="nav-link ">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Data Perhiasan Berlian</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/databarang/3" class="nav-link ">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Data Logam Mulia </p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/databarang/4" class="nav-link ">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Data Bahan Emas</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/databarang/5" class="nav-link ">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Data Loose Diamond</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/databarang/6" class="nav-link ">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Barang Dagang</p>
                             </a>
                         </li>
                     </ul>
@@ -221,7 +262,23 @@
                         <li class="nav-item">
                             <a href="/barangkeluar" class="nav-link ">
                                 <i class="far fa-circle nav-icon"></i>
-                                <p>Jual Barang</p>
+                                <p>Jual Barang Emas</p>
+                            </a>
+                        </li>
+                    </ul>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="/barangkeluar" class="nav-link ">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Jual Loose Diamond</p>
+                            </a>
+                        </li>
+                    </ul>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="/barangkeluar" class="nav-link ">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Jual Barang Dagang</p>
                             </a>
                         </li>
                     </ul>

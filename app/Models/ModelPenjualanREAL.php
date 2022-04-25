@@ -38,7 +38,7 @@ class ModelPenjualanREAL extends Model
     public function penjualankestock()
     {
         $db = db_connect();
-        $data = $db->query('SELECT * from 220331_jualstock WHERE Kode_Brg NOT IN (SELECT barcode FROM tbl_stock)');
+        $data = $db->query('SELECT * from 220331_jualstock WHERE Kode_Brg NOT IN (SELECT barcode FROM tbl_stock_1)');
         return $data->getResult('array');
     }
     public function getNoTransCuci()
@@ -50,7 +50,7 @@ class ModelPenjualanREAL extends Model
     public function Prinbarcode()
     {
         $db = db_connect();
-        $data = $db->query('SELECT * FROM `tbl_stock` WHERE qty != 0 ORDER BY `tbl_stock`.`barcode` ASC');
+        $data = $db->query('SELECT * FROM `tbl_stock_1` WHERE qty != 0 ORDER BY `tbl_stock_1`.`barcode` ASC');
         return $data->getResult('array');
     }
 }

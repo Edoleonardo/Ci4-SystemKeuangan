@@ -8,10 +8,10 @@ function barcodegenerate($kode, $wrn)
   $barcode = $barcodeG;
   $barcode->setText($kode);
   $barcode->setType(BarcodeGenerator::Code128);
-  $barcode->setScale(1);
+  $barcode->setScale(2);
   $barcode->setThickness(25);
   $barcode->setFontSize(10);
-  // $barcode->setBackgroundColor($wrn);
+  $barcode->setBackgroundColor($wrn);
   $code = $barcode->generate();
   return '<img src="data:image/png;base64,' . $code . '" />';
 }
@@ -36,7 +36,7 @@ function barcodegenerate($kode, $wrn)
       }
       echo $tr1;
     ?>
-      <td style=" background-color: <?= $wrn ?> !important;  -webkit-print-color-adjust: exact;"><?= barcodegenerate($row['kode'], $wrn) ?> <br> <?= $row['merek'] ?></td>
+      <td style=" background-color: <?= $wrn ?> !important;  -webkit-print-color-adjust: exact;"><?= barcodegenerate($row['kode'], $wrn) ?> <br> <?= $datapembelian['no_faktur_supp'] ?> <?= $row['merek'] ?></td>
       <td style=" background-color: <?= $wrn ?> !important;  -webkit-print-color-adjust: exact;"><?= $row['kode'] ?> <?= $row['kadar'] ?><br><?= $row['jenis'] ?>, <?= $row['model'] ?><br><?= $row['berat'] ?></td>
     <?php $i++;
     endforeach;

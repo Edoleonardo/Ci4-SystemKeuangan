@@ -9,7 +9,7 @@ use App\Models\ModelKadar;
 use App\Models\ModelMerek;
 use App\Models\ModelSupplier;
 use App\Models\ModelPembelian;
-use App\Models\ModelHome;
+use App\Models\ModelStock1;
 use App\Models\ModelPembayaranBeli;
 use App\Models\ModelKartuStock;
 use App\Models\ModelDetailKartuStock;
@@ -36,7 +36,7 @@ class Barangmasuk extends BaseController
         $this->datamerek = new ModelMerek();
         $this->datajenis = new ModelJenis();
         $this->datapembelian = new ModelPembelian();
-        $this->datastock = new ModelHome();
+        $this->datastock = new ModelStock1();
         $this->barcodeG =  new BarcodeGenerator();
         $this->modelpembayaran =  new ModelPembayaranBeli();
         $this->modelkartustock = new ModelKartuStock();
@@ -210,7 +210,7 @@ class Barangmasuk extends BaseController
                                         $qty = 1;
                                     }
                                     $this->datastock->save([
-                                        'id_stock' => $databahan24k['id_stock'],
+                                        'id_stock_1' => $databahan24k['id_stock_1'],
                                         'id_karyawan' => $session->get('id_user'),
                                         'berat' => $saldoakhir,
                                         'qty' => $qty,
@@ -319,6 +319,8 @@ class Barangmasuk extends BaseController
                                 }
                                 if ($datatransaksi['total_akhir_transfer'] >= $jumlah_pembayaran && $this->request->getVar('pembayaran') == 'Transfer') {
                                     $sukses = true;
+                                } else {
+                                    $sukses = true; //sementara dibikin true walaupun minus
                                 }
                                 if ($datatransaksi['total_akhir_debitcc'] >= $jumlah_pembayaran && $this->request->getVar('pembayaran') == 'Debitcc') {
                                     $sukses = true;
@@ -407,7 +409,7 @@ class Barangmasuk extends BaseController
                 $this->KartuStockMaster($databayar['kode_24k'], $session);
                 $datakartu = $this->modelkartustock->getKartuStockkode($databayar['kode_24k']);
                 $this->datastock->save([
-                    'id_stock' => $databahan24k['id_stock'],
+                    'id_stock_1' => $databahan24k['id_stock_1'],
                     'id_karyawan' => $session->get('id_user'),
                     'berat' => $datakartu['saldo_akhir'],
                     'qty' => 1,
@@ -1014,7 +1016,7 @@ class Barangmasuk extends BaseController
                                 $saldoberat = $row['berat'];
                             }
                             $this->datastock->save([
-                                'id_stock' => $datacheck['id_stock'],
+                                'id_stock_1' => $datacheck['id_stock_1'],
                                 'id_karyawan' => $session->get('id_user'),
                                 'status' => $this->StatusBarang($kodesub),
                                 'no_faktur' => $datapembelian['no_faktur_supp'],
@@ -1054,7 +1056,6 @@ class Barangmasuk extends BaseController
                                 'ongkos' => $row['ongkos'],
                                 'harga_beli' => $row['harga_beli'],
                                 'total_harga' => $row['total_harga'],
-                                'kode_beli' =>  'JN',
                                 'gambar' =>  $row['nama_img'],
                             ]);
                             $this->modeldetailkartustock->save([

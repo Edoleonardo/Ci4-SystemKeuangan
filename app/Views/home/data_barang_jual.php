@@ -67,7 +67,7 @@
                       <td><?= $r['qty'] ?></td>
                       <td><?= $r['kadar'] ?></td>
                       <td>
-                        <a type="button" href="detail/<?= $r['id_stock'] ?>" class="btn btn-block btn-outline-info btn-sm">Detail</a>
+                        <a type="button" href="detail/<?= $r['id_stock_1'] ?>" class="btn btn-block btn-outline-info btn-sm">Detail</a>
                       </td>
                     </tr>
                   <?php endforeach; ?>

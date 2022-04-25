@@ -8,7 +8,7 @@ class ModelStockREAL extends Model
 {
 
     protected $table = '220331_stock';
-    protected $primaryKey = 'id_stockreal';
+    protected $primaryKey = 'id_stock_1real';
     protected $useTimestamps = true;
     protected $allowedFields = ['id_date_cuci', 'pembayaran', 'nama_bank', 'id_karyawan', 'nama_tukang', 'no_cuci', 'keterangan', 'total_berat', 'jumlah_barang', 'tanggal_cuci', 'status_dokumen', 'harga_cuci', 'status_proses'];
 

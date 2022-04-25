@@ -3,7 +3,7 @@
 namespace App\Controllers;
 
 use CodeItNow\BarcodeBundle\Utils\BarcodeGenerator;
-use App\Models\ModelHome;
+use App\Models\ModelStock1;
 use App\Models\ModelDetailBuyback;
 use App\Models\ModelLebur;
 use App\Models\ModelDetailLebur;
@@ -17,7 +17,7 @@ class PesananBarang extends BaseController
     public function __construct()
     {
         $this->barcodeG =  new BarcodeGenerator();
-        $this->modelstock = new ModelHome();
+        $this->modelstock = new ModelStock1();
         $this->modelbuyback = new ModelDetailBuyback();
         $this->modellebur = new ModelLebur();
         $this->modeldetaillebur = new ModelDetailLebur();
