@@ -249,8 +249,8 @@
 <script type="text/javascript">
     var html5QrcodeScanner = new Html5QrcodeScanner(
         "reader", {
-            fps: 10,
-            qrbox: 100,
+            fps: 20,
+            qrbox: 80,
         });
 
     function matiinscan() {
