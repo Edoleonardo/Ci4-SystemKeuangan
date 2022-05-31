@@ -250,7 +250,7 @@
     var html5QrcodeScanner = new Html5QrcodeScanner(
         "reader", {
             fps: 20,
-            qrbox: 80,
+            qrbox: 50,
         });
 
     function matiinscan() {
