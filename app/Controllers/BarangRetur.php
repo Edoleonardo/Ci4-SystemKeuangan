@@ -50,10 +50,18 @@ class BarangRetur extends BaseController
         // $asd = $this->modeldetailbuyback->JumlahDataBuyback(220311121607);
         // dd($asd['total']);
         $data = [
-            'dataretur' => $this->modelretur->getDataReturAll(),
             'datapembelian' => $this->modelpembelian->getPembelianTotalRetur(),
         ];
         return view('returbarang/data_retur', $data);
+    }
+    public function TampilDataRetur()
+    {
+        if ($this->request->isAJAX()) {
+            $data = $this->modelretur->DataFilterRetur($this->request->getVar('tmpildata'), $this->request->getVar('kelompok'), $this->request->getVar('status'),  $this->request->getVar('notrans'));
+            $view = ['dataretur' => $data];
+            $msg = ['tampildata' => view('returbarang/tampildataretur', $view)];
+            echo json_encode($msg);
+        }
     }
     public function ReturBarang()
     {
@@ -107,19 +115,11 @@ class BarangRetur extends BaseController
                         'required' => 'Jenis Harus di isi',
                     ]
                 ],
-                'harga_murni' => [
-                    'rules' => 'required|greater_than[0]',
-                    'errors' => [
-                        'required' => 'Harga Harus di isi',
-                        'greater_than' => 'Harus Lebih Dari 0',
-                    ]
-                ],
             ]);
             if (!$valid) {
                 $msg = [
                     'error' => [
                         'tanggalretur' => $validation->getError('tanggalretur'),
-                        'harga_murni' => $validation->getError('harga_murni'),
                     ]
                 ];
                 echo json_encode($msg);
@@ -129,18 +129,18 @@ class BarangRetur extends BaseController
                 $dataretur = $this->modelretur->GetDataJoinRetur($this->request->getVar('iddate'));
                 $datasupp = $this->modelsupplier->getSupplier($dataretur['id_supplier']);
                 if ($datadetailretur) {
-                    $jmlbyr = $this->request->getVar('harga_murni') * $dataretur['total_berat_murni'];
+                    $jmlbyr = $dataretur['harga_murni'] * $dataretur['total_berat_murni'];
                     $this->modelretur->save([
                         'id_retur' => $dataretur['id_retur'],
                         'id_karyawan' => $session->get('id_user'),
                         'keterangan' => $this->request->getVar('keterangan'),
                         'status_dokumen' => 'Selesai'
                     ]);
-                    $this->modelpembelian->save([
-                        'id_pembelian' => $dataretur['id_pembelian'],
-                        'id_karyawan' => $session->get('id_user'),
-                        'harga_murni' => $this->request->getVar('harga_murni'),
-                    ]);
+                    // $this->modelpembelian->save([
+                    //     'id_pembelian' => $dataretur['id_pembelian'],
+                    //     'id_karyawan' => $session->get('id_user'),
+                    //     'harga_murni' => $dataretur['harga_murni'],
+                    // ]);
                     $this->modelpembayaran->save([
                         'id_date_pembelian' => $dataretur['id_date_pembelian'],
                         'id_karyawan' => $session->get('id_user'),
@@ -150,7 +150,7 @@ class BarangRetur extends BaseController
                         'qty' => $dataretur['jumlah_barang'],
                         'no_retur' => $dataretur['no_retur'],
                         'kode_24k' => null,
-                        'harga_murni' => $this->request->getVar('harga_murni'),
+                        'harga_murni' => $dataretur['harga_murni'],
                         'berat_murni' => $dataretur['total_berat_murni'],
                     ]);
                     foreach ($datadetailretur as $row) {
@@ -198,10 +198,9 @@ class BarangRetur extends BaseController
             $dataretur = $this->modelretur->getDatareturAll($datadetailretur['id_date_retur']);
             if ($dataretur['no_transaksi']) {
                 $datapembelian = $this->modelpembelian->getPembelianRetur($dataretur['no_transaksi']);
-                $harusbayar = $datapembelian['byr_berat_murni'] + $datadetailretur['berat_murni'];
+                // $harusbayar = $datapembelian['byr_barang'] + ($datadetailretur['berat_murni'] * $datapembelian['harga_murni']);
                 $updatestat = true;
             }
-
             $this->modeldetailbuyback->save([
                 'id_detail_buyback' => $datadetailretur['id_detail_buyback'],
                 'id_karyawan' => $session->get('id_user'),
@@ -226,11 +225,8 @@ class BarangRetur extends BaseController
                 $this->modelpembelian->save([
                     'id_pembelian' => $datapembelian['id_pembelian'],
                     'id_karyawan' => $session->get('id_user'),
-                    'byr_berat_murni' => $harusbayar,
                     'cara_pembayaran' => 'Belum Selesai',
                 ]);
-                $msg = $harusbayar;
-
                 $jumlahbayar = $totalberatmurni * $databayar['harga_murni'];
                 $this->modelpembayaran->save([
                     'id_pembayaran' => $databayar['id_pembayaran'],
@@ -266,10 +262,10 @@ class BarangRetur extends BaseController
             $databuyback = $this->modeldetailbuyback->getDataDetailKode($kode);
             $dataretur = $this->modelretur->GetDataJoinRetur($iddate);
             $datadetailretur = $this->modeldetailretur->CheckDataretur($databuyback['id_detail_buyback']);
-            $sumberat = round($this->modeldetailretur->SumBeratMurniDetailRetur($iddate)['berat_murni'], 2);
+            // $sumberat = round($this->modeldetailretur->SumBeratMurniDetailRetur($iddate)['berat_murni'], 2);
             // $hasilskhr = $sumberat + $databuyback['berat_murni'];
             if (!$datadetailretur) {
-                if ($databuyback['berat_murni'] <= $dataretur['byr_berat_murni']) {
+                if ($databuyback['berat_murni'] <= $dataretur['murnibeli']) {
                     $this->modeldetailretur->save([
                         'id_date_retur' => $iddate,
                         'id_karyawan' => $session->get('id_user'),
@@ -290,11 +286,11 @@ class BarangRetur extends BaseController
                         'total_harga' => $databuyback['total_harga'],
                         'status_proses' => 'Retur'
                     ]);
-                    $this->modelpembelian->save([
-                        'id_pembelian' => $dataretur['id_pembelian'],
-                        'id_karyawan' => $session->get('id_user'),
-                        'byr_berat_murni' => $dataretur['byr_berat_murni'] - $databuyback['berat_murni']
-                    ]);
+                    // $this->modelpembelian->save([
+                    //     'id_pembelian' => $dataretur['id_pembelian'],
+                    //     'id_karyawan' => $session->get('id_user'),
+                    //     'byr_barang' => $dataretur['byr_barang'] - ($databuyback['berat_murni'] * $dataretur['harga_murni'])
+                    // ]);
                     $this->modelretur->save([
                         'id_retur' => $dataretur['id_retur'],
                         'id_karyawan' => $session->get('id_user'),
@@ -332,13 +328,7 @@ class BarangRetur extends BaseController
     public function BatalRetur($id)
     {
         $session = session();
-        $dataretur = $this->modelretur->GetDataJoinRetur($id);
         $datadetailretur =  $this->modeldetailretur->getDetailAllretur($id);
-        $this->modelpembelian->save([
-            'id_pembelian' => $dataretur['id_pembelian'],
-            'id_karyawan' => $session->get('id_user'),
-            'byr_berat_murni' => $dataretur['byr_berat_murni'] + $dataretur['total_berat_murni']
-        ]);
         foreach ($datadetailretur as $row) {
             $databuyback = $this->modeldetailbuyback->getDataDetailRetur($row['kode']);
             $this->modeldetailbuyback->save([
@@ -366,7 +356,7 @@ class BarangRetur extends BaseController
             $this->modelpembelian->save([
                 'id_pembelian' => $dataretur['id_pembelian'],
                 'id_karyawan' => $session->get('id_user'),
-                'byr_berat_murni' => $dataretur['byr_berat_murni'] + $kode['berat_murni']
+                'byr_barang' => $dataretur['byr_barang'] + $kode['berat_murni']
             ]);
             $this->modeldetailretur->delete($this->request->getVar('id'));
             $this->modelretur->save([

@@ -46,7 +46,7 @@ $routes->POST('/masuklogin', 'Login::MasukLogin');
 // ---------------Home-------------------
 
 $routes->get('/', ($session->get('role')) ? 'Home::index' : 'Login::Login');
-$routes->get('/kartustock', ($session->get('role')) ? 'Home::KatruStock' : 'Login::Login');
+$routes->get('/kartustock/(:any)', ($session->get('role')) ? 'Home::KatruStock/$1' : 'Login::Login');
 $routes->get('/modaldetailkartustock', ($session->get('role')) ? 'Home::DetailKartuStock' : 'Login::Login');
 $routes->get('/tampildatakartu', ($session->get('role')) ? 'Home::TampilDataKartu' : 'Login::Login');
 $routes->get('/detailbarang/(:any)', ($session->get('role')) ? 'Home::DetailBarangKode/$1' : 'Login::Login');
@@ -65,14 +65,12 @@ $routes->get('/openscanbarcode', ($session->get('role')) ? 'StockOpname::OpenSca
 $routes->get('/databarang/(:any)', ($session->get('role')) ? 'DataStock::databarang/$1' : 'Login::Login');
 $routes->get('/tampildatabarang', ($session->get('role')) ? 'DataStock::TampilDataBarang' : 'Login::Login');
 $routes->get('/detail/(:any)/(:any)', ($session->get('role')) ? 'DataStock::detail/$1/$2' : 'Login::Login');
-$routes->get('/print/(:any)', ($session->get('role')) ? 'DataStock::print/$1' : 'Login::Login');
-
-
-
-
+// $routes->get('/print/(:any)', ($session->get('role')) ? 'DataStock::print/$1' : 'Login::Login');
 
 
 // --------------------BarangMasuk-----------
+// $routes->get('/tampilbayarmodal', ($session->get('role')) ? 'Barangmasuk::TampilBayar' : 'Login::Login');
+$routes->get('/tampilpembelian', ($session->get('role')) ? 'Barangmasuk::TampilPembelian' : 'Login::Login');
 $routes->get('/ubahhargamurni', ($session->get('role')) ? 'Barangmasuk::UbahHargaMurni' : 'Login::Login');
 $routes->get('/barangmasuk', ($session->get('role')) ? 'Barangmasuk::supplier' : 'Login::Login');
 $routes->get('/pembelian', ($session->get('role')) ? 'Barangmasuk::detail_pembelian' : 'Login::Login');
@@ -91,25 +89,27 @@ $routes->delete('/cancelbarang/(:num)', ($session->get('role')) ? 'Barangmasuk::
 $routes->get('/ajaxdetailpembelian', ($session->get('role')) ? 'Barangmasuk::pembelian_detail_read' : 'Login::Login');
 $routes->post('/ajaxpembayaran', ($session->get('role')) ? 'Barangmasuk::Pembayaran_beli' : 'Login::Login');
 $routes->get('/editdetail', ($session->get('role')) ? 'Barangmasuk::GetDataDetail' : 'Login::Login');
-$routes->get('/selesaipembayaran', ($session->get('role')) ? 'Barangmasuk::SelesaiPembayaran' : 'Login::Login');
+// $routes->get('/selesaipembayaran', ($session->get('role')) ? 'Barangmasuk::SelesaiPembayaran' : 'Login::Login');
 // $routes->post('/editdataform', ($session->get('role')) ? 'Barangmasuk::EditDataPost' : 'Login::Login');
 $routes->get('/deletepembayaran', ($session->get('role')) ? 'Barangmasuk::DeletePembayaran' : 'Login::Login');
 $routes->get('/modalbarcode', ($session->get('role')) ? 'Barangmasuk::ModalBarcode' : 'Login::Login');
 $routes->get('/detailbarcode', ($session->get('role')) ? 'Barangmasuk::DetailBarcode' : 'Login::Login');
 $routes->POST('/pilihkelompok', ($session->get('role')) ? 'Barangmasuk::PilihKelompok' : 'Login::Login');
 $routes->get('/tampilform', ($session->get('role')) ? 'Barangmasuk::TampilForm' : 'Login::Login');
+$routes->get('/inputretursales', ($session->get('role')) ? 'Barangmasuk::InputReturSales' : 'Login::Login');
+$routes->get('/inputbahan24k', ($session->get('role')) ? 'Barangmasuk::InputBahan' : 'Login::Login');
 
 $routes->get('/pindahindata', ($session->get('role')) ? 'PindahBarang::HomePindah' : 'Login::Login');
 
 
 //--------------------------BarangKeluar---------------------------
-
+$routes->get('/tampilpenjualan', ($session->get('role')) ? 'Barangkeluar::TampilPenjualan' : 'Login::Login');
+$routes->get('/tampildetailpenjualan', ($session->get('role')) ? 'Barangkeluar::penjualan_read' : 'Login::Login');
 $routes->get('/barangkeluar', ($session->get('role')) ? 'Barangkeluar::DataPenjualan' : 'Login::Login');
 $routes->get('/jualbarang', ($session->get('role')) ? 'Barangkeluar::PenjualanBarang' : 'Login::Login');
 $routes->post('/insertcustomer', ($session->get('role')) ? 'Barangkeluar::InsertCust' : 'Login::Login');
 $routes->post('/kodebarang', ($session->get('role')) ? 'Barangkeluar::InsertJual' : 'Login::Login');
 $routes->post('/returcust', ($session->get('role')) ? 'Barangkeluar::ReturCust' : 'Login::Login');
-$routes->get('/tampilpenjualan', ($session->get('role')) ? 'Barangkeluar::penjualan_read' : 'Login::Login');
 // $routes->get('/tampilretur', ($session->get('role')) ? 'Barangkeluar::penjualan_retur' : 'Login::Login');
 // $routes->get('/returcustomer', ($session->get('role')) ? 'Barangkeluar::penjualan_retur' : 'Login::Login');
 $routes->POST('/bayarretur', ($session->get('role')) ? 'Barangkeluar::Pembayaran_Retur' : 'Login::Login');
@@ -134,6 +134,7 @@ $routes->get('/buybackcust', ($session->get('role')) ? 'BuybackCust::BuyBack' : 
 $routes->get('/halamanbuyback', ($session->get('role')) ? 'BuybackCust::HalamanTambah' : 'Login::Login');
 $routes->post('/scantrans', ($session->get('role')) ? 'BuybackCust::Cari_notrans' : 'Login::Login');
 $routes->get('/tampilbuyback', ($session->get('role')) ? 'BuybackCust::TampilBuyback' : 'Login::Login');
+$routes->get('/tampilbuybacktable', ($session->get('role')) ? 'BuybackCust::TampilBuybackTable' : 'Login::Login');
 $routes->get('/tampildatabuyback', ($session->get('role')) ? 'BuybackCust::TampilDataBuyback' : 'Login::Login');
 $routes->post('/tambahbuyback', ($session->get('role')) ? 'BuybackCust::TambahBuyback' : 'Login::Login');
 $routes->post('/tambahbuybacknonota', ($session->get('role')) ? 'BuybackCust::TambahBuybackNonota' : 'Login::Login');
@@ -145,6 +146,8 @@ $routes->get('/batalbuyback/(:any)', ($session->get('role')) ? 'BuybackCust::Bat
 $routes->get('/modalbarcodebb', ($session->get('role')) ? 'BuybackCust::ModalBarcode' : 'Login::Login');
 $routes->get('/tampilcustbb', ($session->get('role')) ? 'BuybackCust::TampilCustomer' : 'Login::Login');
 $routes->get('/detailbuyback/(:any)', ($session->get('role')) ? 'BuybackCust::DetailBuyback/$1' : 'Login::Login');
+$routes->get('/formnonota', ($session->get('role')) ? 'BuybackCust::FormNoNota' : 'Login::Login');
+$routes->get('/databayarbuyback', ($session->get('role')) ? 'BuybackCust::DataBayarBuyback' : 'Login::Login');
 
 
 
@@ -165,6 +168,7 @@ $routes->get('/detailbarang', ($session->get('role')) ? 'BarangLebur::DataDetail
 $routes->get('/ubahstatus', ($session->get('role')) ? 'BarangLebur::UbahStatus' : 'Login::Login');
 $routes->get('/modalprintlebur', ($session->get('role')) ? 'BarangLebur::ModalLebur' : 'Login::Login');
 $routes->post('/selesailebur', ($session->get('role')) ? 'BarangLebur::SelesaiLebur' : 'Login::Login');
+$routes->get('/tampildatalebur', ($session->get('role')) ? 'BarangLebur::TampilDataLebur' : 'Login::Login');
 
 
 //---------------------------------cuci-----------------------------------------
@@ -182,6 +186,7 @@ $routes->post('/updatecuci', ($session->get('role')) ? 'BarangCuci::UpdateCuci' 
 $routes->get('/printbarcodecuci/(:any)', ($session->get('role')) ? 'BarangCuci::BarcodeGenerate/$1' : 'Login::Login');
 $routes->get('/ubahstatuslanjut', ($session->get('role')) ? 'BarangCuci::UbahStatusLanjut' : 'Login::Login');
 $routes->get('/printnotacuci/(:any)', ($session->get('role')) ? 'BarangCuci::PrintNotaCuci/$1' : 'Login::Login');
+$routes->get('/tampildatacuci', ($session->get('role')) ? 'BarangCuci::TampilDataCuci' : 'Login::Login');
 
 
 //---------------------------------Retur-----------------------------------------
@@ -195,6 +200,7 @@ $routes->get('/modalprintretur', ($session->get('role')) ? 'BarangRetur::ModalRe
 $routes->post('/selesairetur', ($session->get('role')) ? 'BarangRetur::SelesaiRetur' : 'Login::Login');
 $routes->get('/printnotaretur/(:any)', ($session->get('role')) ? 'BarangRetur::PrintNotaRetur/$1' : 'Login::Login');
 $routes->get('/ubahstatuslanjutretur', ($session->get('role')) ? 'BarangRetur::UbahStatusLanjut' : 'Login::Login');
+$routes->get('/tampildataretur', ($session->get('role')) ? 'BarangRetur::TampilDataRetur' : 'Login::Login');
 
 // $routes->get('/leburbarang/(:any)', ($session->get('role')) ?'BarangRetur::TampilLeburBarang/$1': 'Login::Login');
 $routes->get('/detailbarang', ($session->get('role')) ? 'BarangRetur::DataDetailBarang' : 'Login::Login');

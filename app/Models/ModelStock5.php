@@ -10,7 +10,7 @@ class ModelStock5 extends Model
     protected $table = 'tbl_stock_5';
     protected $primaryKey = 'id_stock_5';
     protected $useTimestamps = true;
-    protected $allowedFields = ['barcode', 'id_karyawan', 'status', 'no_faktur', 'tgl_faktur', 'nama_supplier', 'qty', 'jenis', 'model', 'keterangan', 'merek', 'kadar', 'berat_murni', 'berat', 'nilai_tukar', 'ongkos', 'harga_beli', 'total_harga', 'gambar'];
+    protected $allowedFields = ['barcode', 'id_karyawan', 'status', 'no_faktur', 'tgl_faktur', 'nama_supplier', 'qty', 'jenis', 'model', 'keterangan', 'merek', 'carat', 'harga_beli', 'total_harga', 'gambar'];
 
     public function getBarang($id = false)
     {
@@ -30,7 +30,7 @@ class ModelStock5 extends Model
     public function getBarangOpname($id)
     {
         $db = db_connect();
-        $data = $db->query('SELECT * FROM `tbl_stock_5` WHERE barcode not in (SELECT barcode from tbl_stock_5_opname) AND barcode = ' . $id . ';');
+        $data = $db->query('SELECT * FROM `tbl_stock_5` WHERE barcode not in (SELECT barcode from tbl_stock_opname) AND barcode = ' . $id . ';');
         if ($data->getResult('array')) {
             return $data->getResult('array')[0];
         } else {
@@ -40,7 +40,7 @@ class ModelStock5 extends Model
     public function getBarangOpnameId($id)
     {
         $db = db_connect();
-        $data = $db->query('SELECT * FROM `tbl_stock_5` WHERE barcode not in (SELECT barcode from tbl_stock_5_opname) AND id_stock_5 = ' . $id . ';');
+        $data = $db->query('SELECT * FROM `tbl_stock_5` WHERE barcode not in (SELECT barcode from tbl_stock_opname) AND id_stock_5 = ' . $id . ';');
         if ($data->getResult('array')) {
             return $data->getResult('array')[0];
         } else {
@@ -60,7 +60,7 @@ class ModelStock5 extends Model
     {
         $db = db_connect();
         if ($kode) {
-            $search = 'barcode =' . $kode;
+            $search = 'barcode =' . "'" . $kode . "'";
         } else {
             $search = '1 = 1';
         }
@@ -89,7 +89,7 @@ class ModelStock5 extends Model
     public function getBarcode($id)
     {
         $db = db_connect();
-        $data = $db->query('select * from tbl_stock_5 where substr(barcode,1,1) = ' . $id . ' order by created_at DESC');
+        $data = $db->query('select * from tbl_stock_5 where qty != 0 order by created_at DESC');
         return $data->getResult('array');
     }
     public function CheckData($id)
@@ -141,13 +141,13 @@ class ModelStock5 extends Model
     public function SisahOpname()
     {
         $db = db_connect();
-        $data = $db->query('SELECT count(barcode) barcode FROM `tbl_stock_5` WHERE barcode NOT IN (SELECT barcode FROM tbl_stock_5_opname);');
+        $data = $db->query('SELECT count(barcode) barcode FROM `tbl_stock_5` WHERE barcode NOT IN (SELECT barcode FROM tbl_stock_opname);');
         return $data->getResult('array')[0];
     }
     public function BelumOpname()
     {
         $db = db_connect();
-        $data = $db->query('SELECT * FROM `tbl_stock_5` WHERE barcode NOT IN (SELECT barcode FROM tbl_stock_5_opname)  limit 20;');
+        $data = $db->query('SELECT * FROM `tbl_stock_5` WHERE barcode NOT IN (SELECT barcode FROM tbl_stock_opname)  limit 20;');
         return $data->getResult('array');
     }
     public function CountDataStock()

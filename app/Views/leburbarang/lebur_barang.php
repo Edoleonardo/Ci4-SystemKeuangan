@@ -211,14 +211,14 @@
                                                         <!-- <td class="imgg"><img class="imgg" src="/img/<?= $row['nama_img'] ?>"></td> -->
                                                         <td><a href="#" onclick="openmodaldetail(<?= $row['id_detail_buyback'] ?>)"><?= $row['kode'] ?></a></td>
                                                         <td><?= $row['jenis'] ?></td>
-                                                        <td><input type="text" onchange="UbahKet(this,<?= $row['id_detail_buyback'] ?>)" id="ubahketerangan" name="ubahketerangan" value="<?= $row['keterangan'] ?>"></td>
+                                                        <td><input onfocus="this.select()" type="text" onchange="UbahKet(this,<?= $row['id_detail_buyback'] ?>)" id="ubahketerangan" name="ubahketerangan" value="<?= $row['keterangan'] ?>"></td>
                                                         <td><select name="status_proses" onchange="EditData(<?= $row['id_detail_buyback'] ?>,this)" class="form-control" id="status" name="status">
                                                                 <option value="Cuci">Cuci</option>
                                                                 <option value="Retur">Retur</option>
                                                                 <option selected value="Lebur">Lebur</option>
                                                             </select></td>
                                                         <td><?= $row['kadar'] ?></td>
-                                                        <td><input type="number" onchange="UbahBerat(this,<?= $row['id_detail_buyback'] ?>)" id="ubahberat" name="ubahberat" value="<?= $row['berat'] ?>"></td>
+                                                        <td><input onfocus="this.select()" type="number" onchange="UbahBerat(this,<?= $row['id_detail_buyback'] ?>)" id="ubahberat" name="ubahberat" value="<?= $row['berat'] ?>"></td>
                                                         <td>
                                                             <a type="button" onclick="tambahbaranglebur(<?= $row['id_detail_buyback'] ?>)" class="btn btn-block btn-outline-info btn-sm">Lebur</a>
                                                         </td>
@@ -329,14 +329,14 @@
                         <div class="col-sm-3">
                             <div class="form-group">
                                 <label>Tanggal Lebur</label>
-                                <input type="date" id="tanggallebur" name="tanggallebur" class="form-control" placeholder="Masukan tanggallebur" value="<?= date_format(date_create($datamasterlebur['tanggal_lebur']), "Y-m-d") ?>">
+                                <input onfocus="this.select()" type="date" id="tanggallebur" name="tanggallebur" class="form-control" placeholder="Masukan tanggallebur" value="<?= date_format(date_create($datamasterlebur['tanggal_lebur']), "Y-m-d") ?>">
 
                             </div>
                         </div>
                         <div class="col-sm-3">
                             <div class="form-group">
                                 <a href="#" id="tampilmodal" data-toggle="modal" data-target="#modal-barcode"><label>Barcode</label></a>
-                                <input type="text" onkeyup="PilihBarcode($('#barcode').val())" id="barcode" name="barcode" class="form-control" placeholder="Masukan barcode">
+                                <input onfocus="this.select()" type="text" onkeyup="PilihBarcode($('#barcode').val())" id="barcode" name="barcode" class="form-control" placeholder="Masukan barcode">
                             </div>
                         </div>
                         <div class="col-sm-3">
@@ -349,7 +349,7 @@
                                     <?php endforeach; ?>
                                     <option value="-">-</option>
                                 </select>
-                                <!-- <input type="text" name="jenis" id="jenis" class="form-control" placeholder="Masukan Jenis"> -->
+                                <!-- <input onfocus="this.select()" type="text" name="jenis" id="jenis" class="form-control" placeholder="Masukan Jenis"> -->
                                 <div id="validationServerUsernameFeedback" class="invalid-feedback jenismsg">
                                 </div>
                             </div>
@@ -358,7 +358,7 @@
                             <!-- text input -->
                             <div class="form-group">
                                 <label>Berat</label>
-                                <input type="number" step="0.01" id="berat" name="berat" class="form-control" placeholder="Masukan Berat Bersih" value="<?= $datamasterlebur['berat_murni'] ?>">
+                                <input onfocus="this.select()" type="number" step="0.01" id="berat" name="berat" class="form-control" placeholder="Masukan Berat Bersih" value="<?= $datamasterlebur['berat_murni'] ?>">
                                 <div id="validationServerUsernameFeedback" class="invalid-feedback beratmsg">
                                 </div>
                             </div>
@@ -369,14 +369,14 @@
                             <!-- text input -->
                             <div class="form-group">
                                 <label>Model</label>
-                                <input type="text" name="model" id="model" class="form-control" placeholder="Masukan Model Barang">
+                                <input onfocus="this.select()" type="text" name="model" id="model" class="form-control" placeholder="Masukan Model Barang">
                             </div>
                         </div>
                         <div class="col-sm-3">
                             <!-- text input -->
                             <div class="form-group">
                                 <label>Keterangan</label>
-                                <input type="text" name="keterangan" id="keterangan" class="form-control" placeholder="Masukan Keterangan">
+                                <input onfocus="this.select()" type="text" name="keterangan" id="keterangan" class="form-control" placeholder="Masukan Keterangan">
                             </div>
                         </div>
                         <div class="col-sm-3">
@@ -418,7 +418,7 @@
                                             <div class="form-group">
                                                 <div class="form-group"><label>Gambar</label>
                                                     <div class="custom-file">
-                                                        <input type="file" name="gambar" class="custom-file-input" id="gambar" accept="image/*">
+                                                        <input onfocus="this.select()" type="file" name="gambar" class="custom-file-input" id="gambar" accept="image/*">
                                                         <label style="text-align: left" class="custom-file-label" for="gambar">Pilih Gambar</label>
                                                     </div>
                                                 </div>
@@ -434,7 +434,7 @@
                                                     <i class='fa fa-trash'></i></button>
                                                 <button type='button' id='ambilfoto' class='btn btn-info ambilfoto' onclick='Ambil_foto()'>Foto <i class='fa fa-camera'></i>
                                                 </button>
-                                                <input type='hidden' name='gambar' id='gambar' class='image-tag'>
+                                                <input onfocus="this.select()" type='hidden' name='gambar' id='gambar' class='image-tag'>
                                             </div>
                                         </div>
                                     </div>
@@ -511,7 +511,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <div class="card-body table-responsive p-0">
+                <div class="card-body table-responsive p-0" style="max-height:500px ;">
                     <table class="table table-bordered table-hover">
                         <thead>
                             <tr>
@@ -637,10 +637,10 @@
                 $('#berat').val(result.datadetail.berat)
                 $('#keterangan').val(result.datadetail.keterangan)
                 $('#qty').val(result.datadetail.qty)
-                $('#nilai_tukar').val(result.datadetail.nilai_tukar)
+                // $('#nilai_tukar').val(result.datadetail.nilai_tukar)
                 $('#harga_beli').val(result.datadetail.harga_beli)
-                $('#ongkos').val(result.datadetail.ongkos)
-                $('#kelompok').val(($('#barcode').val()) ? $('#barcode').val().substr(0, 1) : $('#kelompok').val())
+                // $('#ongkos').val(result.datadetail.ongkos)
+                // $('#kelompok').val(($('#barcode').val()) ? $('#barcode').val().substr(0, 1) : $('#kelompok').val())
             },
             error: function(xhr, ajaxOptions, thrownError) {
                 alert(xhr.status + "\n" + xhr.responseText + "\n" + thrownError);
@@ -888,6 +888,10 @@
     Webcam.set({
         width: 320,
         height: 240,
+        dest_width: 320,
+        dest_height: 240,
+        crop_width: 320,
+        crop_height: 240,
         image_format: 'jpeg',
         jpeg_quality: 100,
         flip_horiz: true,

@@ -35,50 +35,46 @@
             <div class="row">
                 <div class="col-12">
                     <div class="card">
-                        <div class="card-header ">
-                            <a class="btn btn-app" href="/leburbarang">
-                                <i class="fas fa-plus"></i> Lebur Barang
-                            </a>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-2">
+                                    <div class="form-group">
+                                        <a class="btn btn-app" href="/leburbarang">
+                                            <i class="fas fa-plus"></i> Lebur Barang
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="col-2">
+                                    <div class="form-group">
+                                        <label>Filter Data</label>
+                                        <select name="tampil" onchange="TampilLebur()" class="form-control" id="tampil" name="tampil">
+                                            <option value="10" selected>10 Data</option>
+                                            <option value="100">100 Data</option>
+                                            <option value="1000">1000 Data</option>
+                                            <option value="semua">Semua Data</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-2">
+                                    <div class="form-group">
+                                        <label>Search NoTrans</label>
+                                        <input name="notrans" onfocus="this.select()" oninput="TampilLebur()" class="form-control" id="notrans" name="notrans" placeholder="Masukan Nomor Transaksi">
+                                        <div id="validationServerUsernameFeedback" class="invalid-feedback notransmsg">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-2">
+                                    <div class="form-group">
+                                        <a type="button" href="#" onclick="TampilLebur()"><i class="fa fa-undo"></i></a>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
+                    </div>
+                    <div class="card">
                         <!-- /.card-header -->
-                        <div class="card-body table">
-                            <table id="example1" class="table table-bordered table-striped tableasd">
-                                <thead>
-                                    <tr>
-                                        <th>Gambar</th>
-                                        <th>Nomor Lebur</th>
-                                        <th>model</th>
-                                        <th>Berat Murni</th>
-                                        <th>Detail</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <?php foreach ($datalebur as $row) : ?>
-                                        <tr>
-                                            <td class="imgg"><img class="imgg" src="/img/<?= ($row['nama_img']) ? $row['nama_img'] : 'default.jpg' ?>"></td>
-                                            <td><?= $row['no_lebur'] ?></td>
-                                            <td><?= $row['model'] ?></td>
-                                            <td><?= $row['berat_murni'] ?></td>
-                                            <td>
-                                                <?php if ($row['status_dokumen'] == 'Draft') : ?>
-                                                    <a type="button" href="draftlebur/<?= $row['id_date_lebur'] ?>" class="btn btn-block btn-outline-danger btn-sm">Draft</a>
-                                                <?php else : ?>
-                                                    <a type="button" href="draftlebur/<?= $row['id_date_lebur'] ?>" class="btn btn-block btn-outline-info btn-sm">Detail</a>
-                                                <?php endif ?>
-                                            </td>
-                                        </tr>
-                                    <?php endforeach; ?>
-                                </tbody>
-                                <tfoot>
-                                    <tr>
-                                        <th>Gambar</th>
-                                        <th>Kode</th>
-                                        <th>model</th>
-                                        <th>Berat Murni</th>
-                                        <th>Detail</th>
-                                    </tr>
-                                </tfoot>
-                            </table>
+                        <div class="card-body table" id="tampildatalebur">
+
                         </div>
                         <!-- /.card-body -->
                     </div>
@@ -104,14 +100,27 @@
 
 </footer>
 <script>
+    function TampilLebur() {
+        $.ajax({
+            type: "get",
+            url: "<?php echo base_url('tampildatalebur'); ?>",
+            dataType: "json",
+            data: {
+                tmpildata: $('#tampil').val(),
+                status: $('#status').val(),
+                kelompok: $('#kelompok').val(),
+                notrans: $('#notrans').val(),
+            },
+            success: function(result) {
+                $('#tampildatalebur').html(result.tampildata)
+            },
+            error: function(xhr, ajaxOptions, thrownError) {
+                alert(xhr.status + "\n" + xhr.responseText + "\n" + thrownError);
+            }
+        })
+    }
     $(function() {
-        $("#example1").DataTable({
-            "responsive": true,
-            "lengthChange": false,
-            "autoWidth": false,
-            "aaSorting": []
-            //"buttons": ["copy", "csv", "excel", "pdf", "print", "colvis", ]
-        }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
+        TampilLebur()
     });
 </script>
 <?= $this->endSection(); ?>

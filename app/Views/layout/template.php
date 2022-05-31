@@ -16,7 +16,7 @@
     <link rel="stylesheet" href="<?php echo base_url(); ?>/plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
     <link rel="stylesheet" href="<?php echo base_url(); ?>/plugins/select2/css/select2.min.css">
     <link rel="stylesheet" href="<?php echo base_url(); ?>/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css">
-    <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+    <!-- <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script> -->
     <script src="<?php echo base_url(); ?>/plugins/jquery/jquery.min.js"></script>
     <script src="<?php echo base_url(); ?>/plugins/datatables/jquery.dataTables.min.js"></script>
     <script src="<?php echo base_url(); ?>/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
@@ -46,7 +46,7 @@
   * sidebar-mini
 -->
 
-<body class="hold-transition  sidebar-mini sidebar-collapse">
+<body class="layout-fixed sidebar-collapse sidebar-mini">
     <div class="wrapper">
         <!-- Navbar -->
         <?= $this->include('layout/navbar'); ?>

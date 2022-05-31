@@ -125,11 +125,104 @@ class BaseController extends Controller
             ]);
         }
     }
+    public function KartuStockMaster5($kode, $session, $stat)
+    {
+        $datakartu = $this->modelkartustock5->getKartuStockkode($kode);
+        if ($stat != 'noopname') {
+            $masuk = round($this->modeldetailkartustock5->SumMasukKartu($kode)['masuk'], 2);
+            $keluar = round($this->modeldetailkartustock5->SumKeluarKartu($kode)['keluar'], 2);
+            $saldoakhir = $masuk - $keluar;
+            $this->modelkartustock5->save([
+                'id_kartustock_5' => $datakartu['id_kartustock_5'],
+                'id_karyawan' => $session->get('id_user'),
+                'total_masuk' => $masuk,
+                'total_keluar' => $keluar,
+                'saldo_akhir' => $saldoakhir,
+                'saldo_carat' => $stat
+            ]);
+        } else {
+            if ($datakartu) {
+                $masuk = round($this->modeldetailkartustock5->SumMasukKartu($kode)['masuk'], 2);
+                $keluar = round($this->modeldetailkartustock5->SumKeluarKartu($kode)['keluar'], 2);
+                $saldocarat = round($this->modeldetailkartustock5->SumSaldoBerat($kode)['hasil'], 2);
+                $saldoakhir = $masuk - $keluar;
+                $this->modelkartustock5->save([
+                    'id_kartustock_5' => $datakartu['id_kartustock_5'],
+                    'id_karyawan' => $session->get('id_user'),
+                    'total_masuk' => $masuk,
+                    'total_keluar' => $keluar,
+                    'saldo_akhir' => $saldoakhir,
+                    'saldo_carat' => $saldocarat
+                ]);
+            } else {
+                $masuk = round($this->modeldetailkartustock5->SumMasukKartu($kode)['masuk'], 2);
+                $keluar = round($this->modeldetailkartustock5->SumKeluarKartu($kode)['keluar'], 2);
+                $saldocarat = round($this->modeldetailkartustock5->SumSaldoBerat($kode)['hasil'], 2);
+                $saldoakhir = $masuk - $keluar;
+                $this->modelkartustock5->save([
+                    'kode' => $kode,
+                    'id_karyawan' => $session->get('id_user'),
+                    'total_masuk' => $masuk,
+                    'total_keluar' => $keluar,
+                    'saldo_akhir' => $saldoakhir,
+                    'saldo_carat' => $saldocarat
+                ]);
+            }
+        }
+    }
+    public function KartuStockMaster6($kode, $session)
+    {
+        $datakartu = $this->modelkartustock6->getKartuStockkode($kode);
+        if ($datakartu) {
+            $masuk = round($this->modeldetailkartustock6->SumMasukKartu($kode)['masuk'], 2);
+            $keluar = round($this->modeldetailkartustock6->SumKeluarKartu($kode)['keluar'], 2);
+            $saldoakhir = $masuk - $keluar;
+            $this->modelkartustock6->save([
+                'id_kartustock_6' => $datakartu['id_kartustock_6'],
+                'id_karyawan' => $session->get('id_user'),
+                'total_masuk' => $masuk,
+                'total_keluar' => $keluar,
+                'saldo_akhir' => $saldoakhir,
+            ]);
+        } else {
+            $masuk = round($this->modeldetailkartustock6->SumMasukKartu($kode)['masuk'], 2);
+            $keluar = round($this->modeldetailkartustock6->SumKeluarKartu($kode)['keluar'], 2);
+            $saldoakhir = $masuk - $keluar;
+            $this->modelkartustock6->save([
+                'kode' => $kode,
+                'id_karyawan' => $session->get('id_user'),
+                'total_masuk' => $masuk,
+                'total_keluar' => $keluar,
+                'saldo_akhir' => $saldoakhir,
+            ]);
+        }
+    }
     public function SaldoBerat5($kode)
     {
         $beratkeluar = round($this->modeldetailkartustock->SumKeluarBerat($kode)['berat'], 2);
         $beratmasuk = round($this->modeldetailkartustock->SumMasukBerat($kode)['berat'], 2);
         $totalberat = $beratmasuk - $beratkeluar;
         return $totalberat;
+    }
+
+    public function DataBarangBase($kode)
+    {
+        $kel = substr($kode, 0, 1);
+        if ($kel == 1) {
+            $data = $this->datastock1->getBarangkode($kode);
+        } elseif ($kel == 2) {
+            $data = $this->datastock2->getBarangkode($kode);
+        } elseif ($kel == 3) {
+            $data = $this->datastock3->getBarangkode($kode);
+        } elseif ($kel == 4) {
+            $data = $this->datastock4->getBarangkode($kode);
+        } elseif ($kel == 5) {
+            $data = $this->datastock5->getBarangkode($kode);
+        } elseif ($kel == 6) {
+            $data = $this->datastock6->getBarangkode($kode);
+        } else {
+            $data = null;
+        }
+        return $data;
     }
 }

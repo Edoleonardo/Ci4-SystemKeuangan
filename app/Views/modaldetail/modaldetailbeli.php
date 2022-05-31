@@ -19,6 +19,7 @@
                                             <tr>
                                                 <td>Supplier</td>
                                                 <td><?= $datapembelian['nama_supp'] ?></td>
+                                                <input type="hidden" name="date_id" id="date_id" id="<?= $datapembelian['id_date_pembelian'] ?>">
                                             </tr>
                                             <tr>
                                                 <td>No Pembayaran</td>
@@ -40,10 +41,12 @@
                                                 <td>Nomor Nota Supplier</td>
                                                 <td><?= $datapembelian['no_faktur_supp'] ?></td>
                                             </tr>
-                                            <tr>
-                                                <td>Total Berat Murni</td>
-                                                <td><?= $datapembelian['total_berat_murni'] ?></td>
-                                            </tr>
+                                            <?php if ($datapembelian['kelompok'] == 1) : ?>
+                                                <tr>
+                                                    <td>Total Berat Murni</td>
+                                                    <td><?= $datapembelian['total_berat_murni'] ?></td>
+                                                </tr>
+                                            <?php endif; ?>
                                         </tbody>
                                     </table>
                                 </div>
@@ -71,49 +74,223 @@
                             <br>
                             <div class="row">
                                 <div class="col-12">
-                                    <div class="card">
+                                    <div class="card" id="databeli">
                                         <!-- /.card-header -->
                                         <div class="card-body table-responsive p-0" style="max-height: 500px;">
-                                            <table class="table table-hover text-nowrap">
-                                                <thead>
-                                                    <tr>
-                                                        <th>Gambar</th>
-                                                        <th>Kode</th>
-                                                        <th>Qty</th>
-                                                        <th>Jenis</th>
-                                                        <th>Model</th>
-                                                        <th>Keterangan</th>
-                                                        <th>Berat</th>
-                                                        <th>Berat Murni</th>
-                                                        <th>Harga Beli</th>
-                                                        <th>Ongkos</th>
-                                                        <th>Kadar</th>
-                                                        <th>Nilai Tukar</th>
-                                                        <th>Merek</th>
-                                                        <th>Total Harga</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <?php foreach ($tampildata as $row) : ?>
+                                            <?php if ($datapembelian['kelompok'] == 1) : ?>
+                                                <table class="table table-hover text-nowrap">
+                                                    <thead>
                                                         <tr>
-                                                            <td><img src='/img/<?= $row['nama_img'] ?>' class='imgg'></td>
-                                                            <td><?= $row['kode'] ?></td>
-                                                            <td><?= $row['qty'] ?></td>
-                                                            <td><?= $row['jenis'] ?></td>
-                                                            <td><?= $row['model'] ?></td>
-                                                            <td><?= $row['keterangan'] ?></td>
-                                                            <td><?= $row['berat'] ?></td>
-                                                            <td><?= $row['berat_murni'] ?></td>
-                                                            <td><?= number_format($row['harga_beli'], 2, ",", ".") ?></td>
-                                                            <td><?= number_format($row['ongkos'], 2, ",", ".") ?></td>
-                                                            <td><?= $row['kadar'] ?></td>
-                                                            <td><?= $row['nilai_tukar'] ?></td>
-                                                            <td><?= $row['merek'] ?></td>
-                                                            <td><?= number_format($row['total_harga'], 2, ",", ".") ?></td>
+                                                            <th>Gambar</th>
+                                                            <th>Kode</th>
+                                                            <th>Qty</th>
+                                                            <th>Jenis</th>
+                                                            <th>Model</th>
+                                                            <th>Keterangan</th>
+                                                            <th>Berat</th>
+                                                            <th>Berat Murni</th>
+                                                            <th>Harga Beli</th>
+                                                            <th>Ongkos</th>
+                                                            <th>Kadar</th>
+                                                            <th>Nilai Tukar</th>
+                                                            <th>Merek</th>
+                                                            <th>Total Harga</th>
                                                         </tr>
-                                                    <?php endforeach; ?>
-                                                </tbody>
-                                            </table>
+                                                    </thead>
+                                                    <tbody>
+                                                        <?php foreach ($tampildata as $row) : ?>
+                                                            <tr>
+                                                                <td><img src='/img/<?= $row['nama_img'] ?>' class='imgg'></td>
+                                                                <td><?= $row['kode'] ?></td>
+                                                                <td><?= $row['qty'] ?></td>
+                                                                <td><?= $row['jenis'] ?></td>
+                                                                <td><?= $row['model'] ?></td>
+                                                                <td><?= $row['keterangan'] ?></td>
+                                                                <td><?= $row['berat'] ?></td>
+                                                                <td><?= $row['berat_murni'] ?></td>
+                                                                <td><?= number_format($row['harga_beli'], 2, ",", ".") ?></td>
+                                                                <td><?= number_format($row['ongkos'], 2, ",", ".") ?></td>
+                                                                <td><?= $row['kadar'] ?></td>
+                                                                <td><?= $row['nilai_tukar'] ?></td>
+                                                                <td><?= $row['merek'] ?></td>
+                                                                <td><?= number_format($row['total_harga'], 2, ",", ".") ?></td>
+                                                            </tr>
+                                                        <?php endforeach; ?>
+                                                    </tbody>
+                                                </table>
+                                            <?php endif; ?>
+                                            <?php if ($datapembelian['kelompok'] == 2) : ?>
+                                                <table class="table table-hover text-nowrap">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Gambar</th>
+                                                            <th>Kode</th>
+                                                            <th>Qty</th>
+                                                            <th>Jenis</th>
+                                                            <th>Model</th>
+                                                            <th>Keterangan</th>
+                                                            <th>Berat</th>
+                                                            <th>Harga Beli</th>
+                                                            <th>Ongkos</th>
+                                                            <th>Kadar</th>
+                                                            <th>Merek</th>
+                                                            <th>Total Harga</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <?php foreach ($tampildata as $row) : ?>
+                                                            <tr>
+                                                                <td><img src='/img/<?= $row['nama_img'] ?>' class='imgg'></td>
+                                                                <td><?= $row['kode'] ?></td>
+                                                                <td><?= $row['qty'] ?></td>
+                                                                <td><?= $row['jenis'] ?></td>
+                                                                <td><?= $row['model'] ?></td>
+                                                                <td><?= $row['keterangan'] ?></td>
+                                                                <td><?= $row['berat'] ?></td>
+                                                                <td><?= number_format($row['harga_beli'], 2, ",", ".") ?></td>
+                                                                <td><?= number_format($row['ongkos'], 2, ",", ".") ?></td>
+                                                                <td><?= $row['kadar'] ?></td>
+                                                                <td><?= $row['merek'] ?></td>
+                                                                <td><?= number_format($row['total_harga'], 2, ",", ".") ?></td>
+                                                            </tr>
+                                                        <?php endforeach; ?>
+                                                    </tbody>
+                                                </table>
+                                            <?php endif; ?>
+                                            <?php if ($datapembelian['kelompok'] == 3) : ?>
+                                                <table class="table table-hover text-nowrap">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Gambar</th>
+                                                            <th>Kode</th>
+                                                            <th>Qty</th>
+                                                            <th>Jenis</th>
+                                                            <th>Model</th>
+                                                            <th>Keterangan</th>
+                                                            <th>Berat</th>
+                                                            <th>Harga Beli</th>
+                                                            <th>Kadar</th>
+                                                            <th>Merek</th>
+                                                            <th>Total Harga</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <?php foreach ($tampildata as $row) : ?>
+                                                            <tr>
+                                                                <td><img src='/img/<?= $row['nama_img'] ?>' class='imgg'></td>
+                                                                <td><?= $row['kode'] ?></td>
+                                                                <td><?= $row['qty'] ?></td>
+                                                                <td><?= $row['jenis'] ?></td>
+                                                                <td><?= $row['model'] ?></td>
+                                                                <td><?= $row['keterangan'] ?></td>
+                                                                <td><?= $row['berat'] ?></td>
+                                                                <td><?= number_format($row['harga_beli'], 2, ",", ".") ?></td>
+                                                                <td><?= $row['kadar'] ?></td>
+                                                                <td><?= $row['merek'] ?></td>
+                                                                <td><?= number_format($row['total_harga'], 2, ",", ".") ?></td>
+                                                            </tr>
+                                                        <?php endforeach; ?>
+                                                    </tbody>
+                                                </table>
+                                            <?php endif; ?>
+                                            <?php if ($datapembelian['kelompok'] == 4) : ?>
+                                                <table class="table table-hover text-nowrap">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Gambar</th>
+                                                            <th>Kode</th>
+                                                            <th>Qty</th>
+                                                            <th>Jenis</th>
+                                                            <th>Model</th>
+                                                            <th>Keterangan</th>
+                                                            <th>Berat</th>
+                                                            <th>Harga Beli</th>
+                                                            <th>Kadar</th>
+                                                            <th>Total Harga</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <?php foreach ($tampildata as $row) : ?>
+                                                            <tr>
+                                                                <td><img src='/img/<?= $row['nama_img'] ?>' class='imgg'></td>
+                                                                <td><?= $row['kode'] ?></td>
+                                                                <td><?= $row['qty'] ?></td>
+                                                                <td><?= $row['jenis'] ?></td>
+                                                                <td><?= $row['model'] ?></td>
+                                                                <td><?= $row['keterangan'] ?></td>
+                                                                <td><?= $row['berat'] ?></td>
+                                                                <td><?= number_format($row['harga_beli'], 2, ",", ".") ?></td>
+                                                                <td><?= $row['kadar'] ?></td>
+                                                                <td><?= number_format($row['total_harga'], 2, ",", ".") ?></td>
+                                                            </tr>
+                                                        <?php endforeach; ?>
+                                                    </tbody>
+                                                </table>
+                                            <?php endif; ?>
+                                            <?php if ($datapembelian['kelompok'] == 5) : ?>
+                                                <table class="table table-hover text-nowrap">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Gambar</th>
+                                                            <th>Kode</th>
+                                                            <th>Qty</th>
+                                                            <th>Jenis</th>
+                                                            <th>Model</th>
+                                                            <th>Keterangan</th>
+                                                            <th>Carat</th>
+                                                            <th>Harga Beli</th>
+                                                            <th>Total Harga</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <?php foreach ($tampildata as $row) : ?>
+                                                            <tr>
+                                                                <td><img src='/img/<?= $row['nama_img'] ?>' class='imgg'></td>
+                                                                <td><?= $row['kode'] ?></td>
+                                                                <td><?= $row['qty'] ?></td>
+                                                                <td><?= $row['jenis'] ?></td>
+                                                                <td><?= $row['model'] ?></td>
+                                                                <td><?= $row['keterangan'] ?></td>
+                                                                <td><?= $row['carat'] ?></td>
+                                                                <td><?= number_format($row['harga_beli'], 2, ",", ".") ?></td>
+                                                                <td><?= number_format($row['total_harga'], 2, ",", ".") ?></td>
+                                                            </tr>
+                                                        <?php endforeach; ?>
+                                                    </tbody>
+                                                </table>
+                                            <?php endif; ?>
+                                            <?php if ($datapembelian['kelompok'] == 6) : ?>
+                                                <table class="table table-hover text-nowrap">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Gambar</th>
+                                                            <th>Kode</th>
+                                                            <th>Qty</th>
+                                                            <th>Jenis</th>
+                                                            <th>Model</th>
+                                                            <th>Keterangan</th>
+                                                            <th>Harga Beli</th>
+                                                            <th>Merek</th>
+                                                            <th>Total Harga</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <?php foreach ($tampildata as $row) : ?>
+                                                            <tr>
+                                                                <td><img src='/img/<?= $row['nama_img'] ?>' class='imgg'></td>
+                                                                <td><?= $row['kode'] ?></td>
+                                                                <td><?= $row['qty'] ?></td>
+                                                                <td><?= $row['jenis'] ?></td>
+                                                                <td><?= $row['model'] ?></td>
+                                                                <td><?= $row['keterangan'] ?></td>
+                                                                <td><?= number_format($row['harga_beli'], 2, ",", ".") ?></td>
+                                                                <td><?= $row['merek'] ?></td>
+                                                                <td><?= number_format($row['total_harga'], 2, ",", ".") ?></td>
+                                                            </tr>
+                                                        <?php endforeach; ?>
+                                                    </tbody>
+                                                </table>
+                                            <?php endif; ?>
                                         </div>
                                         <!-- /.card-body -->
                                     </div>
@@ -122,26 +299,7 @@
                             </div>
                             <div id="refresharga">
                                 <div class="row" id="refreshargaisi">
-                                    <div class="col-sm-6">
-                                        <div class="card">
-                                            <!-- /.card-header -->
-                                            <div class="card-body p-0">
-                                                <table class="table table-striped">
-                                                    <tbody>
-                                                        <tr>
-                                                            <td>Total Berat</td>
-                                                            <td><?= number_format($datapembelian['total_berat_rill'], 2, ',', '.') ?></td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>Total Berat Murni</td>
-                                                            <td><?= number_format($datapembelian['total_berat_murni'], 2, ',', '.') ?></td>
-                                                        </tr>
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                            <!-- /.card-body -->
-                                        </div>
-                                    </div>
+
                                     <div class="col-sm-6">
                                         <div class="card">
                                             <?php if ($databayar) : ?>
@@ -150,19 +308,26 @@
                                                     <table class="table table-hover text-nowrap">
                                                         <thead>
                                                             <tr>
-                                                                <th>Cara Pembayaran</th>
+                                                                <th style="text-align: center;">Cara Pembayaran</th>
                                                                 <th style="text-align: center;">Kode</th>
-                                                                <th>Jumlah Bayar</th>
-                                                                <th>Berat Murni</th>
+                                                                <th style="text-align: center;">Jumlah Bayar</th>
+                                                                <?php if ($datapembelian['kelompok'] == 5) : ?>
+                                                                    <th>Carat</th>
+                                                                <?php endif; ?>
+                                                                <?php if ($datapembelian['kelompok'] != 5 && $datapembelian['kelompok'] != 6) : ?>
+                                                                    <th>Berat</th>
+                                                                <?php endif; ?>
                                                             </tr>
                                                         </thead>
                                                         <tbody>
                                                             <?php foreach ($databayar as $byr) : ?>
                                                                 <tr>
-                                                                    <td> <?= $byr['cara_pembayaran'] ?> </td>
-                                                                    <td><?= ($byr['no_retur']) ? $byr['no_retur'] : $byr['kode_24k'] ?></td>
-                                                                    <td><?= number_format($byr['jumlah_pembayaran'], 2, ',', '.') ?></td>
-                                                                    <td><?= $byr['berat_murni'] ?></td>
+                                                                    <td style="text-align: center;"> <?= $byr['cara_pembayaran'] ?> </td>
+                                                                    <td style="text-align: center;"><?= ($byr['no_retur']) ? $byr['no_retur'] : $byr['kode_24k'] ?></td>
+                                                                    <td style="text-align: center;"><?= number_format($byr['jumlah_pembayaran'], 2, ',', '.') ?></td>
+                                                                    <?php if ($datapembelian['kelompok'] != 6) : ?>
+                                                                        <td style="text-align: center;"><?= number_format($byr['berat_murni'], 2, '.', ',') ?></td>
+                                                                    <?php endif; ?>
                                                                 </tr>
                                                             <?php endforeach; ?>
                                                         </tbody>

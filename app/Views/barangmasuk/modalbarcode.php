@@ -14,8 +14,13 @@
                             <tr>
                                 <th style="text-align: center;">Barcode</th>
                                 <th style="text-align: center;">Keterangan</th>
-                                <th style="text-align: center;">Kadar</th>
-                                <th style="text-align: center;">Berat</th>
+                                <?php if ($kel != 6) : ?>
+                                    <?php if ($kel != 5) : ?>
+                                        <th style="text-align: center;">Berat</th>
+                                    <?php else : ?>
+                                        <th style="text-align: center;">Carat</th>
+                                    <?php endif; ?>
+                                <?php endif; ?>
                                 <th style="text-align: center;">Qty</th>
                                 <th style="text-align: center;">No Faktur</th>
                             </tr>
@@ -25,8 +30,9 @@
                                 <tr onclick="PilihBarcode(<?= $row['barcode'] ?>)">
                                     <td><?= $row['barcode'] ?></td>
                                     <td><?= $row['jenis'] ?> <?= $row['model'] ?> <?= $row['keterangan'] ?></td>
-                                    <td><?= $row['kadar'] ?></td>
-                                    <td><?= $row['berat'] ?></td>
+                                    <?php if (isset($row['berat']) || isset($row['carat'])) : ?>
+                                        <td><?= (isset($row['berat'])) ? $row['berat'] : $row['carat'] ?></td>
+                                    <?php endif; ?>
                                     <td><?= $row['qty'] ?></td>
                                     <td><?= $row['no_faktur'] ?></td>
                                 </tr>

@@ -1,28 +1,78 @@
-<?php foreach ($tampildata as $row) : ?>
-    <tr>
-        <td><img src='/img/<?= $row['nama_img'] ?>' class='imgg'></td>
-        <td><?= $row['kode'] ?></td>
-        <?php if (substr($row['kode'], 0, 1) == 3 || substr($row['kode'], 0, 1) == 6) : ?>
-            <td><input onfocus="this.select()" style="width: 100px;" id="qty <?= $row['id_detail_penjualan'] ?>" onchange="UbahHarga(<?= $row['id_detail_penjualan'] ?>,<?= $row['id_date_penjualan'] ?>,<?= substr($row['kode'], 0, 1) ?>,<?= $row['qty'] ?>,<?= $row['berat'] ?>)" type="number" class="form-control" value="<?= $row['qty'] ?>"></td>
-        <?php else : ?>
-            <td><?= $row['qty'] ?></td>
-        <?php endif; ?>
-        <td><input onfocus="this.select()" style="width: 100px;" id="harganow <?= $row['id_detail_penjualan'] ?>" class="harganow" onchange="UbahHarga(<?= $row['id_detail_penjualan'] ?>,<?= $row['id_date_penjualan'] ?>,<?= substr($row['kode'], 0, 1) ?>,<?= $row['qty'] ?>,<?= $row['berat'] ?>)" type="number" class="form-control" value="<?= $row['harga_beli'] ?>"></td>
-        <td><?= number_format($row['ongkos'], 2, ',', '.') ?></td>
-        <td><?= $row['jenis'] ?> <?= $row['model'] ?></td>
-        <td><input onfocus="this.select()" style="width: 100px;" id="keterangan <?= $row['id_detail_penjualan'] ?>" onchange="UbahKet(<?= $row['id_detail_penjualan'] ?>,this)" type="text" class="form-control" value="<?= $row['keterangan'] ?>"></td>
-        <?php if (substr($row['kode'], 0, 1) == 4) : ?>
-            <td><input onfocus="this.select()" style="width: 100px;" id="berat <?= $row['id_detail_penjualan'] ?>" onchange="UbahHarga(<?= $row['id_detail_penjualan'] ?>,<?= $row['id_date_penjualan'] ?>,<?= substr($row['kode'], 0, 1) ?>,<?= $row['qty'] ?>,<?= $row['berat'] ?>)" type="number" class="form-control" value="<?= $row['berat'] ?>"></td>
-        <?php else : ?>
-            <td><?= $row['berat'] ?></td>
-        <?php endif; ?>
-        <td><?= $row['kadar'] ?></td>
-        <td><?= $row['nilai_tukar'] ?></td>
-        <td><?= $row['merek'] ?></td>
-        <td><?= number_format($row['total_harga'], 0, '.', ',') ?></td>
-        <td><button type='button' class='btn btn-block bg-gradient-danger' onclick="hapus(<?= $row['id_detail_penjualan'] ?>,<?= $row['id_date_penjualan'] ?>)"><i class='fas fa-trash'></i></button></td>
-    </tr>
-<?php endforeach; ?>
+<div class="card-body">
+    <br>
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <!-- /.card-header -->
+                <div class="card-body table-responsive p-0">
+                    <table class="table table-hover text-nowrap">
+                        <thead>
+                            <tr>
+                                <th>Gambar</th>
+                                <th>Kode</th>
+                                <th>Qty</th>
+                                <th>Harga Jual</th>
+                                <th>Ongkos</th>
+                                <th>Jenis</th>
+                                <th>Keterangan</th>
+                                <th>Merek</th>
+                                <th>Kadar</th>
+                                <th>Berat</th>
+                                <th>Nilai Tukar</th>
+                                <th>Total Harga</th>
+                                <th>Delete</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            <?php foreach ($tampildata as $row) : ?>
+                                <tr>
+                                    <td><img src='/img/<?= $row['nama_img'] ?>' class='imgg'></td>
+                                    <td><?= $row['kode'] ?></td>
+                                    <td><?= $row['qty'] ?></td>
+                                    <td><input onfocus="this.select()" style="width: 100px;" id="harganow <?= $row['id_detail_penjualan'] ?>" class="form-control harganow" onchange="UbahHarga(<?= $row['id_detail_penjualan'] ?>,<?= $row['id_date_penjualan'] ?>,<?= substr($row['kode'], 0, 1) ?>,<?= $row['qty'] ?>,<?= $row['berat'] ?>)" type="number" class="form-control" value="<?= $row['harga_beli'] ?>"></td>
+                                    <td><?= number_format($row['ongkos'], 2, ',', '.') ?></td>
+                                    <td><?= $row['jenis'] ?> <?= $row['model'] ?></td>
+                                    <td><input onfocus="this.select()" style="width: 100px;" id="keterangan <?= $row['id_detail_penjualan'] ?>" onchange="UbahKet(<?= $row['id_detail_penjualan'] ?>,this)" type="text" class="form-control" value="<?= $row['keterangan'] ?>"></td>
+                                    <td><?= $row['merek'] ?></td>
+                                    <td><?= $row['kadar'] ?></td>
+                                    <td><?= $row['berat'] ?></td>
+                                    <td><?= $row['nilai_tukar'] ?></td>
+                                    <td><?= number_format($row['total_harga'], 0, '.', ',') ?></td>
+                                    <td><button type='button' class='btn btn-block bg-gradient-danger' onclick="hapus(<?= $row['id_detail_penjualan'] ?>,<?= $row['id_date_penjualan'] ?>)"><i class='fas fa-trash'></i></button></td>
+                                </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                </div>
+                <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="card">
+                <!-- /.card-header -->
+                <div class="card-body p-0">
+                    <table class="table table-striped">
+                        <tbody>
+                            <tr>
+                                <td>Total Berat</td>
+                                <td><?= $totalberat ?></td>
+                            </tr>
+                            <tr>
+                                <td>Total Harga</td>
+                                <td><?= number_format($totalharga['total_harga'], 0, ',', '.') ?></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <!-- /.card-body -->
+            </div>
+        </div>
+    </div>
+</div>
 
 <script>
     function hapus(id, iddate) {
@@ -45,13 +95,12 @@
                         iddate: iddate,
                     },
                     success: function(result) {
-
+                        console.log(result)
                         tampildata()
                         Swal.fire({
                             icon: 'success',
                             title: 'Data Berhasil Dihapus',
                         })
-
                     },
                     error: function(xhr, ajaxOptions, thrownError) {
                         alert(xhr.status + "\n" + xhr.responseText + "\n" + thrownError);
@@ -64,20 +113,7 @@
     }
 
     function UbahHarga(id, iddate, kode, qty, berat) {
-        if (kode == 3) {
-            var qty = document.getElementById('qty ' + id).value
-            var hargabaru = document.getElementById('harganow ' + id).value
-        } else {
-            var hargabaru = document.getElementById('harganow ' + id).value
-            var qty = qty
-        }
-        if (kode == 4) {
-            var berat = document.getElementById('berat ' + id).value
-            var hargabaru = document.getElementById('harganow ' + id).value
-        } else {
-            var hargabaru = document.getElementById('harganow ' + id).value
-            var berat = berat
-        }
+        var hargabaru = document.getElementById('harganow ' + id).value
         $.ajax({
             type: "post",
             dataType: "json",

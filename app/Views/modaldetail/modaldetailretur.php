@@ -30,25 +30,15 @@
                                             <td>
                                                 <?= substr($datamasterretur['tanggal_retur'], 0, 10) ?>
                                             </td>
-                                            <td>Tanggal Jatuh Tempo :</td>
+                                            <td>Jumlah Barang :</td>
                                             <td>
-                                                <?= substr($datamasterretur['tgl_jatuh_tempo'], 0, 10) ?>
+                                                <?= $datamasterretur['jumlah_barang'] ?>
                                             </td>
                                         </tr>
                                         <tr>
                                             <td> Total Berat :</td>
                                             <td>
                                                 <?= $datamasterretur['total_berat_murni'] ?> g
-                                            </td>
-                                            <td> Bayar Berat Murni :</td>
-                                            <td>
-                                                <?= $datamasterretur['byr_berat_murni'] ?> g
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>Jumlah Barang :</td>
-                                            <td>
-                                                <?= $datamasterretur['jumlah_barang'] ?>
                                             </td>
                                             <td>No Faktur :</td>
                                             <td>

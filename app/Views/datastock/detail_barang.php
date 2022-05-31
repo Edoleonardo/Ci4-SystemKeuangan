@@ -453,9 +453,9 @@
                         <td>
                           <?= $barang['merek'] ?>
                         </td>
-                        <td>Kadar Barang :</td>
+                        <td>Merek Barang :</td>
                         <td>
-                          <?= $barang['kadar'] ?>
+                          <?= $barang['merek'] ?>
                         </td>
                       </tr>
                       <tr>

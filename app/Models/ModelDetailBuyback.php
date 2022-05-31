@@ -10,7 +10,7 @@ class ModelDetailBuyback extends Model
     protected $table = 'tbl_detail_buyback';
     protected $primaryKey = 'id_detail_buyback';
     protected $useTimestamps = true;
-    protected $allowedFields = ['id_date_buyback', 'id_karyawan', 'id_detail_penjualan', 'nama_img', 'kode', 'jenis', 'qty', 'model', 'keterangan', 'berat_murni', 'berat', 'harga_beli', 'ongkos', 'kadar', 'status', 'nilai_tukar', 'merek', 'total_harga', 'no_nota', 'status_proses', 'nama_bank', 'tunai', 'transfer', 'cara_pembayaran', 'no_nota_jual'];
+    protected $allowedFields = ['id_date_buyback', 'id_karyawan', 'id_detail_penjualan', 'nama_img', 'kode', 'jenis', 'qty', 'model', 'keterangan', 'berat_murni', 'berat', 'carat', 'harga_beli', 'ongkos', 'kadar', 'status', 'nilai_tukar', 'merek', 'total_harga', 'no_nota', 'status_proses', 'nama_bank', 'tunai', 'transfer', 'cara_pembayaran', 'no_nota_jual'];
 
     public function getDetailAllBuyback($id = false)
     {
@@ -113,6 +113,26 @@ class ModelDetailBuyback extends Model
     public function SumBeratDetailBuyback($id)
     {
         $this->selectSum('berat');
+        $this->where('id_date_buyback', $id);
+        $query = $this->get();
+        return $query->getResult('array')[0];
+    }
+    public function SumBerat3DetailBuyback($id)
+    {
+        $db = db_connect();
+        $data = $db->query('SELECT sum(qty * berat) as berat FROM tbl_detail_buyback where id_date_buyback = ' . $id . ';');
+        return $data->getResult('array')[0];
+    }
+    public function SumQtyDetailBuyback($id)
+    {
+        $this->selectSum('qty');
+        $this->where('id_date_buyback', $id);
+        $query = $this->get();
+        return $query->getResult('array')[0];
+    }
+    public function SumCartDetailBuyback($id)
+    {
+        $this->selectSum('carat');
         $this->where('id_date_buyback', $id);
         $query = $this->get();
         return $query->getResult('array')[0];

@@ -23,7 +23,7 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1 class="m-0">Data Kartu Stock</h1>
+                    <h1 class="m-0">Data Kartu Stock Emas</h1>
                 </div><!-- /.col -->
                 <!-- /.content-header -->
                 <div class="col-sm-6">
@@ -52,8 +52,6 @@
                                             <option value="2">Perhiasan Berlian</option>
                                             <option value="3">Logam Mulia (Antam, UBS, HWT)</option>
                                             <option value="4">Bahan Murni</option>
-                                            <option value="5">Loose Diamond</option>
-                                            <option value="6">Barang Dagang</option>
                                         </select>
                                     </div>
                                 </div>
@@ -65,6 +63,19 @@
                                             <option value="1">Belum Jual</option>
                                             <option value="2">Terjual</option>
                                         </select>
+                                    </div>
+                                </div>
+                                <div class="col-3">
+                                    <div class="form-group">
+                                        <label>Search Kode</label>
+                                        <input name="searchkode" onfocus="this.select()" oninput="TampilKartu()" class="form-control" id="searchkode" name="searchkode" placeholder="Masukan Kode Barang">
+                                        <div id="validationServerUsernameFeedback" class="invalid-feedback searchkodemsg">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-3">
+                                    <div class="form-group">
+                                        <a type="button" href="#" onclick="TampilKartu()"><i class="fa fa-undo"></i></a>
                                     </div>
                                 </div>
                             </div>
@@ -109,6 +120,7 @@
             url: "<?php echo base_url('modaldetailkartustock'); ?>",
             data: {
                 kode: kode,
+                kel: 1
             },
             success: function(result) {
                 $('.viewmodal').html(result.modal).show();
@@ -130,6 +142,8 @@
             data: {
                 kode: $('#kode').val(),
                 stock: $('#stock').val(),
+                barcode: $('#searchkode').val(),
+                kel: 1
             },
             success: function(result) {
                 $('#tablekartu').html(result.datakartu)

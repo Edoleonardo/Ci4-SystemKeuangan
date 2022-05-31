@@ -36,4 +36,20 @@ class ModelCuci extends Model
         $data = $db->query('select max(substr(no_cuci,3,10)) no_cuci from tbl_cuci where substr(no_cuci,1,2) = "C-" limit 1');
         return $data->getResult('array')[0];
     }
+    public function DataFilterCuci($lim, $kel, $stat, $notrans)
+    {
+        $db = db_connect();
+        if ($lim == 'semua') {
+            $lim1 = '';
+        } else {
+            $lim1  = 'Limit ' . $lim;
+        }
+        if ($notrans) {
+            $notrans1  = 'no_cuci = ' . '"' . $notrans . '"';
+        } else {
+            $notrans1 = '1 = 1';
+        }
+        $data = $db->query('select * from tbl_cuci where ' . $notrans1 . ' order by created_at DESC ' . $lim1 . ' ');
+        return $data->getResult('array');
+    }
 }

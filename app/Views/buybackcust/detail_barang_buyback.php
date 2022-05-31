@@ -41,7 +41,7 @@
             <table class="table table-striped">
               <tbody>
                 <tr>
-                  <td>Metode Pembayaran</td>
+                  <td>Pembayaran</td>
                   <td><?= $barang['cara_pembayaran'] ?></td>
                 </tr>
                 <?php if ($barang['nama_bank']) : ?>

@@ -10,6 +10,7 @@ use App\Models\ModelKadar;
 use App\Models\ModelMerek;
 use App\Models\ModelSupplier;
 use App\Models\ModelStock1;
+use App\Models\ModelStock2;
 use App\Models\ModelCuci;
 use App\Models\ModelDetailCuci;
 use App\Models\ModelTukang;
@@ -33,6 +34,7 @@ class BarangCuci extends BaseController
         $this->datakadar = new ModelKadar();
         $this->datamerek = new ModelMerek();
         $this->datastock = new ModelStock1();
+        $this->datastock2 = new ModelStock2();
         $this->modelcuci = new ModelCuci();
         $this->modeldetailcuci = new ModelDetailCuci();
         $this->modeltukang = new ModelTukang();
@@ -49,6 +51,15 @@ class BarangCuci extends BaseController
             'datacuci' => $this->modelcuci->getDataCuciAll(),
         ];
         return view('cucibarang/data_cuci', $data);
+    }
+    public function TampilDataCuci()
+    {
+        if ($this->request->isAJAX()) {
+            $data = $this->modelcuci->DataFilterCuci($this->request->getVar('tmpildata'), $this->request->getVar('kelompok'), $this->request->getVar('status'),  $this->request->getVar('notrans'));
+            $view = ['datacuci' => $data];
+            $msg = ['tampildata' => view('cucibarang/tampildatacuci', $view)];
+            echo json_encode($msg);
+        }
     }
     public function BarcodeGenerate($id)
     {
@@ -166,7 +177,7 @@ class BarangCuci extends BaseController
                     'id_cuci' => $datacuci['id_cuci'],
                     'id_karyawan' => $session->get('id_user'),
                     'jumlah_barang' => $this->modeldetailcuci->CountJumlahCuci($iddate)['berat'],
-                    'total_berat' => $this->modeldetailcuci->SumBeratDetailCuci($iddate)['berat'],
+                    'total_berat' => round($this->modeldetailcuci->SumBeratDetailCuci($iddate)['berat'], 2),
                 ]);
                 $msg = 'sukses';
             } else {
@@ -210,7 +221,7 @@ class BarangCuci extends BaseController
                 'id_cuci' => $datacuci['id_cuci'],
                 'id_karyawan' => $session->get('id_user'),
                 'jumlah_barang' => $this->modeldetailcuci->CountJumlahCuci($kode['id_date_cuci'])['berat'],
-                'total_berat' => $this->modeldetailcuci->SumBeratDetailCuci($kode['id_date_cuci'])['berat'],
+                'total_berat' => round($this->modeldetailcuci->SumBeratDetailCuci($kode['id_date_cuci'])['berat'], 2),
             ]);
             $msg = 'sukses';
             echo json_encode($msg);
@@ -233,7 +244,7 @@ class BarangCuci extends BaseController
                 'id_cuci' => $datacuci['id_cuci'],
                 'id_karyawan' => $session->get('id_user'),
                 'jumlah_barang' => $this->modeldetailcuci->CountJumlahCuci($datadetailcuci['id_date_cuci'])['berat'],
-                'total_berat' => $this->modeldetailcuci->SumBeratDetailCuci($datadetailcuci['id_date_cuci'])['berat'],
+                'total_berat' => round($this->modeldetailcuci->SumBeratDetailCuci($datadetailcuci['id_date_cuci'])['berat'], 2),
             ]);
             $msg = 'berhasil';
             echo json_encode($datadetailbuyback);
@@ -271,21 +282,35 @@ class BarangCuci extends BaseController
             $session = session();
             $id = $this->request->getVar('id');
             $datadetailcuci = $this->modeldetailcuci->getDataDetailCuci($id);
-            $datastock = $this->datastock->CheckDataCuci($datadetailcuci['kode']);
             if (substr($datadetailcuci['kode'], 0, 1) == 2) {
                 $harga_beli = $datadetailcuci['harga_beli'];
             } else {
                 $harga_beli = round($datadetailcuci['total_harga'] / $this->request->getVar('berat'));
             }
-            $this->datastock->save([
-                'id_karyawan' => $session->get('id_user'),
-                'id_stock_1' => $datastock['id_stock_1'],
-                'qty' => $datadetailcuci['qty'],
-                'berat' => $this->request->getVar('berat'),
-                'harga_beli' => $harga_beli,
-                'total_harga' => $datadetailcuci['total_harga'],
-                'status' => 'C'
-            ]);
+            if (substr($datadetailcuci['kode'], 0, 1) == 1) {
+                $datastock = $this->datastock->CheckDataCuci($datadetailcuci['kode']);
+                $this->datastock->save([
+                    'id_stock_1' => $datastock['id_stock_1'],
+                    'id_karyawan' => $session->get('id_user'),
+                    'qty' => $datadetailcuci['qty'],
+                    'berat' => $this->request->getVar('berat'),
+                    'harga_beli' => $harga_beli,
+                    'total_harga' => $datadetailcuci['total_harga'],
+                    'status' => 'C'
+                ]);
+            } elseif (substr($datadetailcuci['kode'], 0, 1) == 2) {
+                $datastock = $this->datastock2->CheckDataCuci($datadetailcuci['kode']);
+                $this->datastock2->save([
+                    'id_stock_2' => $datastock['id_stock_2'],
+                    'id_karyawan' => $session->get('id_user'),
+                    'qty' => $datadetailcuci['qty'],
+                    'berat' => $this->request->getVar('berat'),
+                    'harga_beli' => $harga_beli,
+                    'total_harga' => $datadetailcuci['total_harga'],
+                    'status' => 'C'
+                ]);
+            }
+
             $this->modeldetailcuci->save([
                 'id_detail_cuci' => $datadetailcuci['id_detail_cuci'],
                 'id_karyawan' => $session->get('id_user'),

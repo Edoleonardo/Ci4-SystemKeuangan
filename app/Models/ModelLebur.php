@@ -44,4 +44,20 @@ class ModelLebur extends Model
         //  $this->get();
         // return $query;
     }
+    public function DataFilterLebur($lim, $kel, $stat, $notrans)
+    {
+        $db = db_connect();
+        if ($lim == 'semua') {
+            $lim1 = '';
+        } else {
+            $lim1  = 'Limit ' . $lim;
+        }
+        if ($notrans) {
+            $notrans1  = 'no_lebur = ' . '"' . $notrans . '"';
+        } else {
+            $notrans1 = '1 = 1';
+        }
+        $data = $db->query('select * from tbl_lebur where ' . $notrans1 . ' order by created_at DESC ' . $lim1 . ' ');
+        return $data->getResult('array');
+    }
 }

@@ -1,8 +1,7 @@
 <?= $this->extend('layout/template'); ?>
 <?= $this->section('content') ?>
-<script type="text/javascript" src="/js/jquery.js"></script>
 <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<!-- <script src="/js/html5-qrcode.min_.js"></script> -->
+<script src="/js/html5-qrcode.min_.js"></script>
 
 <style>
     .table>tbody>tr>* {
@@ -14,58 +13,8 @@
         width: 100px;
     }
 
-
-    .autocomplete {
-        position: relative;
-        display: inline-block;
-    }
-
-    input {
-        border: 1px solid transparent;
-        background-color: #f1f1f1;
-        padding: 10px;
-        font-size: 16px;
-    }
-
-    input[type=text] {
-        background-color: #f1f1f1;
-        width: 100%;
-    }
-
-    input[type=submit] {
-        background-color: DodgerBlue;
-        color: #fff;
-        cursor: pointer;
-    }
-
-    .autocomplete-items {
-        position: absolute;
-        border: 1px solid #d4d4d4;
-        border-bottom: none;
-        border-top: none;
-        z-index: 99;
-        /*position the autocomplete items to be the same width as the container:*/
-        top: 100%;
-        left: 0;
-        right: 0;
-    }
-
-    .autocomplete-items div {
-        padding: 10px;
-        cursor: pointer;
-        background-color: #fff;
-        border-bottom: 1px solid #d4d4d4;
-    }
-
-    /*when hovering an item:*/
-    .autocomplete-items div:hover {
-        background-color: #e9e9e9;
-    }
-
-    /*when navigating through the items using the arrow keys:*/
-    .autocomplete-active {
-        background-color: DodgerBlue !important;
-        color: #ffffff;
+    .modal {
+        overflow: auto !important;
     }
 </style>
 <!-- Content Wrapper. Contains page content -->
@@ -100,7 +49,7 @@
                         <div class="form-group" style="margin: 1mm;">
                             <label>Kode Barang</label>
                             <div class="input-group input-group-sm">
-                                <input autocomplete="off" type="text" onfocus="this.select()" class="form-control kodebarang" id="kodebarang" onkeyup="ScanBarcode()" name="kodebarang" placeholder="Masukan Kode">
+                                <input autocomplete="off" type="text" onfocus="this.select()" class="form-control kodebarang" id="kodebarang" oninput="ScanBarcode()" name="kodebarang" placeholder="Masukan Kode">
                                 <span class="input-group-append">
                                     <button type="submit" id="btnsubmitform" class="btn btn-info btn-flat btnsubmitform">Ok</button>
                                 </span>
@@ -116,13 +65,13 @@
             <!-- Application buttons -->
             <div class="card">
                 <div class="card-body" id="refreshtombol">
-                    <a class="btn btn-app tambahcustomer" id="tambahcustomer" data-toggle="modal" data-target="#modal-lg">
+                    <!-- <a class="btn btn-app tambahcustomer" id="tambahcustomer" data-toggle="modal" data-target="#modal-tambahcust">
                         <i class="fas fa-users"></i> Tambah Customer
-                    </a>
-                    <!-- <a type="button" onclick="Batal()" class="btn btn-app">
-                        <i class="fas fa-window-close"></i> Batal Jual
                     </a> -->
-                    <a class="btn btn-app bg-danger" type="button" data-toggle="modal" data-target="#modal-bayar">
+                    <a type="button" onclick="Batal()" class="btn btn-app">
+                        <i class="fas fa-window-close"></i> Batal Jual
+                    </a>
+                    <a class="btn btn-app bg-danger" onclick="myDataBayar()" type="button" data-toggle="modal" data-target="#modal-bayar">
                         <i class="fas fa-money-bill"></i> Bayar
                     </a>
                     <a class="btn btn-app bg-primary" type="button" onclick="ScanCamBarcode()">
@@ -133,130 +82,9 @@
             </div>
         </div>
 </div>
-<div class="card">
+<div class="card" id="datajual">
     <!-- /.card-header -->
-    <div class="card-body">
-        <br>
-        <div class="row">
-            <div class="col-12">
-                <div class="card">
-                    <!-- /.card-header -->
-                    <div class="card-body table-responsive p-0">
-                        <table class="table table-hover text-nowrap">
-                            <thead>
-                                <tr>
-                                    <th>Gambar</th>
-                                    <th>Kode</th>
-                                    <th>Qty</th>
-                                    <th>Harga Jual</th>
-                                    <th>Ongkos</th>
-                                    <th>Jenis</th>
-                                    <th>Keterangan</th>
-                                    <th>Berat</th>
-                                    <th>Kadar</th>
-                                    <th>Nilai Tukar</th>
-                                    <th>Merek</th>
-                                    <th>Total Harga</th>
-                                    <th>Delete</th>
-                                </tr>
-                            </thead>
-                            <tbody id="datajual">
-                            </tbody>
-                        </table>
-                    </div>
-                    <!-- /.card-body -->
-                </div>
-                <!-- /.card -->
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-sm-6">
-                <div class="card">
-                    <!-- /.card-header -->
-                    <div class="card-body p-0">
-                        <table class="table table-striped">
-                            <tbody>
-                                <tr>
-                                    <td>Total Berat Murni</td>
-                                    <td id="totalberatbersihhtml01"></td>
-                                </tr>
-                                <tr>
-                                    <td>Total Berat</td>
-                                    <td id="totalberatkotorhtml01"></td>
-                                </tr>
-                                <tr>
-                                    <td>Total Ongkos</td>
-                                    <td id="totalongkoshtml01"></td>
-                                </tr>
-                                <tr>
-                                    <td>Total Harga</td>
-                                    <td id="totalbersih01"></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <!-- /.card-body -->
-                </div>
-            </div>
-            <div class="col-sm-6">
-                <div class="card">
-                    <!-- /.card-header -->
-                    <div class="card-body p-0" id="refreshpembayaran">
 
-                        <table class="table table-striped">
-                            <tbody>
-                                <?php if (isset($datapenjualan)) : ?>
-                                    <tr>
-                                        <td>Metode Pembayaran</td>
-                                        <td><?= $datapenjualan['pembayaran'] ?></td>
-                                    </tr>
-                                    <?php if ($datapenjualan['nama_bank']) : ?>
-                                        <tr>
-                                            <td>Nama Bank</td>
-                                            <td><?= $datapenjualan['nama_bank'] ?></td>
-                                        </tr>
-                                    <?php endif ?>
-                                    <?php if ($datapenjualan['pembulatan']) : ?>
-                                        <tr>
-                                            <td>Pembulatan</td>
-                                            <td><?= number_format($datapenjualan['pembulatan'], 2, ",", ".") ?></td>
-                                        </tr>
-                                    <?php endif ?>
-                                    <?php if ($datapenjualan['charge']) : ?>
-                                        <tr>
-                                            <td>Charge</td>
-                                            <td><?= $datapenjualan['charge'] ?> %</td>
-                                        </tr>
-                                    <?php endif ?>
-                                    <?php if ($datapenjualan['tunai']) : ?>
-                                        <tr>
-                                            <td>Tunai</td>
-                                            <td><?= number_format($datapenjualan['tunai'], 2, ',', '.') ?></td>
-                                        </tr>
-                                    <?php endif ?>
-                                    <?php if ($datapenjualan['debitcc']) : ?>
-                                        <tr>
-                                            <td>Debit / CC</td>
-                                            <td><?= number_format($datapenjualan['debitcc'], 2, ',', '.') ?></td>
-                                        </tr>
-                                    <?php endif ?>
-                                    <?php if ($datapenjualan['transfer']) : ?>
-                                        <tr>
-                                            <td>Transfer</td>
-                                            <td><?= number_format($datapenjualan['transfer'], 2, ',', '.') ?></td>
-                                        </tr>
-                                    <?php endif ?>
-                                <?php endif ?>
-
-                            </tbody>
-                        </table>
-                        <!-- /.card-body -->
-                    </div>
-                </div>
-            </div>
-
-        </div>
-    </div>
     <!-- /.card-body -->
 </div>
 <!-- /.container-fluid -->
@@ -264,97 +92,6 @@
 <!-- /.content -->
 </div>
 <!-- /.content-wrapper -->
-
-<!-- <div class="modal fade" id="modal-bayarrrrr">
-    <div class="modal-dialog modal-xl">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title">Pembayaran</h4>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <form action="/pembayaranform" id="pembayaranform" class="pembayaranform" name="pembayaranform">
-                    <?= csrf_field(); ?>
-                    <div class="card-header mx-auto">
-                        <h3 class="card-title" style=" padding-left: 500px; font-weight: bold;" id="totalbersih"></h3>
-                    </div>
-                    <div class="card-body">
-                        <div class="form-group">
-                            <label>Tunai</label><input type="number" onkeyup="byrtunai()" min="0" id="tunai" name="tunai" class="form-control" placeholder="Masukan tunai">
-                            <div id="validationServerUsernameFeedback" class="invalid-feedback tunaimsg"></div>
-                        </div>
-                        <div class="form-group">
-                            <label>Transfer</label><input type="number" onkeyup="byrtransfer()" min="0" id="transfer" name="transfer" class="form-control" placeholder="Masukan transfer">
-                            <div id="validationServerUsernameFeedback" class="invalid-feedback transfermsg"></div>
-                        </div>
-                        <div class="form-group">
-                            <div class="row">
-                                <div class="col-9">
-                                    <label>Debit/CC</label>
-                                    <input type="number" onkeyup="byrdebitcc()" min="0" id="debitcc" name="debitcc" class="form-control" placeholder="Masukan debit/cc">
-                                    <div id="validationServerUsernameFeedback" class="invalid-feedback debitccmsg"></div>
-                                </div>
-                                <div class="col-3">
-                                    <label>Charge %</label><input type="number" onkeyup="brycas()" step="0.01" id="charge" name="charge" class="form-control" placeholder="Masukan Charge">
-                                    <div id="validationServerUsernameFeedback" class="invalid-feedback chargemsg"></div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-ml-6">
-                                <div class="form-group">
-                                    <?php foreach ($bank as $m) : ?>
-                                        <div class="form-group">
-                                            <input class="form-check-input" type="radio" value="<?= $m['nama_bank'] ?>">
-                                            <labelclass="form-check-label" style="font-weight: bold;"><?= $m['nama_bank'] ?></label>
-                                        </div>
-                                    <?php endforeach; ?>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-12">
-                                <div class="card">
-                                    <div class="card-body table-responsive p-0">
-                                        <table class="table table-head-fixed text-nowrap">
-                                            <tbody>
-                                                <tr>
-                                                    <td>Total Berat Kotor</td>
-                                                    <td id="totalberatkotorhtml"></td>
-                                                    <td>Total Berat Bersih</td>
-                                                    <td id="totalberatbersihhtml"></td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Total Ongkos</td>
-                                                    <td id="totalongkoshtml"></td>
-                                                    <td>Pembulatan</td>
-                                                    <td id="pembulatanhtml"></td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Total Bersih</td>
-                                                    <td id="totalbersih"></td>
-                                                    <td>Harus Bayar</td>
-                                                    <td id="totalbersih1"></td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-            </div>
-            <div class="modal-footer justify-content-between">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <button type="submit" class="btn btn-primary btnbayar">Bayar</button>
-            </div>
-            </form>
-        </div>
-    </div>
-</div> -->
 <div class="modal fade" id="modal-bayar">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
@@ -367,117 +104,111 @@
             <div class="modal-body">
                 <form action="/pembayaranform" id="pembayaranform" class="pembayaranform" name="pembayaranform">
                     <?= csrf_field(); ?>
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <div class="col-sm-12">
-                                <div class="card">
-                                    <div class="form-group" style="margin: 1mm;">
-                                        <label>Nomor Tlp Customer</label>
-                                        <input autocomplete="off" type="tel" class="form-control inputcustomer" id="inputcustomer" name="inputcustomer" value="<?= (isset($datapenjualan['nohp_cust'])) ? $datapenjualan['nohp_cust'] : '' ?>" placeholder="Masukan NOhp customer">
-                                        <div id="validationServerUsernameFeedback" class="invalid-feedback inputcustomermsg">
-                                        </div>
-                                    </div>
-                                </div>
+                    <input type="hidden" name="kelompok" id="kelompok" value="<?= $datapenjualan['kelompok'] ?>">
+                    <input type="hidden" name="dateid" id="dateid" value="<?= $datapenjualan['id_date_penjualan'] ?>">
+                    <input type="hidden" name="hasil" id="hasil" value="0">
+                    <input type="hidden" name="berathasil" id="berathasil" value="0">
+                    <div class="card-header">
+                        <h4 style="text-align: center;" id="totalbayar"></h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-8">
                                 <div class="form-group">
-                                    <label>Pembulatan</label>
-                                    <input onkeyup="myPembulatan()" type="number" value="<?= (isset($datapenjualan['pembulatan'])) ? $datapenjualan['pembulatan'] : ''; ?>" min="0" id="pembulatan" name="pembulatan" class="form-control" placeholder="Masukan Pembulatan">
-                                    <input type="hidden" id="dateid" name="dateid" value="<?= (isset($datapenjualan['id_date_penjualan'])) ? $datapenjualan['id_date_penjualan'] : ''; ?>">
+                                    <label><a href="#" data-toggle="modal" data-target="#modal-customer">NoHp Customer</a></label>
+                                    <input autocomplete="off" type="number" onfocus="this.select()" min="0" onfocusout="checkcust()" id="nohpcust" name="nohpcust" class="form-control" placeholder="Masukan No Hp">
+                                    <div id="validationServerUsernameFeedback" class="invalid-feedback nohpcustmsg"></div>
                                 </div>
                             </div>
-                            <div class="col-sm-12">
-                                <div class="card">
-                                    <div class="p-0">
-                                        <div class="row">
-                                            <div class="col-sm-6">
-                                                <div class="form-group">
-                                                    <label>Cara Pembayaran</label>
-                                                    <select onchange="myPembayaran()" name="pembayaran" class="form-control" id="pembayaran" name="pembayaran">
-                                                        <option value="Bayar Nanti" selected>Bayar Nanti</option>
-                                                        <option value="Debit/CC">Debit/CC</option>
-                                                        <option value="Debit/CCTranfer">Debit/CC & Tranfer</option>
-                                                        <option value="Transfer">Transfer</option>
-                                                        <option value="Tunai">Tunai</option>
-                                                        <option value="Tunai&Debit/CC">Tunai & Debit/CC</option>
-                                                        <option value="Tunai&Transfer">Tunai & Transfer</option>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                            <div class="col-sm-6">
-                                                <div class="form-group metodebayar">
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-sm-6">
-                                                <div class="form-group namabankhtml">
-                                                </div>
-                                            </div>
-                                            <div class="col-sm-6">
-                                                <div class="form-group metodebayar2">
-                                                </div>
-                                            </div>
-                                            <div class="col-sm-6">
-                                                <div class="form-group chargehtml">
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
+                            <div class="col-4">
+                                <div class="form-group">
+                                    <label>Nama Customer</label><input autocomplete="off" type="text" onfocus="this.select()" min="0" id="namacust" name="namacust" class="form-control" placeholder="Nama Custtomer" readonly>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-sm-6">
-                            <div class="card">
-                                <div class="card-body p-0">
-                                    <table class="table table-hover text-nowrap">
-                                        <tbody>
-                                            <tr>
-                                                <td>Total Berat Kotor</td>
-                                                <td id="totalberatkotorhtml"></td>
-                                            </tr>
-                                            <tr>
-                                                <td>Total Berat Bersih</td>
-                                                <td id="totalberatbersihhtml"></td>
-                                            </tr>
-                                            <tr>
-                                                <td>Total Ongkos</td>
-                                                <td id="totalongkoshtml"></td>
-                                            </tr>
-                                            <tr id="tabelbank">
-                                            </tr>
-                                            <tr id="tabelbayar1">
-                                            </tr>
-                                            <tr id="tabelbayar2">
-                                            </tr>
-                                            <tr id="tabelbayar3">
-                                            </tr>
-                                            <tr>
-                                                <td>Pembulatan</td>
-                                                <td id="pembulatanhtml"></td>
-                                            </tr>
-                                            <tr>
-                                                <td>Total Bersih</td>
-                                                <td id="totalbersih"></td>
-                                            </tr>
-                                            <tr>
-                                                <td>Harus Bayar</td>
-                                                <td id="totalbersih1"></td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label><a href="#" onclick="MasukField('pembulatan')">Pembulatan</a></label><input autocomplete="off" type="number" onchange="myDataBayar()" onfocus="this.select()" min="0" id="pembulatan" name="pembulatan" class="form-control" placeholder="Masukan pembulatan">
                                 </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label><a href="#" onclick="MasukField('tunai')">Tunai</a></label><input type="number" onchange="myDataBayar()" onfocus="this.select()" min="0" id="tunai" name="tunai" class="form-control" placeholder="Masukan tunai">
+                                    <div id="validationServerUsernameFeedback" class="invalid-feedback tunaimsg"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label><a href="#" onclick="MasukField('transfer')">Transfer</a></label><input type="number" onchange="myDataBayar()" onfocus="this.select()" min="0" id="transfer" name="transfer" class="form-control" placeholder="Masukan transfer">
+                                    <div id="validationServerUsernameFeedback" class="invalid-feedback transfermsg"></div>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label>Bank Transfer</label><input type="text" min="0" id="banktransfer" name="banktransfer" class="form-control" placeholder="Pilih Bank" readonly>
+                                    <div id="validationServerUsernameFeedback" class="invalid-feedback banktransfermsg"></div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <?php foreach ($bank as $m) : ?>
+                                    <div class="col">
+                                        <div class="form-group">
+                                            <button type="button" style="width: 200px;" onclick="pilihbank('<?= $m['nama_bank'] ?>','banktransfer')" class="btn btn-block btn-outline-info btn-lg"><?= $m['nama_bank'] ?></button>
+                                        </div>
+                                    </div>
+                                <?php endforeach; ?>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label><a href="#" onclick="MasukField('debitcc')">Debit/CC</a></label><input type="number" onchange="myDataBayar()" onfocus="this.select()" min="0" id="debitcc" name="debitcc" class="form-control" placeholder="Masukan Debit/CC">
+                                    <div id="validationServerUsernameFeedback" class="invalid-feedback debitccmsg"></div>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label>Charge</label><input type="number" onchange="myDataBayar()" min="0" step="0.01" id="charge" name="charge" class="form-control" placeholder="Charge">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label><a href="#" onclick="MasukField('byrcharge')">Bayar Charge</a></label><input type="number" onchange="myDataBayar()" min="0" step="0.01" id="byrcharge" name="byrcharge" class="form-control" placeholder="Bayar Charge">
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label>Bank Debit/CC</label><input type="text" min="0" id="bankdebitcc" name="bankdebitcc" class="form-control" placeholder="Bank Debit/CC" readonly>
+                                    <div id="validationServerUsernameFeedback" class="invalid-feedback bankdebitccmsg"></div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <?php foreach ($bank as $m) : ?>
+                                    <div class="col">
+                                        <div class="form-group">
+                                            <button type="button" style="width: 200px;" onclick="pilihbank('<?= $m['nama_bank'] ?>','bankdebitcc')" class="btn btn-block btn-outline-primary btn-lg"><?= $m['nama_bank'] ?></button>
+                                        </div>
+                                    </div>
+                                <?php endforeach; ?>
                             </div>
                         </div>
                     </div>
+                    <div class="modal-footer justify-content-between">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Selesai</button>
+                    </div>
+                </form>
             </div>
-            <div class="modal-footer justify-content-between">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <button type="submit" class="btn btn-primary btnbayar">Bayar</button>
-            </div>
-            </form>
         </div>
     </div>
 </div>
-<div class="modal fade" id="modal-lg">
+
+<div class="modal fade" id="modal-tambahcust">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
@@ -552,6 +283,7 @@
         <!-- /.modal-content -->
     </div>
 </div>
+<div id="modalcust"></div>
 <aside class="control-sidebar control-sidebar-dark">
     <!-- Control sidebar content goes here -->
 </aside>
@@ -564,7 +296,7 @@
     var html5QrcodeScanner = new Html5QrcodeScanner(
         "reader", {
             fps: 10,
-            qrbox: 250
+            qrbox: 100
         });
 
     function matiinscan() {
@@ -581,7 +313,6 @@
             ScanBarcode()
             $('#modal-scan').modal('toggle')
             html5QrcodeScanner.clear();
-
         }
 
         function onScanFailure(error) {
@@ -611,110 +342,6 @@
         })
     }
 
-    function autocomplete(inp, arr) {
-        /*the autocomplete function takes two arguments,
-        the text field element and an array of possible autocompleted values:*/
-        var currentFocus;
-        /*execute a function when someone writes in the text field:*/
-        inp.addEventListener("input", function(e) {
-            var a, b, i, val = this.value;
-            /*close any already open lists of autocompleted values*/
-            closeAllLists();
-            if (!val) {
-                return false;
-            }
-            currentFocus = -1;
-            /*create a DIV element that will contain the items (values):*/
-            a = document.createElement("DIV");
-            a.setAttribute("id", this.id + "autocomplete-list");
-            a.setAttribute("class", "autocomplete-items");
-            /*append the DIV element as a child of the autocomplete container:*/
-            this.parentNode.appendChild(a);
-            /*for each item in the array...*/
-            for (i = 0; i < arr.length; i++) {
-                /*check if the item starts with the same letters as the text field value:*/
-                if (arr[i].substr(0, val.length).toUpperCase() == val.toUpperCase()) {
-                    /*create a DIV element for each matching element:*/
-                    b = document.createElement("DIV");
-                    /*make the matching letters bold:*/
-                    b.innerHTML = "<strong>" + arr[i].substr(0, val.length) + "</strong>";
-                    b.innerHTML += arr[i].substr(val.length);
-                    /*insert a input field that will hold the current array item's value:*/
-                    b.innerHTML += "<input type='hidden' value='" + arr[i] + "'>";
-                    /*execute a function when someone clicks on the item value (DIV element):*/
-                    b.addEventListener("click", function(e) {
-                        /*insert the value for the autocomplete text field:*/
-                        inp.value = this.getElementsByTagName("input")[0].value;
-                        inp.focus()
-                        // inp.select()
-                        /*close the list of autocompleted values,
-                        (or any other open lists of autocompleted values:*/
-                        closeAllLists();
-                    });
-                    a.appendChild(b);
-                }
-            }
-        });
-        /*execute a function presses a key on the keyboard:*/
-        inp.addEventListener("keydown", function(e) {
-            var x = document.getElementById(this.id + "autocomplete-list");
-            if (x) x = x.getElementsByTagName("div");
-            if (e.keyCode == 40) {
-                /*If the arrow DOWN key is pressed,
-                increase the currentFocus variable:*/
-                currentFocus++;
-                /*and and make the current item more visible:*/
-                addActive(x);
-            } else if (e.keyCode == 38) { //up
-                /*If the arrow UP key is pressed,
-                decrease the currentFocus variable:*/
-                currentFocus--;
-                /*and and make the current item more visible:*/
-                addActive(x);
-            } else if (e.keyCode == 13) {
-                /*If the ENTER key is pressed, prevent the form from being submitted,*/
-                e.preventDefault();
-                if (currentFocus > -1) {
-                    /*and simulate a click on the "active" item:*/
-                    if (x) x[currentFocus].click();
-                }
-            }
-        });
-
-        function addActive(x) {
-            /*a function to classify an item as "active":*/
-            if (!x) return false;
-            /*start by removing the "active" class on all items:*/
-            removeActive(x);
-            if (currentFocus >= x.length) currentFocus = 0;
-            if (currentFocus < 0) currentFocus = (x.length - 1);
-            /*add class "autocomplete-active":*/
-            x[currentFocus].classList.add("autocomplete-active");
-        }
-
-        function removeActive(x) {
-            /*a function to remove the "active" class from all autocomplete items:*/
-            for (var i = 0; i < x.length; i++) {
-                x[i].classList.remove("autocomplete-active");
-            }
-        }
-
-        function closeAllLists(elmnt) {
-            /*close all autocomplete lists in the document,
-            except the one passed as an argument:*/
-            var x = document.getElementsByClassName("autocomplete-items");
-            for (var i = 0; i < x.length; i++) {
-                if (elmnt != x[i] && elmnt != inp) {
-                    x[i].parentNode.removeChild(x[i]);
-                }
-            }
-        }
-        /*execute a function when someone clicks in the document:*/
-        document.addEventListener("click", function(e) {
-            closeAllLists(e.target);
-        });
-    }
-
     function isivalue() {
         var jenisbayar = $('#pembayaran').val();
         var harusbayar = $('#totalbersih').html().replaceAll('.', '');
@@ -738,13 +365,8 @@
             dataType: "json",
             url: "<?php echo base_url('tampilcust'); ?>",
             success: function(result) {
-                var arr = []
-                for (var i = 0; i < result.length; i++) {
-                    var obj = result[i];
-                    arr.push(obj.nohp_cust)
-
-                }
-                autocomplete(document.getElementById("inputcustomer"), arr);
+                // console.log(result)
+                $('#modalcust').html(result.tampilcust)
             },
             error: function(xhr, ajaxOptions, thrownError) {
                 alert(xhr.status + "\n" + xhr.responseText + "\n" + thrownError);
@@ -757,16 +379,18 @@
             type: "GET",
             dataType: "json",
             data: {
-                nohp_cust: document.getElementById('inputcustomer').value
+                nohp_cust: document.getElementById('nohpcust').value
             },
             url: "<?php echo base_url('checkcust'); ?>",
             success: function(result) {
+                console.log('asd')
                 if (result == 'gagal') {
-                    isicust = document.getElementById('inputcustomer').value
+                    isicust = document.getElementById('nohpcust').value
                     document.getElementById("nohp").value = isicust
-                    $('#tambahcustomer').trigger('click');
+                    $('#modal-tambahcust').modal('show');
                 } else {
-                    return result;
+                    console.log(result)
+                    $('#namacust').val(result.nama);
                 }
             },
             error: function(xhr, ajaxOptions, thrownError) {
@@ -783,6 +407,35 @@
         return rounded
     }
 
+    function MasukField(jenis) {
+        var hasil = $('#hasil').val()
+        if (jenis == 'pembulatan') {
+            $('#pembulatan').val(hasil)
+        } else if (jenis == 'tunai') {
+            $('#tunai').val(hasil)
+        } else if (jenis == 'transfer') {
+            $('#transfer').val(hasil)
+        } else if (jenis == 'debitcc') {
+            $('#debitcc').val(hasil)
+        } else if (jenis == 'byrcharge') {
+            $('#byrcharge').val(hasil)
+        }
+        myDataBayar()
+    }
+
+    function pilihbank(nmbank, jenis) {
+        if (jenis == 'banktransfer') {
+            $('#banktransfer').val(nmbank)
+        } else {
+            $('#bankdebitcc').val(nmbank)
+        }
+    }
+
+    function pilihcustomer(nohp) {
+        $('#nohpcust').val(nohp)
+        $('#modal-customer').modal('hide')
+        checkcust()
+    }
 
     function tampildata() {
         $.ajax({
@@ -791,15 +444,11 @@
             data: {
                 dateid: document.getElementById('iddate').value
             },
-            url: "<?php echo base_url('tampilpenjualan'); ?>",
+            url: "<?php echo base_url('tampildetailpenjualan'); ?>",
             success: function(result) {
                 var totalharga = parseFloat(result.totalbersih.total_harga)
+                $('#kelompok').val(result.kelompok)
                 $('#datajual').html(result.data)
-                $('#totalbersih01').html(totalharga.toString().replace(/\B(?=(\d{3})+(?!\d))/g, "."))
-                $('#totalberatbersihhtml01').html(pembulatankoma(result.totalberatbersih.berat_murni))
-                $('#totalberatkotorhtml01').html(pembulatankoma(result.totalberatkotor))
-                $('#totalongkoshtml01').html(pembulatankoma(result.totalongkos.ongkos).toString().replace(/\B(?=(\d{3})+(?!\d))/g, "."))
-
 
             },
             error: function(xhr, ajaxOptions, thrownError) {
@@ -817,17 +466,23 @@
                 dateid: '<?= (isset($datapenjualan['id_date_penjualan'])) ? $datapenjualan['id_date_penjualan'] : ''; ?>'
             },
             success: function(result) {
-                var totalharga = parseFloat(result.totalbersih.total_harga) + parseFloat(result.totalongkos.ongkos)
+                const tunai = $('#tunai').val()
+                const transfer = $('#transfer').val()
+                const pembulatan = $('#pembulatan').val()
+                const debitcc = $('#debitcc').val()
+                const charge = $('#charge').val()
+                const byrcharge = $('#byrcharge').val()
 
-                $('#totalberatbersihhtml').html(pembulatankoma(result.totalberatbersih.berat_murni))
-                $('#totalberatkotorhtml').html(pembulatankoma(result.totalberatkotor.berat))
-                $('#totalongkoshtml').html(pembulatankoma(result.totalongkos.ongkos).toString().replace(/\B(?=(\d{3})+(?!\d))/g, "."))
-                document.getElementById('totalbersih1').innerHTML = pembulatankoma(totalharga).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
-                document.getElementById('totalbersih').innerHTML = pembulatankoma(totalharga).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
-                document.getElementById('pembulatanhtml').innerHTML = ''
-                document.getElementById('pembulatan').value = ''
-                isivalue()
-
+                if (charge) {
+                    var totaldebit = debitcc * charge
+                } else {
+                    var totaldebit = 0
+                }
+                var hasil = (parseFloat(result.totalbersih.total_harga) + totaldebit) - tunai - transfer - pembulatan - debitcc - byrcharge
+                $('#hasil').val(hasil)
+                $('#totalbayar').html(' Rp ' + hasil.toString().replace(/\B(?=(\d{3})+(?!\d))/g, "."))
+                $('#totalberatkotorhtml01').html(result.totalberatkotor.berat.toString().replace(/\B(?=(\d{3})+(?!\d))/g, "."))
+                $('#totalbersih01').html(result.totalbersih.total_harga.toString().replace(/\B(?=(\d{3})+(?!\d))/g, "."))
             },
             error: function(xhr, ajaxOptions, thrownError) {
                 alert(xhr.status + "\n" + xhr.responseText + "\n" + thrownError);
@@ -847,386 +502,129 @@
             confirmButtonText: 'Selesai',
         }).then((choose) => {
             if (choose.isConfirmed) {
+                let form = $('.pembayaranform')[0];
+                let data = new FormData(form)
                 $.ajax({
-                    type: "GET",
+                    type: "POST",
+                    data: data,
+                    url: "<?php echo base_url('ajaxpembayaranjual') ?>",
                     dataType: "json",
-                    data: {
-                        nohp_cust: document.getElementById('inputcustomer').value
+                    contentType: false,
+                    processData: false,
+                    cache: false,
+                    beforeSend: function() {
+                        $('.btnbayar').html('<i class="fa fa-spin fa-spinner">')
+                        $('.btnbayar').attr('type', 'button')
                     },
-                    url: "<?php echo base_url('checkcust'); ?>",
+                    complete: function() {
+                        $('.btnbayar').html('Bayar')
+                        $('.btnbayar').attr('type', 'submit')
+                    },
                     success: function(result) {
-                        if (result == 'gagal') {
-                            isicust = document.getElementById('inputcustomer').value
-                            document.getElementById("nohp").value = isicust
-                            $('#tambahcustomer').trigger('click');
-                        } else {
-                            let form = $('.pembayaranform')[0];
-                            let data = new FormData(form)
-                            $.ajax({
-                                type: "POST",
-                                data: data,
-                                url: "<?php echo base_url('ajaxpembayaranjual') ?>",
-                                dataType: "json",
-                                contentType: false,
-                                processData: false,
-                                cache: false,
-                                beforeSend: function() {
-                                    $('.btnbayar').html('<i class="fa fa-spin fa-spinner">')
-                                    $('.btnbayar').attr('type', 'button')
-                                },
-                                complete: function() {
-                                    $('.btnbayar').html('Bayar')
-                                    $('.btnbayar').attr('type', 'submit')
-                                },
-                                success: function(result) {
-                                    if (result != 'error') {
-                                        if (result.error) {
-                                            if (result.error.debitcc) {
-                                                $('#debitcc').addClass('is-invalid')
-                                                $('.debitccmsg').html(result.error.debitcc)
-                                            } else {
-                                                $('#debitcc').removeClass('is-invalid')
-                                                $('.debitccmsg').html('')
-                                            }
-                                            if (result.error.namabank) {
-                                                $('#namabank').addClass('is-invalid')
-                                                $('.namabankmsg').html(result.error.namabank)
-                                            } else {
-                                                $('#namabank').removeClass('is-invalid')
-                                                $('.namabankmsg').html('')
-                                            }
-                                            if (result.error.transfer) {
-                                                $('#transfer').addClass('is-invalid')
-                                                $('.transfermsg').html(result.error.transfer)
-                                            } else {
-                                                $('#transfer').removeClass('is-invalid')
-                                                $('.transfermsg').html('')
-                                            }
-                                            if (result.error.tunai) {
-                                                $('#tunai').addClass('is-invalid')
-                                                $('.tunaimsg').html(result.error.tunai)
-                                            } else {
-                                                $('#tunai').removeClass('is-invalid')
-                                                $('.tunaimsg').html('')
-                                            }
-                                            if (result.error.inputcustomer) {
-                                                $('#inputcustomer').addClass('is-invalid')
-                                                $('.inputcustomermsg').html(result.error.inputcustomer)
-                                            } else {
-                                                $('#inputcustomer').removeClass('is-invalid')
-                                                $('.inputcustomermsg').html('')
-                                            }
-                                            if (result.error.kurang) {
-                                                Swal.fire({
-                                                    icon: 'warning',
-                                                    title: result.error.kurang,
-                                                })
-                                            }
-                                        } else {
-                                            $('#debitcc').removeClass('is-invalid')
-                                            $('.debitccmsg').html('')
-                                            $('#namabank').removeClass('is-invalid')
-                                            $('.namabankmsg').html('')
-                                            $('#transfer').removeClass('is-invalid')
-                                            $('.transfermsg').html('')
-                                            $('#tunai').removeClass('is-invalid')
-                                            $('.tunaimsg').html('')
-                                            $('#inputcustomer').removeClass('is-invalid')
-                                            $('.inputcustomermsg').html('')
-
-                                            Swal.fire({
-                                                icon: 'success',
-                                                title: 'Berhasil Bayar',
-                                                confirmButtonColor: '#3085d6',
-                                                confirmButtonText: 'OK',
-                                                allowOutsideClick: false
-                                            }).then((choose) => {
-                                                if (choose.isConfirmed) {
-                                                    // $('#modal-bayar').modal('toggle');
-                                                    // $("#refreshpembayaran").load("/draftpenjualan/" + document.getElementById('dateid').value + " #refreshpembayaran");
-                                                    // $("#refreshtombol").load("/draftpenjualan/" + document.getElementById('dateid').value + " #refreshtombol");
-                                                    window.location.href = "/detailpenjualan/" + document.getElementById('dateid').value
-                                                }
-                                            })
-                                        }
-                                    } else {
-                                        Swal.fire({
-                                            icon: 'warning',
-                                            title: 'Tidak ada Data',
-                                        })
-                                    }
-
-                                },
-                                error: function(xhr, ajaxOptions, thrownError) {
-                                    alert(xhr.status + "\n" + xhr.responseText + "\n" + thrownError);
+                        console.log(result)
+                        if (result != 'error') {
+                            if (result.error) {
+                                if (result.error.debitcc) {
+                                    $('#debitcc').addClass('is-invalid')
+                                    $('.debitccmsg').html(result.error.debitcc)
+                                } else {
+                                    $('#debitcc').removeClass('is-invalid')
+                                    $('.debitccmsg').html('')
                                 }
+                                if (result.error.banktransfer) {
+                                    $('#banktransfer').addClass('is-invalid')
+                                    $('.banktransfermsg').html(result.error.banktransfer)
+                                } else {
+                                    $('#banktransfer').removeClass('is-invalid')
+                                    $('.banktransfermsg').html('')
+                                }
+                                if (result.error.bankdebitcc) {
+                                    $('#bankdebitcc').addClass('is-invalid')
+                                    $('.bankdebitccmsg').html(result.error.bankdebitcc)
+                                } else {
+                                    $('#bankdebitcc').removeClass('is-invalid')
+                                    $('.bankdebitccmsg').html('')
+                                }
+                                if (result.error.transfer) {
+                                    $('#transfer').addClass('is-invalid')
+                                    $('.transfermsg').html(result.error.transfer)
+                                } else {
+                                    $('#transfer').removeClass('is-invalid')
+                                    $('.transfermsg').html('')
+                                }
+                                if (result.error.nohpcust) {
+                                    $('#nohpcust').addClass('is-invalid')
+                                    $('.nohpcustmsg').html(result.error.nohpcust)
+                                } else {
+                                    $('#nohpcust').removeClass('is-invalid')
+                                    $('.nohpcustmsg').html('')
+                                }
+                                if (result.error.kurang) {
+                                    Swal.fire({
+                                        icon: 'warning',
+                                        title: result.error.kurang,
+                                    })
+                                }
+                            } else {
+                                $('#debitcc').removeClass('is-invalid')
+                                $('.debitccmsg').html('')
+                                $('#banktransfer').removeClass('is-invalid')
+                                $('.banktransfermsg').html('')
+                                $('#bankdebitcc').removeClass('is-invalid')
+                                $('.bankdebitccmsg').html('')
+                                $('#transfer').removeClass('is-invalid')
+                                $('.transfermsg').html('')
+                                $('#nohpcust').removeClass('is-invalid')
+                                $('.nohpcustmsg').html('')
+
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Berhasil Bayar',
+                                    confirmButtonColor: '#3085d6',
+                                    confirmButtonText: 'OK',
+                                    allowOutsideClick: false
+                                }).then((choose) => {
+                                    if (choose.isConfirmed) {
+                                        // $('#modal-bayar').modal('toggle');
+                                        // $("#refreshpembayaran").load("/draftpenjualan/" + document.getElementById('dateid').value + " #refreshpembayaran");
+                                        // $("#refreshtombol").load("/draftpenjualan/" + document.getElementById('dateid').value + " #refreshtombol");
+
+                                        window.location.href = "/detailpenjualan/" + document.getElementById('dateid').value
+                                    }
+                                })
+                            }
+                        } else {
+                            Swal.fire({
+                                icon: 'warning',
+                                title: 'Tidak ada Data',
                             })
                         }
+
                     },
                     error: function(xhr, ajaxOptions, thrownError) {
                         alert(xhr.status + "\n" + xhr.responseText + "\n" + thrownError);
                     }
                 })
-
             }
         })
     })
 
+    function Batal() {
+        Swal.fire({
+            title: 'Batal Penjualan ',
+            text: "Apakah Ingin Batal Penjualan ?",
+            icon: 'info',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Batal',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = "<?php echo base_url('batalpenjualan'); ?>"
+            }
+        })
 
-    function myPembayaran() {
-        const carabyr = document.getElementById('pembayaran').value
-        const metod1 = $('.metodebayar')
-        const nmbank = $('.namabankhtml')
-        const charge = $('.chargehtml')
-        const table1 = $('#tabelbayar1')
-        const table2 = $('#tabelbayar2')
-        const table3 = $('#tabelbayar3')
-        const bank = $('#tabelbank')
-        const metod2 = document.getElementsByClassName('metodebayar2')
-        metod1[0].innerHTML = ''
-        nmbank[0].innerHTML = ''
-        charge[0].innerHTML = ''
-        metod2[0].innerHTML = ''
-        table1[0].innerHTML = ''
-        table2[0].innerHTML = ''
-        table3[0].innerHTML = ''
-        bank[0].innerHTML = ''
-
-        var DebitCC = '<label>Debit/CC</label><input type="number" onkeyup = "byrdebitcc()" min="0" id="debitcc" name="debitcc" class="form-control" placeholder="Masukan debit/cc"><div id="validationServerUsernameFeedback" class="invalid-feedback debitccmsg"></div>'
-        var NamaBank = '<label>Nama Bank Debit/CC</label><select onchange = "byrnamabank()" type="text" id="namabank" name="namabank" class="form-control" placeholder="Masukan Nama Bank"><?php foreach ($bank as $m) : ?><option value="<?= $m['nama_bank'] ?>"><?= $m['nama_bank'] ?> </option><?php endforeach; ?></select><div id="validationServerUsernameFeedback" class="invalid-feedback namabankmsg"></div>'
-        var Charge = '<label>Charge %</label><input type="number" onkeyup = "byrdebitcc()" step="0.01" id="charge" name="charge" class="form-control" placeholder="Masukan Charge"><div id="validationServerUsernameFeedback" class="invalid-feedback chargemsg"></div>'
-        var Transfer = '<label>Transfer</label><input type="number" onkeyup = "byrtransfer()" min="0" id="transfer" name="transfer" class="form-control" placeholder="Masukan transfer"><div id="validationServerUsernameFeedback" class="invalid-feedback transfermsg"></div>'
-        var Tunai = '<label>Tunai</label><input type="number" onkeyup = "byrtunai()" min="0" id="tunai" name="tunai" class="form-control" placeholder="Masukan tunai"><div id="validationServerUsernameFeedback" class="invalid-feedback tunaimsg"></div>'
-
-        if (carabyr == 'Bayar Nanti') {
-            metod1[0].innerHTML = ''
-            nmbank[0].innerHTML = ''
-            charge[0].innerHTML = ''
-            metod2[0].innerHTML = ''
-            table1[0].innerHTML = ''
-            table2[0].innerHTML = ''
-            table3[0].innerHTML = ''
-            bank[0].innerHTML = ''
-            myDataBayar()
-        }
-        if (carabyr == 'Debit/CC') {
-            metod1[0].innerHTML = DebitCC
-            nmbank[0].innerHTML = NamaBank
-            charge[0].innerHTML = Charge
-            bank[0].innerHTML = '<td>Nama Bank</td><td id="bankbyr"></td>'
-            table1[0].innerHTML = '<td>Charge</td><td id="chargebyr"></td>'
-            table2[0].innerHTML = '<td>Debit/CC</td><td id="debitccbyr"></td>'
-            myDataBayar()
-        }
-        if (carabyr == 'Debit/CCTranfer') {
-            metod1[0].innerHTML = DebitCC
-            nmbank[0].innerHTML = NamaBank
-            charge[0].innerHTML = Charge
-            metod2[0].innerHTML = Transfer
-            bank[0].innerHTML = '<td>Nama Bank</td><td id="bankbyr"></td>'
-            table1[0].innerHTML = '<td>Charge</td><td id="chargebyr"></td>'
-            table2[0].innerHTML = '<td>Debit/CC</td><td id="debitccbyr"></td>'
-            table3[0].innerHTML = '<td>Tranfer</td><td id="transferbyr"></td>'
-            myDataBayar()
-        }
-        if (carabyr == 'Transfer') {
-            metod1[0].innerHTML = Transfer
-            nmbank[0].innerHTML = NamaBank
-            bank[0].innerHTML = '<td>Nama Bank</td><td id="bankbyr"></td>'
-            table2[0].innerHTML = '<td>Tranfer</td><td id="transferbyr"></td>'
-            myDataBayar()
-
-        }
-        if (carabyr == 'Tunai') {
-            metod1[0].innerHTML = Tunai
-            table1[0].innerHTML = '<td>Tunai</td><td id="tunaibyr"></td>'
-            myDataBayar()
-
-        }
-        if (carabyr == 'Tunai&Debit/CC') {
-            metod1[0].innerHTML = DebitCC
-            nmbank[0].innerHTML = NamaBank
-            charge[0].innerHTML = Charge
-            metod2[0].innerHTML = Tunai
-            bank[0].innerHTML = '<td>Nama Bank</td><td id="bankbyr"></td>'
-            table1[0].innerHTML = '<td>Charge</td><td id="chargebyr"></td>'
-            table2[0].innerHTML = '<td>Debit/CC</td><td id="debitccbyr"></td>'
-            table3[0].innerHTML = '<td>Tunai</td><td id="tunaibyr"></td>'
-            myDataBayar()
-        }
-
-        if (carabyr == 'Tunai&Transfer') {
-            metod1[0].innerHTML = Transfer
-            nmbank[0].innerHTML = NamaBank
-            metod2[0].innerHTML = Tunai
-            bank[0].innerHTML = '<td>Nama Bank</td><td id="bankbyr"></td>'
-            table3[0].innerHTML = '<td>Tunai</td><td id="tunaibyr"></td>'
-            table2[0].innerHTML = '<td>Tranfer</td><td id="transferbyr"></td>'
-            myDataBayar()
-
-        }
-    }
-
-    function byrnamabank() {
-        const totalbersih = document.getElementById('totalbersih').innerHTML
-        totalbersihval = parseFloat(totalbersih.replaceAll('.', ''))
-        var bank = document.getElementById('namabank').value
-        document.getElementById('bankbyr').innerHTML = bank
-    }
-
-    function myPembulatan() {
-        if (document.getElementById('pembulatan')) {
-            bulat = (isNaN(parseFloat(document.getElementById('pembulatan').value))) ? 0 : parseFloat(document.getElementById('pembulatan').value)
-        } else {
-            bulat = 0
-        }
-        if (document.getElementById('debitcc')) {
-            debitcc = (isNaN(parseFloat(document.getElementById('debitcc').value))) ? 0 : parseFloat(document.getElementById('debitcc').value)
-        } else {
-            debitcc = 0
-        }
-        if (document.getElementById('transfer')) {
-            transfer = (isNaN(parseFloat(document.getElementById('transfer').value))) ? 0 : parseFloat(document.getElementById('transfer').value)
-        } else {
-            transfer = 0
-        }
-        if (document.getElementById('tunai')) {
-            tunai = (isNaN(parseFloat(document.getElementById('tunai').value))) ? 0 : parseFloat(document.getElementById('tunai').value)
-        } else {
-            tunai = 0
-        }
-
-        const totalbersih = document.getElementById('totalbersih').innerHTML
-        totalbersihval = parseFloat(totalbersih.replaceAll('.', ''))
-        var hasil = totalbersihval - (bulat + debitcc + transfer + tunai)
-        document.getElementById('totalbersih1').innerHTML = Math.round(hasil).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
-        document.getElementById('pembulatanhtml').innerHTML = bulat.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
-        isivalue()
-    }
-
-    // function brycas() {
-    //     var val = document.getElementById('charge').value
-    //     var debitcc = document.getElementById('debitcc').value
-    //     const totalbersih = document.getElementById('totalbersih01').innerHTML
-    //     totalbersihval = parseFloat(totalbersih.replaceAll('.', ''))
-    //     hasil = totalbersihval + (val * (debitcc / 100))
-    //     document.getElementById('totalbersih').innerHTML = Math.round(hasil).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
-    //     document.getElementById('totalbersih1').innerHTML = Math.round(hasil).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
-    //     document.getElementById('chargebyr').innerHTML = val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".") + '%'
-    //     // myPembulatan()
-    //     byrdebitcc()
-    //     byrtransfer()
-    //     byrtunai()
-    // }
-
-    function byrdebitcc() {
-        if (document.getElementById('pembulatan')) {
-            bulat = (isNaN(parseFloat(document.getElementById('pembulatan').value))) ? 0 : parseFloat(document.getElementById('pembulatan').value)
-        } else {
-            bulat = 0
-        }
-        if (document.getElementById('debitcc')) {
-            debitcc = (isNaN(parseFloat(document.getElementById('debitcc').value))) ? 0 : parseFloat(document.getElementById('debitcc').value)
-        } else {
-            debitcc = 0
-        }
-        if (document.getElementById('transfer')) {
-            transfer = (isNaN(parseFloat(document.getElementById('transfer').value))) ? 0 : parseFloat(document.getElementById('transfer').value)
-        } else {
-            transfer = 0
-        }
-        if (document.getElementById('tunai')) {
-            tunai = (isNaN(parseFloat(document.getElementById('tunai').value))) ? 0 : parseFloat(document.getElementById('tunai').value)
-        } else {
-            tunai = 0
-        }
-        charge = (isNaN(parseFloat(document.getElementById('charge').value))) ? 0 : parseFloat(document.getElementById('charge').value)
-        var val = charge
-        var debitcc = parseFloat(document.getElementById('debitcc').value)
-        const totalbersih = document.getElementById('totalbersih01').innerHTML
-        totalbersihval = parseFloat(totalbersih.replaceAll('.', ''))
-        hasilcas = totalbersihval + (val * (debitcc / 100))
-        hasil = hasilcas - (debitcc + bulat + tunai + transfer)
-        document.getElementById('totalbersih').innerHTML = Math.round(hasilcas).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
-        document.getElementById('totalbersih1').innerHTML = Math.round(hasil).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
-        document.getElementById('chargebyr').innerHTML = val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".") + '%'
-
-
-    }
-
-    function byrtransfer() {
-        if (document.getElementById('pembulatan')) {
-            bulat = (isNaN(parseFloat(document.getElementById('pembulatan').value))) ? 0 : parseFloat(document.getElementById('pembulatan').value)
-        } else {
-            bulat = 0
-        }
-        if (document.getElementById('debitcc')) {
-            debitcc = (isNaN(parseFloat(document.getElementById('debitcc').value))) ? 0 : parseFloat(document.getElementById('debitcc').value)
-        } else {
-            debitcc = 0
-        }
-        if (document.getElementById('transfer')) {
-            transfer = (isNaN(parseFloat(document.getElementById('transfer').value))) ? 0 : parseFloat(document.getElementById('transfer').value)
-        } else {
-            transfer = 0
-        }
-        if (document.getElementById('tunai')) {
-            tunai = (isNaN(parseFloat(document.getElementById('tunai').value))) ? 0 : parseFloat(document.getElementById('tunai').value)
-        } else {
-            tunai = 0
-        }
-        const totalbersih = document.getElementById('totalbersih').innerHTML
-        totalbersihval = parseFloat(totalbersih.replaceAll('.', ''))
-        hasil = totalbersihval - (debitcc + bulat + tunai + transfer)
-        document.getElementById('transferbyr').innerHTML = Math.round(transfer).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
-        document.getElementById('totalbersih1').innerHTML = Math.round(hasil).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
-    }
-
-    function byrtunai() {
-        if (document.getElementById('pembulatan')) {
-            bulat = (isNaN(parseFloat(document.getElementById('pembulatan').value))) ? 0 : parseFloat(document.getElementById('pembulatan').value)
-        } else {
-            bulat = 0
-        }
-        if (document.getElementById('debitcc')) {
-            debitcc = (isNaN(parseFloat(document.getElementById('debitcc').value))) ? 0 : parseFloat(document.getElementById('debitcc').value)
-        } else {
-            debitcc = 0
-        }
-        if (document.getElementById('transfer')) {
-            transfer = (isNaN(parseFloat(document.getElementById('transfer').value))) ? 0 : parseFloat(document.getElementById('transfer').value)
-        } else {
-            transfer = 0
-        }
-        if (document.getElementById('tunai')) {
-            tunai = (isNaN(parseFloat(document.getElementById('tunai').value))) ? 0 : parseFloat(document.getElementById('tunai').value)
-        } else {
-            tunai = 0
-        }
-        const totalbersih = document.getElementById('totalbersih').innerHTML
-        totalbersihval = parseFloat(totalbersih.replaceAll('.', ''))
-        hasil = totalbersihval - (debitcc + bulat + tunai + transfer)
-        document.getElementById('tunaibyr').innerHTML = Math.round(tunai).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
-        document.getElementById('totalbersih1').innerHTML = Math.round(hasil).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
-
-    }
-
-    // function Batal() {
-    //     Swal.fire({
-    //         title: 'Batal Penjualan ',
-    //         text: "Apakah Ingin Batal Penjualan ?",
-    //         icon: 'info',
-    //         showCancelButton: true,
-    //         confirmButtonColor: '#3085d6',
-    //         cancelButtonColor: '#d33',
-    //         confirmButtonText: 'Batal',
-    //     }).then((result) => {
-    //         if (result.isConfirmed) {
-    //             window.location.href = "<?php echo base_url('batalpenjualan'); ?>"
-    //         }
-    //     })
-
-    // };
+    };
 
     function ScanBarcode() {
         // checkcust()
@@ -1248,13 +646,6 @@
             dataType: "json",
             success: function(result) {
                 if (result.error) {
-                    // if (result.error.inputcustomer) {
-                    //     $('#inputcustomer').addClass('is-invalid')
-                    //     $('.inputcustomermsg').html(result.error.inputcustomer)
-                    // } else {
-                    //     $('#inputcustomer').removeClass('is-invalid')
-                    //     $('.inputcustomermsg').html('')
-                    // }
                     if (result.error.kodebarang) {
                         $('#kodebarang').addClass('is-invalid')
                         $('.kodebarangmsg').html(result.error.kodebarang)
@@ -1265,16 +656,12 @@
                 } else {
                     if (result.pesan == 'gagal') {
                         document.getElementById('kodebarang').removeAttribute("onkeyup");
-                        // $('#kodebarang').addClass('is-invalid')
-                        // $('.kodebarangmsg').html(result.errormsg)
                     } else {
                         $('#kodebarang').removeClass('is-invalid')
                         $('.kodebarangmsg').html('')
-                        // $('#inputcustomer').removeClass('is-invalid')
-                        // $('.inputcustomermsg').html('')
-                        tampildata()
                         document.getElementById('kodebarang').setAttribute("onkeyup", "ScanBarcode()");
                         document.getElementById('kodebarang').value = ''
+                        tampildata()
                     }
                     if (result.idmsg) {
                         window.location.href = "draftpenjualan/" + result.idmsg;
@@ -1332,8 +719,11 @@
                         $('.nohpmsg').html('')
                         $('#nama_cust').removeClass('is-invalid')
                         $('.nama_custmsg').html('')
+                        $('#modal-tambahcust').modal('toggle');
+                        $('#nohpcust').removeClass('is-invalid')
+                        $('.nohpcustmsg').html('')
                         tampilcustomer()
-                        $('#modal-lg').modal('toggle');
+                        checkcust()
                         Swal.fire({
                             icon: 'success',
                             title: 'Berhasil Tambah',

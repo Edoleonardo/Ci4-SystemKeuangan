@@ -76,7 +76,7 @@
                                         <div class="col-sm-2">
                                             <div class="form-group">
                                                 <a href="#" onclick="ModalBarcode(<?= $datapembelian['kelompok'] ?>)"><label>Barcode</label></a>
-                                                <input type="text" onfocus="this.select()" onkeyup="PilihBarcode($('#barcode').val())" id="barcode" name="barcode" class="form-control" placeholder="Masukan barcode">
+                                                <input type="text" autocomplete="off" onfocus="this.select()" oninput="PilihBarcode($('#barcode').val())" id="barcode" name="barcode" class="form-control" placeholder="Masukan barcode">
                                             </div>
                                         </div>
                                         <div class="col-sm-2">
@@ -131,9 +131,10 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <input type="hidden" id="kadar" name="kadar" value="-">
-                                        <input type="hidden" id="nilai_tukar" name="nilai_tukar" value="100">
-                                        <input type="hidden" id="berat" name="berat" value="1">
+                                        <input type="hidden" name="kadar" value="-">
+                                        <input type="hidden" name="nilai_tukar" value="0">
+                                        <input type="hidden" name="berat" value="0">
+                                        <input type="hidden" name="carat" value="0">
                                         <div class="col-sm-3">
                                             <!-- text input -->
                                             <div class="form-group">
@@ -143,7 +144,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <input type="hidden" name="ongkos" id="ongkos" value="0">
+                                        <input type="hidden" name="ongkos" value="0">
                                         <div class="col-sm-1">
                                             <!-- text input -->
                                             <div class="form-group">

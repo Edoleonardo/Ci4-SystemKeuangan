@@ -9,7 +9,7 @@ use App\Models\ModelDetailPenjualan;
 use App\Models\ModelKadar;
 use App\Models\ModelMerek;
 use App\Models\ModelSupplier;
-use App\Models\ModelStock1;
+use App\Models\ModelStock4;
 use App\Models\ModelKartuStock;
 use App\Models\ModelDetailKartuStock;
 use App\Models\ModelLebur;
@@ -37,7 +37,7 @@ class BarangLebur extends BaseController
         $this->datasupplier = new ModelSupplier();
         $this->datakadar = new ModelKadar();
         $this->datamerek = new ModelMerek();
-        $this->datastock = new ModelStock1();
+        $this->datastock = new ModelStock4();
         $this->modelkartustock = new ModelKartuStock();
         $this->modeldetailkartustock = new ModelDetailKartuStock();
         $this->modellebur = new ModelLebur();
@@ -55,6 +55,15 @@ class BarangLebur extends BaseController
             'datalebur' => $this->modellebur->getDataLeburAll(),
         ];
         return view('leburbarang/data_lebur', $data);
+    }
+    public function TampilDataLebur()
+    {
+        if ($this->request->isAJAX()) {
+            $data = $this->modellebur->DataFilterLebur($this->request->getVar('tmpildata'), $this->request->getVar('kelompok'), $this->request->getVar('status'),  $this->request->getVar('notrans'));
+            $view = ['datalebur' => $data];
+            $msg = ['tampildata' => view('leburbarang/tampildatalebur', $view)];
+            echo json_encode($msg);
+        }
     }
     public function UbahStatus()
     {
@@ -214,7 +223,7 @@ class BarangLebur extends BaseController
                         ]);
 
                         $this->datastock->save([
-                            'id_stock_1' => $checkkode['id_stock_1'],
+                            'id_stock_4' => $checkkode['id_stock_4'],
                             'id_karyawan' => $session->get('id_user'),
                             'status' => '24K',
                             'no_faktur' => $datalebur['no_lebur'],
@@ -225,7 +234,6 @@ class BarangLebur extends BaseController
                             'keterangan' => $this->request->getVar('keterangan'),
                             'kadar' => '24K',
                             'berat' => $saldoakhir,
-                            'nilai_tukar' =>  100,
                             'harga_beli' => round($datalebur['total_harga_bahan'] / $this->request->getVar('berat'), 2),
                             'total_harga' => $saldoakhir * round($datalebur['total_harga_bahan'] / $this->request->getVar('berat'), 2),
                             'gambar' =>  $namafile,
@@ -285,10 +293,7 @@ class BarangLebur extends BaseController
                             'keterangan' => $this->request->getVar('keterangan'),
                             'merek' => '-',
                             'kadar' => '24K',
-                            'berat_murni' => $this->request->getVar('berat'),
                             'berat' => $this->request->getVar('berat'),
-                            'nilai_tukar' =>  100,
-                            'ongkos' => 0,
                             'harga_beli' => round($datalebur['total_harga_bahan'] / $this->request->getVar('berat'), 2),
                             'total_harga' => round($datalebur['total_harga_bahan'] / $this->request->getVar('berat'), 2) * $this->request->getVar('berat'),
                             'gambar' =>  $namafile,
@@ -317,7 +322,7 @@ class BarangLebur extends BaseController
                             'merek' => '-',
                             'kadar' => '24K',
                             'berat' => $this->request->getVar('berat'),
-                            'nilai_tukar' =>  '100',
+                            'nilai_tukar' =>  0,
                             'harga_beli' => round($datalebur['total_harga_bahan'] / $this->request->getVar('berat'), 2),
                             'total_harga' => $datalebur['total_harga_bahan'],
                             'gambar' =>  $namafile,
@@ -514,6 +519,7 @@ class BarangLebur extends BaseController
     public function KodeDatailGenerate($id)
     {
         $kodestock = $this->datastock->getKodeStock($id);
+
         $kodelebur = $this->modellebur->getKodeLebur($id);
 
         if ($this->datastock->getKodeStock($id) || $this->detailbeli->getKode($id)) {

@@ -75,7 +75,7 @@ class ModelDetailKartuStock extends Model
     }
     public function GetDataDelete($id, $nofaktur)
     {
-        $this->selectSum('id_detail_kartustock');
+        $this->select('id_detail_kartustock');
         $this->where('barcode', $id);
         $this->where('no_faktur', $nofaktur);
         $query = $this->get();

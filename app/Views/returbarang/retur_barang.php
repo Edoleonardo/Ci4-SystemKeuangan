@@ -118,14 +118,14 @@
                                     <?= substr($datamasterretur['tgl_jatuh_tempo'], 0, 10) ?>
                                 </td>
                             </tr>
-                            <tr>
+                            <tr style="background-color: #d7f2f3;">
                                 <td> Total Berat :</td>
                                 <td>
                                     <?= $datamasterretur['total_berat_murni'] ?> g
                                 </td>
-                                <td> Bayar Berat Murni :</td>
+                                <td> Bayar Berat:</td>
                                 <td>
-                                    <?= $datamasterretur['byr_berat_murni'] ?> g
+                                    <?= $datamasterretur['murnibeli'] ?> g
                                 </td>
                             </tr>
                             <tr>
@@ -342,14 +342,6 @@
                                 <label>Keterangan</label>
                                 <input type="text" class="form-control keterangan" id="keterangan" name="keterangan" placeholder="Masukan Keterangan">
                                 <div id="validationServerUsernameFeedback" class="invalid-feedback keteranganmsg">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-4">
-                            <div class="form-group" style="margin: 1mm;">
-                                <label>Harga Berat Murni</label>
-                                <input type="number" class="form-control harga_murni" id="harga_murni" name="harga_murni" placeholder="Masukan harga murni">
-                                <div id="validationServerUsernameFeedback" class="invalid-feedback harga_murnimsg">
                                 </div>
                             </div>
                         </div>

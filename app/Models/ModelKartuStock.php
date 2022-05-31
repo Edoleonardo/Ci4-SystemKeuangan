@@ -28,20 +28,35 @@ class ModelKartuStock extends Model
         }
         return $this->where(['id_stock_1' => $id])->first();
     }
-    public function getKartuFilter($id, $stock)
+    public function getKartuFilter($id, $stock, $kode)
     {
         $db = db_connect();
+        if ($kode) {
+            $search = "kode =" . "'" . $kode . "'";
+        } else {
+            $search = '1 = 1';
+        }
+        if ($id == 0) {
+            $lim = 'Limit 10';
+            $row = '1 = 1';
+        } else {
+            $lim  = '';
+            $row = 'substr(kode,1,1) = ' . $id;
+        }
+
         if ($stock == 0) {
-            $data = $db->query('select * from tbl_kartustock where substr(kode,1,1) = ' . $id . ' order by updated_at DESC');
+            $qty = '1 = 1';
         }
         if ($stock == 1) {
-            $data = $db->query('select * from tbl_kartustock where substr(kode,1,1) = ' . $id . ' AND saldo_akhir > 0 order by updated_at DESC');
+            $qty = 'saldo_akhir > 0';
         }
         if ($stock == 2) {
-            $data = $db->query('select * from tbl_kartustock where substr(kode,1,1) = ' . $id . '  AND saldo_akhir <= 0  order by updated_at DESC');
+            $qty = 'saldo_akhir = 0';
         }
+        $data = $db->query('select * from tbl_kartustock where ' . $qty . ' and ' . $search . ' and ' . $row . ' order by created_at DESC ' . $lim . ' ');
         return $data->getResult('array');
     }
+
     public function getKartuStockkode($id)
     {
         return $this->where(['kode' => $id])->first();

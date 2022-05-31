@@ -59,15 +59,31 @@
                                                 </select>
                                             </div>
                                         </div>
-                                        <div class="col-sm-2">
-                                            <!-- text input -->
-                                            <div class="form-group">
-                                                <label>Total Berat Murni (Gr)</label>
-                                                <input type="number" onfocus="this.select()" step="0.01" min="0" id="total_berat_m" name="total_berat_m" class="form-control" placeholder="Masukan Total Berat Murni" value="<?= (isset($datapembelian['total_berat_murni'])) ? $datapembelian['total_berat_murni'] : ''; ?>">
-                                                <div id="validationServerUsernameFeedback" class="invalid-feedback total_berat_mmsg">
+                                        <?php if ($datapembelian['kelompok'] == 1) : ?>
+                                            <div class="col-sm-2">
+                                                <!-- text input -->
+                                                <div class="form-group">
+                                                    <label>Total Berat Murni</label>
+                                                    <input type="number" onfocus="this.select()" step="0.01" min="0" id="total_berat_m" name="total_berat_m" class="form-control" placeholder="Masukan Total Berat Murni" value="<?= (isset($datapembelian['total_berat_murni'])) ? $datapembelian['total_berat_murni'] : ''; ?>">
+                                                    <div id="validationServerUsernameFeedback" class="invalid-feedback total_berat_mmsg">
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
+                                        <?php endif; ?>
+                                        <?php if ($datapembelian['kelompok'] == 2) : ?>
+                                            <input type="hidden" onfocus="this.select()" step="0.01" id="total_berat_m" name="total_berat_m" value="0">
+                                        <?php endif; ?>
+                                        <?php if ($datapembelian['kelompok'] == 3 || $datapembelian['kelompok'] == 4) : ?>
+                                            <div class="col-sm-2">
+                                                <!-- text input -->
+                                                <div class="form-group">
+                                                    <label>Total Berat</label>
+                                                    <input type="number" onfocus="this.select()" step="0.01" min="0" id="total_berat_m" name="total_berat_m" class="form-control" placeholder="Masukan Total Berat" value="<?= (isset($datapembelian['total_berat_murni'])) ? $datapembelian['total_berat_murni'] : ''; ?>">
+                                                    <div id="validationServerUsernameFeedback" class="invalid-feedback total_berat_mmsg">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        <?php endif; ?>
                                     </div>
                                 </div>
                             </td>
@@ -85,7 +101,7 @@
                                             <div class="col-sm-2">
                                                 <div class="form-group">
                                                     <a href="#" onclick="ModalBarcode(<?= $datapembelian['kelompok'] ?>)"><label>Barcode</label></a>
-                                                    <input type="text" onfocus="this.select()" onkeyup="PilihBarcode($('#barcode').val())" id="barcode" name="barcode" class="form-control" placeholder="Masukan barcode">
+                                                    <input type="text" autocomplete="off" onfocus="this.select()" oninput="PilihBarcode(this.value)" id="barcode" name="barcode" class="form-control" placeholder="Masukan barcode">
                                                 </div>
                                             </div>
                                         <?php endif; ?>
@@ -118,29 +134,35 @@
                                                 <input type="text" onfocus="this.select()" name="keterangan" id="keterangan" class="form-control" placeholder="Masukan Keterangan">
                                             </div>
                                         </div>
-                                        <div class="col-sm-2">
-                                            <!-- text input -->
-                                            <div class="form-group merek">
-                                                <label>Merek</label>
-                                                <select name="merek" class="form-control" id="merek">
-                                                    <?php foreach ($merek as $m) : ?>
-                                                        <option value="<?= $m['nama_merek'] ?>"><?= $m['nama_merek'] ?> </option>
-                                                    <?php endforeach; ?>
-                                                    <option value="-">-</option>
-                                                </select>
-                                                <div id="validationServerUsernameFeedback" class="invalid-feedback merekmsg">
+                                        <input type="hidden" name="carat" value="0">
+                                        <?php if ($datapembelian['kelompok'] != 4) : ?>
+                                            <div class="col-sm-2">
+                                                <!-- text input -->
+                                                <div class="form-group merek">
+                                                    <label>Merek</label>
+                                                    <select name="merek" class="form-control" id="merek">
+                                                        <?php foreach ($merek as $m) : ?>
+                                                            <option value="<?= $m['nama_merek'] ?>"><?= $m['nama_merek'] ?> </option>
+                                                        <?php endforeach; ?>
+                                                        <option value="-">-</option>
+                                                    </select>
+                                                    <div id="validationServerUsernameFeedback" class="invalid-feedback merekmsg">
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                        <div class="col-sm-1">
-                                            <!-- text input -->
-                                            <div class="form-group">
-                                                <label>Qty</label>
-                                                <input type="Number" onfocus="this.select()" id="qty" name="qty" min="1" class="form-control" placeholder="Masukan jumlah">
-                                                <div id="validationServerUsernameFeedback" class="invalid-feedback qtymsg">
+                                            <div class="col-sm-1">
+                                                <!-- text input -->
+                                                <div class="form-group">
+                                                    <label>Qty</label>
+                                                    <input type="Number" onfocus="this.select()" id="qty" name="qty" min="1" class="form-control" placeholder="Masukan jumlah">
+                                                    <div id="validationServerUsernameFeedback" class="invalid-feedback qtymsg">
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
+                                        <?php else : ?>
+                                            <input type="hidden" name="merek" value="-">
+                                            <input type="hidden" name="qty" value="1">
+                                        <?php endif; ?>
                                         <?php if ($datapembelian['kelompok'] == 1 || $datapembelian['kelompok'] == 2) : ?>
                                             <div class="col-sm-2">
                                                 <!-- text input -->
@@ -154,19 +176,22 @@
                                                     </select>
                                                 </div>
                                             </div>
-
-                                            <div class="col-sm-2">
-                                                <!-- text input -->
-                                                <div class="form-group">
-                                                    <label>Nilai Tukar</label>
-                                                    <input type="number" onfocus="this.select()" id="nilai_tukar" name="nilai_tukar" class="form-control" placeholder="Masukan Nilai Tukar">
-                                                    <div id="validationServerUsernameFeedback" class="invalid-feedback nilai_tukarmsg">
+                                            <?php if ($datapembelian['kelompok'] == 1) : ?>
+                                                <div class="col-sm-2">
+                                                    <!-- text input -->
+                                                    <div class="form-group">
+                                                        <label>Nilai Tukar</label>
+                                                        <input type="number" onfocus="this.select()" id="nilai_tukar" name="nilai_tukar" class="form-control" placeholder="Masukan Nilai Tukar">
+                                                        <div id="validationServerUsernameFeedback" class="invalid-feedback nilai_tukarmsg">
+                                                        </div>
                                                     </div>
                                                 </div>
-                                            </div>
+                                            <?php else : ?>
+                                                <input type="hidden" id="nilai_tukar" name="nilai_tukar" value="0">
+                                            <?php endif; ?>
                                         <?php else : ?>
-                                            <input type="hidden" id="kadar" name="kadar" value="24K">
-                                            <input type="hidden" id="nilai_tukar" name="nilai_tukar" value="100">
+                                            <input type="hidden" name="kadar" value="24K">
+                                            <input type="hidden" name="nilai_tukar" value="0">
                                         <?php endif; ?>
                                         <div class="col-sm-2">
                                             <!-- text input -->
@@ -186,15 +211,19 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-sm-2">
-                                            <!-- text input -->
-                                            <div class="form-group">
-                                                <label>Ongkos</label>
-                                                <input type="number" onfocus="this.select()" value="0" name="ongkos" id="ongkos" class="form-control ongkos" placeholder="Masukan Ongkos">
-                                                <div id="validationServerUsernameFeedback" class="invalid-feedback ongkosmsg">
+                                        <?php if ($datapembelian['kelompok'] == 1) : ?>
+                                            <div class="col-sm-2">
+                                                <!-- text input -->
+                                                <div class="form-group">
+                                                    <label>Ongkos</label>
+                                                    <input type="number" onfocus="this.select()" value="0" name="ongkos" id="ongkos" class="form-control ongkos" placeholder="Masukan Ongkos">
+                                                    <div id="validationServerUsernameFeedback" class="invalid-feedback ongkosmsg">
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
+                                        <?php else : ?>
+                                            <input type="hidden" name="ongkos" value="0">
+                                        <?php endif; ?>
                                         <div class="col-sm-1">
                                             <!-- text input -->
                                             <div class="form-group">

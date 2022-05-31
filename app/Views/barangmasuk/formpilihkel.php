@@ -48,6 +48,7 @@
                     success: function(result) {
                         console.log(result)
                         tampilform()
+                        tampildata()
 
                     },
                     error: function(xhr, ajaxOptions, thrownError) {

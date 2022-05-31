@@ -353,7 +353,7 @@ class PindahBarang extends BaseController
         //     $this->modelpembelian->save([
         //         'id_pembelian' => $row['id_pembelian'],
         //         'total_berat_murni' => round($this->modeldetailpembelian->SumBeratMurniDetail($row['id_date_pembelian'])['berat_murni'], 2),
-        //         'byr_berat_murni' => round($this->modeldetailpembelian->SumBeratMurniDetail($row['id_date_pembelian'])['berat_murni'], 2),
+        //         'byr_barang' => round($this->modeldetailpembelian->SumBeratMurniDetail($row['id_date_pembelian'])['berat_murni'], 2),
         //         'total_berat_rill' => round($this->modeldetailpembelian->SumBeratDetail($row['id_date_pembelian'])['berat'], 2),
         //         'berat_murni_rill' => round($this->modeldetailpembelian->SumBeratMurniDetail($row['id_date_pembelian'])['berat_murni'], 2),
         //         'cara_pembayaran' => 'Bayar Nanti',

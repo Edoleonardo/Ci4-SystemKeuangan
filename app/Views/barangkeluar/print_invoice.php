@@ -53,109 +53,272 @@ function barcodegenerate2($kode)
   </tbody>
 </table>
 <br><br><br><br><br>
-<div class="row">
-  <table style='border-left:none; border-bottom:none;'>
-    <tbody>
-      <thead>
-        <tr>
-          <th>Gambar</th>
-          <th>Barcode</th>
-          <th style="width: 50px;">Qty</th>
-          <th style="width: 500px;">Keterangan</th>
-          <th style="width: 100px;">Berat</th>
-          <th style="width: 100px;">Ongkos</th>
-          <th style="width: 100px;">Jumlah</th>
-        </tr>
-      </thead>
-      <?php $total = 0;
-      $ongkos = 0;
-      $i = 1;
-      foreach ($datadetailjual as $row) : ?>
-        <tr>
-          <td><img id="gmbr" style="width: 100px;" src="/img/<?= $row['nama_img'] ?>" alt=""></td>
-          <td><?= barcodegenerate2($row['kode']) ?></td>
-          <td style="text-align: center;"><?= $row['qty'] ?></td>
-          <td style="vertical-align: middle;"><?= $row['jenis'] ?>, <?= $row['keterangan'] ?>, <?= $row['model'] ?></td>
-          <td style="text-align: center;"><?= $row['berat'] ?></td>
-          <td><?= number_format($row['ongkos'], '2', ',', '.') ?></td>
-          <td><?= number_format($row['total_harga'], '2', ',', '.') ?></td>
-        </tr>
+<?php if ($datajual['kelompok'] == 1 || $datajual['kelompok'] == 2 || $datajual['kelompok'] == 3 || $datajual['kelompok'] == 4) : ?>
+  <div class="row">
+    <table style='border-left:none; border-bottom:none;'>
+      <tbody>
+        <thead>
+          <tr>
+            <th>Gambar</th>
+            <th>Barcode</th>
+            <th style="width: 50px;">Qty</th>
+            <th style="width: 500px;">Keterangan</th>
+            <th style="width: 100px;">Berat</th>
+            <th style="width: 100px;">Ongkos</th>
+            <th style="width: 100px;">Jumlah</th>
+          </tr>
+        </thead>
+        <?php $total = 0;
+        $ongkos = 0;
+        $i = 1;
+        foreach ($datadetailjual as $row) : ?>
+          <tr>
+            <td><img id="gmbr" style="width: 100px;" src="/img/<?= $row['nama_img'] ?>" alt=""></td>
+            <td><?= barcodegenerate2($row['kode']) ?></td>
+            <td style="text-align: center;"><?= $row['qty'] ?></td>
+            <td style="vertical-align: middle;"><?= $row['jenis'] ?>, <?= $row['keterangan'] ?>, <?= $row['model'] ?></td>
+            <td style="text-align: center;"><?= $row['berat'] ?></td>
+            <td style="text-align: center;"><?= number_format($row['ongkos'], 0, ',', '.') ?></td>
+            <td style="text-align: center;"><?= number_format($row['total_harga'], 0, ',', '.') ?></td>
+          </tr>
 
-      <?php $total = $total +  $row['total_harga'];
-        $ongkos = $ongkos + $row['ongkos'];
-        $i++;
-      endforeach; ?>
-      <?php if ($datajual['charge']) : $total = $total + ($total / 100 * $datajual['charge']) ?>
+        <?php $total = $total +  $row['total_harga'];
+          $ongkos = $ongkos + $row['ongkos'];
+          $i++;
+        endforeach; ?>
+        <?php if ($datajual['charge']) : $total = $total + ($datajual['debitcc'] * $datajual['charge']) ?>
 
-      <?php endif ?>
-      <?php if ($ongkos != 0) : ?>
+        <?php endif ?>
+        <?php if ($ongkos != 0) : ?>
+          <tr>
+            <td style='border:none;'></td>
+            <td style='border:none;'></td>
+            <td style='border:none;'></td>
+            <td style='border:none;'></td>
+            <td style='border:none;'></td>
+            <td>Ongkos</td>
+            <td><?= number_format($ongkos, 2, ",", ".") ?></td>
+          </tr>
+        <?php endif ?>
         <tr>
           <td style='border:none;'></td>
           <td style='border:none;'></td>
           <td style='border:none;'></td>
           <td style='border:none;'></td>
           <td style='border:none;'></td>
-          <td>Ongkos</td>
-          <td><?= number_format($ongkos, 2, ",", ".") ?></td>
+          <td>Total</td>
+          <td><?= number_format($total, 2, ",", ".") ?></td>
         </tr>
-      <?php endif ?>
-      <tr>
-        <td style='border:none;'></td>
-        <td style='border:none;'></td>
-        <td style='border:none;'></td>
-        <td style='border:none;'></td>
-        <td style='border:none;'></td>
-        <td>Total</td>
-        <td><?= number_format($total, 2, ",", ".") ?></td>
-      </tr>
-      <?php if ($datajual['pembulatan']) : ?>
-        <tr>
-          <td style='border:none;'></td>
-          <td style='border:none;'></td>
-          <td style='border:none;'></td>
-          <td style='border:none;'></td>
-          <td style='border:none;'></td>
-          <td>Diskon</td>
-          <td><?= number_format($datajual['pembulatan'], 2, ",", ".") ?></td>
-        </tr>
-      <?php endif ?>
-      <?php if ($datajual['tunai']) : ?>
-        <tr>
-          <td style='border:none;'></td>
-          <td style='border:none;'></td>
-          <td style='border:none;'></td>
-          <td style='border:none;'></td>
-          <td style='border:none;'></td>
-          <td>Tunai</td>
-          <td><?= number_format($datajual['tunai'], 2, ',', '.') ?></td>
-        </tr>
-      <?php endif ?>
-      <?php if ($datajual['debitcc']) : ?>
-        <tr>
-          <td style='border:none;'></td>
-          <td style='border:none;'></td>
-          <td style='border:none;'></td>
-          <td style='border:none;'></td>
-          <td style='border:none;'></td>
-          <td>Debit/CC<?= ($datajual['charge']) ? '(' . $datajual['charge'] . '%' . ')' : '' ?></td>
-          <td><?= number_format($datajual['debitcc'], 2, ',', '.') ?></td>
-        </tr>
-      <?php endif ?>
-      <?php if ($datajual['transfer']) : ?>
-        <tr>
-          <td style='border:none;'></td>
-          <td style='border:none;'></td>
-          <td style='border:none;'></td>
-          <td style='border:none;'></td>
-          <td style='border:none;'></td>
-          <td>Transfer</td>
-          <td><?= number_format($datajual['transfer'], 2, ',', '.') ?></td>
-        </tr>
-      <?php endif ?>
-    </tbody>
-  </table>
+        <?php if ($datajual['pembulatan']) : ?>
+          <tr>
+            <td style='border:none;'></td>
+            <td style='border:none;'></td>
+            <td style='border:none;'></td>
+            <td style='border:none;'></td>
+            <td style='border:none;'></td>
+            <td>Diskon</td>
+            <td><?= number_format($datajual['pembulatan'], 2, ",", ".") ?></td>
+          </tr>
+        <?php endif ?>
+        <?php if ($datajual['tunai']) : ?>
+          <tr>
+            <td style='border:none;'></td>
+            <td style='border:none;'></td>
+            <td style='border:none;'></td>
+            <td style='border:none;'></td>
+            <td style='border:none;'></td>
+            <td>Tunai</td>
+            <td><?= number_format($datajual['tunai'], 2, ',', '.') ?></td>
+          </tr>
+        <?php endif ?>
+        <?php if ($datajual['debitcc']) : ?>
+          <tr>
+            <td style='border:none;'></td>
+            <td style='border:none;'></td>
+            <td style='border:none;'></td>
+            <td style='border:none;'></td>
+            <td style='border:none;'></td>
+            <td>Debit/CC<?= ($datajual['charge']) ? '(' . $datajual['charge'] . '%' . ')' : '' ?></td>
+            <td><?= number_format($datajual['debitcc'], 2, ',', '.') ?></td>
+          </tr>
+        <?php endif ?>
+        <?php if ($datajual['transfer']) : ?>
+          <tr>
+            <td style='border:none;'></td>
+            <td style='border:none;'></td>
+            <td style='border:none;'></td>
+            <td style='border:none;'></td>
+            <td style='border:none;'></td>
+            <td>Transfer</td>
+            <td><?= number_format($datajual['transfer'], 2, ',', '.') ?></td>
+          </tr>
+        <?php endif ?>
+      </tbody>
+    </table>
 
-</div>
+  </div>
+<?php elseif ($datajual['kelompok'] == 5) : ?>
+  <div class="row">
+    <table style='border-left:none; border-bottom:none;'>
+      <tbody>
+        <thead>
+          <tr>
+            <th>Gambar</th>
+            <th>Barcode</th>
+            <th style="width: 50px;">Qty</th>
+            <th style="width: 500px;">Keterangan</th>
+            <th style="width: 100px;">Carat</th>
+            <th style="width: 100px;">Jumlah</th>
+          </tr>
+        </thead>
+        <?php $total = 0;
+        $ongkos = 0;
+        $i = 1;
+        foreach ($datadetailjual as $row) : ?>
+          <tr>
+            <td><img id="gmbr" style="width: 100px;" src="/img/<?= $row['nama_img'] ?>" alt=""></td>
+            <td><?= barcodegenerate2($row['kode']) ?></td>
+            <td style="text-align: center;"><?= $row['qty'] ?></td>
+            <td style="vertical-align: middle;"><?= $row['jenis'] ?>, <?= $row['keterangan'] ?>, <?= $row['model'] ?></td>
+            <td style="text-align: center;"><?= $row['carat'] ?></td>
+            <td style="text-align: center;"><?= number_format($row['total_harga'], 0, ',', '.') ?></td>
+          </tr>
+        <?php $total = $total +  $row['total_harga'];
+          $ongkos = $ongkos + $row['ongkos'];
+          $i++;
+        endforeach; ?>
+        <?php if ($datajual['charge']) : $total = $total + ($datajual['debitcc'] * $datajual['charge']) ?>
+
+        <?php endif ?>
+        <tr>
+          <td style='border:none;'></td>
+          <td style='border:none;'></td>
+          <td style='border:none;'></td>
+          <td style='border:none;'></td>
+          <td>Total</td>
+          <td><?= number_format($total, 2, ",", ".") ?></td>
+        </tr>
+        <?php if ($datajual['pembulatan']) : ?>
+          <tr>
+            <td style='border:none;'></td>
+            <td style='border:none;'></td>
+            <td style='border:none;'></td>
+            <td style='border:none;'></td>
+            <td>Diskon</td>
+            <td><?= number_format($datajual['pembulatan'], 2, ",", ".") ?></td>
+          </tr>
+        <?php endif ?>
+        <?php if ($datajual['tunai']) : ?>
+          <tr>
+            <td style='border:none;'></td>
+            <td style='border:none;'></td>
+            <td style='border:none;'></td>
+            <td style='border:none;'></td>
+            <td>Tunai</td>
+            <td><?= number_format($datajual['tunai'], 2, ',', '.') ?></td>
+          </tr>
+        <?php endif ?>
+        <?php if ($datajual['debitcc']) : ?>
+          <tr>
+            <td style='border:none;'></td>
+            <td style='border:none;'></td>
+            <td style='border:none;'></td>
+            <td style='border:none;'></td>
+            <td>Debit/CC<?= ($datajual['charge']) ? '(' . $datajual['charge'] . '%' . ')' : '' ?></td>
+            <td><?= number_format($datajual['debitcc'], 2, ',', '.') ?></td>
+          </tr>
+        <?php endif ?>
+        <?php if ($datajual['transfer']) : ?>
+          <tr>
+            <td style='border:none;'></td>
+            <td style='border:none;'></td>
+            <td style='border:none;'></td>
+            <td style='border:none;'></td>
+            <td>Transfer</td>
+            <td><?= number_format($datajual['transfer'], 2, ',', '.') ?></td>
+          </tr>
+        <?php endif ?>
+      </tbody>
+    </table>
+  </div>
+<?php elseif ($datajual['kelompok'] == 6) : ?>
+  <div class="row">
+    <table style='border-left:none; border-bottom:none;'>
+      <tbody>
+        <thead>
+          <tr>
+            <th>Gambar</th>
+            <th>Barcode</th>
+            <th style="width: 500px;">Keterangan</th>
+            <th style="width: 50px;">Qty</th>
+            <th style="width: 100px;">Jumlah</th>
+          </tr>
+        </thead>
+        <?php $total = 0;
+        $ongkos = 0;
+        $i = 1;
+        foreach ($datadetailjual as $row) : ?>
+          <tr>
+            <td><img id="gmbr" style="width: 100px;" src="/img/<?= $row['nama_img'] ?>" alt=""></td>
+            <td><?= barcodegenerate2($row['kode']) ?></td>
+            <td style="vertical-align: middle;"><?= $row['jenis'] ?>, <?= $row['keterangan'] ?>, <?= $row['model'] ?></td>
+            <td style="text-align: center;"><?= $row['qty'] ?></td>
+            <td style="text-align: center;"><?= number_format($row['total_harga'], 0, ',', '.') ?></td>
+          </tr>
+        <?php $total = $total +  $row['total_harga'];
+          $ongkos = $ongkos + $row['ongkos'];
+          $i++;
+        endforeach; ?>
+        <?php if ($datajual['charge']) : $total = $total + ($datajual['debitcc'] * $datajual['charge']) ?>
+
+        <?php endif ?>
+        <tr>
+          <td style='border:none;'></td>
+          <td style='border:none;'></td>
+          <td style='border:none;'></td>
+          <td>Total</td>
+          <td><?= number_format($total, 2, ",", ".") ?></td>
+        </tr>
+        <?php if ($datajual['pembulatan']) : ?>
+          <tr>
+            <td style='border:none;'></td>
+            <td style='border:none;'></td>
+            <td style='border:none;'></td>
+            <td>Diskon</td>
+            <td><?= number_format($datajual['pembulatan'], 2, ",", ".") ?></td>
+          </tr>
+        <?php endif ?>
+        <?php if ($datajual['tunai']) : ?>
+          <tr>
+            <td style='border:none;'></td>
+            <td style='border:none;'></td>
+            <td style='border:none;'></td>
+            <td>Tunai</td>
+            <td><?= number_format($datajual['tunai'], 2, ',', '.') ?></td>
+          </tr>
+        <?php endif ?>
+        <?php if ($datajual['debitcc']) : ?>
+          <tr>
+            <td style='border:none;'></td>
+            <td style='border:none;'></td>
+            <td style='border:none;'></td>
+            <td>Debit/CC<?= ($datajual['charge']) ? '(' . $datajual['charge'] . '%' . ')' : '' ?></td>
+            <td><?= number_format($datajual['debitcc'], 2, ',', '.') ?></td>
+          </tr>
+        <?php endif ?>
+        <?php if ($datajual['transfer']) : ?>
+          <tr>
+            <td style='border:none;'></td>
+            <td style='border:none;'></td>
+            <td style='border:none;'></td>
+            <td>Transfer</td>
+            <td><?= number_format($datajual['transfer'], 2, ',', '.') ?></td>
+          </tr>
+        <?php endif ?>
+      </tbody>
+    </table>
+  </div>
+<?php endif; ?>
 <style>
   @page {
     size: landscape;

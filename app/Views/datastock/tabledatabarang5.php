@@ -7,7 +7,6 @@
             <th>Model</th>
             <th>Qty</th>
             <th>Carat</th>
-            <th>Kadar</th>
             <th>Aksi</th>
         </tr>
     </thead>
@@ -20,7 +19,6 @@
                 <td><?= $r['model'] ?></td>
                 <td><?= $r['qty'] ?></td>
                 <td><?= $r['carat'] ?></td>
-                <td><?= $r['kadar'] ?></td>
                 <td>
                     <a type="button" href="/detail/<?= $r['id_stock_5'] ?>/5" class="btn btn-block btn-outline-info btn-sm">Detail</a>
                 </td>
@@ -35,7 +33,6 @@
             <th>Model</th>
             <th>Qty</th>
             <th>Carat</th>
-            <th>Kadar</th>
             <th>Aksi</th>
         </tr>
     </tfoot>

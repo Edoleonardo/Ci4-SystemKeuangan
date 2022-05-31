@@ -10,7 +10,7 @@ class ModelDetailMasuk extends Model
     protected $table = 'tbl_detail_pembelian';
     protected $primaryKey = 'id_detail_pembelian';
     protected $useTimestamps = true;
-    protected $allowedFields = ['id_date_pembelian', 'id_karyawan', 'nama_img', 'kode', 'jenis', 'qty', 'model', 'keterangan', 'berat', 'berat_murni', 'harga_beli', 'kadar', 'ongkos', 'nilai_tukar', 'merek', 'total_harga'];
+    protected $allowedFields = ['id_date_pembelian', 'id_karyawan', 'nama_img', 'kode', 'jenis', 'qty', 'model', 'keterangan', 'berat', 'carat', 'berat_murni', 'harga_beli', 'kadar', 'ongkos', 'nilai_tukar', 'merek', 'total_harga'];
 
     public function getDetailAll($id)
     {
@@ -44,9 +44,23 @@ class ModelDetailMasuk extends Model
         $query = $this->get();
         return $query->getResult('array')[0];
     }
+    public function SumDataDetailOngkos($id)
+    {
+        $this->selectSum('ongkos');
+        $this->where('id_date_pembelian', $id);
+        $query = $this->get();
+        return $query->getResult('array')[0];
+    }
     public function SumBeratDetail($id)
     {
         $this->selectSum('berat');
+        $this->where('id_date_pembelian', $id);
+        $query = $this->get();
+        return $query->getResult('array')[0];
+    }
+    public function SumCaratDetail($id)
+    {
+        $this->selectSum('carat');
         $this->where('id_date_pembelian', $id);
         $query = $this->get();
         return $query->getResult('array')[0];
@@ -64,6 +78,22 @@ class ModelDetailMasuk extends Model
         $this->where('id_date_pembelian', $id);
         $query = $this->get();
         return $query->getResult('array')[0];
+    }
+    public function GetJumlahData($id)
+    {
+        $db = db_connect();
+        $data = $db->query('SELECT count(id_date_pembelian) as jml FROM `tbl_detail_pembelian` WHERE id_date_pembelian = ' . $id . ';');
+        return $data->getResult('array')[0];
+        //  $this->get();
+        // return $query;
+    }
+    public function GetDataTotalBerat($id)
+    {
+        $db = db_connect();
+        $data = $db->query('SELECT CASE WHEN substr(kode,1,1) = 3 THEN sum(berat * qty) ELSE sum(berat) END as berat FROM `tbl_detail_pembelian` WHERE id_date_pembelian = ' . $id . ';');
+        return $data->getResult('array')[0];
+        //  $this->get();
+        // return $query;
     }
     public function getKode($id)
     {

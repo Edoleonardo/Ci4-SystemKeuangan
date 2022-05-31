@@ -35,51 +35,46 @@
             <div class="row">
                 <div class="col-12">
                     <div class="card">
-                        <div class="card-header ">
-                            <a class="btn btn-app" href="#" data-toggle="modal" data-target="#modal-lg">
-                                <i class="fas fa-plus"></i> Retur Barang
-                            </a>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-2">
+                                    <div class="form-group">
+                                        <a class="btn btn-app" href="#" data-toggle="modal" data-target="#modal-lg">
+                                            <i class="fas fa-plus"></i> Retur Barang
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="col-2">
+                                    <div class="form-group">
+                                        <label>Filter Data</label>
+                                        <select name="tampil" onchange="TampilRetur()" class="form-control" id="tampil" name="tampil">
+                                            <option value="10" selected>10 Data</option>
+                                            <option value="100">100 Data</option>
+                                            <option value="1000">1000 Data</option>
+                                            <option value="semua">Semua Data</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-2">
+                                    <div class="form-group">
+                                        <label>Search NoTrans</label>
+                                        <input name="notrans" onfocus="this.select()" oninput="TampilRetur()" class="form-control" id="notrans" name="notrans" placeholder="Masukan Nomor Transaksi">
+                                        <div id="validationServerUsernameFeedback" class="invalid-feedback notransmsg">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-2">
+                                    <div class="form-group">
+                                        <a type="button" href="#" onclick="TampilRetur()"><i class="fa fa-undo"></i></a>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <!-- /.card-header -->
-                        <div class="card-body table">
-                            <table id="example1" class="table table-bordered table-striped tableasd">
-                                <thead>
-                                    <tr>
-                                        <th>Nomor Retur</th>
-                                        <th>Jumlah Barang</th>
-                                        <th>Berat Murni</th>
-                                        <th>Detail</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <?php foreach ($dataretur as $row) : ?>
-                                        <tr>
-                                            <td><?= $row['no_retur'] ?></td>
-                                            <td><?= $row['jumlah_barang'] ?></td>
-                                            <td><?= $row['total_berat'] ?></td>
-                                            <td>
-                                                <?php if ($row['status_dokumen'] == 'Draft') : ?>
-                                                    <a type="button" href="draftretur/<?= $row['id_date_retur'] ?>" class="btn btn-block btn-outline-danger btn-sm">Draft</a>
-                                                <?php else : ?>
-                                                    <a type="button" href="draftretur/<?= $row['id_date_retur'] ?>" class="btn btn-block btn-outline-info btn-sm">Detail</a>
-                                                <?php endif ?>
-                                            </td>
-                                        </tr>
-                                    <?php endforeach; ?>
-                                </tbody>
-                                <tfoot>
-                                    <tr>
-                                        <th>Kode</th>
-                                        <th>Jumlah Barang</th>
-                                        <th>Berat Murni</th>
-                                        <th>Detail</th>
-                                    </tr>
-                                </tfoot>
-                            </table>
-                        </div>
-                        <!-- /.card-body -->
                     </div>
-                    <!-- /.card -->
+                    <div class="card">
+                        <div class="card-body table" id="tampildataretur">
+                        </div>
+                    </div>
                 </div>
                 <!-- /.col -->
             </div>
@@ -112,7 +107,7 @@
                                             <th>Supplier</th>
                                             <th>Tanggal Faktur</th>
                                             <th>Jatuh Tempo</th>
-                                            <th>Bayar Berat Murni</th>
+                                            <th>Total Harga</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -122,7 +117,7 @@
                                                 <td><?= $row['nama_supp'] ?></td>
                                                 <td><?= substr($row['tgl_faktur'], 0, 10) ?></td>
                                                 <td><?= substr($row['tgl_jatuh_tempo'], 0, 10) ?></td>
-                                                <td><?= $row['byr_berat_murni'] ?></td>
+                                                <td><?= number_format($row['byr_barang'], 0, ',', '.') ?></td>
                                             </tr>
                                         <?php endforeach; ?>
                                     </tbody>
@@ -153,39 +148,29 @@
 
 </footer>
 <script>
-    function MasukRetur(id) {
+    function TampilRetur() {
         $.ajax({
-            type: "GET",
+            type: "get",
+            url: "<?php echo base_url('tampildataretur'); ?>",
             dataType: "json",
-            url: "<?php echo base_url('returbarang'); ?>",
             data: {
-                idbeli: id,
+                tmpildata: $('#tampil').val(),
+                status: $('#status').val(),
+                kelompok: $('#kelompok').val(),
+                notrans: $('#notrans').val(),
             },
-            beforeSend: function() {
-                $(".masukretur").attr('onclick', ' ')
-            },
-            // complete: function() {
-            //     $('.btntambah').html('Tambah')
-            // },
             success: function(result) {
-                if (result.success) {
-                    window.location.href = "/draftretur/" + result.dateid
-                }
+                $('#tampildataretur').html(result.tampildata)
+
             },
             error: function(xhr, ajaxOptions, thrownError) {
                 alert(xhr.status + "\n" + xhr.responseText + "\n" + thrownError);
             }
         })
     }
-    $(function() {
-        $("#example1").DataTable({
-            "responsive": true,
-            "lengthChange": false,
-            "autoWidth": false,
-            "aaSorting": []
-            //"buttons": ["copy", "csv", "excel", "pdf", "print", "colvis", ]
-        }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
 
+    $(function() {
+        TampilRetur()
         $("#pembelian1").DataTable({
             "responsive": true,
             "lengthChange": false,

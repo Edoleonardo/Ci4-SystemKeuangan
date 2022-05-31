@@ -151,7 +151,7 @@
             <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
                 <!-- Add icons to the links using the .nav-icon class with font-awesome or any other icon font library -->
 
-                <li class="nav-item menu-open">
+                <li class="nav-item menu-is-opening menu-open">
                     <a href="#" class="nav-link">
                         <i class="nav-icon fas fa-tachometer-alt"></i>
                         <p>
@@ -167,12 +167,6 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="/kartustock" class="nav-link ">
-                                <i class="far fa-circle nav-icon"></i>
-                                <p>Kartu Stock</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
                             <a href="/transaksiharian" class="nav-link ">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>Transaksi Harian</p>
@@ -180,7 +174,36 @@
                         </li>
                     </ul>
                 </li>
-                <li class="nav-item menu-open">
+                <li class="nav-item menu-is-opening menu-open">
+                    <a href="#" class="nav-link">
+                        <i class="nav-icon fas fa-book"></i>
+                        <p>
+                            Kartu Stock
+                            <i class="right fas fa-angle-left"></i>
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="/kartustock/1" class="nav-link ">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Emas</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/kartustock/5" class="nav-link ">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Loose Diamond</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/kartustock/6" class="nav-link ">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Barang Dagang</p>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="nav-item menu-is-opening menu-open">
                     <a href="#" class="nav-link">
                         <i class="nav-icon fas fa-archive"></i>
                         <p>
@@ -227,7 +250,7 @@
                         </li>
                     </ul>
                 </li>
-                <li class="nav-item menu-open">
+                <li class="nav-item menu-is-opening menu-open">
                     <a href="#" class="nav-link">
                         <i class="nav-icon far fa-plus-square"></i>
                         <p>
@@ -239,7 +262,7 @@
                         <li class="nav-item">
                             <a href="/barangmasuk" class="nav-link ">
                                 <i class="far fa-circle nav-icon"></i>
-                                <p>Data Pembelian Supplier</p>
+                                <p>Pembelian Barang</p>
                             </a>
                         </li>
                         <li class="nav-item">
@@ -250,7 +273,7 @@
                         </li>
                     </ul>
                 </li>
-                <li class="nav-item menu-open">
+                <li class="nav-item menu-is-opening menu-open">
                     <a href="#" class="nav-link">
                         <i class="nav-icon fas fa-share-square"></i>
                         <p>
@@ -262,28 +285,12 @@
                         <li class="nav-item">
                             <a href="/barangkeluar" class="nav-link ">
                                 <i class="far fa-circle nav-icon"></i>
-                                <p>Jual Barang Emas</p>
-                            </a>
-                        </li>
-                    </ul>
-                    <ul class="nav nav-treeview">
-                        <li class="nav-item">
-                            <a href="/barangkeluar" class="nav-link ">
-                                <i class="far fa-circle nav-icon"></i>
-                                <p>Jual Loose Diamond</p>
-                            </a>
-                        </li>
-                    </ul>
-                    <ul class="nav nav-treeview">
-                        <li class="nav-item">
-                            <a href="/barangkeluar" class="nav-link ">
-                                <i class="far fa-circle nav-icon"></i>
-                                <p>Jual Barang Dagang</p>
+                                <p>Jual Barang</p>
                             </a>
                         </li>
                     </ul>
                 </li>
-                <li class="nav-item menu-open">
+                <li class="nav-item menu-is-opening menu-open">
                     <a href="#" class="nav-link">
                         <i class="nav-icon fas fa-cog"></i>
                         <p>
@@ -312,7 +319,7 @@
                         </li>
                     </ul>
                 </li>
-                <li class="nav-item menu-open">
+                <li class="nav-item menu-is-opening menu-open">
                     <a href="#" class="nav-link">
                         <i class="nav-icon fas fa-book"></i>
                         <p>
@@ -329,7 +336,7 @@
                         </li>
                     </ul>
                 </li>
-                <li class="nav-item menu-open">
+                <li class="nav-item menu-is-opening menu-open">
                     <a href="#" class="nav-link">
                         <i class="nav-icon fas fa-table"></i>
                         <p>
@@ -346,7 +353,7 @@
                         </li>
                     </ul>
                 </li>
-                <li class="nav-item">
+                <li class="nav-item menu-is-opening menu-open">
                     <a href="/stockopname" class="nav-link">
                         <i class="nav-icon far fa fa-list-alt"></i>
                         <p>

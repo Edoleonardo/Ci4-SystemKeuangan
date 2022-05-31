@@ -30,7 +30,7 @@ class ModelStock1 extends Model
     public function getBarangOpname($id)
     {
         $db = db_connect();
-        $data = $db->query('SELECT * FROM `tbl_stock_1` WHERE barcode not in (SELECT barcode from tbl_stock_1_opname) AND barcode = ' . $id . ';');
+        $data = $db->query('SELECT * FROM `tbl_stock_1` WHERE barcode not in (SELECT barcode from tbl_stock_opname) AND barcode = ' . $id . ';');
         if ($data->getResult('array')) {
             return $data->getResult('array')[0];
         } else {
@@ -40,7 +40,7 @@ class ModelStock1 extends Model
     public function getBarangOpnameId($id)
     {
         $db = db_connect();
-        $data = $db->query('SELECT * FROM `tbl_stock_1` WHERE barcode not in (SELECT barcode from tbl_stock_1_opname) AND id_stock_1 = ' . $id . ';');
+        $data = $db->query('SELECT * FROM `tbl_stock_1` WHERE barcode not in (SELECT barcode from tbl_stock_opname) AND id_stock_1 = ' . $id . ';');
         if ($data->getResult('array')) {
             return $data->getResult('array')[0];
         } else {
@@ -60,7 +60,7 @@ class ModelStock1 extends Model
     {
         $db = db_connect();
         if ($kode) {
-            $search = 'barcode =' . $kode;
+            $search = 'barcode =' . "'" . $kode . "'";
         } else {
             $search = '1 = 1';
         }
@@ -141,13 +141,13 @@ class ModelStock1 extends Model
     public function SisahOpname()
     {
         $db = db_connect();
-        $data = $db->query('SELECT count(barcode) barcode FROM `tbl_stock_1` WHERE barcode NOT IN (SELECT barcode FROM tbl_stock_1_opname);');
+        $data = $db->query('SELECT count(barcode) barcode FROM `tbl_stock_1` WHERE barcode NOT IN (SELECT barcode FROM tbl_stock_opname);');
         return $data->getResult('array')[0];
     }
     public function BelumOpname()
     {
         $db = db_connect();
-        $data = $db->query('SELECT * FROM `tbl_stock_1` WHERE barcode NOT IN (SELECT barcode FROM tbl_stock_1_opname)  limit 20;');
+        $data = $db->query('SELECT * FROM `tbl_stock_1` WHERE barcode NOT IN (SELECT barcode FROM tbl_stock_opname)  limit 20;');
         return $data->getResult('array');
     }
     public function CountDataStock()
