@@ -249,7 +249,7 @@
 <script type="text/javascript">
     var html5QrcodeScanner = new Html5QrcodeScanner(
         "reader", {
-            fps: 20,
+            fps: 50,
             qrbox: 50,
         });
 
