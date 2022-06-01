@@ -75,15 +75,15 @@
                                 </tr>
                                 <tr>
                                     <td>Tanggal Input</td>
-                                    <td><?= $datapembelian['created_at'] ?></td>
+                                    <td><?= date("d-m-Y", strtotime($datapembelian['created_at'])) ?></td>
                                 </tr>
                                 <tr>
                                     <td>Tanggal Nota Supplier</td>
-                                    <td><?= $datapembelian['tgl_faktur'] ?></td>
+                                    <td><?= date("d-m-Y", strtotime($datapembelian['tgl_faktur'])) ?></td>
                                 </tr>
                                 <tr>
                                     <td>Tanggal Jatuh Tempo</td>
-                                    <td><?= $datapembelian['tgl_jatuh_tempo'] ?></td>
+                                    <td><?= date("d-m-Y", strtotime($datapembelian['tgl_jatuh_tempo'])) ?></td>
                                 </tr>
                                 <tr>
                                     <td>Nomor Nota Supplier</td>
