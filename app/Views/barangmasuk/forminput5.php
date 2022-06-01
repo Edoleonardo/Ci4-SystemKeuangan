@@ -124,7 +124,7 @@
                                             <!-- text input -->
                                             <div class="form-group">
                                                 <label>Carat</label>
-                                                <input type="number" onfocus="this.select()" step="0.01" id="carat" name="carat" class="form-control" placeholder="Masukan carat">
+                                                <input type="number" min="0.01" onfocus="this.select()" step="0.01" id="carat" name="carat" class="form-control" placeholder="Masukan carat">
                                                 <div id="validationServerUsernameFeedback" class="invalid-feedback caratmsg">
                                                 </div>
                                             </div>

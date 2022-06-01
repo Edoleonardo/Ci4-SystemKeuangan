@@ -636,6 +636,7 @@ class Barangkeluar extends BaseController
                 ];
             } else {
 
+
                 $datapenjualan = $this->penjualan->getDataPenjualan($this->request->getVar('dateid'));
                 $transfer = ($this->request->getVar('transfer')) ? $this->request->getVar('transfer') : 0;
                 $debitcc = ($this->request->getVar('debitcc')) ? $this->request->getVar('debitcc') : 0;
@@ -649,171 +650,179 @@ class Barangkeluar extends BaseController
                     $hasilcharge = 0;
                 }
                 $hasil = ($datapenjualan['total_harga'] + $hasilcharge) - $transfer - $tunai - ($debitcc + $byrcharge) - $pembulatan;
-                if ($hasil <= 0) {
-                    $datacust = $this->datacust->getDataCustomerone($this->request->getVar('nohpcust'));
-                    if ($datapenjualan['kelompok'] == 5) {
-                        $tambahpoint = $this->modeldetailpenjualan->SumCarattDetailJual($this->request->getVar('dateid'))['carat'];
+                $datacust = $this->datacust->getDataCustomerone($this->request->getVar('nohpcust'));
+                if ($datacust) {
+                    if ($hasil <= 0) {
+                        if ($datapenjualan['kelompok'] == 5) {
+                            $tambahpoint = $this->modeldetailpenjualan->SumCarattDetailJual($this->request->getVar('dateid'))['carat'];
+                        } else {
+                            $tambahpoint = $this->modeldetailpenjualan->SumBeratKotorDetailjual($this->request->getVar('dateid'))['berat'];
+                        }
+                        $this->datacust->save([
+                            'id_customer' => $datacust['id_customer'],
+                            'point' => round($datacust['point'] + $tambahpoint),
+                        ]);
+                        $this->penjualan->save([
+                            'id_penjualan' =>  $datapenjualan['id_penjualan'],
+                            'id_karyawan' => $session->get('id_user'),
+                            'nohp_cust' => $this->request->getVar('nohpcust'),
+                            'bank_transfer' => ($this->request->getVar('transfer')) ? $this->request->getVar('banktransfer') : null,
+                            'bank_debitcc' => ($this->request->getVar('debitcc')) ? $this->request->getVar('bankdebitcc') : null,
+                            'pembayaran' => 'Lunas',
+                            'tunai' =>  $tunai,
+                            'debitcc' =>  $debitcc + $byrcharge,
+                            'transfer' =>  $transfer,
+                            'charge' =>   $charge,
+                            'pembulatan' => $pembulatan,
+                            'jumlah' => $this->modeldetailpenjualan->JumlahData($datapenjualan['id_date_penjualan'])['jumlah'],
+                            'status_dokumen' => 'Selesai',
+                        ]);
+                        $msg = [
+                            'pesan' => [
+                                'pesan' => 'berhasil'
+                            ]
+                        ];
+                        $status = true;
                     } else {
-                        $tambahpoint = $this->modeldetailpenjualan->SumBeratKotorDetailjual($this->request->getVar('dateid'))['berat'];
+                        $msg = [
+                            'error' => [
+                                'kurang' => 'Pembayaran Kurang ' . number_format($hasil, 0, ',', '.')
+                            ]
+                        ];
+                        // $msg = $hasil;
                     }
-                    $this->datacust->save([
-                        'id_customer' => $datacust['id_customer'],
-                        'point' => round($datacust['point'] + $tambahpoint),
-                    ]);
-                    $this->penjualan->save([
-                        'id_penjualan' =>  $datapenjualan['id_penjualan'],
-                        'id_karyawan' => $session->get('id_user'),
-                        'nohp_cust' => $this->request->getVar('nohpcust'),
-                        'bank_transfer' => ($this->request->getVar('transfer')) ? $this->request->getVar('banktransfer') : null,
-                        'bank_debitcc' => ($this->request->getVar('debitcc')) ? $this->request->getVar('bankdebitcc') : null,
-                        'pembayaran' => 'Lunas',
-                        'tunai' =>  $tunai,
-                        'debitcc' =>  $debitcc + $byrcharge,
-                        'transfer' =>  $transfer,
-                        'charge' =>   $charge,
-                        'pembulatan' => $pembulatan,
-                        'jumlah' => $this->modeldetailpenjualan->JumlahData($datapenjualan['id_date_penjualan'])['jumlah'],
-                        'status_dokumen' => 'Selesai',
-                    ]);
-                    $msg = [
-                        'pesan' => [
-                            'pesan' => 'berhasil'
-                        ]
-                    ];
-                    $status = true;
                 } else {
                     $msg = [
                         'error' => [
-                            'kurang' => 'Pembayaran Kurang ' . number_format($hasil, 0, ',', '.')
+                            'kurang' => 'Data Customer Tidak ada'
                         ]
                     ];
-                    // $msg = $hasil;
                 }
-            }
-            if (isset($status)) {
-                $datadetailpenjualan = $this->modeldetailpenjualan->getDetailAllJual($datapenjualan['id_date_penjualan']);
-                foreach ($datadetailpenjualan as $row) {
-                    if (substr($row['kode'], 0, 1) == 1 || substr($row['kode'], 0, 1) == 2 || substr($row['kode'], 0, 1) == 3 || substr($row['kode'], 0, 1) == 4) {
-                        $datakartu = $this->modelkartustock->getKartuStockkode($row['kode']);
-                        $saldoakhir = (substr($row['kode'], 0, 1) == 4) ? $datakartu['saldo_akhir'] - $row['berat'] : $datakartu['saldo_akhir'] - $row['qty'];
-                        $this->modeldetailkartustock->save([
-                            // 'id_detail_kartustock' => $datadetailkartu['id_detail_kartustock'],
-                            'barcode' => $row['kode'],
-                            'status' => 'Keluar',
-                            'id_karyawan' => $session->get('id_user'),
-                            'no_faktur' => $datapenjualan['no_transaksi_jual'],
-                            'tgl_faktur' => $datapenjualan['created_at'],
-                            'nama_customer' => $this->request->getVar('nohpcust'),
-                            'saldo' => $saldoakhir,
-                            'masuk' => 0,
-                            'keluar' => (substr($row['kode'], 0, 1) == 4) ? $row['berat'] : $row['qty'],
-                            'jenis' => $row['jenis'],
-                            'model' => $row['model'],
-                            'keterangan' => $row['keterangan'],
-                            'merek' => $row['merek'],
-                            'kadar' => $row['kadar'],
-                            'berat' => $row['berat'],
-                            'nilai_tukar' =>  $row['nilai_tukar'],
-                            'harga_beli' => $row['harga_beli'],
-                            'total_harga' => $row['total_harga'],
-                            'gambar' =>  $row['nama_img'],
-                        ]);
-                        $this->KartuStockMaster($row['kode'], $session);
-                    } elseif (substr($row['kode'], 0, 1) == 5) {
-                        $datakartu = $this->modelkartustock5->getKartuStockkode($row['kode']);
-                        $saldoakhir =  $datakartu['saldo_akhir'] - $row['qty'];
-                        $saldokarat = $datakartu['saldo_carat'] - $row['carat'];
-                        $this->modeldetailkartustock5->save([
-                            // 'id_detail_kartustock' => $datadetailkartu['id_detail_kartustock'],
-                            'barcode' => $row['kode'],
-                            'status' => 'Keluar',
-                            'id_karyawan' => $session->get('id_user'),
-                            'no_faktur' => $datapenjualan['no_transaksi_jual'],
-                            'tgl_faktur' => $datapenjualan['created_at'],
-                            'nama_customer' => $this->request->getVar('nohpcust'),
-                            'saldo' => $saldoakhir,
-                            'saldo_carat' => $saldokarat,
-                            'masuk' => 0,
-                            'keluar' => $row['qty'],
-                            'jenis' => $row['jenis'],
-                            'model' => $row['model'],
-                            'keterangan' => $row['keterangan'],
-                            'merek' => $row['merek'],
-                            'kadar' => $row['kadar'],
-                            'carat' => $row['carat'],
-                            'nilai_tukar' =>  $row['nilai_tukar'],
-                            'harga_beli' => $row['harga_beli'],
-                            'total_harga' => $row['total_harga'],
-                            'gambar' =>  $row['nama_img'],
-                        ]);
-                        $this->KartuStockMaster5($row['kode'], $session, 'noopname');
-                    } elseif (substr($row['kode'], 0, 1) == 6) {
-                        $datakartu = $this->modelkartustock6->getKartuStockkode($row['kode']);
-                        $saldoakhir =  $datakartu['saldo_akhir'] - $row['qty'];
-                        $this->modeldetailkartustock6->save([
-                            // 'id_detail_kartustock' => $datadetailkartu['id_detail_kartustock'],
-                            'barcode' => $row['kode'],
-                            'status' => 'Keluar',
-                            'id_karyawan' => $session->get('id_user'),
-                            'no_faktur' => $datapenjualan['no_transaksi_jual'],
-                            'tgl_faktur' => $datapenjualan['created_at'],
-                            'nama_customer' => $this->request->getVar('nohpcust'),
-                            'saldo' => $saldoakhir,
-                            'masuk' => 0,
-                            'keluar' => $row['qty'],
-                            'jenis' => $row['jenis'],
-                            'model' => $row['model'],
-                            'keterangan' => $row['keterangan'],
-                            'merek' => $row['merek'],
-                            'harga_beli' => $row['harga_beli'],
-                            'total_harga' => $row['total_harga'],
-                            'gambar' =>  $row['nama_img'],
-                        ]);
-                        $this->KartuStockMaster6($row['kode'], $session);
+                if (isset($status)) {
+                    $datadetailpenjualan = $this->modeldetailpenjualan->getDetailAllJual($datapenjualan['id_date_penjualan']);
+                    foreach ($datadetailpenjualan as $row) {
+                        if (substr($row['kode'], 0, 1) == 1 || substr($row['kode'], 0, 1) == 2 || substr($row['kode'], 0, 1) == 3 || substr($row['kode'], 0, 1) == 4) {
+                            $datakartu = $this->modelkartustock->getKartuStockkode($row['kode']);
+                            $saldoakhir = (substr($row['kode'], 0, 1) == 4) ? $datakartu['saldo_akhir'] - $row['berat'] : $datakartu['saldo_akhir'] - $row['qty'];
+                            $this->modeldetailkartustock->save([
+                                // 'id_detail_kartustock' => $datadetailkartu['id_detail_kartustock'],
+                                'barcode' => $row['kode'],
+                                'status' => 'Keluar',
+                                'id_karyawan' => $session->get('id_user'),
+                                'no_faktur' => $datapenjualan['no_transaksi_jual'],
+                                'tgl_faktur' => $datapenjualan['created_at'],
+                                'nama_customer' => $this->request->getVar('nohpcust'),
+                                'saldo' => $saldoakhir,
+                                'masuk' => 0,
+                                'keluar' => (substr($row['kode'], 0, 1) == 4) ? $row['berat'] : $row['qty'],
+                                'jenis' => $row['jenis'],
+                                'model' => $row['model'],
+                                'keterangan' => $row['keterangan'],
+                                'merek' => $row['merek'],
+                                'kadar' => $row['kadar'],
+                                'berat' => $row['berat'],
+                                'nilai_tukar' =>  $row['nilai_tukar'],
+                                'harga_beli' => $row['harga_beli'],
+                                'total_harga' => $row['total_harga'],
+                                'gambar' =>  $row['nama_img'],
+                            ]);
+                            $this->KartuStockMaster($row['kode'], $session);
+                        } elseif (substr($row['kode'], 0, 1) == 5) {
+                            $datakartu = $this->modelkartustock5->getKartuStockkode($row['kode']);
+                            $saldoakhir =  $datakartu['saldo_akhir'] - $row['qty'];
+                            $saldokarat = $datakartu['saldo_carat'] - $row['carat'];
+                            $this->modeldetailkartustock5->save([
+                                // 'id_detail_kartustock' => $datadetailkartu['id_detail_kartustock'],
+                                'barcode' => $row['kode'],
+                                'status' => 'Keluar',
+                                'id_karyawan' => $session->get('id_user'),
+                                'no_faktur' => $datapenjualan['no_transaksi_jual'],
+                                'tgl_faktur' => $datapenjualan['created_at'],
+                                'nama_customer' => $this->request->getVar('nohpcust'),
+                                'saldo' => $saldoakhir,
+                                'saldo_carat' => $saldokarat,
+                                'masuk' => 0,
+                                'keluar' => $row['qty'],
+                                'jenis' => $row['jenis'],
+                                'model' => $row['model'],
+                                'keterangan' => $row['keterangan'],
+                                'merek' => $row['merek'],
+                                'kadar' => $row['kadar'],
+                                'carat' => $row['carat'],
+                                'nilai_tukar' =>  $row['nilai_tukar'],
+                                'harga_beli' => $row['harga_beli'],
+                                'total_harga' => $row['total_harga'],
+                                'gambar' =>  $row['nama_img'],
+                            ]);
+                            $this->KartuStockMaster5($row['kode'], $session, 'noopname');
+                        } elseif (substr($row['kode'], 0, 1) == 6) {
+                            $datakartu = $this->modelkartustock6->getKartuStockkode($row['kode']);
+                            $saldoakhir =  $datakartu['saldo_akhir'] - $row['qty'];
+                            $this->modeldetailkartustock6->save([
+                                // 'id_detail_kartustock' => $datadetailkartu['id_detail_kartustock'],
+                                'barcode' => $row['kode'],
+                                'status' => 'Keluar',
+                                'id_karyawan' => $session->get('id_user'),
+                                'no_faktur' => $datapenjualan['no_transaksi_jual'],
+                                'tgl_faktur' => $datapenjualan['created_at'],
+                                'nama_customer' => $this->request->getVar('nohpcust'),
+                                'saldo' => $saldoakhir,
+                                'masuk' => 0,
+                                'keluar' => $row['qty'],
+                                'jenis' => $row['jenis'],
+                                'model' => $row['model'],
+                                'keterangan' => $row['keterangan'],
+                                'merek' => $row['merek'],
+                                'harga_beli' => $row['harga_beli'],
+                                'total_harga' => $row['total_harga'],
+                                'gambar' =>  $row['nama_img'],
+                            ]);
+                            $this->KartuStockMaster6($row['kode'], $session);
+                        }
                     }
-                }
 
-                $saldobiaya = $this->modeltransaksi->getTransaksi();
-                if ($this->request->getVar('tunai')) {
-                    $this->modeldetailtransaksi->save([
-                        'tanggal_transaksi' => date("Y-m-d H:i:s"),
-                        'id_karyawan' => $session->get('id_user'),
-                        'pembayaran' => 'Tunai',
-                        'keterangan' => $datapenjualan['no_transaksi_jual'],
-                        'id_akun_biaya' => 26,
-                        'masuk' => $this->request->getVar('tunai'),
-                        'keluar' =>  0,
-                        'nama_bank' => ($this->request->getVar('namabank')) ? $this->request->getVar('namabank') : null,
-                    ]);
-                }
-                if ($this->request->getVar('transfer')) {
-                    $this->modeldetailtransaksi->save([
-                        'tanggal_transaksi' => date("Y-m-d H:i:s"),
-                        'id_karyawan' => $session->get('id_user'),
-                        'pembayaran' => 'Transfer',
-                        'keterangan' => $datapenjualan['no_transaksi_jual'],
-                        'id_akun_biaya' => 26,
-                        'masuk' => $this->request->getVar('transfer'),
-                        'keluar' =>  0,
-                        'nama_bank' => ($this->request->getVar('namabank')) ? $this->request->getVar('namabank') : null,
-                    ]);
-                }
-                if ($this->request->getVar('debitcc')) {
-                    $this->modeldetailtransaksi->save([
-                        'tanggal_transaksi' => date("Y-m-d H:i:s"),
-                        'id_karyawan' => $session->get('id_user'),
-                        'pembayaran' => 'Debitcc',
-                        'keterangan' => $datapenjualan['no_transaksi_jual'],
-                        'id_akun_biaya' => 26,
-                        'masuk' => $this->request->getVar('debitcc') + $byrcharge,
-                        'keluar' =>  0,
-                        'nama_bank' => ($this->request->getVar('namabank')) ? $this->request->getVar('namabank') : null,
-                    ]);
-                }
+                    $saldobiaya = $this->modeltransaksi->getTransaksi();
+                    if ($this->request->getVar('tunai')) {
+                        $this->modeldetailtransaksi->save([
+                            'tanggal_transaksi' => date("Y-m-d H:i:s"),
+                            'id_karyawan' => $session->get('id_user'),
+                            'pembayaran' => 'Tunai',
+                            'keterangan' => $datapenjualan['no_transaksi_jual'],
+                            'id_akun_biaya' => 26,
+                            'masuk' => $this->request->getVar('tunai'),
+                            'keluar' =>  0,
+                            'nama_bank' => ($this->request->getVar('namabank')) ? $this->request->getVar('namabank') : null,
+                        ]);
+                    }
+                    if ($this->request->getVar('transfer')) {
+                        $this->modeldetailtransaksi->save([
+                            'tanggal_transaksi' => date("Y-m-d H:i:s"),
+                            'id_karyawan' => $session->get('id_user'),
+                            'pembayaran' => 'Transfer',
+                            'keterangan' => $datapenjualan['no_transaksi_jual'],
+                            'id_akun_biaya' => 26,
+                            'masuk' => $this->request->getVar('transfer'),
+                            'keluar' =>  0,
+                            'nama_bank' => ($this->request->getVar('namabank')) ? $this->request->getVar('namabank') : null,
+                        ]);
+                    }
+                    if ($this->request->getVar('debitcc')) {
+                        $this->modeldetailtransaksi->save([
+                            'tanggal_transaksi' => date("Y-m-d H:i:s"),
+                            'id_karyawan' => $session->get('id_user'),
+                            'pembayaran' => 'Debitcc',
+                            'keterangan' => $datapenjualan['no_transaksi_jual'],
+                            'id_akun_biaya' => 26,
+                            'masuk' => $this->request->getVar('debitcc') + $byrcharge,
+                            'keluar' =>  0,
+                            'nama_bank' => ($this->request->getVar('namabank')) ? $this->request->getVar('namabank') : null,
+                        ]);
+                    }
 
-                $this->BiayaHarianMaster($saldobiaya['id_transaksi'], $session);
+                    $this->BiayaHarianMaster($saldobiaya['id_transaksi'], $session);
+                }
+                echo json_encode($msg);
             }
-            echo json_encode($msg);
         }
     }
 
