@@ -230,6 +230,7 @@ $routes->get('/isidata', ($session->get('role')) ? 'MasterInput::DataMaster' : '
 $routes->get('/transaksiharian', ($session->get('role')) ? 'Transaksi::DataTransaksi' : 'Login::Login');
 $routes->POST('/tambahinput', ($session->get('role')) ? 'Transaksi::TambahInput' : 'Login::Login');
 $routes->get('/tampiltrans', ($session->get('role')) ? 'Transaksi::TampilTransaksi' : 'Login::Login');
+$routes->get('/printtransaksi/(:any)/(:any)', ($session->get('role')) ? 'Transaksi::PrintTransaksi/$1/$2' : 'Login::Login');
 
 /*
  * --------------------------------------------------------------------

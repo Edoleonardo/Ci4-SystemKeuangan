@@ -39,7 +39,7 @@ class Transaksi extends BaseController
     {
         if ($this->request->isAJAX()) {
             if ($this->request->getVar('dari') < $this->request->getVar('sampai')) {
-                $msg = ['error' => 'Dari Tanggal Harus Lebih Besar'];
+                $msg = ['error' => 'Dari Tanggal Harus Lebih Kecil'];
             } else {
                 $data = [
                     'detailtransaksi' => $this->modeldetailtransaksi->getDetailTransaksiFilter($this->request->getVar('dari'), $this->request->getVar('sampai')),
@@ -50,6 +50,14 @@ class Transaksi extends BaseController
 
             echo json_encode($msg);
         }
+    }
+    public function PrintTransaksi($dari, $sampai)
+    {
+        $data = [
+            'detailtransaksi' => $this->modeldetailtransaksi->getDetailTransaksiFilter($dari, $sampai),
+            'datatransaksi' => $this->modeltransaksi->getTransaksi(),
+        ];
+        return view('transaksi/print_transaksi', $data);
     }
     public function TambahInput()
     {
