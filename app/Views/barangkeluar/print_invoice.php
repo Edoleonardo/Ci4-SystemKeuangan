@@ -54,7 +54,7 @@ function barcodegenerate2($kode)
     </tr>
   </tbody>
 </table>
-<br><br><br>
+<br><br>
 <?php if ($datajual['kelompok'] == 1 || $datajual['kelompok'] == 2 || $datajual['kelompok'] == 3 || $datajual['kelompok'] == 4) : ?>
   <div class="row">
     <table style='border-left:none; border-bottom:none;'>
