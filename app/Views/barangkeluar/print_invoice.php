@@ -8,7 +8,7 @@ function barcodegenerate($kode)
   $barcode = $barcodeG;
   $barcode->setText($kode);
   $barcode->setType(BarcodeGenerator::Code128);
-  $barcode->setScale(2);
+  $barcode->setScale(1);
   $barcode->setThickness(25);
   $barcode->setFontSize(10);
   $code = $barcode->generate();
@@ -47,7 +47,8 @@ function barcodegenerate2($kode)
 <table style='border:none;'>
   <tbody>
     <tr>
-      <td style='border:none; width: 160mm;'><?= barcodegenerate($datajual['no_transaksi_jual']) ?></td>
+      <td style="border:none ;width: 135mm;"></td>
+      <td style='border:none;'><?= barcodegenerate($datajual['no_transaksi_jual']) ?> </td>
       <td style='border:none;'>No.Nota : <?= $datajual['no_transaksi_jual'] ?><br>Tangerang, <?= date('d-m-y') ?><br>Bpk/Ibu: <?= $datacust['nama'] ?></td>
     </tr>
   </tbody>
@@ -76,7 +77,7 @@ function barcodegenerate2($kode)
             <td><img id="gmbr" style="width: 100px;" src="/img/<?= $row['nama_img'] ?>" alt=""></td>
             <td><?= barcodegenerate2($row['kode']) ?></td>
             <td style="text-align: center;"><?= $row['qty'] ?></td>
-            <td style="vertical-align: middle;"><?= $row['jenis'] ?>, <?= $row['keterangan'] ?>, <?= $row['model'] ?>, <?= $row['kadar'] ?></td>
+            <td style="vertical-align: middle;"><?= $row['jenis'] ?>, <?= $row['model'] ?>, <?= $row['keterangan'] ?>, <?= $row['kadar'] ?></td>
             <td style="text-align: center;"><?= $row['berat'] ?></td>
             <td style="text-align: center;"><?= number_format($row['ongkos'], 0, ',', '.') ?></td>
             <td style="text-align: center;"><?= number_format($row['total_harga'], 0, ',', '.') ?></td>
@@ -347,7 +348,7 @@ function barcodegenerate2($kode)
   body {
     /*border: solid 1px black ;*/
     /* margin: 50mm 50mm 50mm 50mm; */
-    margin-top: 30mm;
+    margin-top: 7mm;
     margin-left: 10mm;
     /* margin you want for the content */
   }
