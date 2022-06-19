@@ -1,0 +1,57 @@
+TRUNCATE TABLE tbl_supplier;
+TRUNCATE TABLE tbl_stock_1;
+TRUNCATE TABLE tbl_stock_2;
+TRUNCATE TABLE tbl_stock_3;
+TRUNCATE TABLE tbl_stock_4;
+TRUNCATE TABLE tbl_stock_5;
+TRUNCATE TABLE tbl_stock_6;
+TRUNCATE TABLE tbl_retur_sales;
+TRUNCATE TABLE tbl_retur;
+TRUNCATE TABLE tbl_penjualan;
+TRUNCATE TABLE tbl_pembelian;
+TRUNCATE TABLE tbl_pembayaran_pembelian;
+TRUNCATE TABLE tbl_pegawai;
+TRUNCATE TABLE tbl_merek;
+TRUNCATE TABLE tbl_lebur;
+TRUNCATE TABLE tbl_kartustock;
+TRUNCATE TABLE tbl_kadar;
+TRUNCATE TABLE tbl_jenis;
+TRUNCATE TABLE tbl_detail_retur;
+TRUNCATE TABLE tbl_detail_penjualan;
+TRUNCATE TABLE tbl_detail_pembelian;
+TRUNCATE TABLE tbl_detail_lebur;
+TRUNCATE TABLE tbl_detail_kartustock;
+TRUNCATE TABLE tbl_detail_cuci;
+TRUNCATE TABLE tbl_detail_buyback;
+TRUNCATE TABLE tbl_customer;
+TRUNCATE TABLE tbl_cuci;
+TRUNCATE TABLE tbl_buyback;
+TRUNCATE TABLE tbl_bank;
+TRUNCATE TABLE tbl_akun_biaya;
+TRUNCATE TABLE tbl_detail_transaksi;
+TRUNCATE TABLE tbl_stock_opname;
+TRUNCATE TABLE tbl_transaksi;
+TRUNCATE TABLE tbl_tukang;
+TRUNCATE TABLE tbl_detail_kartustock_5;
+TRUNCATE TABLE tbl_detail_kartustock_6;
+TRUNCATE TABLE tbl_kartustock_5;
+TRUNCATE TABLE tbl_kartustock_6;
+TRUNCATE TABLE tbl_kartustock;
+TRUNCATE TABLE tbl_detail_kartustock;
+
+------------------------------
+TRUNCATE `tbl_penjualan`;
+-----------------------------
+TRUNCATE`tbl_detail_penjualan`;
+
+SELECT barcode, Kode FROM `tbl_stock` LEFT OUTER join 220331_pembelian ON tbl_stock.barcode = 220331_pembelian.Kode ORDER BY `220331_pembelian`.`Kode` ASC
+
+SELECT barcode, Kode,No_Nota FROM `tbl_stock` LEFT OUTER join 220331_pembelian ON (tbl_stock.barcode = 220331_pembelian.Kode) WHERE Kode Is NULL;
+
+SELECT no_transaksi, COUNT(no_transaksi) FROM tbl_pembelian GROUP BY no_transaksi HAVING COUNT(no_transaksi) > 1;
+(Cari data dabel)
+
+SELECT barcode, Kode,No_Nota, tbl_stock.nilai_tukar NilaiTkarStock,220331_pembelian.Nilai_Tukar NilaiTkarBeli FROM `tbl_stock` LEFT OUTER join 220331_pembelian ON (tbl_stock.barcode = 220331_pembelian.Kode);
+(Perbandingan NIlaiTukar)
+
+SELECT Kode, COUNT(Kode), SUM(Qty), No_Nota, Berat FROM 220331_pembelian WHERE SUBSTR(Kode,1,1) = 3 OR SUBSTR(Kode,1,1) =4 GROUP BY Kode HAVING COUNT(Kode) > 1;
