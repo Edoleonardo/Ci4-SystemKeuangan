@@ -76,7 +76,7 @@ function barcodegenerate2($kode)
             <td><img id="gmbr" style="width: 100px;" src="/img/<?= $row['nama_img'] ?>" alt=""></td>
             <td><?= barcodegenerate2($row['kode']) ?></td>
             <td style="text-align: center;"><?= $row['qty'] ?></td>
-            <td style="vertical-align: middle;"><?= $row['jenis'] ?>, <?= $row['keterangan'] ?>, <?= $row['model'] ?></td>
+            <td style="vertical-align: middle;"><?= $row['jenis'] ?>, <?= $row['keterangan'] ?>, <?= $row['model'] ?>, <?= $row['kadar'] ?></td>
             <td style="text-align: center;"><?= $row['berat'] ?></td>
             <td style="text-align: center;"><?= number_format($row['ongkos'], 0, ',', '.') ?></td>
             <td style="text-align: center;"><?= number_format($row['total_harga'], 0, ',', '.') ?></td>
