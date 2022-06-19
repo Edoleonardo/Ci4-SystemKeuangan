@@ -47,8 +47,9 @@ function barcodegenerate2($kode)
 <table style='border:none;'>
   <tbody>
     <tr>
-      <td style="border:none ;width: 135mm;"></td>
+      <td style="border:none ;width: 125mm;"></td>
       <td style='border:none;'><?= barcodegenerate($datajual['no_transaksi_jual']) ?> </td>
+      <td style="border:none ;width: 1cm;"></td>
       <td style='border:none;'>No.Nota : <?= $datajual['no_transaksi_jual'] ?><br>Tangerang, <?= date('d-m-y') ?><br>Bpk/Ibu: <?= $datacust['nama'] ?></td>
     </tr>
   </tbody>
