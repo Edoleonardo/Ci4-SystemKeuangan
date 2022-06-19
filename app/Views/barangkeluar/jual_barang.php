@@ -491,6 +491,7 @@
     }
 
     $('.pembayaranform').submit(function(e) {
+        console.log('asdas')
         e.preventDefault()
         Swal.fire({
             title: 'Bayar',

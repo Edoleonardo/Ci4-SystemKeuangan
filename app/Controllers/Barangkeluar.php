@@ -821,8 +821,8 @@ class Barangkeluar extends BaseController
 
                     $this->BiayaHarianMaster($saldobiaya['id_transaksi'], $session);
                 }
-                echo json_encode($msg);
             }
+            echo json_encode($msg);
         }
     }
 
