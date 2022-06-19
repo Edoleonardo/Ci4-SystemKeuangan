@@ -348,7 +348,7 @@ function barcodegenerate2($kode)
     /*border: solid 1px black ;*/
     /* margin: 50mm 50mm 50mm 50mm; */
     margin-top: 30mm;
-    margin-left: 35mm;
+    margin-left: 10mm;
     /* margin you want for the content */
   }
 
