@@ -50,7 +50,7 @@ function barcodegenerate2($kode)
       <td style="border:none ;width: 125mm;"></td>
       <td style='border:none;'><?= barcodegenerate($datajual['no_transaksi_jual']) ?> </td>
       <td style="border:none ;width: 1cm;"></td>
-      <td style='border:none;'>No.Nota : <?= $datajual['no_transaksi_jual'] ?><br>Tangerang, <?= date('d-m-y') ?><br>Bpk/Ibu: <?= $datacust['nama'] ?></td>
+      <td style='border:none;'>No.Nota : <?= $datajual['no_transaksi_jual'] ?><br>Tangerang, <?= date('d-m-y') ?><br>Bpk/Ibu: <?= $datacust['nama'] ?><br>NoHp: <?= $datacust['nohp_cust'] ?></td>
     </tr>
   </tbody>
 </table>
@@ -80,8 +80,8 @@ function barcodegenerate2($kode)
             <td style="text-align: center;"><?= $row['qty'] ?></td>
             <td style="vertical-align: middle;"><?= $row['jenis'] ?>, <?= $row['model'] ?>, <?= $row['keterangan'] ?>, <?= $row['kadar'] ?></td>
             <td style="text-align: center;"><?= $row['berat'] ?> Gr</td>
-            <td style="text-align: center;"> Rp. <?= number_format($row['ongkos'], 0, ',', '.') ?></td>
-            <td style="text-align: center;">Rp. <?= number_format($row['total_harga'], 0, ',', '.') ?></td>
+            <td> <?= ($row['ongkos'] != 0) ? 'Rp. ' . number_format($row['ongkos'], 0, ',', '.') : ' ' ?></td>
+            <td>Rp. <?= number_format($row['total_harga'], 0, ',', '.') ?></td>
           </tr>
 
         <?php $total = $total +  $row['total_harga'];
@@ -182,7 +182,7 @@ function barcodegenerate2($kode)
             <td style="text-align: center;"><?= $row['qty'] ?></td>
             <td style="vertical-align: middle;"><?= $row['jenis'] ?>, <?= $row['keterangan'] ?>, <?= $row['model'] ?></td>
             <td style="text-align: center;"><?= $row['carat'] ?></td>
-            <td style="text-align: center;"><?= number_format($row['total_harga'], 0, ',', '.') ?></td>
+            <td><?= number_format($row['total_harga'], 0, ',', '.') ?></td>
           </tr>
         <?php $total = $total +  $row['total_harga'];
           $ongkos = $ongkos + $row['ongkos'];
@@ -264,7 +264,7 @@ function barcodegenerate2($kode)
             <td><?= barcodegenerate2($row['kode']) ?></td>
             <td style="vertical-align: middle;"><?= $row['jenis'] ?>, <?= $row['keterangan'] ?>, <?= $row['model'] ?></td>
             <td style="text-align: center;"><?= $row['qty'] ?></td>
-            <td style="text-align: center;">Rp. <?= number_format($row['total_harga'], 0, ',', '.') ?></td>
+            <td>Rp. <?= number_format($row['total_harga'], 0, ',', '.') ?></td>
           </tr>
         <?php $total = $total +  $row['total_harga'];
           $ongkos = $ongkos + $row['ongkos'];
