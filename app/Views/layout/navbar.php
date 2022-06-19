@@ -353,13 +353,42 @@
                         </li>
                     </ul>
                 </li>
-                <li class="nav-item menu-is-opening menu-open">
+                <li class="nav-item">
                     <a href="/stockopname" class="nav-link">
                         <i class="nav-icon far fa fa-list-alt"></i>
                         <p>
                             Stock Opname
                         </p>
                     </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        <i class="nav-icon fas fa-cog"></i>
+                        <p>
+                            Master Update
+                            <i class="right fas fa-angle-left"></i>
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="/updatepembelian" class="nav-link ">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Pembelian</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/datacuci" class="nav-link ">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Penjualan</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/datalebur" class="nav-link ">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Buyback</p>
+                            </a>
+                        </li>
+                    </ul>
                 </li>
                 <li class="nav-item">
                     <a href="/logout" class="nav-link">

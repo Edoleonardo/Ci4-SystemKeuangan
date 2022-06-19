@@ -65,7 +65,7 @@ $routes->get('/openscanbarcode', ($session->get('role')) ? 'StockOpname::OpenSca
 $routes->get('/databarang/(:any)', ($session->get('role')) ? 'DataStock::databarang/$1' : 'Login::Login');
 $routes->get('/tampildatabarang', ($session->get('role')) ? 'DataStock::TampilDataBarang' : 'Login::Login');
 $routes->get('/detail/(:any)/(:any)', ($session->get('role')) ? 'DataStock::detail/$1/$2' : 'Login::Login');
-// $routes->get('/print/(:any)', ($session->get('role')) ? 'DataStock::print/$1' : 'Login::Login');
+$routes->get('/print/(:any)', ($session->get('role')) ? 'DataStock::print/$1' : 'Login::Login');
 
 
 // --------------------BarangMasuk-----------
@@ -231,6 +231,12 @@ $routes->get('/transaksiharian', ($session->get('role')) ? 'Transaksi::DataTrans
 $routes->POST('/tambahinput', ($session->get('role')) ? 'Transaksi::TambahInput' : 'Login::Login');
 $routes->get('/tampiltrans', ($session->get('role')) ? 'Transaksi::TampilTransaksi' : 'Login::Login');
 $routes->get('/printtransaksi/(:any)/(:any)', ($session->get('role')) ? 'Transaksi::PrintTransaksi/$1/$2' : 'Login::Login');
+
+//--------------------------------MasterUpdate----------------------------------------------
+$routes->get('/updatepembelian', ($session->get('role')) ? 'MasterUpdate::UpdatePembelian' : 'Login::Login');
+$routes->get('/tampilpembelian_u', ($session->get('role')) ? 'MasterUpdate::TampilPembelian' : 'Login::Login');
+$routes->get('/detailpembelian_u/(:any)', ($session->get('role')) ? 'MasterUpdate::DetailPembelianSupp/$1' : 'Login::Login');
+$routes->get('/updatedata', ($session->get('role')) ? 'MasterUpdate::UpdateData' : 'Login::Login');
 
 /*
  * --------------------------------------------------------------------
