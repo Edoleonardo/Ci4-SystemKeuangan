@@ -64,10 +64,10 @@ function barcodegenerate2($kode)
             <th>Gambar</th>
             <th>Barcode</th>
             <th style="width: 50px;">Qty</th>
-            <th style="width: 200px;">Keterangan</th>
+            <th style="width: 150px;">Keterangan</th>
             <th style="width: 50px;">Berat</th>
             <th style="width: 100px;">Ongkos</th>
-            <th style="width: 100px;">Jumlah</th>
+            <th style="width: 120px;">Jumlah</th>
           </tr>
         </thead>
         <?php $total = 0;
@@ -79,9 +79,9 @@ function barcodegenerate2($kode)
             <td><?= barcodegenerate2($row['kode']) ?></td>
             <td style="text-align: center;"><?= $row['qty'] ?></td>
             <td style="vertical-align: middle;"><?= $row['jenis'] ?>, <?= $row['model'] ?>, <?= $row['keterangan'] ?>, <?= $row['kadar'] ?></td>
-            <td style="text-align: center;"><?= $row['berat'] ?></td>
-            <td style="text-align: center;"><?= number_format($row['ongkos'], 0, ',', '.') ?></td>
-            <td style="text-align: center;"><?= number_format($row['total_harga'], 0, ',', '.') ?></td>
+            <td style="text-align: center;"><?= $row['berat'] ?> Gr</td>
+            <td style="text-align: center;"> Rp. <?= number_format($row['ongkos'], 0, ',', '.') ?></td>
+            <td style="text-align: center;">Rp. <?= number_format($row['total_harga'], 0, ',', '.') ?></td>
           </tr>
 
         <?php $total = $total +  $row['total_harga'];
@@ -99,7 +99,7 @@ function barcodegenerate2($kode)
             <td style='border:none;'></td>
             <td style='border:none;'></td>
             <td>Ongkos</td>
-            <td><?= number_format($ongkos, 2, ",", ".") ?></td>
+            <td>Rp. <?= number_format($ongkos, 0, ",", ".") ?></td>
           </tr>
         <?php endif ?>
         <tr>
@@ -109,7 +109,7 @@ function barcodegenerate2($kode)
           <td style='border:none;'></td>
           <td style='border:none;'></td>
           <td>Total</td>
-          <td><?= number_format($total, 2, ",", ".") ?></td>
+          <td>Rp. <?= number_format($total, 0, ",", ".") ?></td>
         </tr>
         <?php if ($datajual['pembulatan']) : ?>
           <tr>
@@ -119,7 +119,7 @@ function barcodegenerate2($kode)
             <td style='border:none;'></td>
             <td style='border:none;'></td>
             <td>Diskon</td>
-            <td><?= number_format($datajual['pembulatan'], 2, ",", ".") ?></td>
+            <td>Rp. <?= number_format($datajual['pembulatan'], 0, ",", ".") ?></td>
           </tr>
         <?php endif ?>
         <?php if ($datajual['tunai']) : ?>
@@ -130,7 +130,7 @@ function barcodegenerate2($kode)
             <td style='border:none;'></td>
             <td style='border:none;'></td>
             <td>Tunai</td>
-            <td><?= number_format($datajual['tunai'], 2, ',', '.') ?></td>
+            <td>Rp. <?= number_format($datajual['tunai'], 0, ',', '.') ?></td>
           </tr>
         <?php endif ?>
         <?php if ($datajual['debitcc']) : ?>
@@ -141,7 +141,7 @@ function barcodegenerate2($kode)
             <td style='border:none;'></td>
             <td style='border:none;'></td>
             <td>Debit/CC<?= ($datajual['charge']) ? '(' . $datajual['charge'] . '%' . ')' : '' ?></td>
-            <td><?= number_format($datajual['debitcc'], 2, ',', '.') ?></td>
+            <td>Rp. <?= number_format($datajual['debitcc'], 0, ',', '.') ?></td>
           </tr>
         <?php endif ?>
         <?php if ($datajual['transfer']) : ?>
@@ -152,12 +152,11 @@ function barcodegenerate2($kode)
             <td style='border:none;'></td>
             <td style='border:none;'></td>
             <td>Transfer</td>
-            <td><?= number_format($datajual['transfer'], 2, ',', '.') ?></td>
+            <td>Rp. <?= number_format($datajual['transfer'], 0, ',', '.') ?></td>
           </tr>
         <?php endif ?>
       </tbody>
     </table>
-
   </div>
 <?php elseif ($datajual['kelompok'] == 5) : ?>
   <div class="row">
@@ -168,9 +167,9 @@ function barcodegenerate2($kode)
             <th>Gambar</th>
             <th>Barcode</th>
             <th style="width: 50px;">Qty</th>
-            <th style="width: 500px;">Keterangan</th>
+            <th style="width: 150px;">Keterangan</th>
             <th style="width: 100px;">Carat</th>
-            <th style="width: 100px;">Jumlah</th>
+            <th style="width: 120px;">Jumlah</th>
           </tr>
         </thead>
         <?php $total = 0;
@@ -198,7 +197,7 @@ function barcodegenerate2($kode)
           <td style='border:none;'></td>
           <td style='border:none;'></td>
           <td>Total</td>
-          <td><?= number_format($total, 2, ",", ".") ?></td>
+          <td>Rp. <?= number_format($total, 0, ",", ".") ?></td>
         </tr>
         <?php if ($datajual['pembulatan']) : ?>
           <tr>
@@ -207,7 +206,7 @@ function barcodegenerate2($kode)
             <td style='border:none;'></td>
             <td style='border:none;'></td>
             <td>Diskon</td>
-            <td><?= number_format($datajual['pembulatan'], 2, ",", ".") ?></td>
+            <td>Rp. <?= number_format($datajual['pembulatan'], 0, ",", ".") ?></td>
           </tr>
         <?php endif ?>
         <?php if ($datajual['tunai']) : ?>
@@ -217,7 +216,7 @@ function barcodegenerate2($kode)
             <td style='border:none;'></td>
             <td style='border:none;'></td>
             <td>Tunai</td>
-            <td><?= number_format($datajual['tunai'], 2, ',', '.') ?></td>
+            <td>Rp. <?= number_format($datajual['tunai'], 0, ',', '.') ?></td>
           </tr>
         <?php endif ?>
         <?php if ($datajual['debitcc']) : ?>
@@ -227,7 +226,7 @@ function barcodegenerate2($kode)
             <td style='border:none;'></td>
             <td style='border:none;'></td>
             <td>Debit/CC<?= ($datajual['charge']) ? '(' . $datajual['charge'] . '%' . ')' : '' ?></td>
-            <td><?= number_format($datajual['debitcc'], 2, ',', '.') ?></td>
+            <td>Rp. <?= number_format($datajual['debitcc'], 0, ',', '.') ?></td>
           </tr>
         <?php endif ?>
         <?php if ($datajual['transfer']) : ?>
@@ -237,7 +236,7 @@ function barcodegenerate2($kode)
             <td style='border:none;'></td>
             <td style='border:none;'></td>
             <td>Transfer</td>
-            <td><?= number_format($datajual['transfer'], 2, ',', '.') ?></td>
+            <td>Rp. <?= number_format($datajual['transfer'], 0, ',', '.') ?></td>
           </tr>
         <?php endif ?>
       </tbody>
@@ -251,9 +250,9 @@ function barcodegenerate2($kode)
           <tr>
             <th>Gambar</th>
             <th>Barcode</th>
-            <th style="width: 500px;">Keterangan</th>
+            <th style="width: 150px;">Keterangan</th>
             <th style="width: 50px;">Qty</th>
-            <th style="width: 100px;">Jumlah</th>
+            <th style="width: 120px;">Jumlah</th>
           </tr>
         </thead>
         <?php $total = 0;
@@ -265,7 +264,7 @@ function barcodegenerate2($kode)
             <td><?= barcodegenerate2($row['kode']) ?></td>
             <td style="vertical-align: middle;"><?= $row['jenis'] ?>, <?= $row['keterangan'] ?>, <?= $row['model'] ?></td>
             <td style="text-align: center;"><?= $row['qty'] ?></td>
-            <td style="text-align: center;"><?= number_format($row['total_harga'], 0, ',', '.') ?></td>
+            <td style="text-align: center;">Rp. <?= number_format($row['total_harga'], 0, ',', '.') ?></td>
           </tr>
         <?php $total = $total +  $row['total_harga'];
           $ongkos = $ongkos + $row['ongkos'];
@@ -279,7 +278,6 @@ function barcodegenerate2($kode)
           <td style='border:none;'></td>
           <td style='border:none;'></td>
           <td>Total</td>
-          <td><?= number_format($total, 2, ",", ".") ?></td>
         </tr>
         <?php if ($datajual['pembulatan']) : ?>
           <tr>
@@ -287,7 +285,7 @@ function barcodegenerate2($kode)
             <td style='border:none;'></td>
             <td style='border:none;'></td>
             <td>Diskon</td>
-            <td><?= number_format($datajual['pembulatan'], 2, ",", ".") ?></td>
+            <td>Rp. <?= number_format($datajual['pembulatan'], 0, ",", ".") ?></td>
           </tr>
         <?php endif ?>
         <?php if ($datajual['tunai']) : ?>
@@ -296,7 +294,7 @@ function barcodegenerate2($kode)
             <td style='border:none;'></td>
             <td style='border:none;'></td>
             <td>Tunai</td>
-            <td><?= number_format($datajual['tunai'], 2, ',', '.') ?></td>
+            <td>Rp. <?= number_format($datajual['tunai'], 0, ',', '.') ?></td>
           </tr>
         <?php endif ?>
         <?php if ($datajual['debitcc']) : ?>
@@ -305,7 +303,7 @@ function barcodegenerate2($kode)
             <td style='border:none;'></td>
             <td style='border:none;'></td>
             <td>Debit/CC<?= ($datajual['charge']) ? '(' . $datajual['charge'] . '%' . ')' : '' ?></td>
-            <td><?= number_format($datajual['debitcc'], 2, ',', '.') ?></td>
+            <td>Rp. <?= number_format($datajual['debitcc'], 0, ',', '.') ?></td>
           </tr>
         <?php endif ?>
         <?php if ($datajual['transfer']) : ?>
@@ -314,7 +312,7 @@ function barcodegenerate2($kode)
             <td style='border:none;'></td>
             <td style='border:none;'></td>
             <td>Transfer</td>
-            <td><?= number_format($datajual['transfer'], 2, ',', '.') ?></td>
+            <td>Rp. <?= number_format($datajual['transfer'], 0, ',', '.') ?></td>
           </tr>
         <?php endif ?>
       </tbody>
