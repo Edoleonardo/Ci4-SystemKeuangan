@@ -49,7 +49,7 @@
                         <td><?= number_format($totaltransfermasuk - $totaltransferkeluar, 0, ',', '.') ?></td>
                     <tr>
                     <tr id="demo-<?= $i ?>" class="collapse cell-1 row-child">
-                        <td colspan="5">Total Akhir</td>
+                        <td colspan="5">DebitCC</td>
                         <td><?= number_format($totaldebitccmasuk, 0, ',', '.') ?></td>
                         <td><?= number_format($totaldebitcckeluar, 0, ',', '.') ?></td>
                         <td><?= number_format($totaldebitccmasuk - $totaldebitcckeluar, 0, ',', '.') ?></td>
@@ -121,7 +121,7 @@
                 <td><?= number_format($totaltransfermasuk - $totaltransferkeluar, 0, ',', '.') ?></td>
             <tr>
             <tr id="demo-<?= $i ?>" class="collapse cell-1 row-child">
-                <td colspan="5">Total Akhir</td>
+                <td colspan="5">DebitCC</td>
                 <td><?= number_format($totaldebitccmasuk, 0, ',', '.') ?></td>
                 <td><?= number_format($totaldebitcckeluar, 0, ',', '.') ?></td>
                 <td><?= number_format($totaldebitccmasuk - $totaldebitcckeluar, 0, ',', '.') ?></td>
