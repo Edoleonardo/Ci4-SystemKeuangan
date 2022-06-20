@@ -391,10 +391,10 @@
                 if (result.error) {
                     $('#kodebarang').addClass('is-invalid')
                     $('.kodebarangmsg').html(result.error)
-                    Swal.fire({
-                        icon: 'warning',
-                        title: result.error,
-                    })
+                    // Swal.fire({
+                    //     icon: 'warning',
+                    //     title: result.error,
+                    // })
                 } else {
                     $('#kodebarang').removeClass('is-invalid')
                     $('.kodebarangmsg').html('')
