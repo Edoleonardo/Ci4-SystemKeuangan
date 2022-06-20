@@ -210,17 +210,17 @@ class StockOpname extends BaseController
         if ($this->request->isAJAX()) {
             $kel = substr($this->request->getVar('barcode'), 0, 1);
             if ($kel == 1) {
-                $data = $this->datastock->getBarangOpnameId($this->request->getVar('barcode'));
+                $data = $this->datastock->getBarangBarcode($this->request->getVar('barcode'));
             } elseif ($kel == 2) {
-                $data = $this->datastock2->getBarangOpnameId($this->request->getVar('barcode'));
+                $data = $this->datastock2->getBarangBarcode($this->request->getVar('barcode'));
             } elseif ($kel == 3) {
-                $data = $this->datastock3->getBarangOpnameId($this->request->getVar('barcode'));
+                $data = $this->datastock3->getBarangBarcode($this->request->getVar('barcode'));
             } elseif ($kel == 4) {
-                $data = $this->datastock4->getBarangOpnameId($this->request->getVar('barcode'));
+                $data = $this->datastock4->getBarangBarcode($this->request->getVar('barcode'));
             } elseif ($kel == 5) {
-                $data = $this->datastock5->getBarangOpnameId($this->request->getVar('barcode'));
+                $data = $this->datastock5->getBarangBarcode($this->request->getVar('barcode'));
             } elseif ($kel == 6) {
-                $data = $this->datastock6->getBarangOpnameId($this->request->getVar('barcode'));
+                $data = $this->datastock6->getBarangBarcode($this->request->getVar('barcode'));
             } else {
                 $data = null;
             }
