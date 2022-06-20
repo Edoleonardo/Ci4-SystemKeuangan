@@ -49,7 +49,7 @@
                     <div class="form-group" style="margin: 1mm;">
                         <label>Kode Barang</label>
                         <div class="input-group input-group-sm">
-                            <input onfocus="this.select()" type="text" class="form-control kodebarang" id="kodebarang" name="kodebarang" placeholder="Masukan Barcode">
+                            <input onfocus="this.select()" type="text" oninput="OpenBarcode()" class="form-control kodebarang" id="kodebarang" name="kodebarang" placeholder="Masukan Barcode">
                             <span class="input-group-append">
                                 <button type="button" onclick="OpenBarcode()" id="btnsubmitform" class="btn btn-info btn-flat btnsubmitform">Ok</button>
                             </span>
@@ -370,7 +370,7 @@
                         icon: 'success',
                         title: 'Berhasil',
                     })
-
+                    $('#kodebarang').focus()
                 }
             },
             error: function(xhr, ajaxOptions, thrownError) {
@@ -435,7 +435,7 @@
                     })
                     tampildata()
                     $('#modal-modal').modal('toggle')
-
+                    $('#kodebarang').focus()
                 }
             },
             error: function(xhr, ajaxOptions, thrownError) {
@@ -540,7 +540,7 @@
         crop_height: 240,
         image_format: 'jpeg',
         jpeg_quality: 100,
-        flip_horiz: true,
+        // flip_horiz: true,
     });
 
     function cameranyala() {

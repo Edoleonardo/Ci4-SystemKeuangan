@@ -350,13 +350,13 @@ class StockOpname extends BaseController
                     ]
                 ],
 
-                'harga_beli' => [
-                    'rules' => 'required|greater_than[0]',
-                    'errors' => [
-                        'required' => 'Berat Bersih Harus di isi',
-                        'greater_than' => 'TIdak Boleh 0'
-                    ]
-                ],
+                // 'harga_beli' => [
+                //     'rules' => 'required|greater_than[0]',
+                //     'errors' => [
+                //         'required' => 'Berat Bersih Harus di isi',
+                //         'greater_than' => 'TIdak Boleh 0'
+                //     ]
+                // ],
             ]);
             if (!$valid) {
                 $msg = [
