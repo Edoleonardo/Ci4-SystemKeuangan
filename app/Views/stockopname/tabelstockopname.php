@@ -277,22 +277,34 @@
     }
 
     function DeleteOpname(id) {
-        $.ajax({
-            type: "get",
-            url: "<?php echo base_url('hapusopname'); ?>",
-            dataType: "json",
-            data: {
-                iddetail: id
-            },
-            success: function(result) {
-                tampildata()
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Berhasil Di Hapus',
+        Swal.fire({
+            title: 'Tambah',
+            text: "Apakah Ingin Delete Opname ?",
+            icon: 'warning',
+            showCancelButton: true,
+            cancelButtonColor: '#d33',
+            confirmButtonColor: '#3085d6',
+            confirmButtonText: 'Selesai',
+        }).then((choose) => {
+            if (choose.isConfirmed) {
+                $.ajax({
+                    type: "get",
+                    url: "<?php echo base_url('hapusopname'); ?>",
+                    dataType: "json",
+                    data: {
+                        iddetail: id
+                    },
+                    success: function(result) {
+                        tampildata()
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Berhasil Di Hapus',
+                        })
+                    },
+                    error: function(xhr, ajaxOptions, thrownError) {
+                        alert(xhr.status + "\n" + xhr.responseText + "\n" + thrownError);
+                    }
                 })
-            },
-            error: function(xhr, ajaxOptions, thrownError) {
-                alert(xhr.status + "\n" + xhr.responseText + "\n" + thrownError);
             }
         })
     }

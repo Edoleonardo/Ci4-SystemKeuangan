@@ -551,12 +551,18 @@
     }
 
     function Ambil_foto() {
-        Webcam.snap(function(data_uri) {
-            $(".image-tag").val(data_uri);
-            Webcam.reset()
-            // Webcam.attach('#my_camera');
-            document.getElementById('my_camera').innerHTML = '<img src="' + data_uri + '">'
-        })
+        if ($(".image-tag").val()) {
+            document.getElementById('my_camera').innerHTML = ''
+            $(".image-tag").val('');
+            Webcam.attach('#my_camera');
+        } else {
+            Webcam.snap(function(data_uri) {
+                $(".image-tag").val(data_uri);
+                Webcam.reset()
+                // Webcam.attach('#my_camera');
+                document.getElementById('my_camera').innerHTML = '<img src="' + data_uri + '">'
+            })
+        }
     }
 
     function Foto_ulang() {
