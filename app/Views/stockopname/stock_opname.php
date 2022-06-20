@@ -404,6 +404,7 @@
                     $('#modal-modal').modal('toggle')
 
                 }
+                $('#kodebarang').focus()
 
             },
             error: function(xhr, ajaxOptions, thrownError) {
@@ -429,10 +430,10 @@
                         title: result.error,
                     })
                 } else {
-                    Swal.fire({
-                        icon: 'success',
-                        title: result,
-                    })
+                    // Swal.fire({
+                    //     icon: 'success',
+                    //     title: result,
+                    // })
                     tampildata()
                     $('#modal-modal').modal('toggle')
                     $('#kodebarang').focus()
