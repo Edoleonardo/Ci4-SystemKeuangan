@@ -366,12 +366,12 @@
                     $(".image-tag").val('');
                     $(".browse").val('');
                     tampildata()
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Berhasil',
-                    })
+                    // Swal.fire({
+                    //     icon: 'success',
+                    //     title: 'Berhasil',
+                    // })
+                    $('#kodebarang').focus()
                 }
-                $('#kodebarang').focus()
             },
             error: function(xhr, ajaxOptions, thrownError) {
                 alert(xhr.status + "\n" + xhr.responseText + "\n" + thrownError);
