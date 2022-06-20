@@ -295,7 +295,7 @@
                 $('.btntambah').html('<i class="fa fa-spin fa-spinner">')
             },
             complete: function() {
-                $('.btntambah').html('Tambah')
+                $('.btntambah').html('Selesai Edit')
             },
             success: function(result) {
                 console.log(result)
@@ -370,8 +370,8 @@
                         icon: 'success',
                         title: 'Berhasil',
                     })
-                    $('#kodebarang').focus()
                 }
+                $('#kodebarang').focus()
             },
             error: function(xhr, ajaxOptions, thrownError) {
                 alert(xhr.status + "\n" + xhr.responseText + "\n" + thrownError);
