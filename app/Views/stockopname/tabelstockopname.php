@@ -278,13 +278,13 @@
 
     function DeleteOpname(id) {
         Swal.fire({
-            title: 'Tambah',
-            text: "Apakah Ingin Delete Opname ?",
+            title: 'Hapus',
+            text: "Apakah Ingin Hapus Data ?",
             icon: 'warning',
             showCancelButton: true,
             cancelButtonColor: '#d33',
             confirmButtonColor: '#3085d6',
-            confirmButtonText: 'Selesai',
+            confirmButtonText: 'Hapus',
         }).then((choose) => {
             if (choose.isConfirmed) {
                 $.ajax({
