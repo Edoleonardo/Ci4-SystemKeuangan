@@ -404,8 +404,6 @@
                     $('#modal-modal').modal('toggle')
 
                 }
-                $('#kodebarang').focus()
-
             },
             error: function(xhr, ajaxOptions, thrownError) {
                 alert(xhr.status + "\n" + xhr.responseText + "\n" + thrownError);
