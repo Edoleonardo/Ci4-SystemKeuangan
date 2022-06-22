@@ -35,4 +35,10 @@ class ModelStockREAL extends Model
         $data = $db->query('SELECT Merk FROM 220331_stock GROUP BY Merk HAVING COUNT(Merk) > 1;');
         return $data->getResult('array');
     }
+    public function GetPenjualanRill()
+    {
+        $db = db_connect();
+        $data = $db->query('SELECT * FROM `rill_sales` WHERE Kode in (SELECT Kode_brg FROM rill_datastock);');
+        return $data->getResult('array');
+    }
 }

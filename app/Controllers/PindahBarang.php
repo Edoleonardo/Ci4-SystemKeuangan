@@ -70,73 +70,73 @@ class PindahBarang extends BaseController
     }
     public function HomePindah()
     {
-        $session = session();
-        $data = $this->modelstockreal->DataStockReal();
-        dd($data);
-        // 
-        $data = $this->modelstockreal->getDataPenjualan();
-        foreach ($data as $row) {
-            if ($row['kelompok'] == 'Perhiasan Mas') {
-                $kelompok = 1;
-            } else if ($row['kelompok'] == 'Perhiasan Berlian') {
-                $kelompok = 2;
-            } else if ($row['kelompok'] == 'Logam Mulia') {
-                $kelompok = 3;
-            } else if ($row['kelompok'] == 'Bahan Murni (Mas, Perak, Paladium)') {
-                $kelompok = 4;
-            } else if ($row['kelompok'] == 'Barang Dagang Lain/Peralatan tukang') {
-                $kelompok = 5;
-            } else {
-                $kelompok = 5;
-            }
+        // $session = session();
+        // $data = $this->modelstockreal->DataStockReal();
+        // dd($data);
+        // // 
+        // $data = $this->modelstockreal->getDataPenjualan();
+        // foreach ($data as $row) {
+        //     if ($row['kelompok'] == 'Perhiasan Mas') {
+        //         $kelompok = 1;
+        //     } else if ($row['kelompok'] == 'Perhiasan Berlian') {
+        //         $kelompok = 2;
+        //     } else if ($row['kelompok'] == 'Logam Mulia') {
+        //         $kelompok = 3;
+        //     } else if ($row['kelompok'] == 'Bahan Murni (Mas, Perak, Paladium)') {
+        //         $kelompok = 4;
+        //     } else if ($row['kelompok'] == 'Barang Dagang Lain/Peralatan tukang') {
+        //         $kelompok = 5;
+        //     } else {
+        //         $kelompok = 5;
+        //     }
 
-            $datajual = $this->penjualan->getDataNoTrans($row['No_Nota']);
-            $datakartu = $this->modelkartustock->getKartuStockkode($row['Kode']);
-            if (!$datajual && $datakartu) {
-                $this->penjualan->save([
-                    'id_date_penjualan' => $this->randomNumber(12),
-                    'no_transaksi_jual' => $row['No_Nota'],
-                    'id_customer' => '',
-                    'kelompok' =>  $kelompok,
-                    'id_karyawan' => $session->get('id_user'),
-                    'nohp_cust' => $row['Nama_Customer'],
-                    'jumlah' => '0',
-                    'pembulatan' => '0',
-                    'total_harga' => '0',
-                    'nama_bank' => 'NoBank',
-                    'charge' =>   $this->request->getVar('charge'),
-                    'pembayaran' => $row['Pembayaran'],
-                    'tunai' =>  $row['Tunai'],
-                    'debitcc' =>  $row['DebitCC'],
-                    'transfer' =>  $row['Transfer'],
-                    'status_dokumen' => 'Selesai',
-                ]);
-            }
-        }
-        foreach ($data as $row) {
-            $datajual = $this->penjualan->getDataNoTrans($row['No_Nota']);
-            // $datakartu = $this->modelkartustock->getKartuStockkode($row['Kode']);
-            if (!$datajual) {
-                $this->penjualan->save([
-                    'id_date_penjualan' => $this->randomNumber(12),
-                    'no_transaksi_jual' => $row['No_Nota'],
-                    'id_customer' => '',
-                    'kelompok' => $kelompok,
-                    'id_karyawan' => $session->get('id_user'),
-                    'nohp_cust' => ($row['Nama_Customer']) ? $row['Nama_Customer'] : 'NoCust',
-                    'jumlah' => '0',
-                    'pembulatan' => '0',
-                    'total_harga' => '0',
-                    'nama_bank' => 'NoBank',
-                    'charge' =>   0,
-                    'pembayaran' => 'PindahData',
-                    'tunai' =>  0,
-                    'debitcc' =>  0,
-                    'transfer' =>  0,
-                    'status_dokumen' => 'Selesai',
-                ]);
-            }
-        }
+        //     $datajual = $this->penjualan->getDataNoTrans($row['No_Nota']);
+        //     $datakartu = $this->modelkartustock->getKartuStockkode($row['Kode']);
+        //     if (!$datajual && $datakartu) {
+        //         $this->penjualan->save([
+        //             'id_date_penjualan' => $this->randomNumber(12),
+        //             'no_transaksi_jual' => $row['No_Nota'],
+        //             'id_customer' => '',
+        //             'kelompok' =>  $kelompok,
+        //             'id_karyawan' => $session->get('id_user'),
+        //             'nohp_cust' => $row['Nama_Customer'],
+        //             'jumlah' => '0',
+        //             'pembulatan' => '0',
+        //             'total_harga' => '0',
+        //             'nama_bank' => 'NoBank',
+        //             'charge' =>   $this->request->getVar('charge'),
+        //             'pembayaran' => $row['Pembayaran'],
+        //             'tunai' =>  $row['Tunai'],
+        //             'debitcc' =>  $row['DebitCC'],
+        //             'transfer' =>  $row['Transfer'],
+        //             'status_dokumen' => 'Selesai',
+        //         ]);
+        //     }
+        // }
+        // foreach ($data as $row) {
+        //     $datajual = $this->penjualan->getDataNoTrans($row['No_Nota']);
+        //     // $datakartu = $this->modelkartustock->getKartuStockkode($row['Kode']);
+        //     if (!$datajual) {
+        //         $this->penjualan->save([
+        //             'id_date_penjualan' => $this->randomNumber(12),
+        //             'no_transaksi_jual' => $row['No_Nota'],
+        //             'id_customer' => '',
+        //             'kelompok' => $kelompok,
+        //             'id_karyawan' => $session->get('id_user'),
+        //             'nohp_cust' => ($row['Nama_Customer']) ? $row['Nama_Customer'] : 'NoCust',
+        //             'jumlah' => '0',
+        //             'pembulatan' => '0',
+        //             'total_harga' => '0',
+        //             'nama_bank' => 'NoBank',
+        //             'charge' =>   0,
+        //             'pembayaran' => 'PindahData',
+        //             'tunai' =>  0,
+        //             'debitcc' =>  0,
+        //             'transfer' =>  0,
+        //             'status_dokumen' => 'Selesai',
+        //         ]);
+        //     }
+        // }
         return view('home/pindahindata');
     }
 

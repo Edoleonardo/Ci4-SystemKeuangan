@@ -370,6 +370,8 @@
                     //     icon: 'success',
                     //     title: 'Berhasil',
                     // })
+                    console.log('masuk elese')
+                    $("form").get(0).reset();
                     $('#kodebarang').focus()
                 }
             },
