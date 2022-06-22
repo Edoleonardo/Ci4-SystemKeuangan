@@ -86,7 +86,7 @@
                         </div>
                     </div>
                     <div class="form-group" style="margin: 1mm;">
-                        <a class="btn btn-app bg-primary" type="button" onclick="SelesaiOpname()">
+                        <a class="btn btn-app bg-primary" type="button">
                             <i class="fas fa-check"></i> Selesai
                         </a>
                         <a class="btn btn-app bg-primary" type="button" onclick="ScanBarcode()">
