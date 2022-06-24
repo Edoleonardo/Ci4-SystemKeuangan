@@ -662,19 +662,19 @@
                         </div>
                         <div class="form-group">
                             <label>username</label>
-                            <input type="text" id="username" value="" name="username" class="form-control username" placeholder="Masukan username">
+                            <input type="text" id="usernameasd" value="" name="usernameasd" class="form-control usernameasd" placeholder="Masukan username">
                             <div id="validationServerusernameFeedback" class="invalid-feedback usernamemsg">
                             </div>
                         </div>
                         <div class="form-group">
                             <label>password</label>
-                            <input type="text" id="password" value="" name="password" class="form-control password" placeholder="Masukan Password">
+                            <input type="text" id="passwordasd" value="" name="passwordasd" class="form-control passwordasd" placeholder="Masukan Password">
                             <div id="validationServerusernameFeedback" class="invalid-feedback passwordmsg">
                             </div>
                         </div>
                         <div class="form-group">
                             <label>role</label>
-                            <select id="role" name="role" value="" class="form-control role" placeholder="Masukan role">
+                            <select id="role" name="role" class="form-control role" placeholder="Masukan role">
                                 <option value="admin">Admin</option>
                                 <option value="owner">Owner</option>
                             </select>
@@ -1182,6 +1182,8 @@
                 $('.btntambah').html('Tambah')
             },
             success: function(result) {
+                console.log(result)
+
                 if (result.error) {
                     if (result.error.nama_user) {
                         $('#nama_user').addClass('is-invalid')
@@ -1205,17 +1207,17 @@
                         $('.alamatusrmsg').html('')
                     }
                     if (result.error.username) {
-                        $('#username').addClass('is-invalid')
+                        $('#usernameasd').addClass('is-invalid')
                         $('.usernamemsg').html(result.error.username)
                     } else {
-                        $('#username').removeClass('is-invalid')
+                        $('#usernameasd').removeClass('is-invalid')
                         $('.usernamemsg').html('')
                     }
                     if (result.error.password) {
-                        $('#password').addClass('is-invalid')
+                        $('#passwordasd').addClass('is-invalid')
                         $('.passwordmsg').html(result.error.password)
                     } else {
-                        $('#password').removeClass('is-invalid')
+                        $('#passwordasd').removeClass('is-invalid')
                         $('.passwordmsg').html('')
                     }
                     if (result.error.role) {
@@ -1233,9 +1235,9 @@
                     $('.nohp_usermsg').html('')
                     $('#alamatusr').removeClass('is-invalid')
                     $('.alamatusrmsg').html('')
-                    $('#username').removeClass('is-invalid')
+                    $('#usernameasd').removeClass('is-invalid')
                     $('.usernamemsg').html('')
-                    $('#password').removeClass('is-invalid')
+                    $('#passwordasd').removeClass('is-invalid')
                     $('.passwordmsg').html('')
                     $('#role').removeClass('is-invalid')
                     $('.rolemsg').html('')
@@ -1527,8 +1529,8 @@
                     $('#nama_user').val(result.nama_pegawai)
                     $('#nohp_user').val(result.nohp)
                     $('#alamatusr').val(result.alamat)
-                    $('#username').val(result.username)
-                    $('#password').val(result.password)
+                    $('#usernameasd').val(result.username)
+                    $('#passwordasd').val(result.password)
                     $('#role').val(result.role)
                     $('#id_user').val(id);
                     $('#titleuser').html('Update Data user')

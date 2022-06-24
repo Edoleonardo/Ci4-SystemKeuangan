@@ -569,7 +569,7 @@ class MasterInput extends BaseController
                         'required' => 'Alamat Harus di isi',
                     ]
                 ],
-                'password' => [
+                'passwordasd' => [
                     'rules' => 'required',
                     'errors' => [
                         'required' => 'Password Harus di isi',
@@ -584,7 +584,7 @@ class MasterInput extends BaseController
             ]);
             if (!$this->request->getVar('id_user')) {
                 $valid = $this->validate([
-                    'username' => [
+                    'usernameasd' => [
                         'rules' => 'required|is_unique[tbl_pegawai.username]',
                         'errors' => [
                             'required' => 'Username Harus di isi',
@@ -593,9 +593,9 @@ class MasterInput extends BaseController
                     ],
                 ]);
             }
-            if ($this->request->getVar('id_user') && $data['username'] != $this->request->getVar('username')) {
+            if ($this->request->getVar('id_user') && $data['username'] != $this->request->getVar('usernameasd')) {
                 $valid = $this->validate([
-                    'username' => [
+                    'usernameasd' => [
                         'rules' => 'required|is_unique[tbl_pegawai.username]',
                         'errors' => [
                             'required' => 'Username Harus di isi',
@@ -611,8 +611,8 @@ class MasterInput extends BaseController
                         'nama_user' => $validation->getError('nama_user'),
                         'nohp_user' => $validation->getError('nohp_user'),
                         'alamatusr' => $validation->getError('alamatusr'),
-                        'username' => $validation->getError('username'),
-                        'password' => $validation->getError('password'),
+                        'username' => $validation->getError('usernameasd'),
+                        'password' => $validation->getError('passwordasd'),
                         'role' => $validation->getError('role'),
                     ]
                 ];
@@ -626,8 +626,8 @@ class MasterInput extends BaseController
                         'nama_pegawai' => $this->request->getVar('nama_user'),
                         'nohp' => $this->request->getVar('nohp_user'),
                         'alamat' => $this->request->getVar('alamatusr'),
-                        'username' => $this->request->getVar('username'),
-                        'password' => $this->request->getVar('password'),
+                        'username' => $this->request->getVar('usernameasd'),
+                        'password' => $this->request->getVar('passwordasd'),
                         'role' => $this->request->getVar('role'),
                     ]);
                 } else {
@@ -636,8 +636,8 @@ class MasterInput extends BaseController
                         'id_karyawan' => $session->get('id_user'),
                         'nohp' => $this->request->getVar('nohp_user'),
                         'alamat' => $this->request->getVar('alamatusr'),
-                        'username' => $this->request->getVar('username'),
-                        'password' => $this->request->getVar('password'),
+                        'username' => $this->request->getVar('usernameasd'),
+                        'password' => $this->request->getVar('passwordasd'),
                         'role' => $this->request->getVar('role'),
                     ]);
                 }
