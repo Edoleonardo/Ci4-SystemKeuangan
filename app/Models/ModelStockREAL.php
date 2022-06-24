@@ -38,7 +38,7 @@ class ModelStockREAL extends Model
     public function GetPenjualanRill()
     {
         $db = db_connect();
-        $data = $db->query('SELECT * FROM `rill_sales` WHERE Kode in (SELECT Kode_brg FROM rill_datastock);');
+        $data = $db->query('SELECT * FROM `rill_sales`;');
         return $data->getResult('array');
     }
 }

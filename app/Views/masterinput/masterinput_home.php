@@ -1486,8 +1486,7 @@
                     $('#banku1').val(result.bank);
                     $('#id_cust').val(id);
                     $('#modal-updatelg').modal('toggle');
-                }
-                if (jenis == 'supplier') {
+                } else if (jenis == 'supplier') {
                     $('#nama_supp').val(result.nama_supp);
                     $('#nama_sales').val(result.sales_supp);
                     $('#no_hp').val(result.no_hp);
@@ -1499,37 +1498,32 @@
                     $('#titlesupp').html('Update Data Supplier')
                     $('#buttonsupp').html('Update')
                     $('#modal-supplier').modal('toggle');
-                }
-                if (jenis == 'kadar') {
+                } else if (jenis == 'kadar') {
                     $('#nama_kadar').val(result.nama_kadar);
                     $('#nilai_kadar').val(result.nilai_kadar);
                     $('#id_kadar').val(id);
                     $('#titlekadar').html('Update Data Kadar')
                     $('#buttonkadar').html('Update')
                     $('#modal-kadar').modal('toggle');
-                }
-                if (jenis == 'merek') {
+                } else if (jenis == 'merek') {
                     $('#nama_merek').val(result.nama_merek);
                     $('#id_merek').val(id);
                     $('#titlemerek').html('Update Data Merek')
                     $('#buttonmerek').html('Update')
                     $('#modal-merek').modal('toggle')
-                }
-                if (jenis == 'bank') {
+                } else if (jenis == 'bank') {
                     $('#nama_bank').val(result.nama_bank);
                     $('#id_bank').val(id);
                     $('#titlebank').html('Update Data Bank')
                     $('#buttonbank').html('Update')
                     $('#modal-bank').modal('toggle')
-                }
-                if (jenis == 'jenis') {
+                } else if (jenis == 'jenis') {
                     $('#nama_jenis').val(result.nama);
                     $('#id_jenis').val(id);
                     $('#titlejenis').html('Update Data jenis')
                     $('#buttonjenis').html('Update')
                     $('#modal-jenis').modal('toggle')
-                }
-                if (jenis == 'user') {
+                } else if (jenis == 'user') {
                     $('#nama_user').val(result.nama_pegawai)
                     $('#nohp_user').val(result.nohp)
                     $('#alamatusr').val(result.alamat)
@@ -1540,8 +1534,7 @@
                     $('#titleuser').html('Update Data user')
                     $('#buttonuser').html('Update')
                     $('#modal-user').modal('toggle')
-                }
-                if (jenis == 'tukang') {
+                } else if (jenis == 'tukang') {
                     $('#nama_tukang').val(result.nama_tukang)
                     $('#nohp_tukang').val(result.nohp)
                     $('#alamattukng').val(result.alamat)
@@ -1549,8 +1542,7 @@
                     $('#titletukang').html('Update Data tukang')
                     $('#buttontukang').html('Update')
                     $('#modal-tukang').modal('toggle')
-                }
-                if (jenis == 'namaakun') {
+                } else if (jenis == 'namaakun') {
                     $('#nama_akun').val(result.nama_akun);
                     $('#id_akun').val(id);
                     $('#titleakunbiaya').html('Update Data Akun Biaya')

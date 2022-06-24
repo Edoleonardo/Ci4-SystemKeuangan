@@ -549,45 +549,80 @@ class MasterInput extends BaseController
     {
         if ($this->request->isAJAX()) {
             $validation = \Config\Services::validation();
-            $valid = $this->validate([
-                'nama_user' => [
-                    'rules' => 'required',
-                    'errors' => [
-                        'required' => 'Nama User Harus di isi',
-                    ]
-                ],
-                'nohp_user' => [
-                    'rules' => 'required',
-                    'errors' => [
-                        'required' => 'Nomor Hp Harus di isi',
-                    ]
-                ],
-                'alamatusr' => [
-                    'rules' => 'required',
-                    'errors' => [
-                        'required' => 'Alamat Harus di isi',
-                    ]
-                ],
-                'username' => [
-                    'rules' => 'required|is_unique[tbl_pegawai.username]',
-                    'errors' => [
-                        'required' => 'Username Harus di isi',
-                        'is_unique' => 'Username Sudah Ada'
-                    ]
-                ],
-                'password' => [
-                    'rules' => 'required',
-                    'errors' => [
-                        'required' => 'Password Harus di isi',
-                    ]
-                ],
-                'role' => [
-                    'rules' => 'required',
-                    'errors' => [
-                        'required' => 'Role Harus di isi',
-                    ]
-                ],
-            ]);
+            if ($this->request->getVar('id_user')) {
+                $valid = $this->validate([
+                    'nama_user' => [
+                        'rules' => 'required',
+                        'errors' => [
+                            'required' => 'Nama User Harus di isi',
+                        ]
+                    ],
+                    'nohp_user' => [
+                        'rules' => 'required',
+                        'errors' => [
+                            'required' => 'Nomor Hp Harus di isi',
+                        ]
+                    ],
+                    'alamatusr' => [
+                        'rules' => 'required',
+                        'errors' => [
+                            'required' => 'Alamat Harus di isi',
+                        ]
+                    ],
+                    'password' => [
+                        'rules' => 'required',
+                        'errors' => [
+                            'required' => 'Password Harus di isi',
+                        ]
+                    ],
+                    'role' => [
+                        'rules' => 'required',
+                        'errors' => [
+                            'required' => 'Role Harus di isi',
+                        ]
+                    ],
+                ]);
+            } else {
+                $valid = $this->validate([
+                    'nama_user' => [
+                        'rules' => 'required',
+                        'errors' => [
+                            'required' => 'Nama User Harus di isi',
+                        ]
+                    ],
+                    'nohp_user' => [
+                        'rules' => 'required',
+                        'errors' => [
+                            'required' => 'Nomor Hp Harus di isi',
+                        ]
+                    ],
+                    'alamatusr' => [
+                        'rules' => 'required',
+                        'errors' => [
+                            'required' => 'Alamat Harus di isi',
+                        ]
+                    ],
+                    'username' => [
+                        'rules' => 'required|is_unique[tbl_pegawai.username]',
+                        'errors' => [
+                            'required' => 'Username Harus di isi',
+                            'is_unique' => 'Username Sudah Ada'
+                        ]
+                    ],
+                    'password' => [
+                        'rules' => 'required',
+                        'errors' => [
+                            'required' => 'Password Harus di isi',
+                        ]
+                    ],
+                    'role' => [
+                        'rules' => 'required',
+                        'errors' => [
+                            'required' => 'Role Harus di isi',
+                        ]
+                    ],
+                ]);
+            }
             if (!$valid) {
                 $msg = [
                     'error' => [
@@ -602,9 +637,9 @@ class MasterInput extends BaseController
                 echo json_encode($msg);
             } else {
                 $session = session();
-                if ($this->request->getVar('id_pegawai')) {
+                if ($this->request->getVar('id_user')) {
                     $this->modelusers->save([
-                        'id_pegawai' => $this->request->getVar('id_pegawai'),
+                        'id_pegawai' => $this->request->getVar('id_user'),
                         'id_karyawan' => $session->get('id_user'),
                         'nama_pegawai' => $this->request->getVar('nama_user'),
                         'nohp' => $this->request->getVar('nohp_user'),
