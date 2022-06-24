@@ -644,37 +644,37 @@
                     <div class="col-12">
                         <div class="form-group">
                             <label>Nama user</label>
-                            <input type="text" id="nama_user" name="nama_user" class="form-control nama_user" placeholder="Masukan Nama user">
+                            <input type="text" id="nama_user" value="" name="nama_user" class="form-control nama_user" placeholder="Masukan Nama user">
                             <div id="validationServerusernameFeedback" class="invalid-feedback nama_usermsg">
                             </div>
                         </div>
                         <div class="form-group">
                             <label>Nomor Hp</label>
-                            <input type="number" id="nohp_user" name="nohp_user" class="form-control nohp_user" placeholder="Masukan Nomor Hp">
+                            <input type="number" id="nohp_user" value="" name="nohp_user" class="form-control nohp_user" placeholder="Masukan Nomor Hp">
                             <div id="validationServerusernameFeedback" class="invalid-feedback nohp_usermsg">
                             </div>
                         </div>
                         <div class="form-group">
                             <label>Alamat</label>
-                            <input type="text" id="alamatusr" name="alamatusr" class="form-control alamatusr" placeholder="Masukan Alamat user">
+                            <input type="text" id="alamatusr" value="" name="alamatusr" class="form-control alamatusr" placeholder="Masukan Alamat user">
                             <div id="validationServerusernameFeedback" class="invalid-feedback alamatusrmsg">
                             </div>
                         </div>
                         <div class="form-group">
                             <label>username</label>
-                            <input type="text" id="username" name="username" class="form-control username" placeholder="Masukan username">
+                            <input type="text" id="username" value="" name="username" class="form-control username" placeholder="Masukan username">
                             <div id="validationServerusernameFeedback" class="invalid-feedback usernamemsg">
                             </div>
                         </div>
                         <div class="form-group">
                             <label>password</label>
-                            <input type="text" id="password" name="password" class="form-control password" placeholder="Masukan Password">
+                            <input type="text" id="password" value="" name="password" class="form-control password" placeholder="Masukan Password">
                             <div id="validationServerusernameFeedback" class="invalid-feedback passwordmsg">
                             </div>
                         </div>
                         <div class="form-group">
                             <label>role</label>
-                            <select id="role" name="role" class="form-control role" placeholder="Masukan role">
+                            <select id="role" name="role" value="" class="form-control role" placeholder="Masukan role">
                                 <option value="admin">Admin</option>
                                 <option value="owner">Owner</option>
                             </select>
