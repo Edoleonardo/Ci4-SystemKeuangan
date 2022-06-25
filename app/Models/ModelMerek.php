@@ -15,9 +15,10 @@ class ModelMerek extends Model
     public function getMerek($id = false)
     {
         if ($id == false) {
-
-            $data = $this->findAll();
-            return $data;
+            $this->findAll();
+            $this->orderBy('nama_merek', 'ASC');
+            $data = $this->get();
+            return $data->getResult('array');
         }
         return $this->where(['id_merek' => $id])->first();
     }

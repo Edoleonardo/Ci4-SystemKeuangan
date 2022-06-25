@@ -15,9 +15,10 @@ class ModelJenis extends Model
     public function getJenis($id = false)
     {
         if ($id == false) {
-
-            $data = $this->findAll();
-            return $data;
+            $this->findAll();
+            $this->orderBy('nama', 'ASC');
+            $data = $this->get();
+            return $data->getResult('array');
         }
         return $this->where(['id_jenis' => $id])->first();
     }
