@@ -37,14 +37,14 @@
                     <div class="card">
                         <div class="card-body">
                             <div class="row">
-                                <div class="col-2">
+                                <div class="col-sm-2">
                                     <div class="form-group">
                                         <a class="btn btn-app" href="#" data-toggle="modal" data-target="#modal-lg">
                                             <i class="fas fa-plus"></i> Retur Barang
                                         </a>
                                     </div>
                                 </div>
-                                <div class="col-2">
+                                <div class="col-sm-2">
                                     <div class="form-group">
                                         <label>Filter Data</label>
                                         <select name="tampil" onchange="TampilRetur()" class="form-control" id="tampil" name="tampil">
@@ -55,7 +55,7 @@
                                         </select>
                                     </div>
                                 </div>
-                                <div class="col-2">
+                                <div class="col-sm-2">
                                     <div class="form-group">
                                         <label>Search NoTrans</label>
                                         <input name="notrans" onfocus="this.select()" oninput="TampilRetur()" class="form-control" id="notrans" name="notrans" placeholder="Masukan Nomor Transaksi">
@@ -63,7 +63,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-2">
+                                <div class="col-sm-2">
                                     <div class="form-group">
                                         <a type="button" href="#" onclick="TampilRetur()"><i class="fa fa-undo"></i></a>
                                     </div>

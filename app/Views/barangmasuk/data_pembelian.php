@@ -43,14 +43,14 @@
           <div class="card">
             <div class="card-body">
               <div class="row">
-                <div class="col-2">
+                <div class="col-sm-2">
                   <div class="form-group">
                     <a class="btn btn-app" href="/pembelian">
                       <i class="fas fa-plus"></i> Tambah Barang
                     </a>
                   </div>
                 </div>
-                <div class="col-2">
+                <div class="col-sm-2">
                   <div class="form-group">
                     <label>Filter Data</label>
                     <select name="tampil" onchange="TampilBarang()" class="form-control" id="tampil" name="tampil">
@@ -61,7 +61,7 @@
                     </select>
                   </div>
                 </div>
-                <div class="col-2">
+                <div class="col-sm-2">
                   <div class="form-group">
                     <label>Filter Kelompok</label>
                     <select name="kelompok" onchange="TampilBarang()" class="form-control" id="kelompok" name="kelompok">
@@ -75,7 +75,7 @@
                     </select>
                   </div>
                 </div>
-                <div class="col-2">
+                <div class="col-sm-2">
                   <div class="form-group">
                     <label>Filter Status</label>
                     <select name="status" onchange="TampilBarang()" class="form-control" id="status" name="status">
@@ -86,7 +86,7 @@
                     </select>
                   </div>
                 </div>
-                <div class="col-2">
+                <div class="col-sm-2">
                   <div class="form-group">
                     <label>Search NoTrans</label>
                     <input name="notrans" onfocus="this.select()" oninput="TampilBarang()" class="form-control" id="notrans" name="notrans" placeholder="Masukan Nomor Transaksi">
@@ -94,7 +94,7 @@
                     </div>
                   </div>
                 </div>
-                <div class="col-2">
+                <div class="col-sm-1">
                   <div class="form-group">
                     <a type="button" href="#" onclick="TampilBarang()"><i class="fa fa-undo"></i></a>
                   </div>

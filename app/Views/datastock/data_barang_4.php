@@ -37,7 +37,7 @@
           <div class="card">
             <div class="card-body">
               <div class="row">
-                <div class="col-3">
+                <div class="col-sm-3">
                   <div class="form-group">
                     <label>Tampil Data</label>
                     <select name="tmpildata" onchange="TampilBarang()" class="form-control" id="tmpildata" name="tmpildata">
@@ -48,7 +48,7 @@
                     </select>
                   </div>
                 </div>
-                <div class="col-3">
+                <div class="col-sm-3">
                   <div class="form-group">
                     <label>Filter Stock</label>
                     <select name="stock" onchange="TampilBarang()" class="form-control" id="stock" name="stock">
@@ -58,7 +58,7 @@
                     </select>
                   </div>
                 </div>
-                <div class="col-3">
+                <div class="col-sm-3">
                   <div class="form-group">
                     <label>Search Kode</label>
                     <input name="searchkode" onfocus="this.select()" oninput="TampilBarang()" class="form-control" id="searchkode" name="searchkode" placeholder="Masukan Kode Barang">
@@ -66,7 +66,7 @@
                     </div>
                   </div>
                 </div>
-                <div class="col-3">
+                <div class="col-sm-3">
                   <div class="form-group">
                     <a type="button" href="#" onclick="TampilBarang()"><i class="fa fa-undo"></i></a>
                   </div>
