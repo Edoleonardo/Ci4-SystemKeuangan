@@ -48,7 +48,7 @@
     <section class="content">
         <div class="container-fluid">
             <div class="row">
-                <div class="col-8">
+                <div class="col-sm-8">
                     <div class="card">
                         <!-- /.card-header -->
                         <div class="table-responsive" id="refreshtitle">
@@ -103,7 +103,7 @@
                     </div>
                     <!-- /.card -->
                 </div>
-                <div class="col-4">
+                <div class="col-sm-4">
                     <!-- Application buttons -->
                     <div class="card">
                         <div class="card-body">
@@ -116,13 +116,13 @@
                                 </a>
                             </div>
                             <div class="row">
-                                <div class="col-6">
+                                <div class="col-sm-6">
                                     <div class="form-group">
                                         <label>Dari Tanggal</label>
                                         <input type="date" onchange="TampilTrans()" id="sampaitgl" name="sampaitgl" class="form-control" placeholder="Masukan sampaitgl" value="<?= date("Y-m-d", strtotime("-10 days")) ?>">
                                     </div>
                                 </div>
-                                <div class="col-6">
+                                <div class="col-sm-6">
                                     <div class="form-group">
                                         <label>Sampai Tanggal</label>
                                         <input type="date" onchange="TampilTrans()" id="daritgl" name="daritgl" class="form-control" placeholder="Masukan daritgl" value="<?= date("Y-m-d") ?>">
