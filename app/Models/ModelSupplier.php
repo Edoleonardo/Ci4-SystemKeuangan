@@ -15,9 +15,10 @@ class ModelSupplier extends Model
     public function getSupplier($id = false)
     {
         if ($id == false) {
-
-            $data = $this->findAll();
-            return $data;
+            $this->findAll();
+            $this->orderBy('nama_supp', 'ASC');
+            $data = $this->get();
+            return $data->getResult('array');
         }
         return $this->where(['id_supplier' => $id])->first();
     }

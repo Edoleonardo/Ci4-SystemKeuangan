@@ -34,7 +34,7 @@
     <section class="content">
         <div class="container-fluid">
             <div class="row">
-                <div class="col-md-6">
+                <div class="col-md-12">
                     <div class="card">
                         <div class="card-header">
                             <h3 class="card-title">Customer</h3>
@@ -85,7 +85,7 @@
                     </div>
                     <!-- /.card -->
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-12">
                     <div class="card">
                         <div class="card-header">
                             <h3 class="card-title">Supplier</h3>
@@ -209,7 +209,7 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-6">
+                <div class="col-sm-6">
                     <div class="card">
                         <div class="card-header">
                             <h3 class="card-title">Pembayaran Bank</h3>
@@ -243,7 +243,7 @@
                     </div>
                     <!-- /.card -->
                 </div>
-                <div class="col-6">
+                <div class="col-sm-6">
                     <div class="card">
                         <div class="card-header">
                             <h3 class="card-title">Nama Akun</h3>
@@ -279,7 +279,7 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-4">
+                <div class="col-sm-4">
                     <div class="card">
                         <div class="card-header">
                             <h3 class="card-title">jenis</h3>
@@ -313,7 +313,7 @@
                     </div>
                     <!-- /.card -->
                 </div>
-                <div class="col-8">
+                <div class="col-sm-8">
                     <div class="card">
                         <div class="card-header">
                             <h3 class="card-title">Data Tukang</h3>

@@ -43,7 +43,7 @@
     <!-- Main content -->
     <section class="content">
         <div class="row">
-            <div class="col-6">
+            <div class="col-sm-6">
                 <!-- /.card-header -->
                 <div class="card">
                     <div class="form-group" style="margin: 1mm;">
@@ -58,7 +58,7 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-6">
+                        <div class="col-sm-6">
                             <div class="form-group" style="margin: 1mm;">
                                 <label>Kelompok Barang</label>
                                 <div class="input-group input-group-sm">
@@ -73,7 +73,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-6">
+                        <div class="col-sm-6">
                             <div class="form-group" style="margin: 1mm;">
                                 <label>Sudah Opname</label>
                                 <div class="input-group input-group-sm">
@@ -96,7 +96,7 @@
                 </div>
                 <!-- /.card -->
             </div>
-            <div class="col-6">
+            <div class="col-sm-6">
                 <!-- Application buttons -->
                 <div class="card">
                     <div class="card-body table-responsive p-0">
