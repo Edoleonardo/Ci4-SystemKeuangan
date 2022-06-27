@@ -57,7 +57,7 @@
                                 </thead>
                                 <tbody id="tblcustomer">
                                     <?php foreach ($datacust as $row) : ?>
-                                        <tr id="isicustomer" onclick="Updatedata(<?= $row['id_customer'] ?>, 'customer')">
+                                        <tr id="isicustomer" ondblclick="Updatedata(<?= $row['id_customer'] ?>, 'customer')">
                                             <td><?= $row['nama'] ?></td>
                                             <td><?= $row['nohp_cust'] ?></td>
                                             <td><?= $row['alamat_cust'] ?></td>
@@ -109,7 +109,7 @@
                                 </thead>
                                 <tbody>
                                     <?php foreach ($datasup as $row) : ?>
-                                        <tr onclick="Updatedata(<?= $row['id_supplier'] ?>, 'supplier')">
+                                        <tr ondblclick="Updatedata(<?= $row['id_supplier'] ?>, 'supplier')">
                                             <td><?= $row['nama_supp'] ?></td>
                                             <td><?= $row['inisial'] ?></td>
                                             <td><?= $row['alamat_supp'] ?></td>
@@ -157,7 +157,7 @@
                                 </thead>
                                 <tbody>
                                     <?php foreach ($datakadar as $row) : ?>
-                                        <tr onclick="Updatedata(<?= $row['id_kadar'] ?>, 'kadar')">
+                                        <tr ondblclick="Updatedata(<?= $row['id_kadar'] ?>, 'kadar')">
                                             <td><?= $row['nama_kadar'] ?></td>
                                             <td><?= $row['nilai_kadar'] ?></td>
                                         </tr>
@@ -191,7 +191,7 @@
                                 </thead>
                                 <tbody>
                                     <?php foreach ($datamerek as $row) : ?>
-                                        <tr onclick="Updatedata(<?= $row['id_merek'] ?>, 'merek')">
+                                        <tr ondblclick="Updatedata(<?= $row['id_merek'] ?>, 'merek')">
                                             <td><?= $row['nama_merek'] ?></td>
                                         </tr>
                                     <?php endforeach; ?>
@@ -227,7 +227,7 @@
                                 </thead>
                                 <tbody>
                                     <?php foreach ($databank as $row) : ?>
-                                        <tr onclick="Updatedata(<?= $row['id_bank'] ?>, 'bank')">
+                                        <tr ondblclick="Updatedata(<?= $row['id_bank'] ?>, 'bank')">
                                             <td><?= $row['nama_bank'] ?></td>
                                         </tr>
                                     <?php endforeach; ?>
@@ -261,7 +261,7 @@
                                 </thead>
                                 <tbody>
                                     <?php foreach ($dataakun as $row) : ?>
-                                        <tr onclick="Updatedata(<?= $row['id_akun_biaya'] ?>, 'namaakun')">
+                                        <tr ondblclick="Updatedata(<?= $row['id_akun_biaya'] ?>, 'namaakun')">
                                             <td><?= $row['nama_akun'] ?></td>
                                         </tr>
                                     <?php endforeach; ?>
@@ -297,7 +297,7 @@
                                 </thead>
                                 <tbody>
                                     <?php foreach ($datajenis as $row) : ?>
-                                        <tr onclick="Updatedata(<?= $row['id_jenis'] ?>, 'jenis')">
+                                        <tr ondblclick="Updatedata(<?= $row['id_jenis'] ?>, 'jenis')">
                                             <td><?= $row['nama'] ?></td>
                                         </tr>
                                     <?php endforeach; ?>
@@ -333,7 +333,7 @@
                                 </thead>
                                 <tbody>
                                     <?php foreach ($datatukang as $row) : ?>
-                                        <tr onclick="Updatedata(<?= $row['id_tukang'] ?>, 'tukang')">
+                                        <tr ondblclick="Updatedata(<?= $row['id_tukang'] ?>, 'tukang')">
                                             <td><?= $row['nama_tukang'] ?></td>
                                             <td><?= $row['nohp'] ?></td>
                                             <td><?= $row['alamat'] ?></td>
@@ -378,7 +378,7 @@
                                 </thead>
                                 <tbody>
                                     <?php foreach ($datausers as $row) : ?>
-                                        <tr onclick="Updatedata(<?= $row['id_pegawai'] ?>, 'user')">
+                                        <tr ondblclick="Updatedata(<?= $row['id_pegawai'] ?>, 'user')">
                                             <td><?= $row['nama_pegawai'] ?></td>
                                             <td><?= $row['nohp'] ?></td>
                                             <td><?= $row['alamat'] ?></td>

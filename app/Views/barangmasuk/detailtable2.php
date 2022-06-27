@@ -1,4 +1,4 @@
-<div class="card-body table-responsive p-0">
+<div class="card-body table-responsive p-0" style="max-height: 500px;">
     <table class="table table-hover text-nowrap">
         <thead>
             <tr>
