@@ -234,6 +234,8 @@ $routes->get('/printtransaksi/(:any)/(:any)', ($session->get('role')) ? 'Transak
 
 //--------------------------------MasterUpdate----------------------------------------------
 $routes->get('/updatepembelian', ($session->get('role')) ? 'MasterUpdate::UpdatePembelian' : 'Login::Login');
+$routes->get('/editpembelian', ($session->get('role')) ? 'MasterUpdate::EditPembelian' : 'Login::Login');
+$routes->get('/dataupdatedetailpembelian', ($session->get('role')) ? 'MasterUpdate::DataUpdateDetailPembelian' : 'Login::Login');
 $routes->get('/tampilpembelian_u', ($session->get('role')) ? 'MasterUpdate::TampilPembelian' : 'Login::Login');
 $routes->get('/detailpembelian_u/(:any)', ($session->get('role')) ? 'MasterUpdate::DetailPembelianSupp/$1' : 'Login::Login');
 $routes->get('/updatedata', ($session->get('role')) ? 'MasterUpdate::UpdateData' : 'Login::Login');

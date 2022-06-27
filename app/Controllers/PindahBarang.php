@@ -33,6 +33,7 @@ use App\Models\ModelPembelianREAL;
 use App\Models\ModelPenjualanREAL;
 use App\Models\ModelStockREAL;
 use App\Models\ModelBuybackREAL;
+use App\Models\ModelStockOpname;
 
 use CodeIgniter\Validation\Rules;
 
@@ -75,41 +76,22 @@ class PindahBarang extends BaseController
         $this->modeljualreal = new ModelPenjualanREAL();
         $this->modelstockreal = new ModelStockREAL();
         $this->modelbuybackreal = new ModelBuybackREAL();
+        $this->modelopname = new ModelStockOpname();
     }
     public function HomePindah()
     {
         $session = session();
-        // $data = $this->modeljualreal->getDataPenjualan();
-        // // dd($datapembelianreal);
-        // foreach ($data as $row) {
-        //     $datajual = $this->penjualan->getDataNoTrans($row['No_Nota']);
-        //     $datakartu = $this->modelkartustock->getKartuStockkode($row['Kode']);
-        //     if ($datajual && $datakartu) {
-        //         // $datastock = $this->modelkartustock->getKartuStockkode($row['Kode']);
-        //         //$datastock = $this->datastock->getBarangkode($row['Kode']);
-        //         $this->modeldetailpenjualan->save([
-        //             'id_date_penjualan' => $datajual['id_date_penjualan'],
-        //             'id_karyawan' => $session->get('id_user'),
-        //             'nama_img' => $row['gambar'],
-        //             'status' => $row['status'],
-        //             'kode' =>  $row['barcode'],
-        //             'qty' => $row['Qty'],
-        //             'saldo' => $row['Qty'],
-        //             'jenis' =>  $row['Jenis'],
-        //             'model' =>  $row['Model'],
-        //             'keterangan' =>  $row['Keterangan'],
-        //             'berat' =>  $row['Berat'],
-        //             'berat_murni' =>  $row['berat_murni'],
-        //             'harga_beli' =>  $row['harga_beli'],
-        //             'ongkos' => $row['ongkos'],
-        //             'kadar' =>   $row['Kadar'],
-        //             'nilai_tukar' =>   '0',
-        //             'merek' =>  $row['Merek'],
-        //             'total_harga' => $row['Total'],
+        // $datastock = $this->datastock->Getsemuadata();
+        // foreach ($datastock as $row) {
+        //     $dataopname = $this->modelopname->getBarcodeData($row['barcode']);
+        //     if ($dataopname) {
+        //         $this->modelopname->save([
+        //             'id_stock_opname' => $dataopname['id_stock_opname'],
+        //             'jenis' => $row['jenis'],
+        //             'merek' => $row['merek']
         //         ]);
         //     }
         // }
-
         return view('home/pindahindata');
     }
 

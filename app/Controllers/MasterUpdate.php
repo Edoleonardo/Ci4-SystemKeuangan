@@ -103,6 +103,30 @@ class MasterUpdate extends BaseController
         ];
         return view('masterupdate/detail_pembelian_update', $data);
     }
+    public function DataUpdateDetailPembelian()
+    {
+        if ($this->request->isAJAX()) {
+            $kel = $this->request->getVar('kel');
+            $iddetail = $this->request->getVar('id');
+            $jenis_u = $this->request->getVar('jenis');
+            if ($kel == 1 && $jenis_u == 'pembelian') {
+                $data = [
+                    'barang' =>  $this->detailbeli->getDetailone($iddetail),
+                    'merek' => $this->datamerek->getMerek(),
+                    'kadar' => $this->datakadar->getKadar(),
+                    'jenis' => $this->datajenis->getJenis(),
+                    'kel' => $kel
+                ];
+                $msg = [
+                    'tampilupdate' => view('masterupdate/modalupdatedatapembelian', $data)
+                ];
+            }
+            echo json_encode($msg);
+        }
+    }
+    public function EditPembelian()
+    {
+    }
     public function UpdateData()
     {
         if ($this->request->isAJAX()) {

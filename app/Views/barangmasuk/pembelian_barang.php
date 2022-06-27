@@ -146,7 +146,71 @@
 <div id="barcodeview">
 
 </div>
-
+<div class="modal fade" id="modal-edit">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Modal Edit Pembelian</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form action="/editpembelian" name="editpembelian" id="editpembelian" class="editpembelian" method="post" enctype="multipart/form-data">
+                <?= csrf_field(); ?>
+                <div id="openmodaledit">
+                </div>
+                <div class="modal fade" id="modal-foto1">
+                    <div class="modal-dialog modal-default">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h4 class="modal-title">Ambil Foto Edit</h4>
+                                <button type="button" class="close" onclick="$('#modal-foto1').modal('toggle')" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <div class="form-group">
+                                            <div class="form-group"><label>Gambar</label>
+                                                <div class="custom-file">
+                                                    <input onfocus="this.select()" type="file" name="gambar1" class="custom-file-input browse" id="gambar1" accept="image/*">
+                                                    <label style="text-align: left" class="custom-file-label" for="gambar1">Pilih Gambar</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group">
+                                        <div class="col-sm-12">
+                                            <div id='my_camera1'>
+                                            </div>
+                                            <button style="text-align: center;" type='button' id='ambilfoto1' class='btn btn-info ambilfoto1' onclick='Foto_ulang1()'>
+                                                <i class='fa fa-trash'></i></button>
+                                            <button type='button' id='ambilfoto1' class='btn btn-info ambilfoto1' onclick='Ambil_foto1()'>Foto <i class='fa fa-camera'></i>
+                                            </button>
+                                            <input onfocus="this.select()" type='hidden' name='gambar1' id='gambar1' class='image-tag1'>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer justify-content-between">
+                                    <button type="button" class="btn btn-default" onclick="$('#modal-foto1').modal('toggle')">Close</button>
+                                    <button type="button" class="btn btn-primary" onclick="$('#modal-foto1').modal('toggle')">Done</button>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- /.modal-content -->
+                    </div>
+                    <!-- /.modal-dialog -->
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Tutup</button>
+                    <button type="submit" class="btn btn-primary btntambah">Selesai Edit</button>
+            </form>
+        </div>
+    </div>
+</div>
 <script type="text/javascript">
     function PilihBarcode(kode) {
         document.getElementById('barcode').value = kode
@@ -421,6 +485,27 @@
         })
     }
 
+    function ModalEdit_D(id, kel, jenis) {
+        $.ajax({
+            type: "GET",
+            dataType: "json",
+            url: "<?php echo base_url('dataupdatedetailpembelian'); ?>",
+            data: {
+                id: id,
+                kel: kel,
+                jenis: jenis,
+            },
+            success: function(result) {
+                $('#openmodaledit').html(result.tampilupdate)
+                console.log(result.tampilupdate)
+                $('#modal-edit').modal('toggle')
+
+            },
+            error: function(xhr, ajaxOptions, thrownError) {
+                alert(xhr.status + "\n" + xhr.responseText + "\n" + thrownError);
+            }
+        })
+    }
 
     $(document).ready(function() {
         tampilform()
@@ -569,6 +654,7 @@
             Webcam.reset('#my_camera')
         });
     })
+
     Webcam.set({
         width: 320,
         height: 240,
@@ -580,6 +666,9 @@
         jpeg_quality: 100,
         flip_horiz: true,
     });
+
+
+    /////////////////////////////////////////////FOTO RILL//////////////////////////////////////////////////////
 
     function cameranyala() {
         if ($(".image-tag").val()) {
@@ -603,6 +692,30 @@
         document.getElementById('my_camera').innerHTML = ''
         $(".image-tag").val('');
         Webcam.attach('#my_camera');
+    }
+    /////////////////////////////////////////////////FOTO EDIT//////////////////////////////////////////////////////////
+    function cameranyala1() {
+        if ($(".image-tag1").val()) {
+            document.getElementById('my_camera1').innerHTML = '<img src="' + data_uri + '">'
+        } else {
+            Webcam.attach('#my_camera1');
+
+        }
+    }
+
+    function Ambil_foto1() {
+        Webcam.snap(function(data_uri) {
+            $(".image-tag1").val(data_uri);
+            Webcam.reset()
+            // Webcam.attach('#my_camera');
+            document.getElementById('my_camera1').innerHTML = '<img src="' + data_uri + '">'
+        })
+    }
+
+    function Foto_ulang1() {
+        document.getElementById('my_camera1').innerHTML = ''
+        $(".image-tag1").val('');
+        Webcam.attach('#my_camera1');
     }
 </script>
 

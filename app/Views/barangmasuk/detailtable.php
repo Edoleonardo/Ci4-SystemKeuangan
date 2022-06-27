@@ -38,7 +38,7 @@
         </thead>
         <tbody>
             <?php foreach ($tampildata as $row) : ?>
-                <tr>
+                <tr ondblclick="ModalEdit_D(<?= $row['id_detail_pembelian'] ?>,1,'pembelian')">
                     <td><img src='/img/<?= $row['nama_img'] ?>' class='imgg'></td>
                     <td><?= $row['kode'] ?></td>
                     <td><?= $row['qty'] ?></td>
@@ -59,7 +59,6 @@
         </tbody>
     </table>
 </div>
-
 
 <script>
     $(document).ready(function() {
