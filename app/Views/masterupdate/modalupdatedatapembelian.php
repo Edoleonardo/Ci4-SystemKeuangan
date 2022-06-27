@@ -2,6 +2,8 @@
     <div class="modal-body">
         <input type="hidden" name="iddetail1" id="iddetail1" value="<?= $barang['id_detail_pembelian'] ?>">
         <input type="hidden" name="kel1" id="kel1" value="<?= $kel ?>">
+        <input type="hidden" name="jenis_u" id="jenis_u" value="<?= $jenis_u ?>">
+        <input type="hidden" name="nm_img" id="nm_img" value="<?= $barang['nama_img'] ?>">
         <div class="row">
             <div class="col-sm-2">
                 <!-- text input -->
@@ -118,6 +120,8 @@
 <?php elseif ($kel == 2) : ?>
     <input type="hidden" name="iddetail1" id="iddetail1" value="<?= $barang['id_detail_pembelian'] ?>">
     <input type="hidden" name="kel1" id="kel1" value="<?= $kel ?>">
+    <input type="hidden" name="jenis_u" id="jenis_u" value="<?= $jenis_u ?>">
+    <input type="hidden" name="nm_img" id="nm_img" value="<?= $barang['nama_img'] ?>">
     <div class="modal-body">
         <div class="row">
             <div class="col-sm-2">
@@ -217,6 +221,8 @@
 <?php elseif ($kel == 3) : ?>
     <input type="hidden" name="iddetail1" id="iddetail1" value="<?= $barang['id_detail_pembelian'] ?>">
     <input type="hidden" name="kel1" id="kel1" value="<?= $kel ?>">
+    <input type="hidden" name="jenis_u" id="jenis_u" value="<?= $jenis_u ?>">
+    <input type="hidden" name="nm_img" id="nm_img" value="<?= $barang['nama_img'] ?>">
     <div class="modal-body">
         <div class="row">
             <div class="col-sm-2">
@@ -316,6 +322,8 @@
 <?php elseif ($kel == 4) : ?>
     <input type="hidden" name="iddetail1" id="iddetail1" value="<?= $barang['id_detail_pembelian'] ?>">
     <input type="hidden" name="kel1" id="kel1" value="<?= $kel ?>">
+    <input type="hidden" name="jenis_u" id="jenis_u" value="<?= $jenis_u ?>">
+    <input type="hidden" name="nm_img" id="nm_img" value="<?= $barang['nama_img'] ?>">
     <div class="modal-body">
         <div class="row">
             <div class="col-sm-2">
@@ -401,6 +409,8 @@
 <?php elseif ($kel == 5) : ?>
     <input type="hidden" name="iddetail1" id="iddetail1" value="<?= $barang['id_detail_pembelian'] ?>">
     <input type="hidden" name="kel1" id="kel1" value="<?= $kel ?>">
+    <input type="hidden" name="jenis_u" id="jenis_u" value="<?= $jenis_u ?>">
+    <input type="hidden" name="nm_img" id="nm_img" value="<?= $barang['nama_img'] ?>">
     <div class="modal-body">
         <div class="row">
             <div class="col-sm-2">
@@ -474,6 +484,8 @@
 <?php elseif ($kel == 6) : ?>
     <input type="hidden" name="iddetail1" id="iddetail1" value="<?= $barang['id_detail_pembelian'] ?>">
     <input type="hidden" name="kel1" id="kel1" value="<?= $kel ?>">
+    <input type="hidden" name="jenis_u" id="jenis_u" value="<?= $jenis_u ?>">
+    <input type="hidden" name="nm_img" id="nm_img" value="<?= $barang['nama_img'] ?>">
     <div class="modal-body">
         <div class="row">
             <div class="col-sm-2">

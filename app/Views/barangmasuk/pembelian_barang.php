@@ -497,7 +497,6 @@
             },
             success: function(result) {
                 $('#openmodaledit').html(result.tampilupdate)
-                console.log(result.tampilupdate)
                 $('#modal-edit').modal('toggle')
 
             },
@@ -506,6 +505,150 @@
             }
         })
     }
+
+    $('.editpembelian').submit(function(e) {
+        e.preventDefault()
+        let form = $('.editpembelian')[0];
+        let data = new FormData(form)
+        $.ajax({
+            type: "POST",
+            data: data,
+            url: $(this).attr('action'),
+            dataType: "json",
+            enctype: 'multipart/form-data',
+            contentType: false,
+            processData: false,
+            cache: false,
+            beforeSend: function() {
+                $('.btntambah').html('<i class="fa fa-spin fa-spinner">')
+            },
+            complete: function() {
+                $('.btntambah').html('Selesai Edit')
+            },
+            success: function(result) {
+                tampildata()
+                $('#modal-edit').modal('toggle')
+                $("#editpembelian")[0].reset();
+                $(".image-tag1").val('');
+                //console.log(result)
+                // if (result.error) {
+                //     if (result.error.qty) {
+                //         $('#qty').addClass('is-invalid')
+                //         $('.qtymsg').html(result.error.qty)
+                //     } else {
+                //         $('#qty').removeClass('is-invalid')
+                //         $('.qtymsg').html('')
+                //     }
+                //     if (result.error.total_berat) {
+                //         $('#total_berat').addClass('is-invalid')
+                //         $('.total_beratmsg').html(result.error.total_berat)
+                //     } else {
+                //         $('#total_berat').removeClass('is-invalid')
+                //         $('.total_beratmsg').html('')
+                //     }
+                //     if (result.error.total_berat_m) {
+                //         $('#total_berat_m').addClass('is-invalid')
+                //         $('.total_berat_mmsg').html(result.error.total_berat_m)
+                //     } else {
+                //         $('#total_berat_m').removeClass('is-invalid')
+                //         $('.total_berat_mmsg').html('')
+                //     }
+                //     if (result.error.nilai_tukar) {
+                //         $('#nilai_tukar').addClass('is-invalid')
+                //         $('.nilai_tukarmsg').html(result.error.nilai_tukar)
+                //     } else {
+                //         $('#nilai_tukar').removeClass('is-invalid')
+                //         $('.nilai_tukarmsg').html('')
+                //     }
+                //     if (result.error.jenis) {
+                //         $('#jenis').addClass('is-invalid')
+                //         $('.jenismsg').html(result.error.jenis)
+                //     } else {
+                //         $('#jenis').removeClass('is-invalid')
+                //         $('.jenismsg').html('')
+                //     }
+                //     if (result.error.berat) {
+                //         $('#berat').addClass('is-invalid')
+                //         $('.beratmsg').html(result.error.berat)
+                //     } else {
+                //         $('#berat').removeClass('is-invalid')
+                //         $('.beratmsg').html('')
+                //     }
+                //     if (result.error.gambar) {
+                //         $('#ambilgbr').addClass('is-invalid')
+                //         $('.ambilgbrmsg').html(result.error.gambar)
+                //     } else {
+                //         $('#ambilgbr').removeClass('is-invalid')
+                //         $('.ambilgbrmsg').html('')
+                //     }
+                //     if (result.error.no_nota_supp) {
+                //         $('#no_nota_supp').addClass('is-invalid')
+                //         $('.no_nota_suppmsg').html(result.error.no_nota_supp)
+                //     } else {
+                //         $('#no_nota_supp').removeClass('is-invalid')
+                //         $('.no_nota_suppmsg').html('')
+                //     }
+                //     if (result.error.harga_beli) {
+                //         $('#harga_beli').addClass('is-invalid')
+                //         $('.harga_belimsg').html(result.error.harga_beli)
+                //     } else {
+                //         $('#harga_beli').removeClass('is-invalid')
+                //         $('.harga_belimsg').html('')
+                //     }
+                //     if (result.error.ongkos) {
+                //         $('#ongkos').addClass('is-invalid')
+                //         $('.ongkosmsg').html(result.error.ongkos)
+                //     } else {
+                //         $('#ongkos').removeClass('is-invalid')
+                //         $('.ongkosmsg').html('')
+                //     }
+                //     if (result.error.merek) {
+                //         $('#merek').addClass('is-invalid')
+                //         $('.merekmsg').html(result.error.merek)
+                //     } else {
+                //         $('#merek').removeClass('is-invalid')
+                //         $('.merekmsg').html('')
+                //     }
+                //     if (result.error.carat) {
+                //         $('#carat').addClass('is-invalid')
+                //         $('.caratmsg').html(result.error.carat)
+                //     } else {
+                //         $('#carat').removeClass('is-invalid')
+                //         $('.caratmsg').html('')
+                //     }
+                // } else {
+                //     $('#qty').removeClass('is-invalid')
+                //     $('.qtymsg').html('')
+                //     $('#total_berat').removeClass('is-invalid')
+                //     $('.total_beratmsg').html('')
+                //     $('#total_berat_m').removeClass('is-invalid')
+                //     $('.total_berat_mmsg').html('')
+                //     $('#nilai_tukar').removeClass('is-invalid')
+                //     $('.nilai_tukarmsg').html('')
+                //     $('#jenis').removeClass('is-invalid')
+                //     $('.jenismsg').html('')
+                //     $('#berat').removeClass('is-invalid')
+                //     $('.beratmsg').html('')
+                //     $('#ambilgbr').removeClass('is-invalid')
+                //     $('.ambilgbrmsg').html('')
+                //     $('#no_nota_supp').removeClass('is-invalid')
+                //     $('.no_nota_suppmsg').html('')
+                //     $('#harga_beli').removeClass('is-invalid')
+                //     $('.harga_belimsg').html('')
+                //     $('#ongkos').removeClass('is-invalid')
+                //     $('.ongkosmsg').html('')
+                //     $('#merek').removeClass('is-invalid')
+                //     $('.merekmsg').html('')
+                //     $('#carat').removeClass('is-invalid')
+                //     $('.caratmsg').html('')
+                //     tampildata()
+                // }
+            },
+            error: function(xhr, ajaxOptions, thrownError) {
+                alert(xhr.status + "\n" + xhr.responseText + "\n" + thrownError);
+            }
+        })
+    })
 
     $(document).ready(function() {
         tampilform()
@@ -652,6 +795,9 @@
         })
         $(".modal").on("hidden.bs.modal", function() {
             Webcam.reset('#my_camera')
+        });
+        $(".modal-edit").on("hidden.bs.modal", function() {
+            Webcam.reset('#my_camera1')
         });
     })
 

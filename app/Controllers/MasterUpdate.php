@@ -115,7 +115,8 @@ class MasterUpdate extends BaseController
                     'merek' => $this->datamerek->getMerek(),
                     'kadar' => $this->datakadar->getKadar(),
                     'jenis' => $this->datajenis->getJenis(),
-                    'kel' => $kel
+                    'kel' => $kel,
+                    'jenis_u' => $jenis_u
                 ];
                 $msg = [
                     'tampilupdate' => view('masterupdate/modalupdatedatapembelian', $data)
@@ -126,6 +127,62 @@ class MasterUpdate extends BaseController
     }
     public function EditPembelian()
     {
+        if ($this->request->isAJAX()) {
+            $session = session();
+            $kel = $this->request->getVar('kel1');
+            $iddetail = $this->request->getVar('iddetail1');
+            $jenis_u = $this->request->getVar('jenis_u');
+
+            if ($kel == 1 && $jenis_u == 'pembelian') {
+                $filesampul = $this->request->getFile('gambar1');
+                if ($this->request->getPost('gambar1')) {
+                    $image = $this->request->getPost('gambar1');
+                    $image = str_replace('data:image/jpeg;base64,', '', $image);
+                    $image = base64_decode($image, true);
+                    $micro_date = microtime();
+                    $date_array = explode(" ", $micro_date);
+                    $date = date("ymdis", $date_array[1]);
+                    $namafile = $date . $date_array[0] . '.jpg';
+                    file_put_contents(FCPATH . '/img/' . $namafile, $image);
+                    unlink('img/' . $this->request->getVar('nm_img'));
+                } else if ($filesampul->getError() != 4) {
+                    // $namafile = $filesampul->getRandomName(); // pake nama random
+                    // $namafile = $filesampul->getName(); // ini pake nama asli di foto
+                    $micro_date = microtime();
+                    $date_array = explode(" ", $micro_date);
+                    $date = date("ymdis", $date_array[1]);
+                    $namafile = $date . $date_array[0] . '.jpg';
+                    $filesampul->move('img', $namafile);
+                    unlink('img/' . $this->request->getVar('nm_img'));
+                } else {
+                    $namafile = $this->request->getVar('nm_img');
+                }
+
+                $harga = $this->request->getVar('harga_beli1');
+                $berat = $this->request->getVar('berat1');
+                $beratmurni = round($berat * ($this->request->getVar('nilai_tukar1') / 100), 2);
+                $totalharga =  $beratmurni *  $harga + $this->request->getVar('ongkos1');
+                $this->detailbeli->save([
+                    'id_detail_pembelian' => $iddetail,
+                    'id_karyawan' => $session->get('id_user'),
+                    'nama_img' => $namafile,
+                    'qty' => $this->request->getVar('qty1'),
+                    'jenis' => $this->request->getVar('jenis1'),
+                    'model' => $this->request->getVar('model1'),
+                    'keterangan' => $this->request->getVar('keterangan1'),
+                    'berat' => $this->request->getVar('berat1'),
+                    'ongkos' => $this->request->getVar('ongkos1'),
+                    'berat_murni' => $beratmurni,
+                    'harga_beli' => $this->request->getVar('harga_beli1'),
+                    'kadar' =>  $this->request->getVar('kadar1'),
+                    'nilai_tukar' =>  $this->request->getVar('nilai_tukar1'),
+                    'merek' => $this->request->getVar('merek1'),
+                    'total_harga' => $totalharga,
+                ]);
+                $msg = 'sukses';
+            }
+            echo json_encode($msg);
+        }
     }
     public function UpdateData()
     {
