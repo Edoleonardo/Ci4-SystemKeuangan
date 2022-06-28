@@ -142,7 +142,7 @@
                         <div class="card">
                             <!-- /.card-header -->
                             <?php if ($datapembelian['kelompok'] == 1) : ?>
-                                <div class="card-body table-responsive p-0" id="datatable">
+                                <div class="card-body table-responsive p-0" id="datatable" style="max-height: 500px;">
                                     <table class="table table-hover text-nowrap">
                                         <thead>
                                             <tr>
@@ -204,7 +204,7 @@
                                 </div>
                             <?php endif; ?>
                             <?php if ($datapembelian['kelompok'] == 2 || $datapembelian['kelompok'] == 3 || $datapembelian['kelompok'] == 4) : ?>
-                                <div class="card-body table-responsive p-0" id="datatable">
+                                <div class="card-body table-responsive p-0" id="datatable" style="max-height: 500px;">
                                     <table class="table table-hover text-nowrap">
                                         <thead>
                                             <tr>
@@ -257,7 +257,7 @@
                                 </div>
                             <?php endif; ?>
                             <?php if ($datapembelian['kelompok'] == 5) : ?>
-                                <div class="card-body table-responsive p-0" id="datatable">
+                                <div class="card-body table-responsive p-0" id="datatable" style="max-height: 500px;">
                                     <table class="table table-hover text-nowrap">
                                         <thead>
                                             <tr>
@@ -304,7 +304,7 @@
                                 </div>
                             <?php endif; ?>
                             <?php if ($datapembelian['kelompok'] == 6) : ?>
-                                <div class="card-body table-responsive p-0" id="datatable">
+                                <div class="card-body table-responsive p-0" id="datatable" style="max-height: 500px;">
                                     <table class="table table-hover text-nowrap">
                                         <thead>
                                             <tr>

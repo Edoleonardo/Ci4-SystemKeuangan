@@ -8,7 +8,7 @@ function barcodegenerate($kode, $wrn)
   $barcode = $barcodeG;
   $barcode->setText($kode);
   $barcode->setType(BarcodeGenerator::Code128);
-  $barcode->setScale(2);
+  $barcode->setScale(1);
   $barcode->setThickness(25);
   $barcode->setFontSize(10);
   $barcode->setBackgroundColor($wrn);
@@ -16,39 +16,71 @@ function barcodegenerate($kode, $wrn)
   return '<img src="data:image/png;base64,' . $code . '" />';
 }
 ?>
-<table>
-  <tbody>
-
-    <?php $i = 0;
-    foreach ($databarcode as $row) :
-      if (substr($row['kode'], 0, 1) == '1') {
-        $wrn = 'yellow';
-      } else {
-        $wrn = '#FFB6C1';
-      }
-      if ($i == 3) {
-        $tr1 = '<tr>';
-        $tr2 = '</tr>';
-        $i = 0;
-      } else {
-        $tr1 = '';
-        $tr2 = '';
-      }
-      echo $tr1;
-    ?>
-      <td style=" background-color: <?= $wrn ?> !important;  -webkit-print-color-adjust: exact;"><?= barcodegenerate($row['kode'], $wrn) ?> <br> <?= $datapembelian['no_faktur_supp'] ?> <?= $row['merek'] ?></td>
-      <td style=" background-color: <?= $wrn ?> !important;  -webkit-print-color-adjust: exact;"><?= $row['kode'] ?> <?= $row['kadar'] ?><br><?= $row['jenis'] ?>, <?= $row['model'] ?><br><?= $row['berat'] ?></td>
-    <?php $i++;
-    endforeach;
-    echo $tr2; ?>
-
-  </tbody>
+<table style="background-color: purple !important; -webkit-print-color-adjust: exact;">
+  <?php $i = 0;
+  $b = 1;
+  foreach ($databarcode as $row) :
+    if (substr($row['kode'], 0, 1) == '1') {
+      $wrn = 'yellow';
+    } else {
+      $wrn = '#FFB6C1';
+    }
+    if ($i == 3) {
+      $tr1 = '<tr>';
+      $tr2 = '</tr>';
+      $i = 0;
+      $b = $b + 1;
+    } else {
+      $tr1 = '';
+      $tr2 = '';
+    }
+    if ($b == 15) {
+      $tab = '<table class="pagebreak" style="background-color: purple !important; -webkit-print-color-adjust: exact;">';
+      $tab2 = '</table>';
+      $b = 1;
+    } else {
+      $tab = '';
+      $tab2 = '';
+    }
+    echo $tr1;
+    echo $tab;
+  ?>
+    <td style="border: 1px solid white;">
+      <table style="width: 65mm; height: 15mm;">
+        <td>
+          <table style="max-width: 100%; width: 100%;">
+            <tr>
+              <td style=" font-size:12px; padding: 2px; border-color: coral; background-color: <?= $wrn ?> !important;  -webkit-print-color-adjust: exact; text-align: center;">
+                <?= barcodegenerate($row['kode'], $wrn) ?> <br> <?= $datapembelian['no_faktur_supp'] ?> <?= $row['merek'] ?>
+              </td>
+            </tr>
+          </table>
+        </td>
+        <td>
+          <table style="max-width: 100%; width: 100%;">
+            <tr>
+              <td style="font-size:11px; background-color: <?= $wrn ?> !important; -webkit-print-color-adjust: exact; text-align: center; max-width: 100;">
+                <b><?= $row['kode'] ?></b> <b style="color: red;"><?= $row['kadar'] ?></b> <br> <?= $row['jenis'] ?>, <?= $row['model'] ?><br>NW <?= $row['berat'] ?>Gr / GW <?= $row['berat'] + 0.12 ?>Gr <?php if (substr($row['kode'], 0, 1) == '1' && $row['kadar'] == '24K') {
+                                                                                                                                                                                                              echo '<br> Ongkos Rp ' . $row['ongkos'];
+                                                                                                                                                                                                            } elseif (substr($row['kode'], 0, 1) == '2') {
+                                                                                                                                                                                                              echo '<br> Rp ' . number_format($row['total_harga'], 0, ',', '.');
+                                                                                                                                                                                                            } ?>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </table>
+    </td>
+  <?php $i++;
+  endforeach;
+  echo $tr2;
+  echo $tab2; ?>
 </table>
 <style>
   @page {
     size: A4;
     /* auto is the initial value */
-    margin: 0mm;
+    margin: 5mm;
     /* this affects the margin in the printer settings */
   }
 
@@ -58,6 +90,10 @@ function barcodegenerate($kode, $wrn)
     body {
       width: 210mm;
       height: 297mm;
+    }
+
+    .pagebreak {
+      page-break-before: always;
     }
 
     /* ... the rest of the rules ... */
