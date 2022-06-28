@@ -34,7 +34,7 @@ function barcodegenerate($kode, $wrn)
       $tr1 = '';
       $tr2 = '';
     }
-    if ($b == 15) {
+    if ($b == 16) {
       $tab = '<table class="pagebreak" style="background-color: purple !important; -webkit-print-color-adjust: exact;">';
       $tab2 = '</table>';
       $b = 1;
@@ -45,21 +45,21 @@ function barcodegenerate($kode, $wrn)
     echo $tr1;
     echo $tab;
   ?>
-    <td style="border: 1px solid white;">
-      <table style="width: 65mm; height: 15mm;">
+    <td style="border: 1px solid white; min-width: 65mm; max-height: 15mm;">
+      <table>
         <td>
-          <table style="max-width: 100%; width: 100%;">
+          <table>
             <tr>
-              <td style=" font-size:12px; padding: 2px; border-color: coral; background-color: <?= $wrn ?> !important;  -webkit-print-color-adjust: exact; text-align: center;">
+              <td style="font-size:11px; padding: 2px; background-color: <?= $wrn ?> !important;  -webkit-print-color-adjust: exact; text-align: center; max-width: 32mm;min-width: 32mm">
                 <?= barcodegenerate($row['kode'], $wrn) ?> <br> <?= $datapembelian['no_faktur_supp'] ?> <?= $row['merek'] ?>
               </td>
             </tr>
           </table>
         </td>
         <td>
-          <table style="max-width: 100%; width: 100%;">
+          <table>
             <tr>
-              <td style="font-size:11px; background-color: <?= $wrn ?> !important; -webkit-print-color-adjust: exact; text-align: center; max-width: 100;">
+              <td style="font-size:10px; background-color: <?= $wrn ?> !important; -webkit-print-color-adjust: exact; text-align: center; max-width: 32mm;min-width: 32mm">
                 <b><?= $row['kode'] ?></b> <b style="color: red;"><?= $row['kadar'] ?></b> <br> <?= $row['jenis'] ?>, <?= $row['model'] ?><br>NW <?= $row['berat'] ?>Gr / GW <?= $row['berat'] + 0.12 ?>Gr <?php if (substr($row['kode'], 0, 1) == '1' && $row['kadar'] == '24K') {
                                                                                                                                                                                                               echo '<br> Ongkos Rp ' . $row['ongkos'];
                                                                                                                                                                                                             } elseif (substr($row['kode'], 0, 1) == '2') {
