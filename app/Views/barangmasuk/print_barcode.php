@@ -115,7 +115,7 @@ function barcodegenerate($kode, $wrn)
   <script>
     window.addEventListener("load", window.print());
   </script>
-<?php } elseif ($kertas == 'A3+') { ?>
+<?php } else if ($kertas == 'A3plus') { ?>
   <table style="background-color: purple !important; -webkit-print-color-adjust: exact;">
     <?php $i = 0;
     $b = 1;
@@ -214,7 +214,7 @@ function barcodegenerate($kode, $wrn)
   <script>
     window.addEventListener("load", window.print());
   </script>
-<?php } else { ?>
+<?php } elseif ($kertas == 'A3') { ?>
   <table style="background-color: purple !important; -webkit-print-color-adjust: exact;">
     <?php $i = 0;
     $b = 1;

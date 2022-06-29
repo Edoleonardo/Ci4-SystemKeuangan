@@ -132,7 +132,7 @@
                                 <div class="dropdown-menu" role="menu" x-placement="bottom-start">
                                     <a class="dropdown-item" href="/printbarcode/<?= $datapembelian['id_date_pembelian'] ?>/A4" target="_blank">A4</a>
                                     <a class="dropdown-item" href="/printbarcode/<?= $datapembelian['id_date_pembelian'] ?>/A3" target="_blank">A3</a>
-                                    <a class="dropdown-item" href="/printbarcode/<?= $datapembelian['id_date_pembelian'] ?>/A3+" target="_blank">A3+</a>
+                                    <a class="dropdown-item" href="/printbarcode/<?= $datapembelian['id_date_pembelian'] ?>/A3plus" target="_blank">A3+</a>
                                 </div>
                             </div>
                         </div>
