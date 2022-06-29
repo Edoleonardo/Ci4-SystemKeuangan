@@ -10,7 +10,7 @@
             <div class="modal-body">
                 <section class="content">
                     <div class="row">
-                        <div class="col-6">
+                        <div class="col-sm-6">
                             <div class="card">
                                 <!-- /.card-header -->
                                 <div class="card-body table-responsive p-0">
@@ -54,14 +54,22 @@
                             </div>
                             <!-- /.card -->
                         </div>
-                        <div class="col-6">
+                        <div class="col-sm-6">
                             <!-- Application buttons -->
                             <div id="cardbayar">
                                 <div class="card">
                                     <div class="card-body">
-                                        <a class="btn btn-app" href="/printbarcode/<?= $datapembelian['id_date_pembelian'] ?>" target="_blank">
-                                            <i class="fas fa-barcode"></i> Print Barcode
-                                        </a>
+                                        <div class="btn-group">
+                                            <button type="button" class="btn btn-default"><i class="fas fa-print"></i> Print</button>
+                                            <button type="button" class="btn btn-default dropdown-toggle dropdown-icon" data-toggle="dropdown" aria-expanded="true">
+                                                <span class="sr-only">Toggle Dropdown</span>
+                                            </button>
+                                            <div class="dropdown-menu" role="menu" x-placement="bottom-start">
+                                                <a class="dropdown-item" href="/printbarcode/<?= $datapembelian['id_date_pembelian'] ?>/A4" target="_blank">A4</a>
+                                                <a class="dropdown-item" href="/printbarcode/<?= $datapembelian['id_date_pembelian'] ?>/A3" target="_blank">A3</a>
+                                                <a class="dropdown-item" href="/printbarcode/<?= $datapembelian['id_date_pembelian'] ?>/A3+" target="_blank">A3+</a>
+                                            </div>
+                                        </div>
                                     </div>
                                     <!-- /.card-body -->
                                 </div>

@@ -66,7 +66,7 @@
     <!-- Main content -->
     <section class="content">
         <div class="row">
-            <div class="col-6">
+            <div class="col-sm-6">
                 <div class="card">
                     <!-- /.card-header -->
                     <div class="table-responsive" id="tblcard">
@@ -114,7 +114,7 @@
                 </div>
                 <!-- /.card -->
             </div>
-            <div class="col-6">
+            <div class="col-sm-6">
                 <!-- Application buttons -->
                 <div class="card">
                     <div class="card-body" id="refreshtombol">
@@ -153,7 +153,7 @@
                 <div class="row">
                     <?php if (isset($datamastercuci)) : ?>
                         <?php if ($datamastercuci['status_dokumen'] != 'Selesai') : ?>
-                            <div class="col-6">
+                            <div class="col-sm-6">
                                 <label>Pilih Barang Cuci</label>
                                 <div class="card">
                                     <!-- /.card-header -->
@@ -194,7 +194,7 @@
                                 </div>
                                 <!-- /.card -->
                             </div>
-                            <div class="col-6">
+                            <div class="col-sm-6">
                                 <label>Barang Cuci</label>
                                 <div class="card">
                                     <button type="button" class="btn btn-block btn-outline-info btn-sm" onclick="ModalPrintCuci(2,<?= $datamastercuci['id_date_cuci'] ?>)"> <i class="fas fa-print"></i></button>

@@ -16,7 +16,7 @@
             <div class="modal-body">
                 <section class="content">
                     <div class="row">
-                        <div class="col-6">
+                        <div class="col-sm-6">
                             <div class="card">
                                 <?php if ($databuyback['status_dokumen'] == 'Draft') : ?>
                                     <div class="form-group" style="margin: 1mm;">

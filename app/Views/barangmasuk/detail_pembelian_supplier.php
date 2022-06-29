@@ -59,7 +59,7 @@
     <!-- Main content -->
     <section class="content">
         <div class="row">
-            <div class="col-6">
+            <div class="col-sm-6">
                 <div class="card">
                     <!-- /.card-header -->
                     <div class="card-body table-responsive p-0">
@@ -102,14 +102,11 @@
                 </div>
                 <!-- /.card -->
             </div>
-            <div class="col-6">
+            <div class="col-sm-6">
                 <!-- Application buttons -->
                 <div id="cardbayar">
                     <div class="card">
                         <div class="card-body">
-                            <a class="btn btn-app" href="/printbarcode/<?= $datapembelian['id_date_pembelian'] ?>" target="_blank">
-                                <i class="fas fa-barcode"></i> Print Barcode
-                            </a>
                             <!-- <form id="cancelform" action="/cancelbarang/<?= $datapembelian['id_date_pembelian'] ?>" method="POST" class="d-inline">
                                 <?= csrf_field(); ?>
                                 <input type="hidden" name="_method" value="DELETE">
@@ -127,6 +124,17 @@
                                     <i class="fas fa-money-bill"></i> Bayar
                                 </a>
                             <?php endif ?>
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-default"><i class="fas fa-print"></i> Print</button>
+                                <button type="button" class="btn btn-default dropdown-toggle dropdown-icon" data-toggle="dropdown" aria-expanded="true">
+                                    <span class="sr-only">Toggle Dropdown</span>
+                                </button>
+                                <div class="dropdown-menu" role="menu" x-placement="bottom-start">
+                                    <a class="dropdown-item" href="/printbarcode/<?= $datapembelian['id_date_pembelian'] ?>/A4" target="_blank">A4</a>
+                                    <a class="dropdown-item" href="/printbarcode/<?= $datapembelian['id_date_pembelian'] ?>/A3" target="_blank">A3</a>
+                                    <a class="dropdown-item" href="/printbarcode/<?= $datapembelian['id_date_pembelian'] ?>/A3+" target="_blank">A3+</a>
+                                </div>
+                            </div>
                         </div>
                         <!-- /.card-body -->
                     </div>
@@ -418,26 +426,26 @@
                             </div>
                             <div class="card-body">
                                 <div class="row">
-                                    <div class="col-6">
+                                    <div class="col-sm-6">
                                         <div class="form-group">
                                             <label>Harga Saat ini</label><input type="number" onchange="UbahHargaMurni()" onfocus="this.select()" min="0" value="<?= $datapembelian['harga_murni'] ?>" id="harga_murni" name="harga_murni" class="form-control harga_murni" placeholder="Masukan harga">
                                             <div id="validationServerUsernameFeedback" class="invalid-feedback harga_murnimsg"></div>
                                         </div>
                                     </div>
-                                    <div class="col-6">
+                                    <div class="col-sm-6">
                                         <div class="form-group">
                                             <label><a href="#" onclick="MasukField('pembulatan')">Pembulatan</a></label><input autocomplete="off" type="number" onchange="myDataBayar()" onfocus="this.select()" min="0" id="pembulatan" name="pembulatan" class="form-control" placeholder="Masukan pembulatan">
                                         </div>
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="col-6">
+                                    <div class="col-sm-6">
                                         <div class="form-group">
                                             <label><a href="#" onclick="MasukField('tunai')">Tunai</a></label><input type="number" onchange="myDataBayar()" onfocus="this.select()" min="0" id="tunai" name="tunai" class="form-control" placeholder="Masukan tunai">
                                             <div id="validationServerUsernameFeedback" class="invalid-feedback tunaimsg"></div>
                                         </div>
                                     </div>
-                                    <div class="col-6">
+                                    <div class="col-sm-6">
                                         <div class="form-group">
                                             <label><a href="#" onclick="MasukField('transfer')">Transfer</a></label><input type="number" onchange="myDataBayar()" onfocus="this.select()" min="0" id="transfer" name="transfer" class="form-control" placeholder="Masukan transfer">
                                             <div id="validationServerUsernameFeedback" class="invalid-feedback transfermsg"></div>
@@ -476,7 +484,7 @@
                                                 <button type="button" onclick="InputRetur()" id="btnsubmitform" class="btn btn-info btn-flat btnsubmitform">Tambah Retur</button>
                                             </div>
                                         </div>
-                                        <!-- <div class="col-6">
+                                        <!-- <div class="col-sm-6">
                                         <div class="card">
                                             <div class="form-group">
                                                 <label><a href="#" data-toggle="modal" data-target="#modal-bahan24k">Bahan 24K</a></label>
@@ -493,14 +501,14 @@
                                         <div class="col-8">
                                             <div class="card">
                                                 <div class="row">
-                                                    <div class="col-6">
+                                                    <div class="col-sm-6">
                                                         <div class="form-group">
                                                             <label><a href="#" data-toggle="modal" data-target="#modal-bahan24k">Bahan 24K</a></label>
                                                             <input type="text" onfocus="this.select()" min="0" id="kode_bahan24k" name="kode_bahan24k" class="form-control" placeholder="Masukan kode">
                                                             <div id="validationServerUsernameFeedback" class="invalid-feedback kode_bahan24kmsg"></div>
                                                         </div>
                                                     </div>
-                                                    <div class="col-6">
+                                                    <div class="col-sm-6">
                                                         <div class="form-group">
                                                             <label>Berat Bahan</label>
                                                             <input type="text" onfocus="this.select()" min="0" id="beratbahan" name="beratbahan" class="form-control" placeholder="Masukan Berat">

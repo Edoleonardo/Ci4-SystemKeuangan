@@ -16,13 +16,13 @@
                     </div>
                     <div class="card-body">
                         <div class="row">
-                            <div class="col-6">
+                            <div class="col-sm-6">
                                 <div class="form-group">
                                     <label>Harga Saat ini</label><input type="number" onchange="UbahHargaMurni(this)" min="0" value="<?= $datapembelian['harga_murni'] ?>" id="harga_murni" name="harga_murni" onkeyup="Harganow()" class="form-control harga_murni" placeholder="Masukan harga">
                                     <div id="validationServerUsernameFeedback" class="invalid-feedback pembulatanmsg"></div>
                                 </div>
                             </div>
-                            <div class="col-6">
+                            <div class="col-sm-6">
                                 <div class="form-group">
                                     <label>Pembulatan</label><input type="number" onkeyup="byrtunai()" min="0" id="pembulatan" name="pembulatan" class="form-control" placeholder="Masukan pembulatan">
                                     <div id="validationServerUsernameFeedback" class="invalid-feedback pembulatanmsg"></div>
@@ -30,13 +30,13 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-6">
+                            <div class="col-sm-6">
                                 <div class="form-group">
                                     <label>Tunai</label><input type="number" onkeyup="byrtunai()" min="0" id="tunai" name="tunai" class="form-control" placeholder="Masukan tunai">
                                     <div id="validationServerUsernameFeedback" class="invalid-feedback tunaimsg"></div>
                                 </div>
                             </div>
-                            <div class="col-6">
+                            <div class="col-sm-6">
                                 <div class="form-group">
                                     <label>Transfer</label><input type="number" onkeyup="byrtransfer()" min="0" id="transfer" name="transfer" class="form-control" placeholder="Masukan transfer">
                                     <div id="validationServerUsernameFeedback" class="invalid-feedback transfermsg"></div>

@@ -40,7 +40,7 @@
     <!-- Main content -->
     <section class="content">
         <div class="row">
-            <div class="col-6">
+            <div class="col-sm-6">
                 <!-- /.card-header -->
                 <form action="/kodebarcode" name="formkodebarcode" id="formkodebarcode" class="formkodebarcode" method="post">
                     <?= csrf_field(); ?>
@@ -61,7 +61,7 @@
             </div>
             <!-- /.card -->
         </div>
-        <div class="col-6">
+        <div class="col-sm-6">
             <!-- Application buttons -->
             <div class="card">
                 <div class="card-body" id="refreshtombol">
@@ -127,12 +127,12 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-6">
+                            <div class="col-sm-6">
                                 <div class="form-group">
                                     <label><a href="#" onclick="MasukField('pembulatan')">Pembulatan</a></label><input autocomplete="off" type="number" onchange="myDataBayar()" onfocus="this.select()" min="0" id="pembulatan" name="pembulatan" class="form-control" placeholder="Masukan pembulatan">
                                 </div>
                             </div>
-                            <div class="col-6">
+                            <div class="col-sm-6">
                                 <div class="form-group">
                                     <label><a href="#" onclick="MasukField('tunai')">Tunai</a></label><input type="number" onchange="myDataBayar()" onfocus="this.select()" min="0" id="tunai" name="tunai" class="form-control" placeholder="Masukan tunai">
                                     <div id="validationServerUsernameFeedback" class="invalid-feedback tunaimsg"></div>
@@ -140,13 +140,13 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-6">
+                            <div class="col-sm-6">
                                 <div class="form-group">
                                     <label><a href="#" onclick="MasukField('transfer')">Transfer</a></label><input type="number" onchange="myDataBayar()" onfocus="this.select()" min="0" id="transfer" name="transfer" class="form-control" placeholder="Masukan transfer">
                                     <div id="validationServerUsernameFeedback" class="invalid-feedback transfermsg"></div>
                                 </div>
                             </div>
-                            <div class="col-6">
+                            <div class="col-sm-6">
                                 <div class="form-group">
                                     <label>Bank Transfer</label><input type="text" min="0" id="banktransfer" name="banktransfer" class="form-control" placeholder="Pilih Bank" readonly>
                                     <div id="validationServerUsernameFeedback" class="invalid-feedback banktransfermsg"></div>
@@ -163,25 +163,25 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-6">
+                            <div class="col-sm-6">
                                 <div class="form-group">
                                     <label><a href="#" onclick="MasukField('debitcc')">Debit/CC</a></label><input type="number" onchange="myDataBayar()" onfocus="this.select()" min="0" id="debitcc" name="debitcc" class="form-control" placeholder="Masukan Debit/CC">
                                     <div id="validationServerUsernameFeedback" class="invalid-feedback debitccmsg"></div>
                                 </div>
                             </div>
-                            <div class="col-6">
+                            <div class="col-sm-6">
                                 <div class="form-group">
                                     <label>Charge</label><input type="number" onchange="myDataBayar()" min="0" step="0.01" id="charge" name="charge" class="form-control" placeholder="Charge">
                                 </div>
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-6">
+                            <div class="col-sm-6">
                                 <div class="form-group">
                                     <label><a href="#" onclick="MasukField('byrcharge')">Bayar Charge</a></label><input type="number" onchange="myDataBayar()" min="0" step="0.01" id="byrcharge" name="byrcharge" class="form-control" placeholder="Bayar Charge">
                                 </div>
                             </div>
-                            <div class="col-6">
+                            <div class="col-sm-6">
                                 <div class="form-group">
                                     <label>Bank Debit/CC</label><input type="text" min="0" id="bankdebitcc" name="bankdebitcc" class="form-control" placeholder="Bank Debit/CC" readonly>
                                     <div id="validationServerUsernameFeedback" class="invalid-feedback bankdebitccmsg"></div>

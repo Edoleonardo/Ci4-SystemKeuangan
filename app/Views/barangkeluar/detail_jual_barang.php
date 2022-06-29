@@ -35,7 +35,7 @@
     <!-- Main content -->
     <section class="content">
         <div class="row">
-            <div class="col-6">
+            <div class="col-sm-6">
                 <div class="card">
                     <!-- /.card-header -->
                     <table class="table table-striped">
@@ -66,7 +66,7 @@
                 </div>
                 <!-- /.card -->
             </div>
-            <div class="col-6">
+            <div class="col-sm-6">
                 <!-- Application buttons -->
                 <div class="card" id="card1">
                     <div class="card-body" id="card2">

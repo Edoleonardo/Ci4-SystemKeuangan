@@ -44,7 +44,7 @@
     <!-- Main content -->
     <section class="content">
         <div class="row">
-            <div class="col-6">
+            <div class="col-sm-6">
                 <div class="card">
                     <?php if ($databuyback['status_dokumen'] == 'Draft') : ?>
                         <div class="form-group" style="margin: 1mm;">
@@ -78,7 +78,7 @@
                     <?php endif ?>
                 </div>
             </div>
-            <div class="col-6">
+            <div class="col-sm-6">
                 <!-- Application buttons -->
                 <div class="card">
                     <div class="card-body" id="refreshtombol">
@@ -138,7 +138,7 @@
             </div>
             <div class="modal-body">
                 <div class="row">
-                    <div class="col-6">
+                    <div class="col-sm-6">
                         <form action="/scantrans" name="scannotrans" id="scannotrans" class="scannotrans" method="post">
                             <?= csrf_field(); ?>
                             <div class="form-group" style="margin: 1mm;">
@@ -154,7 +154,7 @@
                             </div>
                         </form>
                     </div>
-                    <div class="col-6">
+                    <div class="col-sm-6">
                         <form action="/scanbarcode" name="scanbarcode" id="scanbarcode" class="scanbarcode" method="post">
                             <?= csrf_field(); ?>
                             <div class="form-group" style="margin: 1mm;">
@@ -331,13 +331,13 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-6">
+                            <div class="col-sm-6">
                                 <div class="form-group">
                                     <label><a href="#" onclick="MasukField('tunai')">Tunai</a></label><input type="number" onchange="myDataBayar()" onfocus="this.select()" min="0" id="tunai" name="tunai" class="form-control" placeholder="Masukan tunai">
                                     <div id="validationServerUsernameFeedback" class="invalid-feedback tunaimsg"></div>
                                 </div>
                             </div>
-                            <div class="col-6">
+                            <div class="col-sm-6">
                                 <div class="form-group">
                                     <label><a href="#" onclick="MasukField('transfer')">Transfer</a></label><input type="number" onchange="myDataBayar()" onfocus="this.select()" min="0" id="transfer" name="transfer" class="form-control" placeholder="Masukan transfer">
                                     <div id="validationServerUsernameFeedback" class="invalid-feedback transfermsg"></div>

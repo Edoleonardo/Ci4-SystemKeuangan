@@ -1442,11 +1442,12 @@ class Barangmasuk extends BaseController
         }
     }
 
-    public function BarcodeGenerate($id)
+    public function BarcodeGenerate($id, $kertas)
     {
         $data1 = [
             'databarcode' => $this->detailbeli->getDetailAll($id),
             'datapembelian' => $this->datapembelian->getPembelianSupplier($id),
+            'kertas' => $kertas,
             // 'img' => $this->barangmodel->getImg($id)
         ];
 

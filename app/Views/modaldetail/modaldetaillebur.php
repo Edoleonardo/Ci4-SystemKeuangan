@@ -10,7 +10,7 @@
             <div class="modal-body">
                 <section class="content">
                     <div class="row">
-                        <div class="col-6">
+                        <div class="col-sm-6">
                             <div class="card">
                                 <!-- /.card-header -->
 
@@ -66,7 +66,7 @@
                             </div>
                             <!-- /.card -->
                         </div>
-                        <div class="col-6">
+                        <div class="col-sm-6">
                             <!-- Application buttons -->
                             <div class="card">
                                 <div class="card-body" id="refreshtombol">

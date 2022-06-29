@@ -83,7 +83,7 @@ $routes->get('/stockdata', ($session->get('role')) ? 'Barangmasuk::StockDataMasu
 $routes->get('/draft/(:any)', ($session->get('role')) ? 'Barangmasuk::MasukDraft/$1' : 'Login::Login');
 $routes->get('/detailpembelian/(:any)', ($session->get('role')) ? 'Barangmasuk::DetailPembelianSupp/$1' : 'Login::Login');
 $routes->get('/batalpembelian', ($session->get('role')) ? 'Barangmasuk::BatalPembelian' : 'Login::Login');
-$routes->get('/printbarcode/(:any)', ($session->get('role')) ? 'Barangmasuk::BarcodeGenerate/$1' : 'Login::Login');
+$routes->get('/printbarcode/(:any)/(:any)', ($session->get('role')) ? 'Barangmasuk::BarcodeGenerate/$1/$2' : 'Login::Login');
 $routes->delete('/returbarang/(:num)', ($session->get('role')) ? 'Barangmasuk::ReturBarang/$1' : 'Login::Login');
 $routes->delete('/cancelbarang/(:num)', ($session->get('role')) ? 'Barangmasuk::CancelBarang/$1' : 'Login::Login');
 $routes->get('/ajaxdetailpembelian', ($session->get('role')) ? 'Barangmasuk::pembelian_detail_read' : 'Login::Login');

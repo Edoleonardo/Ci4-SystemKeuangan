@@ -59,7 +59,7 @@
     <!-- Main content -->
     <section class="content">
         <div class="row">
-            <div class="col-6">
+            <div class="col-sm-6">
                 <div class="card">
                     <!-- /.card-header -->
                     <div class="card-body table-responsive p-0">
@@ -119,7 +119,7 @@
                 </div>
                 <!-- /.card -->
             </div>
-            <div class="col-6">
+            <div class="col-sm-6">
                 <!-- Application buttons -->
                 <div id="cardbayar">
                     <div class="card">

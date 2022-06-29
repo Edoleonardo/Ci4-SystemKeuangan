@@ -177,7 +177,7 @@
                 <div class="row">
                     <?php if (isset($datamasterretur)) : ?>
                         <?php if ($datamasterretur['status_dokumen'] != 'Selesai') : ?>
-                            <div class="col-6">
+                            <div class="col-sm-6">
                                 <label>Pilih Barang Retur</label>
                                 <div class="card">
                                     <!-- /.card-header -->
@@ -220,7 +220,7 @@
                                 </div>
                                 <!-- /.card -->
                             </div>
-                            <div class="col-6">
+                            <div class="col-sm-6">
                                 <label>Barang Retur</label>
                                 <div class="card">
                                     <!-- /.card-header -->
