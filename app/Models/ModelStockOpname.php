@@ -34,6 +34,62 @@ class ModelStockOpname extends Model
         $data = $db->query('SELECT count(barcode) as jumlah FROM tbl_stock_opname WHERE substr(barcode,1,1) =' . $kel . ' ;');
         return $data->getResult('array')[0];
     }
+    public function BeratSisaOpname($kel)
+    {
+        $db = db_connect();
+        $data = $db->query('SELECT sum(berat) as berat FROM tbl_stock_opname WHERE substr(barcode,1,1) =' . $kel . ' AND qty != 0 ;');
+        return $data->getResult('array')[0];
+    }
+    public function BeratBelumOpname($kel)
+    {
+        if ($kel == 1) {
+            $tbl = 'tbl_stock_1';
+            $where = 'berat';
+        } elseif ($kel == 2) {
+            $tbl = 'tbl_stock_2';
+            $where = 'berat';
+        } elseif ($kel == 3) {
+            $tbl = 'tbl_stock_3';
+            $where = 'berat';
+        } elseif ($kel == 4) {
+            $tbl = 'tbl_stock_4';
+            $where = 'berat';
+        } elseif ($kel == 5) {
+            $tbl = 'tbl_stock_5';
+            $where = 'carat';
+        } elseif ($kel == 6) {
+            $tbl = 'tbl_stock_6';
+            $where = 'qty';
+        }
+        $db = db_connect();
+        $data = $db->query('SELECT sum(' .  $where . ' ) as berat FROM ' . $tbl . ' WHERE qty != 0 AND barcode not in (select barcode from tbl_stock_opname) ;');
+        return $data->getResult('array')[0];
+    }
+    public function BeratTotalOpname($kel)
+    {
+        if ($kel == 1) {
+            $tbl = 'tbl_stock_1';
+            $where = 'berat';
+        } elseif ($kel == 2) {
+            $tbl = 'tbl_stock_2';
+            $where = 'berat';
+        } elseif ($kel == 3) {
+            $tbl = 'tbl_stock_3';
+            $where = 'berat';
+        } elseif ($kel == 4) {
+            $tbl = 'tbl_stock_4';
+            $where = 'berat';
+        } elseif ($kel == 5) {
+            $tbl = 'tbl_stock_5';
+            $where = 'carat';
+        } elseif ($kel == 6) {
+            $tbl = 'tbl_stock_6';
+            $where = 'qty';
+        }
+        $db = db_connect();
+        $data = $db->query('SELECT sum(' .  $where . ' ) as berat FROM ' . $tbl . ' WHERE qty != 0 ;');
+        return $data->getResult('array')[0];
+    }
     public function getBarcodeData($id)
     {
         return $this->where(['barcode' => $id])->first();

@@ -96,9 +96,12 @@ class StockOpname extends BaseController
             }
             $msg = [
                 'tampildata' => view('stockopname/tabelstockopname', $data),
-                'sisa_opname' => $this->modelstockopname->CountDataOpname($this->request->getVar('kel'))['jumlah'],
+                'sudah_opname' => $this->modelstockopname->CountDataOpname($this->request->getVar('kel'))['jumlah'],
+                'beratsudahhopname' => $this->modelstockopname->BeratSisaOpname($this->request->getVar('kel'))['berat'],
                 'jumlah_barang' => $jumlah_barang,
+                'berattotalopname' => $this->modelstockopname->BeratTotalOpname($this->request->getVar('kel'))['berat'],
                 'belum_opname' => $belum_opname,
+                'beratbelumopname' => $this->modelstockopname->BeratBelumOpname($this->request->getVar('kel'))['berat'],
             ];
 
             echo json_encode($msg);

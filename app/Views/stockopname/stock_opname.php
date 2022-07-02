@@ -105,14 +105,17 @@
                                 <tr>
                                     <td>Total Barang</td>
                                     <td id="totalbarang"></td>
+                                    <td id="berattotal"></td>
                                 </tr>
                                 <tr>
                                     <td>Belum Opname</td>
                                     <td id="sisaopname"></td>
+                                    <td id="beratsisahopname"></td>
                                 </tr>
                                 <tr>
                                     <td>Sudah Opname</td>
                                     <td id="sudahopname"></td>
+                                    <td id="beratsudahopname"></td>
                                 </tr>
                             </tbody>
                         </table>
@@ -492,10 +495,22 @@
             },
             url: "<?php echo base_url('tampilopname'); ?>",
             success: function(result) {
+                if ($('#pilihan').val() == 5) {
+                    var type = ' Carat';
+                } else if ($('#pilihan').val() == 6) {
+                    var type = ' Qty'
+                } else {
+                    var type = ' Gr'
+                }
                 $('#dataopname').html(result.tampildata)
                 $('#totalbarang').html(result.jumlah_barang)
+                $('#berattotal').html(Math.round(result.berattotalopname) + type)
+
                 $('#sisaopname').html(result.belum_opname)
-                $('#sudahopname').html(result.sisa_opname)
+                $('#beratsisahopname').html(Math.round(result.beratbelumopname) + type)
+
+                $('#beratsudahopname').html(Math.round(result.beratsudahhopname) + type)
+                $('#sudahopname').html(result.sudah_opname)
             },
             error: function(xhr, ajaxOptions, thrownError) {
                 alert(xhr.status + "\n" + xhr.responseText + "\n" + thrownError);
