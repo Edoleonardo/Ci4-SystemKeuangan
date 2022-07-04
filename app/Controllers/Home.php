@@ -10,6 +10,14 @@ use App\Models\ModelKartuStock5;
 use App\Models\ModelDetailKartuStock5;
 use App\Models\ModelKartuStock6;
 use App\Models\ModelDetailKartuStock6;
+use App\Models\ModelPenjualan;
+use App\Models\ModelStock2;
+use App\Models\ModelStock3;
+use App\Models\ModelStock4;
+use App\Models\ModelStock5;
+use App\Models\ModelStock6;
+use App\Models\ModelJenis;
+use App\Models\ModelKadar;
 
 use CodeIgniter\Validation\Rules;
 use app\Config\Cache;
@@ -17,14 +25,19 @@ use Config\Cache as ConfigCache;
 
 class Home extends BaseController
 {
-    protected $barangmodel;
-    protected $barcodeG;
-
     public function __construct()
     {
 
+        $this->datastock1 = new ModelStock1();
+        $this->datastock2 = new ModelStock2();
+        $this->datastock3 = new ModelStock3();
+        $this->datastock4 = new ModelStock4();
+        $this->datastock5 = new ModelStock5();
+        $this->datastock6 = new ModelStock6();
+        $this->modeljenis = new ModelJenis();
+        $this->modelkadar = new ModelKadar();
+        $this->penjualan =  new ModelPenjualan();
         $this->barcodeG =  new BarcodeGenerator();
-        $this->barangmodel = new ModelStock1();
         $this->modelkartustock = new ModelKartuStock();
         $this->modeldetailkartustock = new ModelDetailKartuStock();
         $this->modelkartustock5 = new ModelKartuStock5();
@@ -36,12 +49,25 @@ class Home extends BaseController
     }
     public function index()
     {
+        $data = [
+            'totalbarang' => $this->datastock1->CountDataStock()['barcode'] +  $this->datastock2->CountDataStock()['barcode'] +  $this->datastock3->CountDataStock()['barcode'] + $this->datastock4->CountDataStock()['barcode'] + $this->datastock5->CountDataStock()['barcode'] + $this->datastock5->CountDataStock()['barcode'] + $this->datastock6->CountDataStock()['barcode'],
+            'totalpenjualan' => $this->penjualan->CountDataStock(),
 
-        return view('home/index');
+        ];
+        return view('home/index', $data);
+    }
+
+    public function PrintStatistik()
+    {
+        $data = [
+            'jenis' => $this->modeljenis->getJenis(),
+            'kadar' => $this->modelkadar->getKadar()
+        ];
+        return view('home/printstatistik', $data);
     }
     public function DetailBarangKode($id)
     {
-        $getid = $this->barangmodel->getBarangkode($id);
+        $getid = $this->datastock1->getBarangkode($id);
         return redirect()->to('/detail/' . $getid['id_stock_1']);
     }
 
@@ -139,7 +165,7 @@ class Home extends BaseController
 
     public function print($id)
     {
-        $data = $this->barangmodel->getBarang($id);
+        $data = $this->datastock1->getBarang($id);
         $barcode = $this->barcodeG;
         $barcode->setText($data['barcode']);
         $barcode->setType(BarcodeGenerator::Code128);

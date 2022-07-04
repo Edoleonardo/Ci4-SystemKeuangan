@@ -15,9 +15,10 @@ class ModelKadar extends Model
     public function getKadar($id = false)
     {
         if ($id == false) {
-
-            $data = $this->findAll();
-            return $data;
+            $this->findAll();
+            $this->orderBy('nilai_kadar', 'ASC');
+            $data = $this->get();
+            return $data->getResult('array');
         }
         return $this->where(['id_kadar' => $id])->first();
     }

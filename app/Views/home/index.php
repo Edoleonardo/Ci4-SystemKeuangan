@@ -23,6 +23,68 @@
   <div class="content">
     <div class="container-fluid">
       <div class="row">
+        <div class="col-lg-3 col-6">
+          <!-- small box -->
+          <div class="small-box bg-info">
+            <div class="inner">
+              <h3><?= $totalbarang ?></h3>
+
+              <p>Total Barang</p>
+            </div>
+            <div class="icon">
+              <i class="fas fa-archive"></i>
+            </div>
+            <a href="/printstatistik" class="small-box-footer">Print Statistik <i class="fas fa-arrow-circle-right"></i></a>
+          </div>
+        </div>
+        <!-- ./col -->
+        <div class="col-lg-3 col-6">
+          <!-- small box -->
+          <div class="small-box bg-success">
+            <div class="inner">
+              <h3><?= $totalpenjualan['no_transaksi_jual'] ?></h3>
+
+              <p>Total Penjualan</p>
+            </div>
+            <div class="icon">
+              <i class="ion ion-stats-bars"></i>
+            </div>
+            <a href="/barangkeluar" class="small-box-footer">Data Penjualan <i class="fas fa-arrow-circle-right"></i></a>
+          </div>
+        </div>
+        <!-- ./col -->
+        <div class="col-lg-3 col-6">
+          <!-- small box -->
+          <div class="small-box bg-warning">
+            <div class="inner">
+              <h3>44</h3>
+
+              <p>User Registrations</p>
+            </div>
+            <div class="icon">
+              <i class="ion ion-person-add"></i>
+            </div>
+            <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+          </div>
+        </div>
+        <!-- ./col -->
+        <div class="col-lg-3 col-6">
+          <!-- small box -->
+          <div class="small-box bg-danger">
+            <div class="inner">
+              <h3>65</h3>
+
+              <p>Unique Visitors</p>
+            </div>
+            <div class="icon">
+              <i class="ion ion-pie-graph"></i>
+            </div>
+            <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+          </div>
+        </div>
+        <!-- ./col -->
+      </div>
+      <div class="row">
         <div class="col-lg-6">
           <div class="card">
             <div class="card-header border-0">
@@ -67,7 +129,7 @@
             <div class="card-header border-0 ">
               <h3 style="text-align: center; font-size: 20px; ">Harga Emas</h3>
             </div>
-            <div class="card-body table-responsive">
+            <div class="table-responsive">
               <div id="div_widget" align="center"></div>
             </div>
           </div>

@@ -65,4 +65,10 @@ class ModelPenjualan extends Model
         $data = $db->query('select * from tbl_penjualan where ' . $kel1 . ' and ' . $stat1 . ' and ' . $notrans1 . ' order by created_at DESC ' . $lim1 . ' ');
         return $data->getResult('array');
     }
+    public function CountDataStock()
+    {
+        $this->selectCount('no_transaksi_jual');
+        $query = $this->get();
+        return $query->getResult('array')[0];
+    }
 }
