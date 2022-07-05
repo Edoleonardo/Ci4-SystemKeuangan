@@ -132,6 +132,20 @@
             data: {
                 no_id: no_id
             },
+            beforeSend: function() {
+                Swal.fire({
+
+                    html: 'Please wait...',
+                    allowEscapeKey: false,
+                    allowOutsideClick: false,
+                    didOpen: () => {
+                        Swal.showLoading()
+                    }
+                });
+            },
+            complete: function() {
+                swal.close()
+            },
             success: function(result) {
                 if (result.error) {
                     console.log(result.error);

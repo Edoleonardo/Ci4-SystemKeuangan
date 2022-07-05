@@ -10,7 +10,7 @@ class ModelDetailPenjualan extends Model
     protected $table = 'tbl_detail_penjualan';
     protected $primaryKey = 'id_detail_penjualan';
     protected $useTimestamps = true;
-    protected $allowedFields = ['id_date_penjualan', 'id_karyawan', 'status', 'nama_img', 'kode', 'jenis', 'qty', 'saldo', 'saldo_carat', 'model', 'keterangan', 'berat_murni', 'berat', 'carat', 'harga_beli', 'ongkos', 'kadar', 'nilai_tukar', 'merek', 'total_harga'];
+    protected $allowedFields = ['id_date_penjualan', 'id_karyawan', 'status', 'nama_img', 'kode', 'jenis', 'qty', 'saldo', 'saldo_carat', 'model', 'keterangan', 'berat_murni', 'berat', 'carat', 'harga_beli', 'ongkos', 'kadar', 'nilai_tukar', 'merek', 'total_harga', 'created_at', 'updated_at'];
 
     public function getDetailAllJual($id)
     {

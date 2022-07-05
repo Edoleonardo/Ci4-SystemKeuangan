@@ -104,10 +104,9 @@
                         $('#username').removeClass('is-invalid')
                         $('.usernamemsg').html('')
                         if (hasil == 'gagal') {
-                            Swal.fire({
-                                icon: 'warning',
-                                title: 'Username / Password Salah',
-                            })
+                            $('#password').addClass('is-invalid')
+                            $('#username').addClass('is-invalid')
+                            $('.passwordmsg').html('Username / Password Salah')
                         } else {
                             window.location.href = '/'
                         }

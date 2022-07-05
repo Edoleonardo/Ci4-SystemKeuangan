@@ -36,9 +36,12 @@
             </div>
             <a href="#" class="small-box-footer" data-toggle="dropdown" aria-expanded="true">Print Statistik <i class=" fas fa-arrow-circle-right"></i></a>
             <div class="dropdown-menu" role="menu" x-placement="top-start">
-              <a class="dropdown-item" href="/A4" target="_blank">A4</a>
-              <a class="dropdown-item" href="/A3" target="_blank">A3</a>
-              <a class="dropdown-item" href="/A3plus" target="_blank">A3+</a>
+              <a class="dropdown-item" href="#" onclick="ModalBarang(1)">Perhiasan Mas</a>
+              <a class="dropdown-item" href="#" onclick="ModalBarang(2)">Perhiasan Berlian</a>
+              <a class="dropdown-item" href="#" onclick="ModalBarang(3)">Emas LM</a>
+              <a class="dropdown-item" href="#" onclick="ModalBarang(4)">Bahan Murni</a>
+              <a class="dropdown-item" href="#" onclick="ModalBarang(5)">Perhiasan Berlian</a>
+              <a class="dropdown-item" href="#" onclick="ModalBarang(6)">Barang Dagang</a>
             </div>
           </div>
         </div>
@@ -57,9 +60,7 @@
             <a href="/barangkeluar" class="small-box-footer">Data Penjualan <i class="fas fa-arrow-circle-right"></i></a>
           </div>
         </div>
-        <!-- ./col -->
-        <div class="col-lg-3 col-6">
-          <!-- small box -->
+        <!-- <div class="col-lg-3 col-6">
           <div class="small-box bg-warning">
             <div class="inner">
               <h3>44</h3>
@@ -72,9 +73,7 @@
             <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
           </div>
         </div>
-        <!-- ./col -->
         <div class="col-lg-3 col-6">
-          <!-- small box -->
           <div class="small-box bg-danger">
             <div class="inner">
               <h3>65</h3>
@@ -86,8 +85,7 @@
             </div>
             <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
           </div>
-        </div>
-        <!-- ./col -->
+        </div> -->
       </div>
       <div class="row">
         <div class="col-lg-6">
@@ -194,6 +192,29 @@
 <footer class="main-footer">
 
 </footer>
+<div class="modal fade" id="modal-data">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Data Master Stock</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div id="openmodal">
+
+        </div>
+      </div>
+      <div class="modal-footer justify-content-between">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Tutup</button>
+        <button type="button" class="btn btn-primary btntambah" data-dismiss="modal">Batal</button>
+      </div>
+    </div>
+  </div>
+  <!-- /.modal-content -->
+</div>
+
 <!-- Control Sidebar -->
 <aside class="control-sidebar control-sidebar-dark">
   <!-- Control sidebar content goes here -->
@@ -215,5 +236,36 @@
   // v_width = 400;
   // v_height = 300;
   // he_org_show_chart(v_widget_type, v_period, v_width, v_height, 'div_chart_antam');
+  function ModalBarang(kel) {
+    $.ajax({
+      type: "GET",
+      dataType: "json",
+      url: "<?php echo base_url('tampilmodalhome'); ?>",
+      data: {
+        kel: kel
+      },
+      beforeSend: function() {
+        Swal.fire({
+
+          html: 'Please wait...',
+          allowEscapeKey: false,
+          allowOutsideClick: false,
+          didOpen: () => {
+            Swal.showLoading()
+          }
+        });
+      },
+      complete: function() {
+        swal.close()
+      },
+      success: function(result) {
+        $('#openmodal').html(result.modal)
+        $('#modal-data').modal('toggle')
+      },
+      error: function(xhr, ajaxOptions, thrownError) {
+        alert(xhr.status + "\n" + xhr.responseText + "\n" + thrownError);
+      }
+    })
+  }
 </script>
 <?= $this->endSection(); ?>

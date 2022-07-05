@@ -22,6 +22,13 @@ class ModelStock5 extends Model
         return $this->where(['id_stock_5' => $id])->first();
     }
 
+    public function getBarangQty()
+    {
+        $db = db_connect();
+        $data = $db->query('select * from tbl_stock_5 where qty != 0');
+        return $data->getResult('array');
+    }
+
     public function getBarangBarcode($id)
     {
         return $this->where(['barcode' => $id])->first();

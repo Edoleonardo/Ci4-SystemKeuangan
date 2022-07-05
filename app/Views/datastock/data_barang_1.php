@@ -116,6 +116,20 @@
         searchkode: $('#searchkode').val(),
         kel: 1
       },
+      beforeSend: function() {
+        Swal.fire({
+
+          html: 'Please wait...',
+          allowEscapeKey: false,
+          allowOutsideClick: false,
+          didOpen: () => {
+            Swal.showLoading()
+          }
+        });
+      },
+      complete: function() {
+        swal.close()
+      },
       success: function(result) {
         $('#datatable').html(result.databarang)
 

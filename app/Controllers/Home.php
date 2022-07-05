@@ -163,6 +163,63 @@ class Home extends BaseController
         }
     }
 
+    public function TampilModalHome()
+    {
+        if ($this->request->isAJAX()) {
+            if ($this->request->getVar('kel') == 1) {
+                $datadetail = [
+                    'barang' => $this->datastock1->getBarangQty(),
+                ];
+                $data = [
+                    'modal' => view('home/modal_1', $datadetail)
+                ];
+            }
+            if ($this->request->getVar('kel') == 2) {
+                $datadetail = [
+                    'barang' => $this->datastock2->getBarangQty(),
+                ];
+                $data = [
+                    'modal' => view('home/modal_2', $datadetail)
+                ];
+            }
+            if ($this->request->getVar('kel') == 3) {
+                $datadetail = [
+                    'barang' => $this->datastock3->getBarangQty(),
+                ];
+                $data = [
+                    'modal' => view('home/modal_3', $datadetail)
+                ];
+            }
+            if ($this->request->getVar('kel') == 4) {
+                $datadetail = [
+                    'barang' => $this->datastock4->getBarangQty(),
+                ];
+                $data = [
+                    'modal' => view('home/modal_4', $datadetail)
+                ];
+            }
+            if ($this->request->getVar('kel') == 5) {
+                $datadetail = [
+                    'barang' => $this->datastock5->getBarangQty(),
+                ];
+                $data = [
+                    'modal' => view('home/modal_5', $datadetail)
+                ];
+            }
+            if ($this->request->getVar('kel') == 6) {
+                $datadetail = [
+                    'barang' => $this->datastock6->getBarangQty(),
+                ];
+                $data = [
+                    'modal' => view('home/modal_6', $datadetail)
+                ];
+            }
+
+            echo json_encode($data);
+        }
+    }
+
+
     public function print($id)
     {
         $data = $this->datastock1->getBarang($id);

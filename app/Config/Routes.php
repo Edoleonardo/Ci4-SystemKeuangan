@@ -51,6 +51,7 @@ $routes->get('/modaldetailkartustock', ($session->get('role')) ? 'Home::DetailKa
 $routes->get('/tampildatakartu', ($session->get('role')) ? 'Home::TampilDataKartu' : 'Login::Login');
 $routes->get('/detailbarang/(:any)', ($session->get('role')) ? 'Home::DetailBarangKode/$1' : 'Login::Login');
 $routes->get('/printstatistik', ($session->get('role')) ? 'Home::PrintStatistik' : 'Login::Login');
+$routes->get('/tampilmodalhome', ($session->get('role')) ? 'Home::TampilModalHome' : 'Login::Login');
 
 //----------------------stockopname--------------------------
 $routes->get('/stockopname', ($session->get('role')) ? 'StockOpname::HomeOpname' : 'Login::Login');

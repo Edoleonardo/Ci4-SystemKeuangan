@@ -10,7 +10,7 @@ class ModelPenjualan extends Model
     protected $table = 'tbl_penjualan';
     protected $primaryKey = 'id_penjualan';
     protected $useTimestamps = true;
-    protected $allowedFields = ['id_date_penjualan', 'no_transaksi_jual', 'id_karyawan', 'kelompok', 'nohp_cust', 'jumlah', 'bank_transfer', 'bank_debitcc', 'pembulatan', 'total_harga', 'pembayaran', 'pembayaran_retur', 'charge', 'tunai', 'debitcc', 'transfer', 'status_dokumen', 'created_at'];
+    protected $allowedFields = ['id_date_penjualan', 'no_transaksi_jual', 'id_karyawan', 'kelompok', 'nohp_cust', 'jumlah', 'bank_transfer', 'bank_debitcc', 'pembulatan', 'total_harga', 'pembayaran', 'pembayaran_retur', 'charge', 'tunai', 'debitcc', 'transfer', 'status_dokumen', 'created_at', 'updated_at'];
 
     public function getDataPenjualan($id = false)
     {

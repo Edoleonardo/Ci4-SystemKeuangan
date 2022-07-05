@@ -465,7 +465,7 @@
                     url: "<?php echo base_url('selesaiopname'); ?>",
                     beforeSend: function() {
                         Swal.fire({
-                            title: 'Proses Opname',
+
                             html: 'Please wait...',
                             allowEscapeKey: false,
                             allowOutsideClick: false,

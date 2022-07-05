@@ -113,14 +113,14 @@
                     </div>
                     <div class="card-body">
                         <div class="row">
-                            <div class="col-8">
+                            <div class="col-sm-8">
                                 <div class="form-group">
                                     <label><a href="#" data-toggle="modal" data-target="#modal-customer">NoHp Customer</a></label>
                                     <input autocomplete="off" type="number" onfocus="this.select()" min="0" onfocusout="checkcust()" id="nohpcust" name="nohpcust" class="form-control" placeholder="Masukan No Hp">
                                     <div id="validationServerUsernameFeedback" class="invalid-feedback nohpcustmsg"></div>
                                 </div>
                             </div>
-                            <div class="col-4">
+                            <div class="col-sm-4">
                                 <div class="form-group">
                                     <label>Nama Customer</label><input autocomplete="off" type="text" onfocus="this.select()" min="0" id="namacust" name="namacust" class="form-control" placeholder="Nama Custtomer" readonly>
                                 </div>
@@ -195,6 +195,13 @@
                                         </div>
                                     </div>
                                 <?php endforeach; ?>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                    <label>Tanggal Transaksi (Sementara)</label><input type="date" min="0" id="tanggaltrans" name="tanggaltrans" class="form-control" placeholder="tanggal">
+                                </div>
                             </div>
                         </div>
                     </div>

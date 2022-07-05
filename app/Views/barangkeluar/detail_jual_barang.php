@@ -57,7 +57,7 @@
                             </tr>
                             <tr>
                                 <td>
-                                    Tanggal Beli : <?= substr($datapenjualan['updated_at'], 0, 10) ?>
+                                    Tanggal Jual : <?= substr($datapenjualan['created_at'], 0, 10) ?>
                                 </td>
                             </tr>
                         </tbody>
