@@ -556,6 +556,7 @@ class StockOpname extends BaseController
                             'merek' => $row['merek'],
                             'kadar' => $row['kadar'],
                             'berat' => $row['berat'],
+                            'berat_murni' => $row['berat_murni'],
                             'nilai_tukar' =>  $row['nilai_tukar'],
                             'harga_beli' =>  $row['harga_beli'],
                             'total_harga' => $row['total_harga'],
