@@ -254,7 +254,7 @@
                     <a href="#" class="nav-link">
                         <i class="nav-icon far fa-plus-square"></i>
                         <p>
-                            Barang Masuk
+                            Pembelian
                             <i class=" right fas fa-angle-left"></i>
                         </p>
                     </a>
@@ -262,7 +262,7 @@
                         <li class="nav-item">
                             <a href="/barangmasuk" class="nav-link ">
                                 <i class="far fa-circle nav-icon"></i>
-                                <p>Pembelian Barang</p>
+                                <p>Pembelian Supplier</p>
                             </a>
                         </li>
                         <li class="nav-item">
@@ -277,7 +277,7 @@
                     <a href="#" class="nav-link">
                         <i class="nav-icon fas fa-share-square"></i>
                         <p>
-                            Barang Keluar
+                            Penjualan
                             <i class="right fas fa-angle-left"></i>
                         </p>
                     </a>

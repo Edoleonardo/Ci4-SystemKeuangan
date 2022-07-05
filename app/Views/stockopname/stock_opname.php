@@ -463,6 +463,20 @@
                     type: "GET",
                     dataType: "json",
                     url: "<?php echo base_url('selesaiopname'); ?>",
+                    beforeSend: function() {
+                        Swal.fire({
+                            title: 'Proses Opname',
+                            html: 'Please wait...',
+                            allowEscapeKey: false,
+                            allowOutsideClick: false,
+                            didOpen: () => {
+                                Swal.showLoading()
+                            }
+                        });
+                    },
+                    complete: function() {
+                        swal.close()
+                    },
                     success: function(result) {
                         if (result.error) {
                             Swal.fire({

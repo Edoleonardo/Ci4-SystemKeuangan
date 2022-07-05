@@ -34,7 +34,12 @@
             <div class="icon">
               <i class="fas fa-archive"></i>
             </div>
-            <a href="/printstatistik" class="small-box-footer">Print Statistik <i class="fas fa-arrow-circle-right"></i></a>
+            <a href="#" class="small-box-footer" data-toggle="dropdown" aria-expanded="true">Print Statistik <i class=" fas fa-arrow-circle-right"></i></a>
+            <div class="dropdown-menu" role="menu" x-placement="top-start">
+              <a class="dropdown-item" href="/A4" target="_blank">A4</a>
+              <a class="dropdown-item" href="/A3" target="_blank">A3</a>
+              <a class="dropdown-item" href="/A3plus" target="_blank">A3+</a>
+            </div>
           </div>
         </div>
         <!-- ./col -->
