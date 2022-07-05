@@ -284,7 +284,7 @@ class StockOpname extends BaseController
                     ]);
                     $msg = 'sukses';
                 } else {
-                    $msg = ['error' => 'Data Tidak Ada'];
+                    $msg = ['error' => 'Data Sudah Di Opname'];
                 }
             } else {
                 $msg = ['error' => 'Data Tidak Ada'];
@@ -517,7 +517,7 @@ class StockOpname extends BaseController
                 } else {
                     $msg = [
                         'error' => [
-                            'error' => 'Data Tidak Ada'
+                            'error' => 'Data Tidak Ada / Sudah Di Opname'
                         ]
                     ];
                 }
