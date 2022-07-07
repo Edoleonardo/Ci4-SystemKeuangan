@@ -52,16 +52,16 @@
 
 
 <script>
-    $(function() {
-        $("#example1").DataTable({
-            paging: false,
-            "responsive": true,
-            "lengthChange": false,
-            "autoWidth": false,
-            "aaSorting": [],
-            "buttons": ["excel"]
+    // $(function() {
+    //     $("#example1").DataTable({
+    //         paging: false,
+    //         "responsive": true,
+    //         "lengthChange": false,
+    //         "autoWidth": false,
+    //         "aaSorting": [],
+    //         "buttons": ["excel"]
 
-            //"buttons": ["copy", "csv", "excel", "pdf", "print", ]
-        }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
-    });
+    //         //"buttons": ["copy", "csv", "excel", "pdf", "print", ]
+    //     }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
+    // });
 </script>
