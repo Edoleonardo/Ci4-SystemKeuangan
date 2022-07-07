@@ -202,8 +202,8 @@
         </button>
       </div>
       <div class="modal-body">
-        <div id="openmodal">
-
+        <div class="card table-responsive">
+          <div id="openmodal"></div>
         </div>
       </div>
       <div class="modal-footer justify-content-between">

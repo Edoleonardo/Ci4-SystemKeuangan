@@ -169,6 +169,10 @@ class Home extends BaseController
             if ($this->request->getVar('kel') == 1) {
                 $datadetail = [
                     'barang' => $this->datastock1->getBarangQty(),
+                    'cjenis' => $this->datastock1->CountDataJenis(),
+                    'hkadar' => $this->datastock1->DataKadar(),
+                    'bjenis' => $this->datastock1->DataJenis(),
+                    'funct' =>  new ModelStock1(),
                 ];
                 $data = [
                     'modal' => view('home/modal_1', $datadetail)

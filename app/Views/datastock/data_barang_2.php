@@ -118,7 +118,6 @@
       },
       beforeSend: function() {
         Swal.fire({
-
           html: 'Please wait...',
           allowEscapeKey: false,
           allowOutsideClick: false,
