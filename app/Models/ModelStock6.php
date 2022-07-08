@@ -163,4 +163,40 @@ class ModelStock6 extends Model
         $query = $this->get();
         return $query->getResult('array')[0];
     }
+    public function SumDataHomeQty($kdr, $jns)
+    {
+        $db = db_connect();
+        $data = $db->query('SELECT sum(qty) as qty FROM `tbl_stock_7` WHERE qty != 0 AND kadar = ' . '"' . $kdr . '"' . ' AND jenis = ' . '"' . $jns . '"' . ';');
+        return $data->getResult('array');
+    }
+    public function SumDataHomeBrt($kdr, $jns)
+    {
+        $db = db_connect();
+        $data = $db->query('SELECT sum(berat) as berat FROM `tbl_stock_7` WHERE qty != 0 AND kadar = ' . '"' . $kdr . '"' . ' AND jenis = ' . '"' . $jns . '"' . ';');
+        return $data->getResult('array');
+    }
+    public function SumDataTotalQty($kdr)
+    {
+        $db = db_connect();
+        $data = $db->query('SELECT sum(qty) as qty FROM `tbl_stock_7` WHERE qty != 0 AND kadar = ' . '"' . $kdr . '"' . ';');
+        return $data->getResult('array');
+    }
+    public function SumDataTotalBrt($kdr)
+    {
+        $db = db_connect();
+        $data = $db->query('SELECT sum(berat) as berat FROM `tbl_stock_7` WHERE qty != 0 AND kadar = ' . '"' . $kdr . '"' . ';');
+        return $data->getResult('array');
+    }
+    public function SumDataGrandTotalQty()
+    {
+        $db = db_connect();
+        $data = $db->query('SELECT sum(qty) as qty FROM `tbl_stock_7` WHERE qty != 0;');
+        return $data->getResult('array');
+    }
+    public function SumDataGrandTotalBrt()
+    {
+        $db = db_connect();
+        $data = $db->query('SELECT sum(berat) as berat FROM `tbl_stock_7` WHERE qty != 0;');
+        return $data->getResult('array');
+    }
 }

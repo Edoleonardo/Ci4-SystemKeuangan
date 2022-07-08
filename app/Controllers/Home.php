@@ -181,6 +181,10 @@ class Home extends BaseController
             if ($this->request->getVar('kel') == 2) {
                 $datadetail = [
                     'barang' => $this->datastock2->getBarangQty(),
+                    'cjenis' => $this->datastock2->CountDataJenis(),
+                    'hkadar' => $this->datastock2->DataKadar(),
+                    'bjenis' => $this->datastock2->DataJenis(),
+                    'funct' =>  new ModelStock2(),
                 ];
                 $data = [
                     'modal' => view('home/modal_2', $datadetail)
@@ -189,6 +193,10 @@ class Home extends BaseController
             if ($this->request->getVar('kel') == 3) {
                 $datadetail = [
                     'barang' => $this->datastock3->getBarangQty(),
+                    'cjenis' => $this->datastock3->CountDataJenis(),
+                    'hkadar' => $this->datastock3->DataKadar(),
+                    'bjenis' => $this->datastock3->DataJenis(),
+                    'funct' =>  new ModelStock3(),
                 ];
                 $data = [
                     'modal' => view('home/modal_3', $datadetail)
@@ -197,6 +205,10 @@ class Home extends BaseController
             if ($this->request->getVar('kel') == 4) {
                 $datadetail = [
                     'barang' => $this->datastock4->getBarangQty(),
+                    'cjenis' => $this->datastock4->CountDataJenis(),
+                    'hkadar' => $this->datastock4->DataKadar(),
+                    'bjenis' => $this->datastock4->DataJenis(),
+                    'funct' =>  new ModelStock4(),
                 ];
                 $data = [
                     'modal' => view('home/modal_4', $datadetail)
