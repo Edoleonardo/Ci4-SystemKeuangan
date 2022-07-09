@@ -200,7 +200,7 @@
                         <div class="row">
                             <div class="col-sm-12">
                                 <div class="form-group">
-                                    <label>Tanggal Transaksi (Sementara)</label><input type="date" min="0" id="tanggaltrans" name="tanggaltrans" class="form-control" placeholder="tanggal">
+                                    <label>Tanggal Transaksi (Sementara)</label><input type="date" min="0" id="tanggaltrans" name="tanggaltrans" class="form-control" placeholder="tanggal" required>
                                 </div>
                             </div>
                         </div>
