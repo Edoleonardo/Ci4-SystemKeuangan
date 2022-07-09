@@ -369,4 +369,7 @@ function barcodegenerate2($kode)
 </style>
 <script>
   window.addEventListener("load", window.print());
+  window.addEventListener('afterprint', (event) => {
+    window.close()
+  });
 </script>
