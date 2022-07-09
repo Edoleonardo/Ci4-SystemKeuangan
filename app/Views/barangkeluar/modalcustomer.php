@@ -20,7 +20,7 @@
                             </thead>
                             <tbody>
                                 <?php foreach ($datacust as $row) : ?>
-                                    <tr onclick="pilihcustomer(<?= $row['nohp_cust'] ?>)">
+                                    <tr onclick="pilihcustomer('<?= $row['nohp_cust'] ?>')">
                                         <td><?= $row['nohp_cust'] ?></td>
                                         <td><?= $row['nama'] ?></td>
                                         <td><?= $row['point'] ?></td>

@@ -274,21 +274,20 @@
                     </ul>
                 </li>
                 <li class="nav-item">
-                    <a href="#" class="nav-link">
+                    <a href="/barangkeluar" class="nav-link">
                         <i class="nav-icon fas fa-share-square"></i>
                         <p>
                             Penjualan
-                            <i class="right fas fa-angle-left"></i>
                         </p>
                     </a>
-                    <ul class="nav nav-treeview">
+                    <!-- <ul class="nav nav-treeview">
                         <li class="nav-item">
                             <a href="/barangkeluar" class="nav-link ">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>Jual Barang</p>
                             </a>
                         </li>
-                    </ul>
+                    </ul> -->
                 </li>
                 <li class="nav-item">
                     <a href="#" class="nav-link">

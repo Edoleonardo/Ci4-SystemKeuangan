@@ -390,7 +390,6 @@
             },
             url: "<?php echo base_url('checkcust'); ?>",
             success: function(result) {
-                console.log('asd')
                 if (result == 'gagal') {
                     isicust = document.getElementById('nohpcust').value
                     document.getElementById("nohp").value = isicust
