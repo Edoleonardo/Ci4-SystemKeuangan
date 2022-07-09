@@ -157,7 +157,6 @@
                 swal.close()
             },
             success: function(result) {
-                console.log(result)
                 $('#tampildata').html(result.tampildata)
 
             },
