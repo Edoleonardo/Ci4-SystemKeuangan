@@ -75,7 +75,7 @@ function barcodegenerate2($kode)
         $i = 1;
         foreach ($datadetailjual as $row) : ?>
           <tr>
-            <td><img id="gmbr" style="width: 100px;" src="/img/<?= $row['nama_img'] ?>" alt=""></td>
+            <td><img id="gmbr" style="width: 100px; max-height: 100px;" src="/img/<?= $row['nama_img'] ?>" alt=""></td>
             <td><?= barcodegenerate2($row['kode']) ?></td>
             <td style="text-align: center;"><?= $row['qty'] ?></td>
             <td style="vertical-align: middle;"><?= $row['jenis'] ?>, <?= $row['model'] ?>, <?= $row['keterangan'] ?>, <?= $row['kadar'] ?></td>
@@ -177,7 +177,7 @@ function barcodegenerate2($kode)
         $i = 1;
         foreach ($datadetailjual as $row) : ?>
           <tr>
-            <td><img id="gmbr" style="width: 100px;" src="/img/<?= $row['nama_img'] ?>" alt=""></td>
+            <td><img id="gmbr" style="width: 100px; max-height: 100px;" src="/img/<?= $row['nama_img'] ?>" alt=""></td>
             <td><?= barcodegenerate2($row['kode']) ?></td>
             <td style="text-align: center;"><?= $row['qty'] ?></td>
             <td style="vertical-align: middle;"><?= $row['jenis'] ?>, <?= $row['keterangan'] ?>, <?= $row['model'] ?></td>
@@ -260,7 +260,7 @@ function barcodegenerate2($kode)
         $i = 1;
         foreach ($datadetailjual as $row) : ?>
           <tr>
-            <td><img id="gmbr" style="width: 100px;" src="/img/<?= $row['nama_img'] ?>" alt=""></td>
+            <td><img id="gmbr" style="width: 100px; max-height: 100px;" src="/img/<?= $row['nama_img'] ?>" alt=""></td>
             <td><?= barcodegenerate2($row['kode']) ?></td>
             <td style="vertical-align: middle;"><?= $row['jenis'] ?>, <?= $row['keterangan'] ?>, <?= $row['model'] ?></td>
             <td style="text-align: center;"><?= $row['qty'] ?></td>
