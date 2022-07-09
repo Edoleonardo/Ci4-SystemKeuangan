@@ -802,24 +802,24 @@ class Barangkeluar extends BaseController
                             'nama_bank' => ($this->request->getVar('namabank')) ? $this->request->getVar('namabank') : null,
                         ]);
                     }
-                    if ($this->request->getVar('pembulatan')) {
-                        if ($this->request->getVar('tunai') > $this->request->getVar('transfer')) {
-                            $byr = 'Tunai';
-                        } else {
-                            $byr = 'Transfer';
-                        }
-                        $this->modeldetailtransaksi->save([
-                            //'tanggal_transaksi' => date("Y-m-d H:i:s"),
-                            'tanggal_transaksi' => $this->request->getVar('tanggaltrans'),
-                            'id_karyawan' => $session->get('id_user'),
-                            'pembayaran' => $byr,
-                            'keterangan' => $datapenjualan['no_transaksi_jual'],
-                            'id_akun_biaya' => 26,
-                            'masuk' => 0,
-                            'keluar' =>  $this->request->getVar('pembulatan'),
-                            'nama_bank' => ($this->request->getVar('namabank')) ? $this->request->getVar('namabank') : null,
-                        ]);
-                    }
+                    // if ($this->request->getVar('pembulatan')) {
+                    //     if ($this->request->getVar('tunai') > $this->request->getVar('transfer')) {
+                    //         $byr = 'Tunai';
+                    //     } else {
+                    //         $byr = 'Transfer';
+                    //     }
+                    //     $this->modeldetailtransaksi->save([
+                    //         //'tanggal_transaksi' => date("Y-m-d H:i:s"),
+                    //         'tanggal_transaksi' => $this->request->getVar('tanggaltrans'),
+                    //         'id_karyawan' => $session->get('id_user'),
+                    //         'pembayaran' => $byr,
+                    //         'keterangan' => $datapenjualan['no_transaksi_jual'],
+                    //         'id_akun_biaya' => 26,
+                    //         'masuk' => 0,
+                    //         'keluar' =>  $this->request->getVar('pembulatan'),
+                    //         'nama_bank' => ($this->request->getVar('namabank')) ? $this->request->getVar('namabank') : null,
+                    //     ]);
+                    // }
                     if ($this->request->getVar('transfer')) {
                         $this->modeldetailtransaksi->save([
                             //'tanggal_transaksi' => date("Y-m-d H:i:s"), //sementara

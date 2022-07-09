@@ -439,6 +439,7 @@
     }
 
     function pilihcustomer(nohp) {
+        console.log(nohp)
         $('#nohpcust').val(nohp)
         $('#modal-customer').modal('hide')
         checkcust()

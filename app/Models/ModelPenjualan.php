@@ -58,7 +58,7 @@ class ModelPenjualan extends Model
             $stat1  = 'pembayaran = ' . '"' . $stat . '"';
         }
         if ($notrans) {
-            $notrans1  = 'no_transaksi_jual = ' . '"' . $notrans . '"';
+            $notrans1  = 'no_transaksi_jual like ' . '"%' . $notrans . '%"';
         } else {
             $notrans1 = '1 = 1';
         }
