@@ -116,7 +116,7 @@
                             <div class="col-sm-8">
                                 <div class="form-group">
                                     <label><a href="#" data-toggle="modal" data-target="#modal-customer">NoHp Customer</a></label>
-                                    <input autocomplete="off" type="number" onfocus="this.select()" min="0" onfocusout="checkcust()" id="nohpcust" name="nohpcust" class="form-control" placeholder="Masukan No Hp">
+                                    <input autocomplete="off" type="text" onfocus="this.select()" min="0" onfocusout="checkcust()" id="nohpcust" name="nohpcust" class="form-control" placeholder="Masukan No Hp">
                                     <div id="validationServerUsernameFeedback" class="invalid-feedback nohpcustmsg"></div>
                                 </div>
                             </div>
@@ -236,7 +236,7 @@
                         </div>
                         <div class="form-group">
                             <label>Nomor Hp</label>
-                            <input autocomplete="off" type="number" id="nohp" name="nohp" class="form-control nohp" placeholder="Masukan Nomor No Hp">
+                            <input autocomplete="off" type="text" id="nohp" name="nohp" class="form-control nohp" placeholder="Masukan Nomor No Hp">
                             <div id="validationServerUsernameFeedback" class="invalid-feedback nohpmsg">
                             </div>
                         </div>
