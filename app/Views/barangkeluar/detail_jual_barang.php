@@ -75,7 +75,7 @@
                                 <i class="fas fa-money-bill"></i> Bayar Retur
                             </a>
                         <?php else : ?>
-                            <a class="btn btn-app" target="_blank" onclick="pindahtempat()" href="/printinvoice/<?= $datapenjualan['id_date_penjualan'] ?>" target="_blank">
+                            <a class="btn btn-app" target="_blank" onclick="pindahtempat('/printinvoice/<?= $datapenjualan['id_date_penjualan'] ?>')" target="_blank">
                                 <i class="fas fa-print"></i> Print Invoce
                             </a>
                             <a class="btn btn-app bg-primary" type="button">
@@ -418,7 +418,8 @@
         // document.getElementById('pembayaran').value = 'Bayar Nanti'
     }
 
-    function pindahtempat() {
+    function pindahtempat(url) {
+        window.open(url);
         window.location.href = '/barangkeluar'
     }
     $(document).ready(function() {
