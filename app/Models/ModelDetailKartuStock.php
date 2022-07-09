@@ -10,7 +10,7 @@ class ModelDetailKartuStock extends Model
     protected $table = 'tbl_detail_kartustock';
     protected $primaryKey = 'id_detail_kartustock';
     protected $useTimestamps = true;
-    protected $allowedFields = ['barcode', 'id_karyawan', 'status', 'no_faktur', 'nama_customer', 'saldo', 'masuk', 'keluar', 'jenis', 'model', 'keterangan', 'merek', 'kadar', 'berat', 'nilai_tukar', 'harga_beli', 'total_harga', 'gambar'];
+    protected $allowedFields = ['barcode', 'id_karyawan', 'status', 'no_faktur', 'nama_customer', 'saldo', 'masuk', 'keluar', 'jenis', 'model', 'keterangan', 'merek', 'kadar', 'berat', 'nilai_tukar', 'harga_beli', 'total_harga', 'gambar', 'created_at', 'updated_at'];
 
     public function getDetailKartuStock($id = false)
     {

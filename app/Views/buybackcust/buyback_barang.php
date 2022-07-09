@@ -357,6 +357,10 @@
                                 </div>
                             <?php endforeach; ?>
                         </div>
+                        <div class="form-group">
+                            <label>Tanggal Buyback(Sementara)</label><input type="date" min="0" id="datebuyback" name="datebuyback" class="form-control" required>
+                            <div id="validationServerUsernameFeedback" class="invalid-feedback datebuybackmsg"></div>
+                        </div>
                     </div>
                     <div class="modal-footer justify-content-between">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>

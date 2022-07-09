@@ -1633,8 +1633,13 @@ class Barangkeluar extends BaseController
     {
         if ($this->request->isAJAX()) {
             $data = $this->penjualan->DataFilterPenjualan($this->request->getVar('tmpildata'), $this->request->getVar('kelompok'), $this->request->getVar('status'),  $this->request->getVar('notrans'));
-            $view = ['datapenjualan' => $data];
-            $msg = ['tampildata' => view('barangkeluar/tampilpenjualan', $view)];
+            $view = [
+                'datapenjualan' => $data,
+                'datacust' => new ModelCustomer()
+            ];
+            $msg = [
+                'tampildata' => view('barangkeluar/tampilpenjualan', $view),
+            ];
 
             echo json_encode($msg);
         }

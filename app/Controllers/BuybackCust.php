@@ -390,7 +390,8 @@ class BuybackCust extends BaseController
                                 'tunai' => $this->request->getVar('tunai'),
                                 'transfer' => $this->request->getVar('transfer'),
                                 'nama_bank' => $namabank,
-                                'tgl_selesai' => date("Y-m-d H:i:s"),
+                                //'tgl_selesai' => date("Y-m-d H:i:s"),
+                                'tgl_selesai' => $this->request->getVar('datebuyback'),
                                 'status_dokumen' => 'Selesai'
                             ]);
 
@@ -954,7 +955,8 @@ class BuybackCust extends BaseController
 
                             if ($this->request->getVar('tunai')) {
                                 $this->modeldetailtransaksi->save([
-                                    'tanggal_transaksi' => date("Y-m-d H:i:s"),
+                                    //'tanggal_transaksi' => date("Y-m-d H:i:s"),sementara
+                                    'tanggal_transaksi' => $this->request->getVar('datebuyback'),
                                     'id_karyawan' => $session->get('id_user'),
                                     'pembayaran' => 'Tunai',
                                     'keterangan' => $databuyback['no_transaksi_buyback'],
@@ -966,7 +968,8 @@ class BuybackCust extends BaseController
                             }
                             if ($this->request->getVar('transfer')) {
                                 $this->modeldetailtransaksi->save([
-                                    'tanggal_transaksi' => date("Y-m-d H:i:s"),
+                                    //'tanggal_transaksi' => date("Y-m-d H:i:s"),sementara
+                                    'tanggal_transaksi' => $this->request->getVar('datebuyback'),
                                     'id_karyawan' => $session->get('id_user'),
                                     'pembayaran' => 'Transfer',
                                     'keterangan' => $databuyback['no_transaksi_buyback'],

@@ -11,10 +11,11 @@
     </thead>
     <tbody>
         <?php foreach ($datapenjualan as $row) : ?>
+            <?php $dcust = $datacust->getDataCustomerone($row['nohp_cust']) ?>
             <tr>
                 <td><a href="#" type="button" onclick="OpenModalDetail('<?= $row['no_transaksi_jual'] ?>')"><?= $row['no_transaksi_jual'] ?></a></td>
                 <td><?= date("d-m-Y", strtotime($row['created_at'])); ?></td>
-                <td><?= $row['nohp_cust'] ?></td>
+                <td><?= ($dcust) ? $dcust['nohp_cust'] : ''  ?> (<?= ($dcust) ? $dcust['nama'] : 'No Data' ?>) </td>
                 <td><?= number_format($row['total_harga']) ?></td>
                 <td><?= $row['pembayaran'] ?></td>
                 <td>
