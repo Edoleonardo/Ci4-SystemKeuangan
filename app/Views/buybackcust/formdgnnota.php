@@ -493,7 +493,6 @@
 <?php endif; ?>
 <script>
     $('#tambahbuyback').submit(function(e) {
-        console.log('asd')
         e.preventDefault()
         let form = $('.tambahbuyback')[0];
         let data = new FormData(form)

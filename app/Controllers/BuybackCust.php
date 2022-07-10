@@ -365,9 +365,10 @@ class BuybackCust extends BaseController
                     $session = session();
                     $tunai = ($this->request->getVar('tunai')) ? $this->request->getVar('tunai') : 0;
                     $transfer = ($this->request->getVar('transfer')) ? $this->request->getVar('transfer') : 0;
+                    $pembulatan = ($this->request->getVar('pembulatan')) ? $this->request->getVar('pembulatan') : 0;
                     $totalvar = $tunai + $transfer;
                     $databuyback = $this->modelbuyback->getDataBuyback($this->request->getVar('iddate'));
-                    $hasilbayar = $databuyback['total_harga'] - $totalvar;
+                    $hasilbayar = ($databuyback['total_harga'] - $totalvar) - $pembulatan;
                     if ($saldobiaya['total_akhir_tunai'] >= $this->request->getVar('tunai')) {
                         $sukses = true;
                     }
@@ -646,7 +647,7 @@ class BuybackCust extends BaseController
                                 } else {
                                     if (substr($row['kode'], 0, 1) == 1 || substr($row['kode'], 0, 1) == 2) {
                                         $datakartu = $this->modelkartustock->getKartuStockkode($row['kode']);
-                                        $saldoakhir = $datakartu['saldo_akhir'] + $row['qty'];
+                                        $saldoakhir = (isset($datakartu['saldo_akhir'])) ? $datakartu['saldo_akhir'] : 0 + $row['qty'];
                                     } elseif (substr($row['kode'], 0, 1) == 3) {
                                         $datakartu = $this->modelkartustock->getKartuStockkode($row['kode']);
                                         $saldoakhir = $datakartu['saldo_akhir'] + $row['qty'];
@@ -1138,7 +1139,7 @@ class BuybackCust extends BaseController
                         }
                         $beratmurni = round($berat * ($this->request->getVar('nilai_tukar') / 100), 2);
                         if ($kode == 1) {
-                            $totalharga =  $beratmurni *  $harga;
+                            $totalharga =  $berat *  $harga;
                             $kadar = $this->request->getVar('kadar');
                             $merek = $this->request->getVar('merek');
                             $this->datastock->save([
@@ -1524,7 +1525,7 @@ class BuybackCust extends BaseController
                         if ($kode == 1) {
                             $statusproses = $this->request->getVar('status_proses');
                             $beratmurni = round($berat * ($nilaitukar / 100), 2);
-                            $totalharga =  $beratmurni * $harga;
+                            $totalharga =  $berat * $harga;
                             $carat = 0;
                         } elseif ($kode == 2) {
                             $statusproses = $this->request->getVar('status_proses');

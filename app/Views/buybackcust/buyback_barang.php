@@ -331,6 +331,11 @@
                             </div>
                         </div>
                         <div class="row">
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                    <label><a href="#" onclick="MasukField('pembulatan')">Pembulatan</a></label><input type="number" onchange="myDataBayar()" onfocus="this.select()" min="0" id="pembulatan" name="pembulatan" class="form-control" placeholder="Masukan pembulatan">
+                                </div>
+                            </div>
                             <div class="col-sm-6">
                                 <div class="form-group">
                                     <label><a href="#" onclick="MasukField('tunai')">Tunai</a></label><input type="number" onchange="myDataBayar()" onfocus="this.select()" min="0" id="tunai" name="tunai" class="form-control" placeholder="Masukan tunai">
@@ -432,16 +437,18 @@
             type: "GET",
             dataType: "json",
             data: {
-                nohp_cust: document.getElementById('inputcustomer').value
+                nohp_cust: document.getElementById('nohpcust').value
             },
             url: "<?php echo base_url('checkcust'); ?>",
             success: function(result) {
+                console.log('asd')
                 if (result == 'gagal') {
-                    isicust = document.getElementById('inputcustomer').value
+                    isicust = document.getElementById('nohpcust').value
                     document.getElementById("nohp").value = isicust
-                    $('#tambahcustomer').trigger('click');
+                    $('#modal-tambahcust').modal('show');
                 } else {
-                    return result;
+                    console.log(result)
+                    $('#namacust').val(result.nama);
                 }
             },
             error: function(xhr, ajaxOptions, thrownError) {
@@ -739,7 +746,7 @@
             var hargabeli = parseFloat(document.getElementById('harga_beli').value)
             var nilaitukar = parseFloat(document.getElementById('nilai_tukar').value)
             beratmurni = berat * nilaitukar / 100
-            harusbyr = (beratmurni * hargabeli);
+            harusbyr = (berat * hargabeli);
         } else if (kode == 2) {
             var hargabeli = parseFloat(document.getElementById('harga_beli').value)
             harusbyr = hargabeli
@@ -775,7 +782,8 @@
             success: function(result) {
                 const tunai = $('#tunai').val()
                 const transfer = $('#transfer').val()
-                var hasil = (parseFloat(result.total_harga)) - tunai - transfer
+                const pembulatan = $('#pembulatan').val()
+                var hasil = (parseFloat(result.total_harga)) - tunai - transfer - pembulatan
                 $('#hasil').val(hasil)
                 $('#totalbayar').html(' Rp ' + hasil.toString().replace(/\B(?=(\d{3})+(?!\d))/g, "."))
                 console.log(result)
@@ -854,9 +862,9 @@
                     $('.notransmsg').html('')
                     document.getElementById('notrans').setAttribute("onkeyup", "ScannoTrans()");
                     document.getElementById('notrans').value = ''
-                    //$('#nohpcust').val(result.datacust) sementara
+                    $('#nohpcust').val(result.datacust)
                     $('#datamodalbuyback').html(result.data)
-                    checkcust()
+                    //checkcust()
                 }
             },
             error: function(xhr, ajaxOptions, thrownError) {
@@ -888,9 +896,9 @@
                     $('.barcodemsg').html('')
                     document.getElementById('nobarcode').setAttribute("onkeyup", "Scanbarcode()");
                     document.getElementById('nobarcode').value = ''
-                    //$('#nohpcust').val(result.datacust) sementara
+                    $('#nohpcust').val(result.datacust)
                     $('#datamodalbuyback').html(result.data)
-                    checkcust()
+                    //checkcust()
                 }
             },
             error: function(xhr, ajaxOptions, thrownError) {
@@ -978,30 +986,7 @@
         checkcust()
     }
 
-    function checkcust() {
-        $.ajax({
-            type: "GET",
-            dataType: "json",
-            data: {
-                nohp_cust: document.getElementById('nohpcust').value
-            },
-            url: "<?php echo base_url('checkcust'); ?>",
-            success: function(result) {
-                console.log('asd')
-                if (result == 'gagal') {
-                    isicust = document.getElementById('nohpcust').value
-                    document.getElementById("nohp").value = isicust
-                    $('#modal-tambahcust').modal('show');
-                } else {
-                    console.log(result)
-                    $('#namacust').val(result.nama);
-                }
-            },
-            error: function(xhr, ajaxOptions, thrownError) {
-                alert(xhr.status + "\n" + xhr.responseText + "\n" + thrownError);
-            }
-        })
-    }
+
 
     function HarusBayar() {
         var kel = parseFloat(document.getElementById('kel').value)
@@ -1011,7 +996,7 @@
             var nilaitukar = parseFloat(document.getElementById('nilai_tukar1').value)
             var hargabeli = parseFloat(document.getElementById('harga_beli1').value)
             beratmurni = berat * nilaitukar / 100
-            harusbyr = hargabeli * beratmurni
+            harusbyr = hargabeli * berat
         } else if (kel == 2) {
             var hargabeli = parseFloat(document.getElementById('harga_beli1').value)
             harusbyr = hargabeli
