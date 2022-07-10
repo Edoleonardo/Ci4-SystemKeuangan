@@ -854,7 +854,7 @@
                     $('.notransmsg').html('')
                     document.getElementById('notrans').setAttribute("onkeyup", "ScannoTrans()");
                     document.getElementById('notrans').value = ''
-                    $('#nohpcust').val(result.datacust)
+                    //$('#nohpcust').val(result.datacust) sementara
                     $('#datamodalbuyback').html(result.data)
                     checkcust()
                 }
@@ -888,7 +888,7 @@
                     $('.barcodemsg').html('')
                     document.getElementById('nobarcode').setAttribute("onkeyup", "Scanbarcode()");
                     document.getElementById('nobarcode').value = ''
-                    $('#nohpcust').val(result.datacust)
+                    //$('#nohpcust').val(result.datacust) sementara
                     $('#datamodalbuyback').html(result.data)
                     checkcust()
                 }
