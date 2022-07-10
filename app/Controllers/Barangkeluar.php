@@ -68,14 +68,12 @@ class Barangkeluar extends BaseController
     public function PenjualanBarang()
     {
         $session = session();
-        $session->remove('date_id_penjualan');
-        //-------------------------------------------------------------
-        $dateidjual = date('ymdhis');
-        $session->set('date_id_penjualan', $dateidjual);
+        $notrans = $this->NoTransaksiGenerateJual();
+        $dateidjual = date('ymdhis') . substr($notrans, 6, 4);
         $this->penjualan->save([
             // 'created_at' => date("y-m-d"),
             'id_date_penjualan' => $dateidjual,
-            'no_transaksi_jual' => $this->NoTransaksiGenerateJual(),
+            'no_transaksi_jual' => $notrans,
             'id_customer' => '',
             'id_karyawan' => $session->get('id_user'),
             'kelompok' => 0,
@@ -514,8 +512,6 @@ class Barangkeluar extends BaseController
 
     public function DraftPenjualan($id)
     {
-        $session = session();
-        $session->set('date_id_penjualan', $id);
         $data = $this->penjualan->getDataPenjualan($id);
         if ($data['status_dokumen'] == 'Draft') {
             $datapenjualan = [
@@ -1559,29 +1555,67 @@ class Barangkeluar extends BaseController
             exit('Anda Hacker Sejati');
         }
     }
-    public function BatalPenjualan()
+    public function BatalPenjualan($id)
     {
         $session = session();
-        if ($session->get('date_id_penjualan')) {
-            $data = $this->modeldetailpenjualan->getDetailAllJual($session->get('date_id_penjualan'));
-
-            foreach ($data as $row) {
-
-                $databarang = $this->datastock->getBarangkode($row['kode']);
+        $data = $this->modeldetailpenjualan->getDetailAllJual($id);
+        foreach ($data as $row) {
+            if (substr($row['kode'], 0, 1) == 1) {
+                $databarang = $this->datastock1->getBarangkode($row['kode']);
                 $datakartu = $this->modelkartustock->getKartuStockkode($row['kode']);
-                $this->datastock->save([
+                $this->datastock1->save([
                     'id_stock_1' => $databarang['id_stock_1'],
                     'id_karyawan' => $session->get('id_user'),
                     'qty' => $datakartu['saldo_akhir']
                 ]);
-            }
-            $this->modeldetailpenjualan->query('DELETE FROM tbl_detail_penjualan WHERE id_date_penjualan =' . $session->get('date_id_penjualan') . ';');
-            $this->penjualan->query('DELETE FROM tbl_penjualan WHERE id_date_penjualan =' . $session->get('date_id_penjualan') . ';');
+            } elseif (substr($row['kode'], 0, 1) == 2) {
+                $databarang = $this->datastock2->getBarangkode($row['kode']);
+                $datakartu = $this->modelkartustock->getKartuStockkode($row['kode']);
+                $this->datastock2->save([
+                    'id_stock_2' => $databarang['id_stock_2'],
+                    'id_karyawan' => $session->get('id_user'),
+                    'qty' => $datakartu['saldo_akhir']
+                ]);
+            } elseif (substr($row['kode'], 0, 1) == 3) {
+                $databarang = $this->datastock3->getBarangkode($row['kode']);
+                $datakartu = $this->modelkartustock->getKartuStockkode($row['kode']);
+                $this->datastock3->save([
+                    'id_stock_3' => $databarang['id_stock_3'],
+                    'id_karyawan' => $session->get('id_user'),
+                    'qty' => $datakartu['saldo_akhir']
+                ]);
+            } elseif (substr($row['kode'], 0, 1) == 4) {
+                $databarang = $this->datastock4->getBarangkode($row['kode']);
+                $datakartu = $this->modelkartustock->getKartuStockkode($row['kode']);
+                $this->datastock4->save([
+                    'id_stock_4' => $databarang['id_stock_4'],
+                    'id_karyawan' => $session->get('id_user'),
+                    'berat' => $datakartu['saldo_akhir']
+                ]);
+            } elseif (substr($row['kode'], 0, 1) == 5) {
+                $databarang = $this->datastock5->getBarangkode($row['kode']);
+                $datakartu = $this->modelkartustock5->getKartuStockkode($row['kode']);
+                $this->datastock5->save([
+                    'id_stock_5' => $databarang['id_stock_5'],
+                    'id_karyawan' => $session->get('id_user'),
+                    'qty' => $datakartu['saldo_akhir'],
+                    'carat' => $datakartu['saldo_carat'],
+                ]);
+            } elseif (substr($row['kode'], 0, 1) == 6) {
+                $databarang = $this->datastock6->getBarangkode($row['kode']);
+                $datakartu = $this->modelkartustock6->getKartuStockkode($row['kode']);
+                $this->datastock6->save([
+                    'id_stock_5' => $databarang['id_stock_5'],
+                    'id_karyawan' => $session->get('id_user'),
+                    'qty' => $datakartu['saldo_akhir'],
 
-            return redirect()->to('/barangkeluar');
-        } else {
-            return redirect()->to('/barangkeluar');
+                ]);
+            }
         }
+        $this->modeldetailpenjualan->query('DELETE FROM tbl_detail_penjualan WHERE id_date_penjualan =' . $id . ';');
+        $this->penjualan->query('DELETE FROM tbl_penjualan WHERE id_date_penjualan =' . $id . ';');
+
+        return redirect()->to('/barangkeluar');
     }
 
     public function penjualan_detail_read()

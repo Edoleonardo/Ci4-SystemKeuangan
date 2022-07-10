@@ -122,7 +122,7 @@ $routes->get('/deletedetailjual', ($session->get('role')) ? 'Barangkeluar::Delet
 $routes->get('/deletedetailjualretur', ($session->get('role')) ? 'Barangkeluar::DeleteDetailjualRetur' : 'Login::Login');
 $routes->get('/datadetailretur', ($session->get('role')) ? 'Barangkeluar::DataDetailRetur' : 'Login::Login');
 $routes->get('/draftpenjualan/(:any)', ($session->get('role')) ? 'Barangkeluar::DraftPenjualan/$1' : 'Login::Login');
-$routes->get('/batalpenjualan', ($session->get('role')) ? 'Barangkeluar::BatalPenjualan' : 'Login::Login');
+$routes->get('/batalpenjualan/(:any)', ($session->get('role')) ? 'Barangkeluar::BatalPenjualan/$1' : 'Login::Login');
 $routes->post('/ubahharga', ($session->get('role')) ? 'Barangkeluar::UbahHarga' : 'Login::Login');
 $routes->post('/ubahhargaretur', ($session->get('role')) ? 'Barangkeluar::UbahHargaRetur' : 'Login::Login');
 $routes->get('/ajaxdetailpenjualan', ($session->get('role')) ? 'Barangkeluar::penjualan_detail_read' : 'Login::Login');

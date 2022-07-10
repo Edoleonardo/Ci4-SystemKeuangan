@@ -84,11 +84,12 @@ class BarangCuci extends BaseController
     public function CuciBarang()
     {
         $session = session();
-        $dateid = date('ymdhis');
+        $nocuci = $this->NoTransaksiGenerateCuci();
+        $dateid = date('ymdhis') . substr($nocuci, 6, 4);
         $this->modelcuci->save([
             // 'created_at' => date("y-m-d"),
             'id_date_cuci' => $dateid,
-            'no_cuci' => $this->NoTransaksiGenerateCuci(),
+            'no_cuci' => $nocuci,
             'id_karyawan' => $session->get('id_user'),
             'supplier_cuci' => '-',
             'keterangan' => '-',

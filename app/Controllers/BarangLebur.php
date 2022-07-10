@@ -82,11 +82,12 @@ class BarangLebur extends BaseController
     public function LeburBarang()
     {
         $session = session();
-        $dateid = date('ymdhis');
+        $nolebur = $this->NoTransaksiGenerateLebur();
+        $dateid = date('ymdhis') . substr($nolebur, 6, 4);
         $this->modellebur->save([
             // 'created_at' => date("y-m-d"),
             'id_date_lebur' => $dateid,
-            'no_lebur' => $this->NoTransaksiGenerateLebur(),
+            'no_lebur' => $nolebur,
             'id_karyawan' => $session->get('id_user'),
             'nama_img' => 'default.jpg',
             'kode' => '-',

@@ -297,8 +297,8 @@ class Barangmasuk extends BaseController
     public function detail_pembelian()
     {
         $session = session();
-        $dateid = date("ymdhis");
         $notransaksi = $this->NoTransaksiGenerate();
+        $dateid = date("ymdhis") . substr($notransaksi, 6, 4);
         $this->datapembelian->save([
             'id_date_pembelian' => $dateid,
             'kelompok' => null,

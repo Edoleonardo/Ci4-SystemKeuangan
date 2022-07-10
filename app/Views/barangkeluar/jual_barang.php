@@ -628,7 +628,7 @@
             confirmButtonText: 'Batal',
         }).then((result) => {
             if (result.isConfirmed) {
-                window.location.href = "<?php echo base_url('batalpenjualan'); ?>"
+                window.location.href = "/batalpenjualan/" + $('#iddate').val()
             }
         })
 

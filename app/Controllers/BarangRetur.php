@@ -67,13 +67,14 @@ class BarangRetur extends BaseController
     {
         if ($this->request->isAJAX()) {
             $session = session();
-            $dateid = date('ymdhis');
+            $noretur = $this->NoTransaksiGenerateRetur();
+            $dateid = date('ymdhis') . substr($noretur, 6, 4);
             $datapembelian = $this->modelpembelian->getPembelian($this->request->getVar('idbeli'));
             $this->modelretur->save([
                 // 'created_at' => date("y-m-d"),
                 'id_date_retur' => $dateid,
                 'id_karyawan' => $session->get('id_user'),
-                'no_retur' => $this->NoTransaksiGenerateRetur(),
+                'no_retur' => $noretur,
                 'no_transaksi' => $datapembelian['no_transaksi'],
                 'total_berat' => 0,
                 'total_berat_murni' => 0,

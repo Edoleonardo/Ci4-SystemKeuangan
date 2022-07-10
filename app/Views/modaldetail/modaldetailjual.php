@@ -18,12 +18,12 @@
                                         <tbody>
                                             <tr>
                                                 <td>
-                                                    Nama Customer : <?= $datacust['nama'] ?>
+                                                    Nama Customer : <?= (isset($datacust['nama'])) ? $datacust['nama'] : 'NoData' ?>
                                                 </td>
                                             </tr>
                                             <tr>
                                                 <td>
-                                                    No Hp : <?= $datacust['nohp_cust'] ?>
+                                                    No Hp : <?= (isset($datacust['nohp_cust']) ? $datacust['nohp_cust'] : 'NoData') ?>
                                                 </td>
                                             </tr>
                                             <tr>

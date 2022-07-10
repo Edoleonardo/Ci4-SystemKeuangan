@@ -81,11 +81,12 @@ class BuybackCust extends BaseController
     public function HalamanTambah()
     {
         $session = session();
-        $dateidbuyback = date('ymdhis');
+        $nobuyback = $this->NoTransaksiGenerateBuyback();
+        $dateidbuyback = date('ymdhis') . substr($nobuyback, 6, 4);
         $this->modelbuyback->save([
             // 'created_at' => date("y-m-d"),
             'id_date_buyback' => $dateidbuyback,
-            'no_transaksi_buyback' => $this->NoTransaksiGenerateBuyback(),
+            'no_transaksi_buyback' => $nobuyback,
             'id_karyawan' => $session->get('id_user'),
             'total_berat' => 0,
             'kelompok' => 0,
