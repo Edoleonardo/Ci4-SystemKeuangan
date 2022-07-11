@@ -153,12 +153,11 @@
           }
         });
       },
-      complete: function() {
-        swal.close()
-      },
       success: function(result) {
         $('#tampildata').html(result.tampildata)
-
+        $(document).ready(function() {
+          swal.close()
+        })
       },
       error: function(xhr, ajaxOptions, thrownError) {
         alert(xhr.status + "\n" + xhr.responseText + "\n" + thrownError);

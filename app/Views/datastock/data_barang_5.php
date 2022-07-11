@@ -127,12 +127,11 @@
           }
         });
       },
-      complete: function() {
-        swal.close()
-      },
       success: function(result) {
         $('#datatable').html(result.databarang)
-
+        $(document).ready(function() {
+          swal.close()
+        })
       },
       error: function(xhr, ajaxOptions, thrownError) {
         alert(xhr.status + "\n" + xhr.responseText + "\n" + thrownError);

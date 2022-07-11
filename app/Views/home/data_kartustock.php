@@ -122,10 +122,23 @@
                 kode: kode,
                 kel: 1
             },
+            beforeSend: function() {
+                Swal.fire({
+                    html: 'Please wait...',
+                    allowEscapeKey: false,
+                    allowOutsideClick: false,
+                    didOpen: () => {
+                        Swal.showLoading()
+                    }
+                });
+            },
             success: function(result) {
                 $('.viewmodal').html(result.modal).show();
                 $('#title').html('Detail Kartu Stock ' + kode)
                 $('#modal-xl').modal('show');
+                $(document).ready(function() {
+                    swal.close()
+                })
             },
             error: function(xhr, ajaxOptions, thrownError) {
                 alert(xhr.status + "\n" + xhr.responseText + "\n" + thrownError);
@@ -145,9 +158,21 @@
                 barcode: $('#searchkode').val(),
                 kel: 1
             },
+            beforeSend: function() {
+                Swal.fire({
+                    html: 'Please wait...',
+                    allowEscapeKey: false,
+                    allowOutsideClick: false,
+                    didOpen: () => {
+                        Swal.showLoading()
+                    }
+                });
+            },
             success: function(result) {
                 $('#tablekartu').html(result.datakartu)
-
+                $(document).ready(function() {
+                    swal.close()
+                })
             },
             error: function(xhr, ajaxOptions, thrownError) {
                 alert(xhr.status + "\n" + xhr.responseText + "\n" + thrownError);
