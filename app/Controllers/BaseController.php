@@ -128,9 +128,23 @@ class BaseController extends Controller
     public function KartuStockMaster5($kode, $session, $stat)
     {
         $datakartu = $this->modelkartustock5->getKartuStockkode($kode);
-        if ($stat != 'noopname') {
+        // if ($stat != 'noopname') {
+        //     $masuk = round($this->modeldetailkartustock5->SumMasukKartu($kode)['masuk'], 2);
+        //     $keluar = round($this->modeldetailkartustock5->SumKeluarKartu($kode)['keluar'], 2);
+        //     $saldoakhir = $masuk - $keluar;
+        //     $this->modelkartustock5->save([
+        //         'id_kartustock_5' => $datakartu['id_kartustock_5'],
+        //         'id_karyawan' => $session->get('id_user'),
+        //         'total_masuk' => $masuk,
+        //         'total_keluar' => $keluar,
+        //         'saldo_akhir' => $saldoakhir,
+        //         'saldo_carat' => $stat
+        //     ]);
+        // } else {
+        if ($datakartu) {
             $masuk = round($this->modeldetailkartustock5->SumMasukKartu($kode)['masuk'], 2);
             $keluar = round($this->modeldetailkartustock5->SumKeluarKartu($kode)['keluar'], 2);
+            $saldocarat = round($this->modeldetailkartustock5->SumSaldoBerat($kode)['hasil'], 2);
             $saldoakhir = $masuk - $keluar;
             $this->modelkartustock5->save([
                 'id_kartustock_5' => $datakartu['id_kartustock_5'],
@@ -138,38 +152,23 @@ class BaseController extends Controller
                 'total_masuk' => $masuk,
                 'total_keluar' => $keluar,
                 'saldo_akhir' => $saldoakhir,
-                'saldo_carat' => $stat
+                'saldo_carat' => $saldocarat
             ]);
         } else {
-            if ($datakartu) {
-                $masuk = round($this->modeldetailkartustock5->SumMasukKartu($kode)['masuk'], 2);
-                $keluar = round($this->modeldetailkartustock5->SumKeluarKartu($kode)['keluar'], 2);
-                $saldocarat = round($this->modeldetailkartustock5->SumSaldoBerat($kode)['hasil'], 2);
-                $saldoakhir = $masuk - $keluar;
-                $this->modelkartustock5->save([
-                    'id_kartustock_5' => $datakartu['id_kartustock_5'],
-                    'kode' => $kode,
-                    'id_karyawan' => $session->get('id_user'),
-                    'total_masuk' => $masuk,
-                    'total_keluar' => $keluar,
-                    'saldo_akhir' => $saldoakhir,
-                    'saldo_carat' => $saldocarat
-                ]);
-            } else {
-                $masuk = round($this->modeldetailkartustock5->SumMasukKartu($kode)['masuk'], 2);
-                $keluar = round($this->modeldetailkartustock5->SumKeluarKartu($kode)['keluar'], 2);
-                $saldocarat = round($this->modeldetailkartustock5->SumSaldoBerat($kode)['hasil'], 2);
-                $saldoakhir = $masuk - $keluar;
-                $this->modelkartustock5->save([
-                    'kode' => $kode,
-                    'id_karyawan' => $session->get('id_user'),
-                    'total_masuk' => $masuk,
-                    'total_keluar' => $keluar,
-                    'saldo_akhir' => $saldoakhir,
-                    'saldo_carat' => $saldocarat
-                ]);
-            }
+            $masuk = round($this->modeldetailkartustock5->SumMasukKartu($kode)['masuk'], 2);
+            $keluar = round($this->modeldetailkartustock5->SumKeluarKartu($kode)['keluar'], 2);
+            $saldocarat = round($this->modeldetailkartustock5->SumSaldoBerat($kode)['hasil'], 2);
+            $saldoakhir = $masuk - $keluar;
+            $this->modelkartustock5->save([
+                'kode' => $kode,
+                'id_karyawan' => $session->get('id_user'),
+                'total_masuk' => $masuk,
+                'total_keluar' => $keluar,
+                'saldo_akhir' => $saldoakhir,
+                'saldo_carat' => $saldocarat
+            ]);
         }
+        // }
     }
     public function KartuStockMaster6($kode, $session)
     {
