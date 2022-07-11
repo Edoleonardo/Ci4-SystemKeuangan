@@ -148,6 +148,7 @@ class BaseController extends Controller
                 $saldoakhir = $masuk - $keluar;
                 $this->modelkartustock5->save([
                     'id_kartustock_5' => $datakartu['id_kartustock_5'],
+                    'kode' => $kode,
                     'id_karyawan' => $session->get('id_user'),
                     'total_masuk' => $masuk,
                     'total_keluar' => $keluar,

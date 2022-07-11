@@ -119,23 +119,10 @@
                 kode: kode,
                 kel: 6
             },
-            beforeSend: function() {
-                Swal.fire({
-                    html: 'Please wait...',
-                    allowEscapeKey: false,
-                    allowOutsideClick: false,
-                    didOpen: () => {
-                        Swal.showLoading()
-                    }
-                });
-            },
             success: function(result) {
                 $('.viewmodal').html(result.modal).show();
                 $('#title').html('Detail Kartu Stock ' + kode)
                 $('#modal-xl').modal('show');
-                $(document).ready(function() {
-                    swal.close()
-                })
             },
             error: function(xhr, ajaxOptions, thrownError) {
                 alert(xhr.status + "\n" + xhr.responseText + "\n" + thrownError);

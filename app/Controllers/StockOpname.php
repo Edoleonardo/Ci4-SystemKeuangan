@@ -335,10 +335,9 @@ class StockOpname extends BaseController
             if ($this->request->getVar('kel') == 5) {
                 $valid = $this->validate([
                     'carat' => [
-                        'rules' => 'required|greater_than[0]',
+                        'rules' => 'required',
                         'errors' => [
                             'required' => 'Nilai Tukar Harus di isi',
-                            'greater_than' => 'TIdak Boleh 0'
                         ]
                     ],
                 ]);
