@@ -222,10 +222,14 @@ class BuybackCust extends BaseController
             $data1 = [
                 'kel' => substr($data['kode'], 0, 1),
                 'dataval' => $data,
-                'databuyback' => $this->request->getVar('iddate')
+                'databuyback' => $this->request->getVar('iddate'),
+                'merek' => $this->datamerek->getMerek(),
+                'kadar' => $this->datakadar->getKadar(),
+                'jenis' => $this->datajenis->getJenis(),
             ];
             $msg = [
-                'tampilform' => view('buybackcust/formdgnnota', $data1)
+                'tampilform' => view('buybackcust/formdgnnota', $data1),
+                'dataval' => $data['kode'],
             ];
             echo json_encode($msg);
         }
@@ -1013,7 +1017,6 @@ class BuybackCust extends BaseController
         if ($this->request->isAJAX()) {
             $validation = \Config\Services::validation();
             $filesampul = $this->request->getFile('gambar');
-
             if ($filesampul->getError() != 4 || $this->request->getPost('gambar')) {
                 $valid = $this->validate([
                     'nilai_tukar' => [
@@ -1502,7 +1505,6 @@ class BuybackCust extends BaseController
                         'harga_beli1' => $validation->getError('harga_beli1'),
                         'qty1' => $validation->getError('qty1'),
                         'carat1' => $validation->getError('carat1'),
-
                     ]
                 ];
                 echo json_encode($msg);
@@ -1512,6 +1514,7 @@ class BuybackCust extends BaseController
                 $id = $this->request->getVar('id');
                 $databarang = $this->modeldetailpenjualan->getDetailoneJual($id);
                 // $datamaster = $this->datastock->getBarangkode($databarang['kode']);
+                $filesampul = $this->request->getFile('gambar');
                 $kode = $this->request->getVar('kel');
                 $qty = $this->request->getVar('qty1');
                 $harga = $this->request->getVar('harga_beli1');
@@ -1562,25 +1565,48 @@ class BuybackCust extends BaseController
                             'id_karyawan' => $session->get('id_user'),
                             'kelompok' =>  $kode,
                         ]);
+                        if ($filesampul->getError() != 4 || $this->request->getPost('gambar')) {
+                            if (file_exists('img/' .  $databarang['nama_img'])) {
+                                unlink('img/' . $databarang['nama_img']); //untuk hapus file
+                            }
+                            if ($this->request->getPost('gambar')) {
+                                $image = $this->request->getPost('gambar');
+                                $image = str_replace('data:image/jpeg;base64,', '', $image);
+                                $image = base64_decode($image, true);
+                                $namafile = date('ymdhis') . $databarang['kode'] . '.jpg';
+                                file_put_contents(FCPATH . '/img/' . $namafile, $image);
+                            } else {
+                                $filesampul = $this->request->getFile('gambar');
+                                if ($filesampul->getError() == 4) {
+                                    $namafile = 'default.jpg';
+                                } else {
+                                    $namafile = date('ymdhis') . $databarang['kode'] . '.jpg'; // pake nama random
+                                    // $namafile = $filesampul->getName(); // ini pake nama asli di foto
+                                    $filesampul->move('img', $namafile);
+                                }
+                            }
+                        } else {
+                            $namafile = 'default.jpg';
+                        }
                         $this->modeldetailbuyback->save([
-                            'nama_img' => $databarang['nama_img'],
+                            'nama_img' =>  $namafile,
                             'id_karyawan' => $session->get('id_user'),
                             'id_date_buyback' => $this->request->getVar('iddate'),
                             'id_detail_penjualan' => $databarang['id_detail_penjualan'],
                             'kode' =>  $databarang['kode'],
                             'qty' => $qty,
-                            'jenis' =>  $databarang['jenis'],
-                            'model' =>  $databarang['model'],
+                            'jenis' =>  $this->request->getVar('jenis1'),
+                            'model' =>  $this->request->getVar('model1'),
                             'status' =>  $databarang['status'],
-                            'keterangan' =>  $databarang['keterangan'],
+                            'keterangan' => $this->request->getVar('keterangan1'),
                             'carat' => $carat,
                             'berat' =>  $berat,
                             'berat_murni' =>  $beratmurni,
                             'harga_beli' =>  $harga,
                             'ongkos' => $databarang['ongkos'],
-                            'kadar' =>   $databarang['kadar'],
+                            'kadar' =>   $this->request->getVar('kadar1'),
                             'nilai_tukar' => $nilaitukar,
-                            'merek' => $databarang['merek'],
+                            'merek' => $this->request->getVar('merek1'),
                             'no_nota' => $datapenjualan['no_transaksi_jual'],
                             'total_harga' => $totalharga,
                             'status_proses' => $statusproses

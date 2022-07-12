@@ -195,7 +195,90 @@
     </div>
     <!-- /.modal-dialog -->
 </div>
-<div id="modaldgnnota">
+
+<div class="modal fade" id="modal-edit">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="ttupdate">Update Data</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form action="/tambahbuyback" id="tambahbuyback" class="tambahbuyback" name="tambahbuyback">
+                    <?= csrf_field(); ?>
+                    <div id="modaldgnnota">
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <!-- text input -->
+                            <table class="table table-striped">
+                                <tbody>
+                                    <tr>
+                                        <td>Total Harga</td>
+                                        <td id="totalhargaedit"></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-primary btnedit" id="btntambah">Tambah</button>
+            </div>
+            <div class="modal fade" id="modal-foto">
+                <div class="modal-dialog modal-default">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title">Ambil Foto</h4>
+                            <button type="button" class="close" onclick="$('#modal-foto').modal('toggle')" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <div class="form-group">
+                                        <div class="form-group"><label>Gambar</label>
+                                            <div class="custom-file">
+                                                <input type="file" name="gambar" class="custom-file-input" id="gambar" accept="image/*">
+                                                <label style="text-align: left" class="custom-file-label" for="gambar">Pilih Gambar</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group">
+                                    <div class="col-sm-12">
+                                        <div id='my_camera'>
+                                        </div>
+                                        <button style="text-align: center;" type='button' id='ambilfoto' class='btn btn-info ambilfoto' onclick='Foto_ulang()'>
+                                            <i class='fa fa-trash'></i></button>
+                                        <button type='button' id='ambilfoto' class='btn btn-info ambilfoto' onclick='Ambil_foto()'>Foto <i class='fa fa-camera'></i>
+                                        </button>
+                                        <input type='hidden' name='gambar' id='gambar' class='image-tag'>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="modal-footer justify-content-between">
+                                <button type="button" class="btn btn-default" onclick="$('#modal-foto').modal('toggle')">Close</button>
+                                <button type="button" class="btn btn-primary" onclick="$('#modal-foto').modal('toggle')">Done</button>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /.modal-content -->
+                </div>
+                <!-- /.modal-dialog -->
+            </div>
+            </form>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
 </div>
 <div class="modal fade" id="modal-nonota">
     <div class="modal-dialog modal-xl">
@@ -245,12 +328,12 @@
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                 <button type="submit" class="btn btn-primary btnedit">Tambah</button>
             </div>
-            <div class="modal fade" id="modal-foto">
+            <div class="modal fade" id="modal-foto1">
                 <div class="modal-dialog modal-default">
                     <div class="modal-content">
                         <div class="modal-header">
                             <h4 class="modal-title">Ambil Foto</h4>
-                            <button type="button" class="close" onclick="$('#modal-foto').modal('toggle')" aria-label="Close">
+                            <button type="button" class="close" onclick="$('#modal-foto1').modal('toggle')" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
@@ -260,8 +343,8 @@
                                     <div class="form-group">
                                         <div class="form-group"><label>Gambar</label>
                                             <div class="custom-file">
-                                                <input type="file" name="gambar" class="custom-file-input" id="gambar" accept="image/*">
-                                                <label style="text-align: left" class="custom-file-label" for="gambar">Pilih Gambar</label>
+                                                <input type="file" name="gambar1" class="custom-file-input" id="gambar1" accept="image/*">
+                                                <label style="text-align: left" class="custom-file-label" for="gambar1">Pilih Gambar</label>
                                             </div>
                                         </div>
                                     </div>
@@ -272,18 +355,18 @@
                                     <div class="col-sm-12">
                                         <div id='my_camera'>
                                         </div>
-                                        <button style="text-align: center;" type='button' id='ambilfoto' class='btn btn-info ambilfoto' onclick='Foto_ulang()'>
+                                        <button style="text-align: center;" type='button' id='ambilfoto1' class='btn btn-info ambilfoto1' onclick='Foto_ulang1()'>
                                             <i class='fa fa-trash'></i></button>
-                                        <button type='button' id='ambilfoto' class='btn btn-info ambilfoto' onclick='Ambil_foto()'>Foto <i class='fa fa-camera'></i>
+                                        <button type='button' id='ambilfoto1' class='btn btn-info ambilfoto1' onclick='Ambil_foto1()'>Foto <i class='fa fa-camera'></i>
                                         </button>
-                                        <input type='hidden' name='gambar' id='gambar' class='image-tag'>
+                                        <input type='hidden' name='gambar1' id='gambar1' class='image-tag1'>
                                     </div>
                                 </div>
                             </div>
 
                             <div class="modal-footer justify-content-between">
-                                <button type="button" class="btn btn-default" onclick="$('#modal-foto').modal('toggle')">Close</button>
-                                <button type="button" class="btn btn-primary" onclick="$('#modal-foto').modal('toggle')">Done</button>
+                                <button type="button" class="btn btn-default" onclick="$('#modal-foto1').modal('toggle')">Close</button>
+                                <button type="button" class="btn btn-primary" onclick="$('#modal-foto1').modal('toggle')">Done</button>
                             </div>
                         </div>
                     </div>
@@ -932,7 +1015,6 @@
                 // $('#totalberatkotorhtml01').html(pembulatankoma(result.totalberatkotor.berat))
                 // $('#totalongkoshtml01').html(pembulatankoma(result.totalongkos.ongkos).toString().replace(/\B(?=(\d{3})+(?!\d))/g, "."))
 
-
             },
             error: function(xhr, ajaxOptions, thrownError) {
                 alert(xhr.status + "\n" + xhr.responseText + "\n" + thrownError);
@@ -951,6 +1033,7 @@
             },
             success: function(result) {
                 $('#modaldgnnota').html(result.tampilform)
+                $('#ttupdate').html('Edit Data ' + result.dataval);
                 $('#modal-edit').modal('toggle');
             },
             error: function(xhr, ajaxOptions, thrownError) {
@@ -1036,7 +1119,7 @@
         jpeg_quality: 100,
         flip_horiz: true,
     });
-
+    //-----------------------------------------------
     function cameranyala() {
         if ($(".image-tag").val()) {
             document.getElementById('my_camera').innerHTML = '<img src="' + data_uri + '">'
@@ -1059,12 +1142,39 @@
         $(".image-tag").val('');
         Webcam.attach('#my_camera');
     }
+    //--------------------------------------------
+    function cameranyala1() {
+        if ($(".image-tag1").val()) {
+            document.getElementById('my_camera1').innerHTML = '<img src="' + data_uri + '">'
+        } else {
+            Webcam.attach('#my_camera1');
+        }
+    }
+
+    function Ambil_foto1() {
+        Webcam.snap(function(data_uri) {
+            $(".image-tag1").val(data_uri);
+            Webcam.reset()
+            // Webcam.attach('#my_camera1');
+            document.getElementById('my_camera1').innerHTML = '<img src="' + data_uri + '">'
+        })
+    }
+
+    function Foto_ulang1() {
+        document.getElementById('my_camera1').innerHTML = ''
+        $(".image-tag1").val('');
+        Webcam.attach('#my_camera1');
+    }
+    //---------------------------------------------
     $(document).ready(function() {
         FormNonota()
         tampilcustomer()
         // ModalBarcode()
         tampildatabuyback()
         $("#modal-foto").on("hidden.bs.modal", function() {
+            Webcam.reset()
+        });
+        $("#modal-foto1").on("hidden.bs.modal", function() {
             Webcam.reset()
         });
         $('.insertcust').submit(function(e) {

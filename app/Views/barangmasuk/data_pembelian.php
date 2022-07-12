@@ -89,7 +89,7 @@
                 <div class="col-sm-2">
                   <div class="form-group">
                     <label>Search NoTrans</label>
-                    <input name="notrans" onfocus="this.select()" oninput="TampilBarang()" class="form-control" id="notrans" name="notrans" placeholder="Masukan Nomor Transaksi">
+                    <input name="notrans" onfocus="this.select()" onfocusout="TampilBarang()" class="form-control" id="notrans" name="notrans" placeholder="Masukan Nomor Transaksi">
                     <div id="validationServerUsernameFeedback" class="invalid-feedback notransmsg">
                     </div>
                   </div>

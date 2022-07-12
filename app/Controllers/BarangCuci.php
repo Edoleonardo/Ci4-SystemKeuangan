@@ -293,8 +293,15 @@ class BarangCuci extends BaseController
                 $this->datastock->save([
                     'id_stock_1' => $datastock['id_stock_1'],
                     'id_karyawan' => $session->get('id_user'),
+                    'gambar' => $datadetailcuci['nama_img'],
+                    'jenis' =>  $datadetailcuci['jenis'],
+                    'model' =>  $datadetailcuci['model'],
+                    'merek' =>  $datadetailcuci['merek'],
+                    'kadar' =>   $datadetailcuci['kadar'],
+                    'keterangan' =>  $datadetailcuci['keterangan'],
                     'qty' => $datadetailcuci['qty'],
                     'berat' => $this->request->getVar('berat'),
+                    'nilai_tukar' =>   $datadetailcuci['nilai_tukar'],
                     'harga_beli' => $harga_beli,
                     'total_harga' => $datadetailcuci['total_harga'],
                     'status' => 'C'
@@ -304,6 +311,12 @@ class BarangCuci extends BaseController
                 $this->datastock2->save([
                     'id_stock_2' => $datastock['id_stock_2'],
                     'id_karyawan' => $session->get('id_user'),
+                    'gambar' => $datadetailcuci['nama_img'],
+                    'jenis' =>  $datadetailcuci['jenis'],
+                    'model' =>  $datadetailcuci['model'],
+                    'merek' =>  $datadetailcuci['merek'],
+                    'kadar' =>   $datadetailcuci['kadar'],
+                    'keterangan' =>  $datadetailcuci['keterangan'],
                     'qty' => $datadetailcuci['qty'],
                     'berat' => $this->request->getVar('berat'),
                     'harga_beli' => $harga_beli,
@@ -311,7 +324,6 @@ class BarangCuci extends BaseController
                     'status' => 'C'
                 ]);
             }
-
             $this->modeldetailcuci->save([
                 'id_detail_cuci' => $datadetailcuci['id_detail_cuci'],
                 'id_karyawan' => $session->get('id_user'),

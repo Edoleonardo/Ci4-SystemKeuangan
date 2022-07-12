@@ -61,7 +61,7 @@
                 <div class="col-sm-3">
                   <div class="form-group">
                     <label>Search Kode</label>
-                    <input name="searchkode" onfocus="this.select()" oninput="TampilBarang()" class="form-control" id="searchkode" name="searchkode" placeholder="Masukan Kode Barang">
+                    <input name="searchkode" onfocus="this.select()" onfocusout="TampilBarang()" class="form-control" id="searchkode" name="searchkode" placeholder="Masukan Kode Barang">
                     <div id="validationServerUsernameFeedback" class="invalid-feedback searchkodemsg">
                     </div>
                   </div>
