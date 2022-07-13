@@ -66,7 +66,7 @@
             <!-- text input -->
             <div class="form-group">
                 <label>Qty</label>
-                <input onfocus="this.select()" type="Number" id="qty" onkeyup="totalharga()" name="qty" min="1" class="form-control" placeholder="Masukan qty">
+                <input onfocus="this.select()" type="Number" id="qty" value="1" onkeyup="totalharga()" name="qty" min="1" class="form-control" placeholder="Masukan qty">
                 <div id="validationServerUsernameFeedback" class="invalid-feedback qtymsg">
                 </div>
             </div>
@@ -180,7 +180,7 @@
             <!-- text input -->
             <div class="form-group">
                 <label>Qty</label>
-                <input onfocus="this.select()" type="Number" id="qty" onkeyup="totalharga()" name="qty" min="1" class="form-control" placeholder="Masukan qty">
+                <input onfocus="this.select()" type="Number" id="qty" value="1" onkeyup="totalharga()" name="qty" min="1" class="form-control" placeholder="Masukan qty">
                 <div id="validationServerUsernameFeedback" class="invalid-feedback qtymsg">
                 </div>
             </div>
@@ -281,7 +281,7 @@
             <!-- text input -->
             <div class="form-group">
                 <label>Qty</label>
-                <input onfocus="this.select()" type="Number" id="qty" onkeyup="totalharga()" name="qty" min="1" class="form-control" placeholder="Masukan qty">
+                <input onfocus="this.select()" type="Number" id="qty" value="1" onkeyup="totalharga()" name="qty" min="1" class="form-control" placeholder="Masukan qty">
                 <div id="validationServerUsernameFeedback" class="invalid-feedback qtymsg">
                 </div>
             </div>
@@ -429,7 +429,7 @@
             <!-- text input -->
             <div class="form-group">
                 <label>Qty</label>
-                <input onfocus="this.select()" type="Number" id="qty" onkeyup="totalharga()" name="qty" min="1" class="form-control" placeholder="Masukan qty">
+                <input onfocus="this.select()" type="Number" id="qty" value="1" onkeyup="totalharga()" name="qty" min="1" class="form-control" placeholder="Masukan qty">
                 <div id="validationServerUsernameFeedback" class="invalid-feedback qtymsg">
                 </div>
             </div>
@@ -512,7 +512,7 @@
             <!-- text input -->
             <div class="form-group">
                 <label>Qty</label>
-                <input onfocus="this.select()" type="Number" id="qty" onkeyup="totalharga()" name="qty" min="1" class="form-control" placeholder="Masukan qty">
+                <input onfocus="this.select()" type="Number" id="qty" value="1" onkeyup="totalharga()" name="qty" min="1" class="form-control" placeholder="Masukan qty">
                 <div id="validationServerUsernameFeedback" class="invalid-feedback qtymsg">
                 </div>
             </div>

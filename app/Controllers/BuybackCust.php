@@ -398,7 +398,9 @@ class BuybackCust extends BaseController
                                 'nama_bank' => $namabank,
                                 //'tgl_selesai' => date("Y-m-d H:i:s"),
                                 'tgl_selesai' => $this->request->getVar('datebuyback'),
-                                'status_dokumen' => 'Selesai'
+                                'status_dokumen' => 'Selesai',
+                                'created_at' => $this->request->getVar('datebuyback'),
+                                'updated_at' => $this->request->getVar('datebuyback'),
                             ]);
 
                             foreach ($datadetail as $row) {
@@ -1366,7 +1368,9 @@ class BuybackCust extends BaseController
                     }
 
                     if ($data['nama_img'] != 'default.jpg') { //buyback dengan nota, foto ikut terhapus
-                        unlink('img/' . $data['nama_img']); //untuk hapus file
+                        if ($data['nama_img'] != 'default.jpg') {
+                            unlink('img/' . $data['nama_img']); //untuk hapus file
+                        }
                     }
                     $this->modeldetailbuyback->delete($id);
                 }
@@ -1514,7 +1518,7 @@ class BuybackCust extends BaseController
                 $id = $this->request->getVar('id');
                 $databarang = $this->modeldetailpenjualan->getDetailoneJual($id);
                 // $datamaster = $this->datastock->getBarangkode($databarang['kode']);
-                $filesampul = $this->request->getFile('gambar');
+                $filesampul = $this->request->getFile('gambar1');
                 $kode = $this->request->getVar('kel');
                 $qty = $this->request->getVar('qty1');
                 $harga = $this->request->getVar('harga_beli1');
@@ -1565,12 +1569,12 @@ class BuybackCust extends BaseController
                             'id_karyawan' => $session->get('id_user'),
                             'kelompok' =>  $kode,
                         ]);
-                        if ($filesampul->getError() != 4 || $this->request->getPost('gambar')) {
+                        if ($filesampul->getError() != 4 || $this->request->getPost('gambar1')) {
                             if (file_exists('img/' .  $databarang['nama_img'])) {
                                 unlink('img/' . $databarang['nama_img']); //untuk hapus file
                             }
-                            if ($this->request->getPost('gambar')) {
-                                $image = $this->request->getPost('gambar');
+                            if ($this->request->getPost('gambar1')) {
+                                $image = $this->request->getPost('gambar1');
                                 $image = str_replace('data:image/jpeg;base64,', '', $image);
                                 $image = base64_decode($image, true);
                                 $namafile = date('ymdhis') . $databarang['kode'] . '.jpg';

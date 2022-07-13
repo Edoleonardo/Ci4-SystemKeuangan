@@ -195,7 +195,6 @@
     </div>
     <!-- /.modal-dialog -->
 </div>
-
 <div class="modal fade" id="modal-edit">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
@@ -228,12 +227,12 @@
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                 <button type="submit" class="btn btn-primary btnedit" id="btntambah">Tambah</button>
             </div>
-            <div class="modal fade" id="modal-foto">
+            <div class="modal fade" id="modal-foto1">
                 <div class="modal-dialog modal-default">
                     <div class="modal-content">
                         <div class="modal-header">
                             <h4 class="modal-title">Ambil Foto</h4>
-                            <button type="button" class="close" onclick="$('#modal-foto').modal('toggle')" aria-label="Close">
+                            <button type="button" class="close" onclick="$('#modal-foto1').modal('toggle')" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
@@ -243,8 +242,8 @@
                                     <div class="form-group">
                                         <div class="form-group"><label>Gambar</label>
                                             <div class="custom-file">
-                                                <input type="file" name="gambar" class="custom-file-input" id="gambar" accept="image/*">
-                                                <label style="text-align: left" class="custom-file-label" for="gambar">Pilih Gambar</label>
+                                                <input type="file" name="gambar1" class="custom-file-input" id="gambar1" accept="image/*">
+                                                <label style="text-align: left" class="custom-file-label" for="gambar1">Pilih Gambar</label>
                                             </div>
                                         </div>
                                     </div>
@@ -253,20 +252,20 @@
                             <div class="row">
                                 <div class="form-group">
                                     <div class="col-sm-12">
-                                        <div id='my_camera'>
+                                        <div id='my_camera1'>
                                         </div>
-                                        <button style="text-align: center;" type='button' id='ambilfoto' class='btn btn-info ambilfoto' onclick='Foto_ulang()'>
+                                        <button style="text-align: center;" type='button' id='ambilfoto1' class='btn btn-info ambilfoto1' onclick='Foto_ulang1()'>
                                             <i class='fa fa-trash'></i></button>
-                                        <button type='button' id='ambilfoto' class='btn btn-info ambilfoto' onclick='Ambil_foto()'>Foto <i class='fa fa-camera'></i>
+                                        <button type='button' id='ambilfoto1' class='btn btn-info ambilfoto1' onclick='Ambil_foto1()'>Foto <i class='fa fa-camera'></i>
                                         </button>
-                                        <input type='hidden' name='gambar' id='gambar' class='image-tag'>
+                                        <input type='hidden' name='gambar1' id='gambar1' class='image-tag1'>
                                     </div>
                                 </div>
                             </div>
 
                             <div class="modal-footer justify-content-between">
-                                <button type="button" class="btn btn-default" onclick="$('#modal-foto').modal('toggle')">Close</button>
-                                <button type="button" class="btn btn-primary" onclick="$('#modal-foto').modal('toggle')">Done</button>
+                                <button type="button" class="btn btn-default" onclick="$('#modal-foto1').modal('toggle')">Close</button>
+                                <button type="button" class="btn btn-primary" onclick="$('#modal-foto1').modal('toggle')">Done</button>
                             </div>
                         </div>
                     </div>
@@ -328,12 +327,12 @@
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                 <button type="submit" class="btn btn-primary btnedit">Tambah</button>
             </div>
-            <div class="modal fade" id="modal-foto1">
+            <div class="modal fade" id="modal-foto">
                 <div class="modal-dialog modal-default">
                     <div class="modal-content">
                         <div class="modal-header">
                             <h4 class="modal-title">Ambil Foto</h4>
-                            <button type="button" class="close" onclick="$('#modal-foto1').modal('toggle')" aria-label="Close">
+                            <button type="button" class="close" onclick="$('#modal-foto').modal('toggle')" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
@@ -343,8 +342,8 @@
                                     <div class="form-group">
                                         <div class="form-group"><label>Gambar</label>
                                             <div class="custom-file">
-                                                <input type="file" name="gambar1" class="custom-file-input" id="gambar1" accept="image/*">
-                                                <label style="text-align: left" class="custom-file-label" for="gambar1">Pilih Gambar</label>
+                                                <input type="file" name="gambar" class="custom-file-input" id="gambar" accept="image/*">
+                                                <label style="text-align: left" class="custom-file-label" for="gambar">Pilih Gambar</label>
                                             </div>
                                         </div>
                                     </div>
@@ -355,18 +354,18 @@
                                     <div class="col-sm-12">
                                         <div id='my_camera'>
                                         </div>
-                                        <button style="text-align: center;" type='button' id='ambilfoto1' class='btn btn-info ambilfoto1' onclick='Foto_ulang1()'>
+                                        <button style="text-align: center;" type='button' id='ambilfoto' class='btn btn-info ambilfoto' onclick='Foto_ulang()'>
                                             <i class='fa fa-trash'></i></button>
-                                        <button type='button' id='ambilfoto1' class='btn btn-info ambilfoto1' onclick='Ambil_foto1()'>Foto <i class='fa fa-camera'></i>
+                                        <button type='button' id='ambilfoto' class='btn btn-info ambilfoto' onclick='Ambil_foto()'>Foto <i class='fa fa-camera'></i>
                                         </button>
-                                        <input type='hidden' name='gambar1' id='gambar1' class='image-tag1'>
+                                        <input type='hidden' name='gambar' id='gambar' class='image-tag'>
                                     </div>
                                 </div>
                             </div>
 
                             <div class="modal-footer justify-content-between">
-                                <button type="button" class="btn btn-default" onclick="$('#modal-foto1').modal('toggle')">Close</button>
-                                <button type="button" class="btn btn-primary" onclick="$('#modal-foto1').modal('toggle')">Done</button>
+                                <button type="button" class="btn btn-default" onclick="$('#modal-foto').modal('toggle')">Close</button>
+                                <button type="button" class="btn btn-primary" onclick="$('#modal-foto').modal('toggle')">Done</button>
                             </div>
                         </div>
                     </div>
@@ -462,7 +461,8 @@
 </div>
 <div id="barcodeview">
 </div>
-<div id="modalcust"></div>
+<div id="modalcust">
+</div>
 <div class="modal fade" id="modal-tambahcust">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
@@ -513,6 +513,7 @@
         </div>
     </div>
     <!-- /.modal-content -->
+</div>
 </div>
 <script type="text/javascript">
     function checkcust() {

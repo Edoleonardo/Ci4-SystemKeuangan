@@ -109,7 +109,7 @@
             <!-- text input -->
             <div class="form-group">
                 <label>Foto</label><br>
-                <button type="button" id="ambilgbr1" class="btn btn-primary" data-toggle="modal" data-target="#modal-foto" onclick="cameranyala()">
+                <button type="button" id="ambilgbr1" class="btn btn-primary" data-toggle="modal" data-target="#modal-foto1" onclick="cameranyala1()">
                     <i class="fa fa-camera"></i>
                 </button>
                 <div id="validationServerUsernameFeedback" class="invalid-feedback ambilgbr1msg"></div>
@@ -214,6 +214,16 @@
                 </select>
             </div>
         </div>
+        <div class="col-sm-1">
+            <!-- text input -->
+            <div class="form-group">
+                <label>Foto</label><br>
+                <button type="button" id="ambilgbr1" class="btn btn-primary" data-toggle="modal" data-target="#modal-foto1" onclick="cameranyala1()">
+                    <i class="fa fa-camera"></i>
+                </button>
+                <div id="validationServerUsernameFeedback" class="invalid-feedback ambilgbr1msg"></div>
+            </div>
+        </div>
     </div>
 <?php elseif ($kel == 3) : ?>
     <div class="row">
@@ -290,6 +300,16 @@
                 </div>
             </div>
         </div>
+        <div class="col-sm-1">
+            <!-- text input -->
+            <div class="form-group">
+                <label>Foto</label><br>
+                <button type="button" id="ambilgbr1" class="btn btn-primary" data-toggle="modal" data-target="#modal-foto1" onclick="cameranyala1()">
+                    <i class="fa fa-camera"></i>
+                </button>
+                <div id="validationServerUsernameFeedback" class="invalid-feedback ambilgbr1msg"></div>
+            </div>
+        </div>
     </div>
 <?php elseif ($kel == 4) : ?>
     <div class="row">
@@ -352,6 +372,16 @@
                 <input onfocus="this.select()" type="number" value="<?= $dataval['harga_beli'] ?>" name="harga_beli1" onkeyup="HarusBayar()" id="harga_beli1" class="form-control harga_beli1" placeholder="Masukan Harga Beli">
                 <div id="validationServerUsernameFeedback" class="invalid-feedback harga_beli1msg">
                 </div>
+            </div>
+        </div>
+        <div class="col-sm-1">
+            <!-- text input -->
+            <div class="form-group">
+                <label>Foto</label><br>
+                <button type="button" id="ambilgbr1" class="btn btn-primary" data-toggle="modal" data-target="#modal-foto1" onclick="cameranyala1()">
+                    <i class="fa fa-camera"></i>
+                </button>
+                <div id="validationServerUsernameFeedback" class="invalid-feedback ambilgbr1msg"></div>
             </div>
         </div>
     </div>
@@ -417,6 +447,16 @@
                 <input onfocus="this.select()" type="number" value="<?= $dataval['harga_beli'] ?>" name="harga_beli1" onkeyup="HarusBayar()" id="harga_beli1" class="form-control harga_beli1" placeholder="Masukan Harga Beli">
                 <div id="validationServerUsernameFeedback" class="invalid-feedback harga_beli1msg">
                 </div>
+            </div>
+        </div>
+        <div class="col-sm-1">
+            <!-- text input -->
+            <div class="form-group">
+                <label>Foto</label><br>
+                <button type="button" id="ambilgbr1" class="btn btn-primary" data-toggle="modal" data-target="#modal-foto1" onclick="cameranyala1()">
+                    <i class="fa fa-camera"></i>
+                </button>
+                <div id="validationServerUsernameFeedback" class="invalid-feedback ambilgbr1msg"></div>
             </div>
         </div>
     </div>
@@ -487,8 +527,17 @@
                 </div>
             </div>
         </div>
+        <div class="col-sm-1">
+            <!-- text input -->
+            <div class="form-group">
+                <label>Foto</label><br>
+                <button type="button" id="ambilgbr1" class="btn btn-primary" data-toggle="modal" data-target="#modal-foto1" onclick="cameranyala1()">
+                    <i class="fa fa-camera"></i>
+                </button>
+                <div id="validationServerUsernameFeedback" class="invalid-feedback ambilgbr1msg"></div>
+            </div>
+        </div>
     </div>
-
 <?php endif; ?>
 <script>
     $('#tambahbuyback').submit(function(e) {
