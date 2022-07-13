@@ -43,7 +43,7 @@
                     <div class="card">
                         <div class="card-body">
                             <div class="row">
-                                <div class="col-3">
+                                <div class="col-sm-3">
                                     <div class="form-group">
                                         <label>Filter Kode</label>
                                         <select name="kode" onchange="TampilKartu()" class="form-control" id="kode" name="kode">
@@ -52,7 +52,7 @@
                                         </select>
                                     </div>
                                 </div>
-                                <div class="col-3">
+                                <div class="col-sm-3">
                                     <div class="form-group">
                                         <label>Filter Stock</label>
                                         <select name="stock" onchange="TampilKartu()" class="form-control" id="stock" name="stock">
@@ -62,15 +62,15 @@
                                         </select>
                                     </div>
                                 </div>
-                                <div class="col-3">
+                                <div class="col-sm-3">
                                     <div class="form-group">
                                         <label>Search Kode</label>
-                                        <input name="searchkode" onfocus="this.select()" oninput="TampilKartu()" class="form-control" id="searchkode" name="searchkode" placeholder="Masukan Kode Barang">
+                                        <input name="searchkode" onfocus="this.select()" onfocusout="TampilKartu()" class="form-control" id="searchkode" name="searchkode" placeholder="Masukan Kode Barang">
                                         <div id="validationServerUsernameFeedback" class="invalid-feedback searchkodemsg">
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-3">
+                                <div class="col-sm-3">
                                     <div class="form-group">
                                         <a type="button" href="#" onclick="TampilKartu()"><i class="fa fa-undo"></i></a>
                                     </div>
