@@ -29,7 +29,7 @@
           <div class="col-12 col-sm-6">
             <h3 class="d-inline-block d-sm-none"><?= $barang['jenis'] . ' ' . $barang['keterangan'] . ' ' . $barang['merek']  . ' ' . $barang['barcode'] ?></h3>
             <div class="col-12">
-              <img src="/img/<?= $barang['gambar'] ?>" class="product-image" alt="Product Image">
+              <img style="max-width: 500px;" src=" /img/<?= $barang['gambar'] ?>" class="product-image" alt="Product Image">
             </div>
             <div class="col-12 product-image-thumbs">
               <div class="product-image-thumb active"><img src="/img/<?= $barang['gambar'] ?>" alt="Product Image"></div>
