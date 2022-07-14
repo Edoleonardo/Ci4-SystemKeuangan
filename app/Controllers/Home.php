@@ -166,63 +166,95 @@ class Home extends BaseController
     public function TampilModalHome()
     {
         if ($this->request->isAJAX()) {
-            if ($this->request->getVar('kel') == 1) {
+            if ($this->request->getVar('kel') == 1 && $this->request->getVar('jenis') == 'sts') {
                 $datadetail = [
                     'barang' => $this->datastock1->getBarangQty(),
                     'cjenis' => $this->datastock1->CountDataJenis(),
                     'hkadar' => $this->datastock1->DataKadar(),
                     'bjenis' => $this->datastock1->DataJenis(),
                     'funct' =>  new ModelStock1(),
+                    'param' => $this->request->getVar('jenis')
+                ];
+                $data = [
+                    'modal' => view('home/modal_1', $datadetail),
+                    'param' => $this->request->getVar('jenis')
+                ];
+            } elseif ($this->request->getVar('kel') == 1 && $this->request->getVar('jenis') == 'tbl') {
+                $datadetail = [
+                    'barang' => $this->datastock1->getBarangQty(),
+                    'param' => $this->request->getVar('jenis')
                 ];
                 $data = [
                     'modal' => view('home/modal_1', $datadetail)
                 ];
-            }
-            if ($this->request->getVar('kel') == 2) {
+            } elseif ($this->request->getVar('kel') == 2 && $this->request->getVar('jenis') == 'sts') {
                 $datadetail = [
                     'barang' => $this->datastock2->getBarangQty(),
                     'cjenis' => $this->datastock2->CountDataJenis(),
                     'hkadar' => $this->datastock2->DataKadar(),
                     'bjenis' => $this->datastock2->DataJenis(),
                     'funct' =>  new ModelStock2(),
+                    'param' => $this->request->getVar('jenis')
                 ];
                 $data = [
                     'modal' => view('home/modal_2', $datadetail)
                 ];
-            }
-            if ($this->request->getVar('kel') == 3) {
+            } elseif ($this->request->getVar('kel') == 2 && $this->request->getVar('jenis') == 'tbl') {
+                $datadetail = [
+                    'barang' => $this->datastock2->getBarangQty(),
+                    'param' => $this->request->getVar('jenis')
+                ];
+                $data = [
+                    'modal' => view('home/modal_2', $datadetail)
+                ];
+            } elseif ($this->request->getVar('kel') == 3 && $this->request->getVar('jenis') == 'sts') {
                 $datadetail = [
                     'barang' => $this->datastock3->getBarangQty(),
                     'cjenis' => $this->datastock3->CountDataJenis(),
                     'hkadar' => $this->datastock3->DataKadar(),
                     'bjenis' => $this->datastock3->DataJenis(),
                     'funct' =>  new ModelStock3(),
+                    'param' => $this->request->getVar('jenis')
                 ];
                 $data = [
                     'modal' => view('home/modal_3', $datadetail)
                 ];
-            }
-            if ($this->request->getVar('kel') == 4) {
+            } elseif ($this->request->getVar('kel') == 3 && $this->request->getVar('jenis') == 'tbl') {
+                $datadetail = [
+                    'barang' => $this->datastock3->getBarangQty(),
+                    'param' => $this->request->getVar('jenis')
+                ];
+                $data = [
+                    'modal' => view('home/modal_3', $datadetail)
+                ];
+            } elseif ($this->request->getVar('kel') == 4 && $this->request->getVar('jenis') == 'sts') {
                 $datadetail = [
                     'barang' => $this->datastock4->getBarangQty(),
                     'cjenis' => $this->datastock4->CountDataJenis(),
                     'hkadar' => $this->datastock4->DataKadar(),
                     'bjenis' => $this->datastock4->DataJenis(),
                     'funct' =>  new ModelStock4(),
+                    'param' => $this->request->getVar('jenis')
                 ];
                 $data = [
                     'modal' => view('home/modal_4', $datadetail)
                 ];
-            }
-            if ($this->request->getVar('kel') == 5) {
+            } elseif ($this->request->getVar('kel') == 4 && $this->request->getVar('jenis') == 'tbl') {
+                $datadetail = [
+                    'barang' => $this->datastock4->getBarangQty(),
+                    'param' => $this->request->getVar('jenis')
+                ];
+                $data = [
+                    'modal' => view('home/modal_4', $datadetail)
+                ];
+            } elseif ($this->request->getVar('kel') == 5) {
                 $datadetail = [
                     'barang' => $this->datastock5->getBarangQty(),
                 ];
                 $data = [
                     'modal' => view('home/modal_5', $datadetail)
                 ];
-            }
-            if ($this->request->getVar('kel') == 6) {
+            } elseif ($this->request->getVar('kel') == 6) {
                 $datadetail = [
                     'barang' => $this->datastock6->getBarangQty(),
                 ];

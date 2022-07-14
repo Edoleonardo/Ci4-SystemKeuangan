@@ -516,6 +516,14 @@
 </div>
 </div>
 <script type="text/javascript">
+    <?php $session = session(); ?>
+    <?php if ($session->getFlashdata('msg')) { ?>
+        Swal.fire({
+            icon: 'warning',
+            title: 'Data Tidak Dapat Dihapus',
+        })
+    <?php } ?>
+
     function checkcust() {
         $.ajax({
             type: "GET",
@@ -1069,8 +1077,6 @@
         $('#modal-customer').modal('hide')
         checkcust()
     }
-
-
 
     function HarusBayar() {
         var kel = parseFloat(document.getElementById('kel').value)

@@ -1404,27 +1404,31 @@ class BuybackCust extends BaseController
         $session = session();
         $databuyback = $this->modelbuyback->getDataBuyback($id);
         $datadetailbb = $this->modeldetailbuyback->getDetailAllBuyback($id);
-        foreach ($datadetailbb as $row) {
-            // $data = $this->modeldetailbuyback->getDataDetailKode($row['id_detail_buyback']);
-            if ($row['no_nota'] == 'NoNota') {
-                $datastock = $this->datastock->getBarangkode($row['kode']);
-                $this->datastock->delete($datastock['id_stock_1']);
-                if ($row['nama_img'] != 'default.jpg') { //buyback dengan nota, foto ikut terhapus
-                    unlink('img/' . $row['nama_img']); //untuk hapus file
+        if ($databuyback['status_dokumen'] != 'Selesai') {
+            foreach ($datadetailbb as $row) {
+                // $data = $this->modeldetailbuyback->getDataDetailKode($row['id_detail_buyback']);
+                if ($row['no_nota'] == 'NoNota') {
+                    $datastock = $this->datastock->getBarangkode($row['kode']);
+                    $this->datastock->delete($datastock['id_stock_1']);
+                    if ($row['nama_img'] != 'default.jpg') { //buyback dengan nota, foto ikut terhapus
+                        unlink('img/' . $row['nama_img']); //untuk hapus file
+                    }
+                } else {
+                    $datadetailpenjualan = $this->modeldetailpenjualan->getDetailoneJual($row['id_detail_penjualan']);
+                    $this->modeldetailpenjualan->save([
+                        'id_detail_penjualan' => $row['id_detail_penjualan'],
+                        'id_karyawan' => $session->get('id_user'),
+                        'saldo' => (substr($row['kode'], 0, 1) == 4) ? $row['berat'] + $datadetailpenjualan['saldo'] : $row['qty'] + $datadetailpenjualan['saldo']
+                    ]);
                 }
-            } else {
-                $datadetailpenjualan = $this->modeldetailpenjualan->getDetailoneJual($row['id_detail_penjualan']);
-                $this->modeldetailpenjualan->save([
-                    'id_detail_penjualan' => $row['id_detail_penjualan'],
-                    'id_karyawan' => $session->get('id_user'),
-                    'saldo' => (substr($row['kode'], 0, 1) == 4) ? $row['berat'] + $datadetailpenjualan['saldo'] : $row['qty'] + $datadetailpenjualan['saldo']
-                ]);
+                $this->modeldetailbuyback->delete($id);
             }
-
-            $this->modeldetailbuyback->delete($id);
+            $this->modelbuyback->delete($databuyback['id_buyback']);
+            return redirect()->to('/buybackcust');
+        } else {
+            $session->setFlashdata('msg', 'Data Tidak Dapat Dihapus');
+            return redirect()->to('/draftbuyback/' . $id);
         }
-        $this->modelbuyback->delete($databuyback['id_buyback']);
-        return redirect()->to('/buybackcust');
     }
     public function DetailBuyback($id)
     {

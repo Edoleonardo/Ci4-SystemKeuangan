@@ -36,12 +36,12 @@
             </div>
             <a href="#" class="small-box-footer" data-toggle="dropdown" aria-expanded="true">Print Statistik <i class=" fas fa-arrow-circle-right"></i></a>
             <div class="dropdown-menu" role="menu" x-placement="top-start">
-              <a class="dropdown-item" href="#" onclick="ModalBarang(1)">Perhiasan Mas</a>
-              <a class="dropdown-item" href="#" onclick="ModalBarang(2)">Perhiasan Berlian</a>
-              <a class="dropdown-item" href="#" onclick="ModalBarang(3)">Emas LM</a>
-              <a class="dropdown-item" href="#" onclick="ModalBarang(4)">Bahan Murni</a>
-              <a class="dropdown-item" href="#" onclick="ModalBarang(5)">Perhiasan Berlian</a>
-              <a class="dropdown-item" href="#" onclick="ModalBarang(6)">Barang Dagang</a>
+              <a class="dropdown-item" href="#" onclick="ModalBarang(1,'tbl')">Perhiasan Mas</a>
+              <a class="dropdown-item" href="#" onclick="ModalBarang(2,'tbl')">Perhiasan Berlian</a>
+              <a class="dropdown-item" href="#" onclick="ModalBarang(3,'tbl')">Emas LM</a>
+              <a class="dropdown-item" href="#" onclick="ModalBarang(4,'tbl')">Bahan Murni</a>
+              <a class="dropdown-item" href="#" onclick="ModalBarang(5,'tbl')">Perhiasan Berlian</a>
+              <a class="dropdown-item" href="#" onclick="ModalBarang(6,'tbl')">Barang Dagang</a>
             </div>
           </div>
         </div>
@@ -201,6 +201,11 @@
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
+      <input type="hidden" name="" id="kelid">
+      <div class="btn-group">
+        <button type="button" class="btn btn-info" onclick="ModalBarang($('#kelid').val(),'tbl')">Table</button>
+        <button type="button" class="btn btn-info" onclick="ModalBarang($('#kelid').val(),'sts')">Statistik</button>
+      </div>
       <div class="modal-body">
         <div class="card table-responsive">
           <div id="openmodal"></div>
@@ -236,13 +241,15 @@
   // v_width = 400;
   // v_height = 300;
   // he_org_show_chart(v_widget_type, v_period, v_width, v_height, 'div_chart_antam');
-  function ModalBarang(kel) {
+  function ModalBarang(kel, jenis) {
+    $('#kelid').val(kel)
     $.ajax({
       type: "GET",
       dataType: "json",
       url: "<?php echo base_url('tampilmodalhome'); ?>",
       data: {
-        kel: kel
+        kel,
+        jenis
       },
       beforeSend: function() {
         Swal.fire({
@@ -255,12 +262,12 @@
           }
         });
       },
-      complete: function() {
-        swal.close()
-      },
       success: function(result) {
+        $(document).ready(function() {
+          swal.close()
+        });
         $('#openmodal').html(result.modal)
-        $('#modal-data').modal('toggle')
+        $('#modal-data').modal('show')
       },
       error: function(xhr, ajaxOptions, thrownError) {
         alert(xhr.status + "\n" + xhr.responseText + "\n" + thrownError);
