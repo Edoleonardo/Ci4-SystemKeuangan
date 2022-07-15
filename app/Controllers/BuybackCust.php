@@ -27,6 +27,7 @@ use App\Models\ModelCustomer;
 use App\Models\ModelJenis;
 use App\Models\ModelTransaksi;
 use App\Models\ModelDetailTransaksi;
+use CodeIgniter\I18n\Time;
 
 use CodeIgniter\Model;
 use CodeIgniter\Validation\Rules;
@@ -1778,6 +1779,18 @@ class BuybackCust extends BaseController
             ];
             $view = view('buybackcust/formnonota', $data);
             $msg = ['form' => $view];
+
+            echo json_encode($msg);
+        }
+    }
+    public function UpdateTanggalBB()
+    {
+        if ($this->request->isAJAX()) {
+            $time = Time::createFromFormat('Y-m-d H:i:s', $this->request->getVar('tanggal') . ' ' . date('H:i:s'));
+            $this->modelbuyback->updatetanggal($this->request->getVar('notransedit'), $time);
+            $msg = [
+                'msg' => 'sukses',
+            ];
 
             echo json_encode($msg);
         }

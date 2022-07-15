@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use CodeIgniter\Model;
+use CodeIgniter\I18n\Time;
 
 class ModelBuyback extends Model
 {
@@ -69,5 +70,16 @@ class ModelBuyback extends Model
         }
         $data = $db->query('select * from tbl_buyback where ' . $kel1 . ' and ' . $stat1 . ' and ' . $notrans1 . ' order by created_at DESC ' . $lim1 . ' ');
         return $data->getResult('array');
+    }
+
+    public function updatetanggal($id, $date)
+    {
+        $db = db_connect();
+        $date = Time::createFromFormat('Y-m-d H:i:s', $date);
+
+        $data = $db->query('UPDATE tbl_buyback set tgl_selesai = "' . $date . '", created_at = "' . $date . '", updated_at = "' . $date . '" WHERE no_transaksi_buyback = "' . $id . '"');
+        $data = $db->query('UPDATE tbl_detail_transaksi set tanggal_transaksi = "' . $date . '", created_at = "' . $date . '", updated_at = "' . $date . '" WHERE keterangan = "' . $id . '"');
+        $data = $db->query('UPDATE tbl_detail_kartustock set created_at = "' . $date . '", updated_at = "' . $date . '" WHERE no_faktur = "' . $id . '"');
+        return 1;
     }
 }

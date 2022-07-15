@@ -11,7 +11,7 @@
     </thead>
     <tbody>
         <?php foreach ($databuyback as $row) : ?>
-            <tr>
+            <tr ondblclick="OpenModelEdit('<?= $row['no_transaksi_buyback'] ?>','<?= date('Y-m-d', strtotime($row['created_at'])) ?>')">
                 <td><a href="#" type="button" onclick="OpenModalDetail('<?= $row['no_transaksi_buyback'] ?>')"><?= $row['no_transaksi_buyback'] ?></a></td>
                 <td><?= date("d-m-Y", strtotime($row['created_at'])); ?></td>
                 <td><?= $row['kelompok'] ?></td>

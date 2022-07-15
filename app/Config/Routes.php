@@ -152,6 +152,8 @@ $routes->get('/tampilcustbb', ($session->get('role')) ? 'BuybackCust::TampilCust
 $routes->get('/detailbuyback/(:any)', ($session->get('role')) ? 'BuybackCust::DetailBuyback/$1' : 'Login::Login');
 $routes->get('/formnonota', ($session->get('role')) ? 'BuybackCust::FormNoNota' : 'Login::Login');
 $routes->get('/databayarbuyback', ($session->get('role')) ? 'BuybackCust::DataBayarBuyback' : 'Login::Login');
+$routes->get('/databayarbuyback', ($session->get('role')) ? 'BuybackCust::DataBayarBuyback' : 'Login::Login');
+$routes->post('/updatetanggalbb', ($session->get('role')) ? 'BuybackCust::UpdateTanggalBB' : 'Login::Login');
 
 
 

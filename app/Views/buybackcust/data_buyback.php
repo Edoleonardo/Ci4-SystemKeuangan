@@ -123,6 +123,34 @@
 <footer class="main-footer">
 
 </footer>
+<div class="modal fade" id="modal-editgl">
+    <div class="modal-dialog modal-s">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Ubah Tanggal Buyback</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form action="/updatetanggalbb" name="updatetanggalbb" id="updatetanggalbb" class="updatetanggalbb" method="post">
+                <?= csrf_field(); ?>
+                <div class="row" style="margin: 10px;">
+                    <input type="hidden" id="notransedit" name="notransedit" value="">
+                    <div class="col-12">
+                        <div class="form-group">
+                            <label>Tangal</label>
+                            <input type="date" id="tanggal" name="tanggal" class="form-control tanggal" placeholder="Masukan Tanggal">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Tutup</button>
+                    <button type="submit" class="btn btn-primary btntambah">Ubah</button>
+            </form>
+        </div>
+    </div>
+    <!-- /.modal-content -->
+</div>
 <script>
     function OpenModalDetail(no_id) {
         $.ajax({
@@ -147,9 +175,7 @@
                 swal.close()
             },
             success: function(result) {
-                if (result.error) {
-                    console.log(result.error);
-                } else {
+                if (result.error) {} else {
                     $('#openmodaldetail').html(result.modaldetail)
                     $('#modal-modal').modal('toggle')
                 }
@@ -172,7 +198,6 @@
                 notrans: $('#notrans').val(),
             },
             success: function(result) {
-                console.log(result)
                 $('#tampildata').html(result.tampildata)
 
             },
@@ -181,6 +206,39 @@
             }
         })
     }
+
+    function OpenModelEdit(id, date) {
+        $('#modal-editgl').modal('toggle')
+        $('#tanggal').val(date)
+        $('#notransedit').val(id)
+    }
+    $('.updatetanggalbb').submit(function(e) {
+        e.preventDefault()
+        let form = $('.updatetanggalbb')[0];
+        let data = new FormData(form)
+        $.ajax({
+            type: "POST",
+            url: "<?php echo base_url('updatetanggalbb'); ?>",
+            dataType: "json",
+            data: data,
+            contentType: false,
+            processData: false,
+            cache: false,
+            dataType: "json",
+            success: function(result) {
+                $('#modal-editgl').modal('toggle')
+                TampilBarang()
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Edit Berhasil',
+                })
+            },
+            error: function(xhr, ajaxOptions, thrownError) {
+                alert(xhr.status + "\n" + xhr.responseText + "\n" + thrownError);
+            }
+        })
+
+    })
     $(document).ready(function() {
         TampilBarang()
     })
