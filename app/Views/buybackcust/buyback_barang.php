@@ -1114,7 +1114,107 @@
         totalharga.innerHTML = Math.round(harusbyr).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
 
     }
-
+    $('#tambahbuyback').submit(function(e) {
+        e.preventDefault()
+        let form = $('.tambahbuyback')[0];
+        let data = new FormData(form)
+        Swal.fire({
+            title: 'Tambah',
+            text: "Yakin ingin Buyback Barang ini ?",
+            icon: 'info',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Tambah',
+            allowOutsideClick: false
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    type: "POST",
+                    data: data,
+                    url: "<?php echo base_url('/tambahbuyback'); ?>",
+                    contentType: false,
+                    processData: false,
+                    cache: false,
+                    dataType: "json",
+                    success: function(result) {
+                        if (result.error) {
+                            if (result.error.kurang) {
+                                Swal.fire({
+                                    icon: 'warning',
+                                    title: result.error.kurang,
+                                })
+                            }
+                            if (result.error.nilai_tukar1) {
+                                $('#nilai_tukar1').addClass('is-invalid')
+                                $('.nilai_tukar1msg').html(result.error.nilai_tukar1)
+                            } else {
+                                $('#nilai_tukar1').removeClass('is-invalid')
+                                $('.nilai_tukar1msg').html('')
+                            }
+                            if (result.error.berat1) {
+                                $('#berat1').addClass('is-invalid')
+                                $('.berat1msg').html(result.error.berat1)
+                            } else {
+                                $('#berat1').removeClass('is-invalid')
+                                $('.berat1msg').html('')
+                            }
+                            if (result.error.harga_beli1) {
+                                $('#harga_beli1').addClass('is-invalid')
+                                $('.harga_beli1msg').html(result.error.harga_beli1)
+                            } else {
+                                $('#harga_beli1').removeClass('is-invalid')
+                                $('.harga_beli1msg').html('')
+                            }
+                            if (result.error.qty1) {
+                                $('#qty1').addClass('is-invalid')
+                                $('.qty1msg').html(result.error.qty1)
+                            } else {
+                                $('#qty1').removeClass('is-invalid')
+                                $('.qty1msg').html('')
+                            }
+                            if (result.error.carat1) {
+                                $('#carat1').addClass('is-invalid')
+                                $('.carat1msg').html(result.error.carat1)
+                            } else {
+                                $('#carat1').removeClass('is-invalid')
+                                $('.carat1msg').html('')
+                            }
+                        } else {
+                            $('#nilai_tukar1').removeClass('is-invalid')
+                            $('.nilai_tukar1msg').html('')
+                            $('#jenis').removeClass('is-invalid')
+                            $('.jenismsg').html('')
+                            $('#berat1').removeClass('is-invalid')
+                            $('.berat1msg').html('')
+                            $('#harga_beli1').removeClass('is-invalid')
+                            $('.harga_beli1msg').html('')
+                            $('#qty1').removeClass('is-invalid')
+                            $('.qty1msg').html('')
+                            $('#carat1').removeClass('is-invalid')
+                            $('.carat1msg').html('')
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Berhasil Tambah',
+                                confirmButtonColor: '#3085d6',
+                                confirmButtonText: 'OK',
+                                allowOutsideClick: false
+                            }).then((choose) => {
+                                if (choose.isConfirmed) {
+                                    $('#modal-edit').modal('toggle');
+                                    $('#modal-nota').modal('toggle');
+                                    tampildatabuyback()
+                                }
+                            })
+                        }
+                    },
+                    error: function(xhr, ajaxOptions, thrownError) {
+                        alert(xhr.status + "\n" + xhr.responseText + "\n" + thrownError);
+                    }
+                })
+            }
+        })
+    })
     Webcam.set({
         width: 320,
         height: 240,
