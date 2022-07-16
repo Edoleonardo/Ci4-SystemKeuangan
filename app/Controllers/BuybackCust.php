@@ -1585,7 +1585,7 @@ class BuybackCust extends BaseController
                                 $namafile = date('ymdhis') . $databarang['kode'] . '.jpg';
                                 file_put_contents(FCPATH . '/img/' . $namafile, $image);
                             } else {
-                                $filesampul = $this->request->getFile('gambar');
+                                $filesampul = $this->request->getFile('gambar1');
                                 if ($filesampul->getError() == 4) {
                                     $namafile = 'default.jpg';
                                 } else {
