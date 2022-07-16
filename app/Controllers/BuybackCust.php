@@ -1595,7 +1595,7 @@ class BuybackCust extends BaseController
                                 }
                             }
                         } else {
-                            $namafile = 'default.jpg';
+                            $namafile = $databarang['nama_img'];
                         }
                         $this->modeldetailbuyback->save([
                             'nama_img' =>  $namafile,
