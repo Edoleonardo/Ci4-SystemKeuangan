@@ -638,7 +638,8 @@
 
                     },
                     error: function(xhr, ajaxOptions, thrownError) {
-                        alert(xhr.status + "\n" + xhr.responseText + "\n" + thrownError);
+                        // alert(xhr.status + "\n" + xhr.responseText + "\n" + thrownError);
+                        window.location.href = "/detailpenjualan/" + document.getElementById('dateid').value
                     }
                 })
             }

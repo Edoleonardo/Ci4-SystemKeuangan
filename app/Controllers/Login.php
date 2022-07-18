@@ -29,6 +29,8 @@ class Login extends BaseController
     }
     public function login()
     {
+        $session = session();
+        $session->destroy();
         return view('login/loginview');
     }
     public function LogOut()
