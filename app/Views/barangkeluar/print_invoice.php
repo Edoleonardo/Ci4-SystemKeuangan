@@ -50,7 +50,7 @@ function barcodegenerate2($kode)
       <td style="border:none ;width: 125mm;"></td>
       <td style='border:none;'><?= barcodegenerate($datajual['no_transaksi_jual']) ?> </td>
       <td style="border:none ;width: 1cm;"></td>
-      <td style='border:none;'>No.Nota : <?= $datajual['no_transaksi_jual'] ?><br>Tangerang, <?= $datajual['created_at'] ?><br>Bpk/Ibu: <?= $datacust['nama'] ?><br>NoHp: <?= $datacust['nohp_cust'] ?></td>
+      <td style='border:none;'>No.Nota : <?= $datajual['no_transaksi_jual'] ?><br>Tangerang, <?= substr($datajual['created_at'], 0, 10) ?><br>Bpk/Ibu: <?= $datacust['nama'] ?><br>NoHp: <?= $datacust['nohp_cust'] ?></td>
     </tr>
   </tbody>
 </table>
