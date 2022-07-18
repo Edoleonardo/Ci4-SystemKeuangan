@@ -97,4 +97,11 @@ class ModelDetailTransaksi extends Model
         $query = $this->get();
         return $query->getResult('array')[0];
     }
+    //---------------------------------delete transaksi
+    public function DeleteTransaksi($notrans) //delete semua data transaksi
+    {
+        $db = db_connect();
+        $data = $db->query('DELETE FROM tbl_detail_transaksi WHERE keterangan = "' . $notrans . '"');
+        return true;
+    }
 }

@@ -227,7 +227,6 @@ $routes->POST('/insertjenis', ($session->get('role') == 'owner') ? 'MasterInput:
 $routes->POST('/insertuser', ($session->get('role') == 'owner') ? 'MasterInput::InsertUser' : 'Login::Login');
 $routes->POST('/insertukang', ($session->get('role') == 'owner') ? 'MasterInput::InsertTukang' : 'Login::Login');
 $routes->POST('/insertakun', ($session->get('role') == 'owner') ? 'MasterInput::InsertAkun' : 'Login::Login');
-
 // $routes->POST('/hapusdata', 'MasterInput::HapusData');
 $routes->get('/isidata', ($session->get('role') == 'owner') ? 'MasterInput::DataMaster' : 'Login::Login');
 // }
@@ -239,12 +238,13 @@ $routes->get('/tampiltrans', ($session->get('role')) ? 'Transaksi::TampilTransak
 $routes->get('/printtransaksi/(:any)/(:any)', ($session->get('role')) ? 'Transaksi::PrintTransaksi/$1/$2' : 'Login::Login');
 
 //--------------------------------MasterUpdate----------------------------------------------
-$routes->get('/updatepembelian', ($session->get('role')) ? 'MasterUpdate::UpdatePembelian' : 'Login::Login');
-$routes->post('/editpembelian', ($session->get('role')) ? 'MasterUpdate::EditPembelian' : 'Login::Login');
-$routes->get('/dataupdatedetailpembelian', ($session->get('role')) ? 'MasterUpdate::DataUpdateDetailPembelian' : 'Login::Login');
-$routes->get('/tampilpembelian_u', ($session->get('role')) ? 'MasterUpdate::TampilPembelian' : 'Login::Login');
-$routes->get('/detailpembelian_u/(:any)', ($session->get('role')) ? 'MasterUpdate::DetailPembelianSupp/$1' : 'Login::Login');
-$routes->get('/updatedata', ($session->get('role')) ? 'MasterUpdate::UpdateData' : 'Login::Login');
+$routes->get('/updatepembelian', ($session->get('role') == 'owner') ? 'MasterUpdate::UpdatePembelian' : 'Login::Login');
+$routes->post('/editpembelian', ($session->get('role') == 'owner') ? 'MasterUpdate::EditPembelian' : 'Login::Login');
+$routes->get('/dataupdatedetailpembelian', ($session->get('role') == 'owner') ? 'MasterUpdate::DataUpdateDetailPembelian' : 'Login::Login');
+$routes->get('/tampilpembelian_u', ($session->get('role') == 'owner') ? 'MasterUpdate::TampilPembelian' : 'Login::Login');
+$routes->get('/detailpembelian_u/(:any)', ($session->get('role') == 'owner') ? 'MasterUpdate::DetailPembelianSupp/$1' : 'Login::Login');
+$routes->get('/updatedata', ($session->get('role') == 'owner') ? 'MasterUpdate::UpdateData' : 'Login::Login');
+$routes->POST('/editpembayaranform', ($session->get('role') == 'owner') ? 'MasterUpdate::EditPembayaranForm' : 'Login::Login');
 
 /*
  * --------------------------------------------------------------------

@@ -27,6 +27,8 @@ use App\Models\ModelJenis;
 use App\Models\ModelRetur;
 use App\Models\ModelTransaksi;
 use App\Models\ModelDetailTransaksi;
+use App\Models\ModelPenjualan;
+use App\Models\ModelDetailPenjualan;
 
 use CodeIgniter\CLI\Console;
 use CodeIgniter\Validation\Rules;
@@ -63,6 +65,8 @@ class MasterUpdate extends BaseController
         $this->modelretur = new ModelRetur();
         $this->modeltransaksi = new ModelTransaksi();
         $this->modeldetailtransaksi = new ModelDetailTransaksi();
+        $this->penjualan = new ModelPenjualan();
+        $this->modeldetailpenjualan = new ModelDetailPenjualan();
     }
 
     public function UpdatePembelian()
@@ -293,4 +297,145 @@ class MasterUpdate extends BaseController
         }
     }
     //------------------------------------------------Update Penjualan-----------------------------------------------------
+    public function EditPembayaranForm()
+    {
+        $validation = \Config\Services::validation();
+        if ($this->request->isAJAX()) {
+            $session = session();
+            $valid = true;
+
+            if ($this->request->getVar('transfer')) {
+                $valid = $this->validate([
+                    'transfer' => [
+                        'rules' => 'required',
+                        'errors' => [
+                            'required' => 'Transfer Harus di isi',
+                        ]
+                    ],
+                    'banktransfer' => [
+                        'rules' => 'required',
+                        'errors' => [
+                            'required' => 'Bank Harus Dipilih',
+                        ]
+                    ]
+                ]);
+            }
+            if ($this->request->getVar('debitcc')) {
+                $valid = $this->validate([
+                    'debitcc' => [
+                        'rules' => 'required',
+                        'errors' => [
+                            'required' => 'Transfer Harus di isi',
+                        ]
+                    ],
+                    'bankdebitcc' => [
+                        'rules' => 'required',
+                        'errors' => [
+                            'required' => 'Bank Harus Dipilih',
+                        ]
+                    ]
+                ]);
+            }
+            if (!$valid) {
+                $msg = [
+                    'error' => [
+                        'nohpcust' => $validation->getError('nohpcust'),
+                        'transfer' => $validation->getError('transfer'),
+                        'banktransfer' => $validation->getError('banktransfer'),
+                        'bankdebitcc' => $validation->getError('bankdebitcc'),
+                        'debitcc' => $validation->getError('debitcc'),
+                    ]
+                ];
+            } else {
+                $datapenjualan = $this->penjualan->getDataPenjualan($this->request->getVar('dateid'));
+                $transfer = ($this->request->getVar('transfer')) ? $this->request->getVar('transfer') : 0;
+                $debitcc = ($this->request->getVar('debitcc')) ? $this->request->getVar('debitcc') : 0;
+                $tunai = ($this->request->getVar('tunai')) ? $this->request->getVar('tunai') : 0;
+                $pembulatan = ($this->request->getVar('pembulatan')) ? $this->request->getVar('pembulatan') : 0;
+                $byrcharge = ($this->request->getVar('byrcharge')) ? $this->request->getVar('byrcharge') : 0;
+                $charge = ($this->request->getVar('charge')) ? $this->request->getVar('charge') : 0;
+                if ($this->request->getVar('charge')) {
+                    $hasilcharge = $debitcc * $charge;
+                } else {
+                    $hasilcharge = 0;
+                }
+                $hasil = ($datapenjualan['total_harga'] + $hasilcharge) - $transfer - $tunai - ($debitcc + $byrcharge) - $pembulatan;
+
+                if ($hasil <= 0) {
+                    $this->penjualan->save([
+                        'id_penjualan' =>  $datapenjualan['id_penjualan'],
+                        'id_karyawan' => $session->get('id_user'),
+                        'bank_transfer' => ($this->request->getVar('transfer')) ? $this->request->getVar('banktransfer') : null,
+                        'bank_debitcc' => ($this->request->getVar('debitcc')) ? $this->request->getVar('bankdebitcc') : null,
+                        'pembayaran' => 'Lunas',
+                        'tunai' =>  $tunai,
+                        'debitcc' =>  $debitcc + $byrcharge,
+                        'transfer' =>  $transfer,
+                        'charge' =>   $charge,
+                        'pembulatan' => $pembulatan,
+                        'jumlah' => $this->modeldetailpenjualan->JumlahData($datapenjualan['id_date_penjualan'])['jumlah'],
+                    ]);
+                    $msg = [
+                        'pesan' => [
+                            'pesan' => 'berhasil'
+                        ]
+                    ];
+                    $status = true;
+                } else {
+                    $msg = [
+                        'error' => [
+                            'kurang' => 'Pembayaran Kurang ' . number_format($hasil, 0, ',', '.')
+                        ]
+                    ];
+                    // $msg = $hasil;
+                }
+                if (isset($status)) {
+                    $saldobiaya = $this->modeltransaksi->getTransaksi();
+                    $this->modeldetailtransaksi->DeleteTransaksi($datapenjualan['no_transaksi_jual']);
+                    if ($this->request->getVar('tunai')) {
+                        $this->modeldetailtransaksi->save([
+                            //'tanggal_transaksi' => date("Y-m-d H:i:s"),
+                            'tanggal_transaksi' => $datapenjualan['created_at'],
+                            'id_karyawan' => $session->get('id_user'),
+                            'pembayaran' => 'Tunai',
+                            'keterangan' => $datapenjualan['no_transaksi_jual'],
+                            'id_akun_biaya' => 26,
+                            'masuk' => $this->request->getVar('tunai'),
+                            'keluar' =>  0,
+                            'nama_bank' => ($this->request->getVar('namabank')) ? $this->request->getVar('namabank') : null,
+                        ]);
+                    }
+                    if ($this->request->getVar('transfer')) {
+                        $this->modeldetailtransaksi->save([
+                            //'tanggal_transaksi' => date("Y-m-d H:i:s"), //sementara
+                            'tanggal_transaksi' => $datapenjualan['created_at'],
+                            'id_karyawan' => $session->get('id_user'),
+                            'pembayaran' => 'Transfer',
+                            'keterangan' => $datapenjualan['no_transaksi_jual'],
+                            'id_akun_biaya' => 26,
+                            'masuk' => $this->request->getVar('transfer'),
+                            'keluar' =>  0,
+                            'nama_bank' => ($this->request->getVar('namabank')) ? $this->request->getVar('namabank') : null,
+                        ]);
+                    }
+                    if ($this->request->getVar('debitcc')) {
+                        $this->modeldetailtransaksi->save([
+                            //'tanggal_transaksi' => date("Y-m-d H:i:s"), //sementara
+                            'tanggal_transaksi' => $datapenjualan['created_at'],
+                            'id_karyawan' => $session->get('id_user'),
+                            'pembayaran' => 'Debitcc',
+                            'keterangan' => $datapenjualan['no_transaksi_jual'],
+                            'id_akun_biaya' => 26,
+                            'masuk' => $this->request->getVar('debitcc') + $byrcharge,
+                            'keluar' =>  0,
+                            'nama_bank' => ($this->request->getVar('namabank')) ? $this->request->getVar('namabank') : null,
+                        ]);
+                    }
+
+                    $this->BiayaHarianMaster($saldobiaya['id_transaksi'], $session);
+                }
+            }
+            echo json_encode($msg);
+        }
+    }
 }

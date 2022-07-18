@@ -12,7 +12,7 @@
     <tbody>
         <?php foreach ($datapenjualan as $row) : ?>
             <?php $dcust = $datacust->getDataCustomerone($row['nohp_cust']) ?>
-            <tr>
+            <tr ondblclick="OpenModelEdit('<?= $row['no_transaksi_jual'] ?>','<?= date('Y-m-d', strtotime($row['created_at'])) ?>')">
                 <td><a href="#" type="button" onclick="OpenModalDetail('<?= $row['no_transaksi_jual'] ?>')"><?= $row['no_transaksi_jual'] ?></a></td>
                 <td><?= date("d-m-Y", strtotime($row['created_at'])); ?></td>
                 <td><?= ($dcust) ? $dcust['nohp_cust'] : ''  ?> (<?= ($dcust) ? $dcust['nama'] : 'No Data' ?>) </td>
