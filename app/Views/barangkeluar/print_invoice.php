@@ -111,17 +111,6 @@ function barcodegenerate2($kode)
           <td>Total</td>
           <td style="text-align: right;">Rp. <?= number_format($total, 0, ",", ".") ?>,-</td>
         </tr>
-        <?php if ($datajual['pembulatan']) : ?>
-          <tr>
-            <td style='border:none;'></td>
-            <td style='border:none;'></td>
-            <td style='border:none;'></td>
-            <td style='border:none;'></td>
-            <td style='border:none;'></td>
-            <td>Diskon</td>
-            <td style="text-align: right;">Rp. <?= number_format($datajual['pembulatan'], 0, ",", ".") ?>,-</td>
-          </tr>
-        <?php endif ?>
         <?php if ($datajual['tunai']) : ?>
           <tr>
             <td style='border:none;'></td>
@@ -199,16 +188,6 @@ function barcodegenerate2($kode)
           <td>Total</td>
           <td style="text-align: right;">Rp. <?= number_format($total, 0, ",", ".") ?>,-</td>
         </tr>
-        <?php if ($datajual['pembulatan']) : ?>
-          <tr>
-            <td style='border:none;'></td>
-            <td style='border:none;'></td>
-            <td style='border:none;'></td>
-            <td style='border:none;'></td>
-            <td>Diskon</td>
-            <td style="text-align: right;">Rp. <?= number_format($datajual['pembulatan'], 0, ",", ".") ?>,-</td>
-          </tr>
-        <?php endif ?>
         <?php if ($datajual['tunai']) : ?>
           <tr>
             <td style='border:none;'></td>
@@ -279,15 +258,6 @@ function barcodegenerate2($kode)
           <td style='border:none;'></td>
           <td>Total</td>
         </tr>
-        <?php if ($datajual['pembulatan']) : ?>
-          <tr>
-            <td style='border:none;'></td>
-            <td style='border:none;'></td>
-            <td style='border:none;'></td>
-            <td>Diskon</td>
-            <td style="text-align: right;">Rp. <?= number_format($datajual['pembulatan'], 0, ",", ".") ?>,-</td>
-          </tr>
-        <?php endif ?>
         <?php if ($datajual['tunai']) : ?>
           <tr>
             <td style='border:none;'></td>

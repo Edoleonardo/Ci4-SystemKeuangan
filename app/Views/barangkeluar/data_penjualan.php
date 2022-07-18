@@ -129,6 +129,8 @@
 <footer class="main-footer">
 
 </footer>
+
+<div id="openmodaldetail"></div>
 <div class="modal fade" id="modal-editgl">
     <div class="modal-dialog modal-s">
         <div class="modal-content">
@@ -138,7 +140,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form action="/updatetanggaljual" name="updatetanggaljual" id="updatetanggaljual" class="updatetanggaljual" method="post">
+            <form action="/updatetanggalbb" name="updatetanggalbb" id="updatetanggalbb" class="updatetanggalbb" method="post">
                 <?= csrf_field(); ?>
                 <div class="row" style="margin: 10px;">
                     <input type="hidden" id="notransedit" name="notransedit" value="">
@@ -157,7 +159,6 @@
     </div>
     <!-- /.modal-content -->
 </div>
-<div id="openmodaldetail"></div>
 <script>
     function TampilBarang() {
         $.ajax({
