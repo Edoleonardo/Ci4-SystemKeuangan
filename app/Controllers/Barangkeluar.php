@@ -23,6 +23,8 @@ use App\Models\ModelBank;
 use App\Models\ModelTransaksi;
 use App\Models\ModelDetailTransaksi;
 use App\Models\ModelDetailBuyback;
+use CodeIgniter\I18n\Time;
+
 use CodeIgniter\Model;
 use CodeIgniter\Validation\Rules;
 use Faker\Provider\ar_EG\Person;
@@ -1673,6 +1675,19 @@ class Barangkeluar extends BaseController
             ];
             $msg = [
                 'tampildata' => view('barangkeluar/tampilpenjualan', $view),
+            ];
+
+            echo json_encode($msg);
+        }
+    }
+
+    public function UpdateTanggalJual()
+    {
+        if ($this->request->isAJAX()) {
+            $time = Time::createFromFormat('Y-m-d H:i:s', $this->request->getVar('tanggal') . ' ' . date('H:i:s'));
+            $this->penjualan->updatetanggal($this->request->getVar('notransedit'), $time);
+            $msg = [
+                'msg' => 'sukses',
             ];
 
             echo json_encode($msg);

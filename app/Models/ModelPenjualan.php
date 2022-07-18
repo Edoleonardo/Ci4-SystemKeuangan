@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use CodeIgniter\Model;
+use CodeIgniter\I18n\Time;
+
 
 class ModelPenjualan extends Model
 {
@@ -70,5 +72,16 @@ class ModelPenjualan extends Model
         $this->selectCount('no_transaksi_jual');
         $query = $this->get();
         return $query->getResult('array')[0];
+    }
+
+    public function updatetanggal($id, $date)
+    {
+        $db = db_connect();
+        $date = Time::createFromFormat('Y-m-d H:i:s', $date);
+
+        $data = $db->query('UPDATE tbl_penjualan set created_at = "' . $date . '", updated_at = "' . $date . '" WHERE no_transaksi_jual = "' . $id . '"');
+        $data = $db->query('UPDATE tbl_detail_transaksi set tanggal_transaksi = "' . $date . '", created_at = "' . $date . '", updated_at = "' . $date . '" WHERE keterangan = "' . $id . '"');
+        $data = $db->query('UPDATE tbl_detail_kartustock set created_at = "' . $date . '", updated_at = "' . $date . '" WHERE no_faktur = "' . $id . '"');
+        return 1;
     }
 }

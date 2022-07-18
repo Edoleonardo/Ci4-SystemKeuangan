@@ -132,6 +132,7 @@ $routes->get('/detailpenjualan/(:any)', ($session->get('role')) ? 'Barangkeluar:
 $routes->get('/tampilcust', ($session->get('role')) ? 'Barangkeluar::TampilCustomer' : 'Login::Login');
 $routes->get('/checkcust', ($session->get('role')) ? 'Barangkeluar::CheckCustomer' : 'Login::Login');
 $routes->get('/ubahketjual', ($session->get('role')) ? 'Barangkeluar::UbahKeterangan' : 'Login::Login');
+$routes->post('/updatetanggaljual', ($session->get('role')) ? 'Barangkeluar::UpdateTanggalJual' : 'Login::Login');
 
 //------------------buyback----------------
 $routes->get('/buybackcust', ($session->get('role')) ? 'BuybackCust::BuyBack' : 'Login::Login');

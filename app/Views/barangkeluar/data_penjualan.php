@@ -140,7 +140,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form action="/updatetanggalbb" name="updatetanggalbb" id="updatetanggalbb" class="updatetanggalbb" method="post">
+            <form action="/updatetanggaljual" name="updatetanggaljual" id="updatetanggaljual" class="updatetanggaljual" method="post">
                 <?= csrf_field(); ?>
                 <div class="row" style="margin: 10px;">
                     <input type="hidden" id="notransedit" name="notransedit" value="">
