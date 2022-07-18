@@ -42,8 +42,10 @@ class Transaksi extends BaseController
                 $msg = ['error' => 'Dari Tanggal Harus Lebih Kecil'];
             } else {
                 $data = [
-                    'detailtransaksi' => $this->modeldetailtransaksi->getDetailTransaksiFilter($this->request->getVar('dari'), $this->request->getVar('sampai')),
+                    //'detailtransaksi' => $this->modeldetailtransaksi->getDetailTransaksiFilter($this->request->getVar('dari'), $this->request->getVar('sampai')),
                     'datatransaksi' => $this->modeltransaksi->getTransaksi(),
+                    'datatime' => $this->modeldetailtransaksi->getTimeTransaksiFilter($this->request->getVar('dari'), $this->request->getVar('sampai')),
+                    'modeltransaksi' => $this->modeldetailtransaksi
                 ];
                 $msg = ['tampiltrans' => view('transaksi/tabletransaksi', $data)];
             }
