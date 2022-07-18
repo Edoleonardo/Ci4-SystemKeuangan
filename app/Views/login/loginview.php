@@ -42,7 +42,7 @@
                         </div>
                     </div>
                     <div class="input-group mb-3">
-                        <input type="password" name="password1" id="password1" class="form-control" value="<?= (isset($_COOKIE['password1'])) ? $_COOKIE['password1'] : '' ?>" placeholder="Masukan password1">
+                        <input type="password" name="password1" id="password1" class="form-control" value="<?= (isset($_COOKIE['password1'])) ? $_COOKIE['password1'] : '' ?>" placeholder="Masukan Password">
                         <div id="validationServerUsernameFeedback" class="invalid-feedback password1msg">
                         </div>
                     </div>
