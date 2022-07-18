@@ -37,19 +37,19 @@
                             <div id="validationServerUsernameFeedback" class="invalid-feedback jenismsg">
                             </div>
                         </div> -->
-                        <input type="text" name="username" id="username" class="form-control" value="<?= (isset($_COOKIE['username'])) ? $_COOKIE['username'] : '' ?>" placeholder="Masukan Username">
-                        <div id="validationServerUsernameFeedback" class="invalid-feedback usernamemsg">
+                        <input type="text" name="username1" id="username1" class="form-control" value="<?= (isset($_COOKIE['username1'])) ? $_COOKIE['username1'] : '' ?>" placeholder="Masukan Username">
+                        <div id="validationServerUsernameFeedback" class="invalid-feedback username1msg">
                         </div>
                     </div>
                     <div class="input-group mb-3">
-                        <input type="password" name="password" id="password" class="form-control" value="<?= (isset($_COOKIE['password'])) ? $_COOKIE['password'] : '' ?>" placeholder="Masukan password">
-                        <div id="validationServerUsernameFeedback" class="invalid-feedback passwordmsg">
+                        <input type="password" name="password1" id="password1" class="form-control" value="<?= (isset($_COOKIE['password1'])) ? $_COOKIE['password1'] : '' ?>" placeholder="Masukan password1">
+                        <div id="validationServerUsernameFeedback" class="invalid-feedback password1msg">
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-8">
                             <div class="icheck-primary">
-                                <input type="checkbox" name="remember" id="remember" <?= (isset($_COOKIE['password'])) ? 'checked' : '' ?>>
+                                <input type="checkbox" name="remember" id="remember" <?= (isset($_COOKIE['password1'])) ? 'checked' : '' ?>>
                                 <label for="remember">
                                     Remember Me
                                 </label>
@@ -83,30 +83,30 @@
                 cache: false,
                 success: function(hasil) {
                     if (hasil.error) {
-                        if (hasil.error.username) {
-                            $('#username').addClass('is-invalid')
-                            $('.usernamemsg').html(hasil.error.username)
+                        if (hasil.error.username1) {
+                            $('#username1').addClass('is-invalid')
+                            $('.username1msg').html(hasil.error.username1)
                         } else {
-                            $('#username').removeClass('is-invalid')
-                            $('.usernamemsg').html('')
+                            $('#username1').removeClass('is-invalid')
+                            $('.username1msg').html('')
                         }
-                        if (hasil.error.password) {
-                            $('#password').addClass('is-invalid')
-                            $('.passwordmsg').html(hasil.error.password)
+                        if (hasil.error.password1) {
+                            $('#password1').addClass('is-invalid')
+                            $('.password1msg').html(hasil.error.password1)
                         } else {
-                            $('#password').removeClass('is-invalid')
-                            $('.passwordmsg').html('')
+                            $('#password1').removeClass('is-invalid')
+                            $('.password1msg').html('')
                         }
 
                     } else {
-                        $('#password').removeClass('is-invalid')
-                        $('.passwordmsg').html('')
-                        $('#username').removeClass('is-invalid')
-                        $('.usernamemsg').html('')
+                        $('#password1').removeClass('is-invalid')
+                        $('.password1msg').html('')
+                        $('#username1').removeClass('is-invalid')
+                        $('.username1msg').html('')
                         if (hasil == 'gagal') {
-                            $('#password').addClass('is-invalid')
-                            $('#username').addClass('is-invalid')
-                            $('.passwordmsg').html('Username / Password Salah')
+                            $('#password1').addClass('is-invalid')
+                            $('#username1').addClass('is-invalid')
+                            $('.password1msg').html('Username / Password Salah')
                         } else {
                             window.location.href = '/'
                         }

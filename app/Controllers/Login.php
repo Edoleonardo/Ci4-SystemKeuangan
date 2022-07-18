@@ -42,13 +42,13 @@ class Login extends BaseController
         if ($this->request->isAJAX()) {
             $validation = \Config\Services::validation();
             if (!$this->validate([
-                'username' => [
+                'username1' => [
                     'rules' => 'required',
                     'errors' => [
                         'required' => 'Username Harus di isi',
                     ]
                 ],
-                'password' => [
+                'password1' => [
                     'rules' => 'required',
                     'errors' => [
                         'required' => 'Password Harus di isi',
@@ -58,26 +58,26 @@ class Login extends BaseController
             ])) {
                 $msg = [
                     'error' => [
-                        'username' => $validation->getError('username'),
-                        'password' => $validation->getError('password'),
+                        'username1' => $validation->getError('username1'),
+                        'password1' => $validation->getError('password1'),
                     ]
                 ];
                 echo json_encode($msg);
             } else {
-                $username = $this->request->getVar('username');
-                $password = $this->request->getVar('password');
+                $username1 = $this->request->getVar('username1');
+                $password1 = $this->request->getVar('password1');
                 $check = $this->modellogin->getDatauserAll();
-                $data = $this->multi_array_search($check, array('username' => $username, 'password' =>  $password));
+                $data = $this->multi_array_search($check, array('username' => $username1, 'password' =>  $password1));
                 if ($data) {
                     if ($this->request->getVar('remember')) {
-                        setcookie("username", $username, time() + (10 * 365 * 24 * 60 * 60), "/");
-                        setcookie("password", $password, time() + (10 * 365 * 24 * 60 * 60), "/");
+                        setcookie("username1", $username1, time() + (10 * 365 * 24 * 60 * 60), "/");
+                        setcookie("password1", $password1, time() + (10 * 365 * 24 * 60 * 60), "/");
                     } else {
-                        if (isset($_COOKIE['username'])) {
-                            setcookie('username', '');
+                        if (isset($_COOKIE['username1'])) {
+                            setcookie('username1', '');
                         }
-                        if (isset($_COOKIE['password'])) {
-                            setcookie('password', '');
+                        if (isset($_COOKIE['password1'])) {
+                            setcookie('password1', '');
                         }
                     }
                     $session = session();
@@ -86,11 +86,11 @@ class Login extends BaseController
                     $session->set('nama_user', $check[$data[0]]['nama_pegawai']);
                     $msg = 'berhasil';
                 } else {
-                    if (isset($_COOKIE['username'])) {
-                        setcookie('username', '');
+                    if (isset($_COOKIE['username1'])) {
+                        setcookie('username1', '');
                     }
-                    if (isset($_COOKIE['password'])) {
-                        setcookie('password', '');
+                    if (isset($_COOKIE['password1'])) {
+                        setcookie('password1', '');
                     }
                     $msg = 'gagal';
                 }
