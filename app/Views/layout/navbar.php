@@ -335,23 +335,25 @@
                         </li>
                     </ul>
                 </li> -->
-                <li class="nav-item">
-                    <a href="#" class="nav-link">
-                        <i class="nav-icon fas fa-table"></i>
-                        <p>
-                            Input Master Data
-                            <i class="right fas fa-angle-left"></i>
-                        </p>
-                    </a>
-                    <ul class="nav nav-treeview">
-                        <li class="nav-item">
-                            <a href="/masterinput" class="nav-link ">
-                                <i class="far fa-circle nav-icon"></i>
-                                <p>Master data</p>
-                            </a>
-                        </li>
-                    </ul>
-                </li>
+                <?php if ($session->get('role') == 'owner') { ?>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">
+                            <i class="nav-icon fas fa-table"></i>
+                            <p>
+                                Input Master Data
+                                <i class="right fas fa-angle-left"></i>
+                            </p>
+                        </a>
+                        <ul class="nav nav-treeview">
+                            <li class="nav-item">
+                                <a href="/masterinput" class="nav-link ">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Master data</p>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                <?php } ?>
                 <li class="nav-item">
                     <a href="/stockopname" class="nav-link">
                         <i class="nav-icon far fa fa-list-alt"></i>

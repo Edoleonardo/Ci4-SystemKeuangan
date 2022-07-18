@@ -213,23 +213,23 @@ $routes->get('/detailbarang', ($session->get('role')) ? 'BarangRetur::DataDetail
 
 
 //----------------------------------masterinput-------------------------
-$routes->get('/masterinput', ($session->get('role')) ? 'MasterInput::HomeInput' : 'Login::Login');
-$routes->POST('/insertsupp', ($session->get('role')) ? 'MasterInput::InsertSupp' : 'Login::Login');
-$routes->POST('/insertkadar', ($session->get('role')) ? 'MasterInput::InsertKadar' : 'Login::Login');
-$routes->POST('/insertmerek', ($session->get('role')) ? 'MasterInput::InsertMerek' : 'Login::Login');
-$routes->POST('/insertbank', ($session->get('role')) ? 'MasterInput::InsertBank' : 'Login::Login');
-$routes->POST('/updatesupp', ($session->get('role')) ? 'MasterInput::UpdateSupp' : 'Login::Login');
-$routes->POST('/updatekadar', ($session->get('role')) ? 'MasterInput::UpdateKadar' : 'Login::Login');
-$routes->POST('/updatemerek', ($session->get('role')) ? 'MasterInput::UpdateMerek' : 'Login::Login');
-$routes->POST('/updatebank', ($session->get('role')) ? 'MasterInput::UpdateBank' : 'Login::Login');
-$routes->POST('/updatecust', ($session->get('role')) ? 'MasterInput::UpdateCust' : 'Login::Login');
-$routes->POST('/insertjenis', ($session->get('role')) ? 'MasterInput::InsertJenis' : 'Login::Login');
-$routes->POST('/insertuser', ($session->get('role')) ? 'MasterInput::InsertUser' : 'Login::Login');
-$routes->POST('/insertukang', ($session->get('role')) ? 'MasterInput::InsertTukang' : 'Login::Login');
-$routes->POST('/insertakun', ($session->get('role')) ? 'MasterInput::InsertAkun' : 'Login::Login');
+$routes->get('/masterinput', ($session->get('role') == 'owner') ? 'MasterInput::HomeInput' : 'Login::Login');
+$routes->POST('/insertsupp', ($session->get('role') == 'owner') ? 'MasterInput::InsertSupp' : 'Login::Login');
+$routes->POST('/insertkadar', ($session->get('role') == 'owner') ? 'MasterInput::InsertKadar' : 'Login::Login');
+$routes->POST('/insertmerek', ($session->get('role') == 'owner') ? 'MasterInput::InsertMerek' : 'Login::Login');
+$routes->POST('/insertbank', ($session->get('role') == 'owner') ? 'MasterInput::InsertBank' : 'Login::Login');
+$routes->POST('/updatesupp', ($session->get('role') == 'owner') ? 'MasterInput::UpdateSupp' : 'Login::Login');
+$routes->POST('/updatekadar', ($session->get('role') == 'owner') ? 'MasterInput::UpdateKadar' : 'Login::Login');
+$routes->POST('/updatemerek', ($session->get('role') == 'owner') ? 'MasterInput::UpdateMerek' : 'Login::Login');
+$routes->POST('/updatebank', ($session->get('role') == 'owner') ? 'MasterInput::UpdateBank' : 'Login::Login');
+$routes->POST('/updatecust', ($session->get('role') == 'owner') ? 'MasterInput::UpdateCust' : 'Login::Login');
+$routes->POST('/insertjenis', ($session->get('role') == 'owner') ? 'MasterInput::InsertJenis' : 'Login::Login');
+$routes->POST('/insertuser', ($session->get('role') == 'owner') ? 'MasterInput::InsertUser' : 'Login::Login');
+$routes->POST('/insertukang', ($session->get('role') == 'owner') ? 'MasterInput::InsertTukang' : 'Login::Login');
+$routes->POST('/insertakun', ($session->get('role') == 'owner') ? 'MasterInput::InsertAkun' : 'Login::Login');
 
 // $routes->POST('/hapusdata', 'MasterInput::HapusData');
-$routes->get('/isidata', ($session->get('role')) ? 'MasterInput::DataMaster' : 'Login::Login');
+$routes->get('/isidata', ($session->get('role') == 'owner') ? 'MasterInput::DataMaster' : 'Login::Login');
 // }
 
 //----------------------------------Transaksi-------------------------------------

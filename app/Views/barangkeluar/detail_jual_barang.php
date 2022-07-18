@@ -70,18 +70,12 @@
                 <!-- Application buttons -->
                 <div class="card" id="card1">
                     <div class="card-body" id="card2">
-                        <?php if ($datapenjualan['status_dokumen'] == 'Retur') : ?>
-                            <a class="btn btn-app bg-danger" type="button" data-toggle="modal" data-target="#modal-bayar">
-                                <i class="fas fa-money-bill"></i> Bayar Retur
-                            </a>
-                        <?php else : ?>
-                            <a class="btn btn-app" target="_blank" onclick="pindahtempat('/printinvoice/<?= $datapenjualan['id_date_penjualan'] ?>')" target="_blank">
-                                <i class="fas fa-print"></i> Print Invoce
-                            </a>
-                            <a class="btn btn-app bg-primary" type="button">
-                                <i class="fas fa-check"></i> Lunas
-                            </a>
-                        <?php endif; ?>
+                        <a class="btn btn-app" target="_blank" onclick="pindahtempat('/printinvoice/<?= $datapenjualan['id_date_penjualan'] ?>')" target="_blank">
+                            <i class="fas fa-print"></i> Print Invoce
+                        </a>
+                        <a class="btn btn-app bg-primary" type="button">
+                            <i class="fas fa-check"></i> Lunas
+                        </a>
                     </div>
                     <!-- /.card-body -->
                 </div>
