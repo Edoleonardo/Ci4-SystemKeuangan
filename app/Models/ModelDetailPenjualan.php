@@ -31,7 +31,7 @@ class ModelDetailPenjualan extends Model
     {
         $this->select('*');
         $this->where('kode', $id);
-        $this->where('LENGTH(id_date_penjualan)', 12);
+        // $this->where('LENGTH(id_date_penjualan)', 12);
         $this->orderBy('created_at', 'DESC');
         $query = $this->get();
         if ($query->getResult('array')) {

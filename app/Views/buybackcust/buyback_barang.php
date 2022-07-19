@@ -611,6 +611,10 @@
             url: "<?php echo base_url('formnonota') ?>",
             success: function(result) {
                 $('#formnonotaa').html(result.form)
+                $('#my_camera').val('')
+                $(".image-tag").val('')
+                $('.custom-file-input').val('');
+                $('.custom-file-input').next('label').html('Pilih Gambar');
             },
             error: function(xhr, ajaxOptions, thrownError) {
                 alert(xhr.status + "\n" + xhr.responseText + "\n" + thrownError);
@@ -642,6 +646,7 @@
                     cache: false,
                     dataType: "json",
                     success: function(result) {
+                        console.log(result.kel)
                         if (result.error) {
                             if (result.error.qty) {
                                 $('#qty').addClass('is-invalid')
@@ -778,6 +783,13 @@
                                 $('#namabank').removeClass('is-invalid')
                                 $('.namabank').html('')
                             }
+                            if (result.error.tunai) {
+                                $('#tunai').addClass('is-invalid')
+                                $('.tunaimsg').html(result.error.tunai)
+                            } else {
+                                $('#tunai').removeClass('is-invalid')
+                                $('.tunai').html('')
+                            }
                             if (result.error.nohpcust) {
                                 $('#nohpcust').addClass('is-invalid')
                                 $('.nohpcustmsg').html(result.error.nohpcust)
@@ -805,6 +817,8 @@
                             $('.nohpcustmsg').html('')
                             $('#transfer').removeClass('is-invalid')
                             $('.transfermsg').html('')
+                            $('#tunai').removeClass('is-invalid')
+                            $('.tunaimsg').html('')
                             Swal.fire({
                                 icon: 'success',
                                 title: 'Berhasil Bayar',
@@ -1010,20 +1024,6 @@
             },
             success: function(result) {
                 $('#databuyback').html(result.data)
-
-
-                // $('#totalhargaview').html(result.totalharga.toString().replace(/\B(?=(\d{3})+(?!\d))/g, "."))
-                // $('#totalberatview').html((Math.round(result.totalberat * 100) / 100).toString().replace(/\B(?=(\d{3})+(?!\d))/g, "."))
-                // $('#harusbayar').html(result.totalharga.toString().replace(/\B(?=(\d{3})+(?!\d))/g, "."))
-                // $('#brtmurni').html((Math.round(result.totalberat * 100) / 100).toString().replace(/\B(?=(\d{3})+(?!\d))/g, "."))
-
-                // var totalharga = parseFloat(result.totalbersih.total_harga) + parseFloat(result.totalongkos.ongkos)
-                // $('#datajual').html(result.data)
-                // $('#totalbersih01').html(totalharga.toString().replace(/\B(?=(\d{3})+(?!\d))/g, "."))
-                // $('#totalberatbersihhtml01').html(pembulatankoma(result.totalberatbersih.berat_murni))
-                // $('#totalberatkotorhtml01').html(pembulatankoma(result.totalberatkotor.berat))
-                // $('#totalongkoshtml01').html(pembulatankoma(result.totalongkos.ongkos).toString().replace(/\B(?=(\d{3})+(?!\d))/g, "."))
-
             },
             error: function(xhr, ajaxOptions, thrownError) {
                 alert(xhr.status + "\n" + xhr.responseText + "\n" + thrownError);
@@ -1279,10 +1279,14 @@
         // ModalBarcode()
         tampildatabuyback()
         $("#modal-foto").on("hidden.bs.modal", function() {
-            Webcam.reset()
+            if (!$(".image-tag1").val()) {
+                Webcam.reset()
+            }
         });
         $("#modal-foto1").on("hidden.bs.modal", function() {
-            Webcam.reset()
+            if (!$(".image-tag1").val()) {
+                Webcam.reset()
+            }
         });
         $('.insertcust').submit(function(e) {
             e.preventDefault()

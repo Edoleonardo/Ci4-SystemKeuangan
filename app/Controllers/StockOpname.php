@@ -427,31 +427,31 @@ class StockOpname extends BaseController
                                 'gambar' =>  $namafile,
                             ]);
                         } elseif ($kel == 2) {
-                            $this->datastock->save([
+                            $this->datastock2->save([
                                 'id_stock_2' => $datastock['id_stock_2'],
                                 'id_karyawan' => $session->get('id_user'),
                                 'gambar' =>  $namafile,
                             ]);
                         } elseif ($kel == 3) {
-                            $this->datastock->save([
+                            $this->datastock3->save([
                                 'id_stock_3' => $datastock['id_stock_3'],
                                 'id_karyawan' => $session->get('id_user'),
                                 'gambar' =>  $namafile,
                             ]);
                         } elseif ($kel == 4) {
-                            $this->datastock->save([
+                            $this->datastock4->save([
                                 'id_stock_4' => $datastock['id_stock_4'],
                                 'id_karyawan' => $session->get('id_user'),
                                 'gambar' =>  $namafile,
                             ]);
                         } elseif ($kel == 5) {
-                            $this->datastock->save([
+                            $this->datastock5->save([
                                 'id_stock_5' => $datastock['id_stock_5'],
                                 'id_karyawan' => $session->get('id_user'),
                                 'gambar' =>  $namafile,
                             ]);
                         } elseif ($kel == 6) {
-                            $this->datastock->save([
+                            $this->datastock6->save([
                                 'id_stock_6' => $datastock['id_stock_6'],
                                 'id_karyawan' => $session->get('id_user'),
                                 'gambar' =>  $namafile,
