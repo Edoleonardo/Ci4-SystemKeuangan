@@ -438,4 +438,121 @@ class MasterUpdate extends BaseController
             echo json_encode($msg);
         }
     }
+
+    //---------------------------------------------------Transaksi Harian------------------------------------------------------------
+
+    public function TampilEdit()
+    {
+        if ($this->request->isAJAX()) {
+            $msg = $this->modeldetailtransaksi->getDetailTransaksi($this->request->getVar('id'));
+            echo json_encode($msg);
+        }
+    }
+    public function EditTransaksi()
+    {
+        if ($this->request->isAJAX()) {
+            $validation = \Config\Services::validation();
+            $valid = $this->validate([
+                'kategori1' => [
+                    'rules' => 'required',
+                    'errors' => [
+                        'required' => 'kategori Harus di isi',
+                    ]
+                ],
+                'keterangan1' => [
+                    'rules' => 'required',
+                    'errors' => [
+                        'required' => 'Keterangan Harus di isi',
+
+                    ]
+                ],
+                'tangalinput1' => [
+                    'rules' => 'required',
+                    'errors' => [
+                        'required' => 'tangal input Harus di isi',
+
+                    ]
+                ],
+                'amount1' => [
+                    'rules' => 'required|greater_than[0]',
+                    'errors' => [
+                        'required' => 'amount Harus di isi',
+                        'greater_than' => 'harus lebih besar dari 0'
+
+                    ]
+                ],
+                'nama_akun1' => [
+                    'rules' => 'required',
+                    'errors' => [
+                        'required' => 'Nama Akun Harus di isi',
+
+                    ]
+                ],
+            ]);
+            if (!$valid) {
+                $msg = [
+                    'error' => [
+                        'kategori' => $validation->getError('kategori'),
+                        'keterangan1' => $validation->getError('keterangan1'),
+                        'tangalinput1' => $validation->getError('tangalinput1'),
+                        'amount1' => $validation->getError('amount1'),
+                        'nama_akun1' => $validation->getError('nama_akun1'),
+                    ]
+                ];
+                echo json_encode($msg);
+            } else {
+                $session = session();
+                $datatransaksi = $this->modeltransaksi->getTransaksi($this->request->getVar('id_transaksi1'));
+                if ($this->request->getVar('kategori1') == 'keluar') { //--------------------------------Kategori Masuk
+                    if ($datatransaksi['total_akhir_tunai'] >= $this->request->getVar('amount1') && $this->request->getVar('pembayaran1') == 'Tunai') {
+                        $keluar = $this->request->getVar('amount');
+                        $masuk = 0;
+                        $sukses = true;
+                    }
+                    // if ($datatransaksi['total_akhir_transfer'] >= $this->request->getVar('amount1') && $this->request->getVar('pembayaran1') == 'Transfer') {
+                    //     $keluar = $this->request->getVar('amount1');
+                    //     $masuk = 0;
+                    //     $sukses = true;
+                    // }
+                    elseif ($this->request->getVar('pembayaran1') == 'Transfer') {
+                        $keluar = $this->request->getVar('amount1');
+                        $masuk = 0;
+                        $sukses = true;
+                    } elseif ($datatransaksi['total_akhir_debitcc'] >= $this->request->getVar('amount1') && $this->request->getVar('pembayaran1') == 'Debitcc') {
+                        $keluar = $this->request->getVar('amount1');
+                        $masuk = 0;
+                        $sukses = true;
+                    } elseif (!isset($sukses)) {
+                        $msg = [
+                            'error' => [
+                                'saldo' => 'Saldo Kurang',
+                            ]
+                        ];
+                    }
+                } else {
+                    $keluar = 0;
+                    $masuk = $this->request->getVar('amount1');
+                    $sukses = true;
+                }
+                if (isset($sukses)) {
+                    $datedetail = $this->modeldetailtransaksi->getDetailTransaksi($this->request->getVar('iddetailtrans'));
+                    $this->modeldetailtransaksi->save([
+                        'id_detail_transaksi' => $datedetail['id_detail_transaksi'],
+                        'tanggal_transaksi' => $this->request->getVar('tangalinput1') . ' ' . date("H:i:s"),
+                        'id_karyawan' => $session->get('id_user'),
+                        'pembayaran' => $this->request->getVar('pembayaran1'),
+                        'keterangan' => $this->request->getVar('keterangan1'),
+                        'id_akun_biaya' => $this->request->getVar('nama_akun1'),
+                        'keluar' => $keluar,
+                        'masuk' => $masuk,
+                        'nama_bank' => ($this->request->getVar('namabank1')) ? $this->request->getVar('namabank1') : null,
+                    ]);
+
+                    $this->BiayaHarianMaster($datatransaksi['id_transaksi'], $session);
+                    $msg = 'berhasil';
+                }
+                echo json_encode($msg);
+            }
+        }
+    }
 }

@@ -80,7 +80,7 @@
             $datadetail = $modeltransaksi->getDataDate($r['tanggal_transaksi']);
             foreach ($datadetail as $key) :
             ?>
-                <tr id="demo-<?= $i ?>" class="collapse cell-1 row-child" <?= ($key['pembayaran']) == 'Tunai' ? 'style="background-color: #defcff;"' : '' ?> <?= ($key['pembayaran']) == 'Transfer' ? 'style="background-color: #ffffe3;"' : '' ?><?= ($key['pembayaran']) == 'Debitcc' ? 'style="background-color: #ffeae8;"' : '' ?>>
+                <tr id="demo-<?= $i ?>" <?= ($session->get('role') == 'owner') ? 'ondblclick="ModalEdit(' . $key["id_detail_transaksi"] . ')"' : '' ?> class="collapse cell-1 row-child" <?= ($key['pembayaran']) == 'Tunai' ? 'style="background-color: #defcff;"' : '' ?> <?= ($key['pembayaran']) == 'Transfer' ? 'style="background-color: #ffffe3;"' : '' ?><?= ($key['pembayaran']) == 'Debitcc' ? 'style="background-color: #ffeae8;"' : '' ?>>
                     <td class="text-center"><i class="fa fa-angle-up"></i></td>
                     <td><?= $key['pembayaran'] ?></td>
                     <td><a href="#" type="button" onclick="OpenModal('<?= $key['keterangan'] ?>')"><?= $key['keterangan'] ?></a></td>

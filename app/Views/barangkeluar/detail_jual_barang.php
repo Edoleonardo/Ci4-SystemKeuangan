@@ -350,7 +350,7 @@
                         <div class="card">
                             <!-- /.card-header -->
                             <div class="card-body p-0" id="card11">
-                                <table class="table table-striped" id="card22" ondblclick="OpenEditBayar()">
+                                <table class="table table-striped" id="card22" <?= ($session->get('role') == 'owner') ? 'ondblclick="OpenEditBayar()"' : '' ?>>
                                     <tbody>
                                         <?php if (isset($datapenjualan)) : ?>
                                             <?php if ($datapenjualan['pembulatan']) : ?>

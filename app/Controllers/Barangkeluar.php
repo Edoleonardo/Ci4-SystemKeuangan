@@ -553,6 +553,7 @@ class Barangkeluar extends BaseController
             'totalcarat' => $totalcarat,
             'totalberat' => $totalberat,
             'totalqty' => $totalqty,
+            'session' => session(),
             'hargabaru' =>  $this->modeldetailpenjualan->SumDataDetailJual($data['id_date_penjualan'])['total_harga'],
             'datacust' => $this->datacust->getDataCustomerone($data['nohp_cust']),
             'tampildata' => $this->modeldetailpenjualan->getDetailAllJual($id),

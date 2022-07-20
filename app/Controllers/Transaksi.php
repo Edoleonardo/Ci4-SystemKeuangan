@@ -29,7 +29,8 @@ class Transaksi extends BaseController
             'detailtransaksi' => $this->modeldetailtransaksi->getDetailTransaksi(),
             'datatransaksi' => $this->modeltransaksi->getTransaksi(),
             'dataakun' => $this->modelakun->getAkunBiaya(),
-            'bank' => $this->modelbank->getBank()
+            'bank' => $this->modelbank->getBank(),
+            'session' => session()
 
         ];
         // dd($this->modeltransaksi->getTransaksi());
@@ -45,7 +46,8 @@ class Transaksi extends BaseController
                     //'detailtransaksi' => $this->modeldetailtransaksi->getDetailTransaksiFilter($this->request->getVar('dari'), $this->request->getVar('sampai')),
                     'datatransaksi' => $this->modeltransaksi->getTransaksi(),
                     'datatime' => $this->modeldetailtransaksi->getTimeTransaksiFilter($this->request->getVar('dari'), $this->request->getVar('sampai')),
-                    'modeltransaksi' => $this->modeldetailtransaksi
+                    'modeltransaksi' => $this->modeldetailtransaksi,
+                    'session' => session()
                 ];
                 $msg = ['tampiltrans' => view('transaksi/tabletransaksi', $data)];
             }

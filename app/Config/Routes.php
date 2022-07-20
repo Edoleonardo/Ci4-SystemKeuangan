@@ -246,6 +246,8 @@ $routes->get('/tampilpembelian_u', ($session->get('role') == 'owner') ? 'MasterU
 $routes->get('/detailpembelian_u/(:any)', ($session->get('role') == 'owner') ? 'MasterUpdate::DetailPembelianSupp/$1' : 'Login::Login');
 $routes->get('/updatedata', ($session->get('role') == 'owner') ? 'MasterUpdate::UpdateData' : 'Login::Login');
 $routes->POST('/editpembayaranform', ($session->get('role') == 'owner') ? 'MasterUpdate::EditPembayaranForm' : 'Login::Login');
+$routes->get('/tampiledit', ($session->get('role') == 'owner') ? 'MasterUpdate::TampilEdit' : 'Login::Login');
+$routes->POST('/edittrans', ($session->get('role') == 'owner') ? 'MasterUpdate::EditTransaksi' : 'Login::Login');
 
 /*
  * --------------------------------------------------------------------
