@@ -248,6 +248,7 @@ $routes->get('/updatedata', ($session->get('role') == 'owner') ? 'MasterUpdate::
 $routes->POST('/editpembayaranform', ($session->get('role') == 'owner') ? 'MasterUpdate::EditPembayaranForm' : 'Login::Login');
 $routes->get('/tampiledit', ($session->get('role') == 'owner') ? 'MasterUpdate::TampilEdit' : 'Login::Login');
 $routes->POST('/edittrans', ($session->get('role') == 'owner') ? 'MasterUpdate::EditTransaksi' : 'Login::Login');
+$routes->POST('/editbayar', ($session->get('role') == 'owner') ? 'MasterUpdate::EditBayarBuyback' : 'Login::Login');
 
 /*
  * --------------------------------------------------------------------

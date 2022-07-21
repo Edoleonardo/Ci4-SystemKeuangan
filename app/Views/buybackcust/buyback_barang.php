@@ -459,6 +459,68 @@
     </div>
     <!-- /.modal-dialog -->
 </div>
+<div class="modal fade" id="modal-editbayar">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Pembayaran</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form action="/editbayar" id="editbayar" class="editbayar" name="editbayar">
+                    <?= csrf_field(); ?>
+                    <input type="hidden" name="kelompok" id="kelompok" value="<?= $databuyback['kelompok'] ?>">
+                    <input type="hidden" name="iddate" id="iddate" value="<?= $databuyback['id_date_buyback'] ?>">
+                    <input type="hidden" name="hasiledit" id="hasiledit" value="0">
+                    <div class="card-header">
+                        <h4 style="text-align: center;" id="totalbayaredit"></h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                    <label><a href="#" onclick="MasukFieldedit('pembulatanedit')">Pembulatan</a></label><input type="number" onchange="myDataBayaredit()" onfocus="this.select()" min="0" id="pembulatanedit" name="pembulatanedit" class="form-control" placeholder="Masukan pembulatan">
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label><a href="#" onclick="MasukFieldedit('tunaiedit')">Tunai</a></label><input type="number" onchange="myDataBayaredit()" onfocus="this.select()" min="0" id="tunaiedit" name="tunaiedit" class="form-control" placeholder="Masukan tunai">
+                                    <div id="validationServerUsernameFeedback" class="invalid-feedback tunaieditmsg"></div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label><a href="#" onclick="MasukFieldedit('transferedit')">Transfer</a></label><input type="number" onchange="myDataBayaredit()" onfocus="this.select()" min="0" id="transferedit" name="transferedit" class="form-control" placeholder="Masukan transfer">
+                                    <div id="validationServerUsernameFeedback" class="invalid-feedback transfereditmsg"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Bank Transfer</label><input type="text" min="0" id="namabankedit" name="namabankedit" class="form-control" placeholder="Pilih Bank" readonly>
+                            <div id="validationServerUsernameFeedback" class="invalid-feedback namabankeditmsg"></div>
+                        </div>
+                        <div class="row">
+                            <?php foreach ($bank as $m) : ?>
+                                <div class="col">
+                                    <div class="form-group">
+                                        <button type="button" style="width: 200px;" onclick="pilihbankedit('<?= $m['nama_bank'] ?>')" class="btn btn-block btn-outline-info btn-lg"><?= $m['nama_bank'] ?></button>
+                                    </div>
+                                </div>
+                            <?php endforeach; ?>
+                        </div>
+                    </div>
+                    <div class="modal-footer justify-content-between">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Selesai</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!-- /.modal-dialog -->
+</div>
 <div id="barcodeview">
 </div>
 <div id="modalcust">
@@ -524,6 +586,11 @@
         })
     <?php } ?>
 
+    function OpenEditBayar() {
+        $('#modal-editbayar').modal('toggle')
+        myDataBayaredit()
+    }
+
     function checkcust() {
         $.ajax({
             type: "GET",
@@ -533,13 +600,11 @@
             },
             url: "<?php echo base_url('checkcust'); ?>",
             success: function(result) {
-                console.log('asd')
                 if (result == 'gagal') {
                     isicust = document.getElementById('nohpcust').value
                     document.getElementById("nohp").value = isicust
                     $('#modal-tambahcust').modal('show');
                 } else {
-                    console.log(result)
                     $('#namacust').val(result.nama);
                 }
             },
@@ -646,7 +711,6 @@
                     cache: false,
                     dataType: "json",
                     success: function(result) {
-                        console.log(result.kel)
                         if (result.error) {
                             if (result.error.qty) {
                                 $('#qty').addClass('is-invalid')
@@ -774,7 +838,6 @@
                     cache: false,
                     dataType: "json",
                     success: function(result) {
-                        console.log(result)
                         if (result.error) {
                             if (result.error.namabank) {
                                 $('#namabank').addClass('is-invalid')
@@ -822,6 +885,89 @@
                             Swal.fire({
                                 icon: 'success',
                                 title: 'Berhasil Bayar',
+                                confirmButtonColor: '#3085d6',
+                                confirmButtonText: 'OK',
+                                allowOutsideClick: false
+                            }).then((choose) => {
+                                if (choose.isConfirmed) {
+                                    location.reload();
+                                    // $('#modal-nonota').modal('toggle');
+                                    // $("#refrestbl").load("/buybackcust #refrestbl");
+                                    // tampildatabuyback()
+                                }
+                            })
+                        }
+                    },
+                    error: function(xhr, ajaxOptions, thrownError) {
+                        alert(xhr.status + "\n" + xhr.responseText + "\n" + thrownError);
+                    }
+                })
+            }
+        })
+
+    })
+    $('.editbayar').submit(function(e) {
+        e.preventDefault()
+        let form = $('.editbayar')[0];
+        let data = new FormData(form)
+        Swal.fire({
+            title: 'Bayar',
+            text: "Edit Pembayaran Sudah Selesai ?",
+            icon: 'info',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Tambah',
+            allowOutsideClick: false
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    type: "POST",
+                    data: data,
+                    url: "<?php echo base_url('editbayar'); ?>",
+                    contentType: false,
+                    processData: false,
+                    cache: false,
+                    dataType: "json",
+                    success: function(result) {
+                        if (result.error) {
+                            if (result.error.namabankedit) {
+                                $('#namabankedit').addClass('is-invalid')
+                                $('.namabankeditmsg').html(result.error.namabankedit)
+                            } else {
+                                $('#namabankedit').removeClass('is-invalid')
+                                $('.namabankedit').html('')
+                            }
+                            if (result.error.tunaiedit) {
+                                $('#tunaiedit').addClass('is-invalid')
+                                $('.tunaieditmsg').html(result.error.tunaiedit)
+                            } else {
+                                $('#tunaiedit').removeClass('is-invalid')
+                                $('.tunaiedit').html('')
+                            }
+                            if (result.error.transferedit) {
+                                $('#transferedit').addClass('is-invalid')
+                                $('.transfereditmsg').html(result.error.transferedit)
+                            } else {
+                                $('#transferedit').removeClass('is-invalid')
+                                $('.transfereditmsg').html('')
+                            }
+                            if (result.error.bayar) {
+                                Swal.fire({
+                                    icon: 'warning',
+                                    title: result.error.bayar,
+                                })
+                            }
+                        } else {
+                            $('#namabankedit').removeClass('is-invalid')
+                            $('.namabankeditmsg').html('')
+                            $('#transferedit').removeClass('is-invalid')
+                            $('.transfereditmsg').html('')
+                            $('#tunaiedit').removeClass('is-invalid')
+                            $('.tunaieditmsg').html('')
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Berhasil Edit',
                                 confirmButtonColor: '#3085d6',
                                 confirmButtonText: 'OK',
                                 allowOutsideClick: false
@@ -891,8 +1037,32 @@
                 const pembulatan = $('#pembulatan').val()
                 var hasil = (parseFloat(result.total_harga)) - tunai - transfer - pembulatan
                 $('#hasil').val(hasil)
-                $('#totalbayar').html(' Rp ' + hasil.toString().replace(/\B(?=(\d{3})+(?!\d))/g, "."))
-                console.log(result)
+                $('#totalbayar').html(' Rp ' + hasil.toLocaleString('en-US'))
+                $('#totalbayar').html(' Rp ' + hasil.toLocaleString('en-US'))
+
+            },
+            error: function(xhr, ajaxOptions, thrownError) {
+                alert(xhr.status + "\n" + xhr.responseText + "\n" + thrownError);
+            }
+        })
+    }
+
+    function myDataBayaredit() {
+        $.ajax({
+            type: "GET",
+            dataType: "json",
+            url: "<?php echo base_url('databayarbuyback'); ?>",
+            data: {
+                dateid: $("#iddate").val()
+            },
+            success: function(result) {
+                const tunai = $('#tunaiedit').val()
+                const transfer = $('#transferedit').val()
+                const pembulatan = $('#pembulatanedit').val()
+                var hasil = (parseFloat(result.total_harga)) - tunai - transfer - pembulatan
+                $('#hasiledit').val(hasil)
+                $('#totalbayaredit').html(' Rp ' + hasil.toLocaleString('en-US'))
+
             },
             error: function(xhr, ajaxOptions, thrownError) {
                 alert(xhr.status + "\n" + xhr.responseText + "\n" + thrownError);
@@ -938,6 +1108,20 @@
         myDataBayar()
     }
 
+    function MasukFieldedit(jenis) {
+        var hasil = $('#hasiledit').val()
+        if (jenis == 'pembulatanedit') {
+            $('#pembulatanedit').val(hasil)
+        }
+        if (jenis == 'tunaiedit') {
+            $('#tunaiedit').val(hasil)
+        }
+        if (jenis == 'transferedit') {
+            $('#transferedit').val(hasil)
+        }
+        myDataBayaredit()
+    }
+
     function ScannoTrans() {
         $('#scannotransbtn').trigger('click');
     }
@@ -959,7 +1143,6 @@
             cache: false,
             dataType: "json",
             success: function(result) {
-                console.log(result.asd)
                 if (result.pesan_error) {
                     $('#notrans').addClass('is-invalid')
                     $('.notransmsg').html(result.pesan_error)
@@ -1052,14 +1235,12 @@
 
     }
 
-
     function tampilcustomer() {
         $.ajax({
             type: "GET",
             dataType: "json",
             url: "<?php echo base_url('tampilcust'); ?>",
             success: function(result) {
-                // console.log(result)
                 $('#modalcust').html(result.tampilcust)
             },
             error: function(xhr, ajaxOptions, thrownError) {
@@ -1070,6 +1251,10 @@
 
     function pilihbank(nmbank) {
         $('#namabank').val(nmbank)
+    }
+
+    function pilihbankedit(nmbank) {
+        $('#namabankedit').val(nmbank)
     }
 
     function pilihcustomer(nohp) {

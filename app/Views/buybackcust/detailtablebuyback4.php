@@ -71,7 +71,7 @@
             <div class="col-sm-6">
                 <div class="card">
                     <!-- /.card-header -->
-                    <div class="card-body p-0" id="refreshpembayaran">
+                    <div class="card-body p-0" id="refreshpembayaran" <?= ($session->get('role') == 'owner') ? 'ondblclick="OpenEditBayar()"' : '' ?>>
 
                         <table class="table table-striped">
                             <tbody>

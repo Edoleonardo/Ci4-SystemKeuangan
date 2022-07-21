@@ -29,6 +29,7 @@ use App\Models\ModelTransaksi;
 use App\Models\ModelDetailTransaksi;
 use App\Models\ModelPenjualan;
 use App\Models\ModelDetailPenjualan;
+use App\Models\ModelBuyback;
 
 use CodeIgniter\CLI\Console;
 use CodeIgniter\Validation\Rules;
@@ -67,6 +68,7 @@ class MasterUpdate extends BaseController
         $this->modeldetailtransaksi = new ModelDetailTransaksi();
         $this->penjualan = new ModelPenjualan();
         $this->modeldetailpenjualan = new ModelDetailPenjualan();
+        $this->modelbuyback = new ModelBuyback();
     }
 
     public function UpdatePembelian()
@@ -550,6 +552,136 @@ class MasterUpdate extends BaseController
 
                     $this->BiayaHarianMaster($datatransaksi['id_transaksi'], $session);
                     $msg = 'berhasil';
+                }
+                echo json_encode($msg);
+            }
+        }
+    }
+    //-----------------------------------------------Transaksi Buyback--------------------------------------------------------
+    public function EditBayarBuyback()
+    {
+        if ($this->request->isAJAX()) {
+            $saldobiaya = $this->modeltransaksi->getTransaksi();
+            $validation = \Config\Services::validation();
+            $valid = true;
+            if ($this->request->getVar('transferedit')) {
+                $valid = $this->validate([
+                    'transferedit' => [
+                        'rules' => 'required|numeric',
+                        'errors' => [
+                            'required' => 'Transfer Harus di isi',
+                            'numeric' => 'Harus Angka',
+                        ]
+                    ],
+                    'namabankedit' => [
+                        'rules' => 'required',
+                        'errors' => [
+                            'required' => 'Nama Bank Harus di isi',
+                        ]
+                    ]
+
+                ]);
+            }
+            if ($this->request->getVar('tunaiedit')) {
+                $valid = $this->validate([
+                    'tunaiedit' => [
+                        'rules' => 'numeric',
+                        'errors' => [
+                            'numeric' => 'Harus Angka',
+                        ]
+                    ],
+                ]);
+            }
+
+            if (!$valid) {
+                $msg = [
+                    'error' => [
+                        'transferedit' => $validation->getError('transferedit'),
+                        'namabankedit' => $validation->getError('namabankedit'),
+                        'tunaiedit' => $validation->getError('tunaiedit'),
+                    ]
+                ];
+                echo json_encode($msg);
+            } else {
+                $session = session();
+                $tunai = ($this->request->getVar('tunaiedit')) ? $this->request->getVar('tunaiedit') : 0;
+                $transfer = ($this->request->getVar('transferedit')) ? $this->request->getVar('transferedit') : 0;
+                $pembulatan = ($this->request->getVar('pembulatanedit')) ? $this->request->getVar('pembulatanedit') : 0;
+                $totalvar = $tunai + $transfer;
+                $databuyback = $this->modelbuyback->getDataBuyback($this->request->getVar('iddate'));
+                $hasilbayar = ($databuyback['total_harga'] - $totalvar) - $pembulatan;
+                if ($saldobiaya['total_akhir_tunai'] >= $this->request->getVar('tunaiedit') && !$this->request->getVar('transferedit')) {
+                    $sukses = true;
+                } elseif ($this->request->getVar('transferedit') && !$this->request->getVar('tunaiedit')) {
+                    $sukses = true;
+                } elseif ($saldobiaya['total_akhir_tunai'] >= $this->request->getVar('tunaiedit') && $this->request->getVar('transferedit')) {
+                    $sukses = true;
+                } else {
+                    $sukses = false;
+                }
+                if ($this->request->getVar('pembulatanedit') != $databuyback['total_harga']) {
+                    if ($sukses) {
+                        if ($hasilbayar <= 0 && $databuyback['total_harga'] != 0) {
+                            $this->modeldetailtransaksi->DeleteTransaksi($databuyback['no_transaksi_buyback']);
+                            $namabank = ($this->request->getVar('transferedit')) ? $this->request->getVar('namabankedit') : null;
+                            $this->modelbuyback->save([
+                                'id_buyback' => $databuyback['id_buyback'],
+                                'id_karyawan' => $session->get('id_user'),
+                                'nohp_cust' => $this->request->getVar('nohpcust'),
+                                'tunai' => $this->request->getVar('tunaiedit'),
+                                'transfer' => $this->request->getVar('transferedit'),
+                                'nama_bank' => $namabank,
+                                //'tgl_selesai' => date("Y-m-d H:i:s"),
+                            ]);
+
+                            if ($this->request->getVar('tunaiedit')) {
+                                $this->modeldetailtransaksi->save([
+                                    //'tanggal_transaksi' => date("Y-m-d H:i:s"),sementara
+                                    'tanggal_transaksi' => ($databuyback['tgl_selesai']) ? $databuyback['tgl_selesai'] : date("Y-m-d H:i:s"),
+                                    'id_karyawan' => $session->get('id_user'),
+                                    'pembayaran' => 'Tunai',
+                                    'keterangan' => $databuyback['no_transaksi_buyback'],
+                                    'id_akun_biaya' => 8,
+                                    'masuk' => 0,
+                                    'keluar' =>  $this->request->getVar('tunaiedit'),
+                                    'nama_bank' => ($this->request->getVar('namabankedit')) ? $this->request->getVar('namabankedit') : null,
+                                ]);
+                            }
+                            if ($this->request->getVar('transferedit')) {
+                                $this->modeldetailtransaksi->save([
+                                    //'tanggal_transaksi' => date("Y-m-d H:i:s"),sementara
+                                    'tanggal_transaksi' => ($databuyback['tgl_selesai']) ? $databuyback['tgl_selesai'] : date("Y-m-d H:i:s"),
+                                    'id_karyawan' => $session->get('id_user'),
+                                    'pembayaran' => 'Transfer',
+                                    'keterangan' => $databuyback['no_transaksi_buyback'],
+                                    'id_akun_biaya' => 8,
+                                    'masuk' => 0,
+                                    'keluar' => $this->request->getVar('transferedit'),
+                                    'nama_bank' => ($this->request->getVar('namabankedit')) ? $this->request->getVar('namabankedit') : null,
+                                ]);
+                            }
+                            $this->BiayaHarianMaster($saldobiaya['id_transaksi'], $session);
+                            $msg = 'sukses';
+                        } else {
+                            $msg = [
+                                'error' => [
+                                    'bayar' => 'Bayar Kurang ' . $hasilbayar,
+                                ]
+                            ];
+                        }
+                    } else {
+                        $msg = [
+                            'error' => [
+                                'bayar' => 'Saldo Biaya Kurang',
+                            ]
+                        ];
+                    }
+                } else {
+                    $msg = [
+                        'error' => [
+                            'bayar' => 'Tidak Boleh Pembulatan Semua',
+                        ]
+                    ];
                 }
                 echo json_encode($msg);
             }

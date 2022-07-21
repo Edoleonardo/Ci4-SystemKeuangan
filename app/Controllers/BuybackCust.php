@@ -266,6 +266,7 @@ class BuybackCust extends BaseController
             $data = [
                 'databuyback' => $databuyback,
                 'tampildata' => $datadetail,
+                'session' => session(),
                 'totalberat' => $this->modeldetailbuyback->SumBeratDetailBuyback($this->request->getVar('iddate')),
                 'totalberat3' => $this->modeldetailbuyback->SumBerat3DetailBuyback($this->request->getVar('iddate')),
                 'totalcarat' => $this->modeldetailbuyback->SumCartDetailBuyback($this->request->getVar('iddate')),

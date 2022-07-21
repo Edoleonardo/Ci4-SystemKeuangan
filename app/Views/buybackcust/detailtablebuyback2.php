@@ -75,7 +75,7 @@
                     <!-- /.card-header -->
                     <div class="card-body p-0" id="refreshpembayaran">
 
-                        <table class="table table-striped">
+                        <table class="table table-striped" <?= ($session->get('role') == 'owner') ? 'ondblclick="OpenEditBayar()"' : '' ?>>
                             <tbody>
                                 <?php if (isset($databuyback)) : ?>
                                     <tr>
